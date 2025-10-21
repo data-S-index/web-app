@@ -1,0 +1,57 @@
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["strictUndefinedChecks"]
+}
+
+// generator kysely {
+//   provider = "prisma-kysely"
+
+//   output   = "../types"
+//   fileName = "kysely.ts"
+// }
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id String @id @default(cuid(2))
+
+    givenName  String @default("") // first name
+    familyName String @default("") // last name
+
+    emailAddress String @unique
+    password     String
+
+    emailVerified                 Boolean   @default(false)
+    emailVerifiedAt               DateTime?
+    emailVerificationToken        String?   @unique
+    emailVerificationTokenExpires DateTime?
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    Dataset Dataset[]
+
+    @@index([emailAddress])
+}
+
+model Dataset {
+    id Int @id @default(autoincrement())
+
+    name        String
+    description String
+
+    imageUrl String
+
+    publishedAt DateTime
+
+    user   User   @relation(fields: [userId], references: [id])
+    userId String
+
+    randomInt Int @default(0) // a field to touch when data in a related table is updated - For sorting by last updated
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+}
