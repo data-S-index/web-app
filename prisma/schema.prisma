@@ -63,7 +63,8 @@ model Dataset {
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    Citation Citation[]
+    Citation  Citation[]
+    FujiScore FujiScore[]
 }
 
 model Citation {
@@ -71,6 +72,29 @@ model Citation {
 
     dataset   Dataset @relation(fields: [datasetId], references: [id])
     datasetId Int
+
+    doi       String
+    journal   String? // Check if nullable in the MDC record
+    publisher String? // Check if nullable in the MDC record
+    source    String? // Check if nullable in the MDC record
+
+    citedDate DateTime @default(now()) // publishedDate in the MDC record
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+}
+
+model FujiScore {
+    id String @id @default(cuid(2))
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id])
+    datasetId Int
+
+    score Int @default(0) // 0-100
+
+    // The date and time the score was calculated
+    // We want to replace older daily/interval scores with monthly scores at some point
+    calculatedAt DateTime @default(now())
 
     created DateTime @default(now())
     updated DateTime @updatedAt
