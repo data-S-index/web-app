@@ -13,18 +13,18 @@ const styles = computed(() => {
   return {
     "--animate-aurora": "aurora 60s linear infinite",
     "--aurora":
-      "repeating-linear-gradient(100deg,#3b82f6_10%,#a5b4fc_15%,#93c5fd_20%,#ddd6fe_25%,#60a5fa_30%)",
+      "repeating-linear-gradient(100deg,#0e7490_10%,#0891b2_15%,#047857_20%,#059669_25%,#065f46_30%)",
     "--black": "#000",
 
-    "--blue-300": "#3B82F6",
-    "--blue-400": "#A5B4FC",
-    "--blue-500": "#93C5FD",
+    "--blue-300": "#047857",
+    "--blue-400": "#0e7490",
+    "--blue-500": "#059669",
     "--dark-gradient":
       "repeating-linear-gradient(100deg,#000_0%,#000_7%,transparent_10%,transparent_12%,#000_16%)",
-    "--indigo-300": "#a5b4fc",
+    "--indigo-300": "#0891b2",
     "--transparent": "transparent",
-    "--violet-200": "#E9D5FF",
-    "--white": "#60A5FA",
+    "--violet-200": "#065f46",
+    "--white": "#0e7490",
     "--white-gradient":
       "repeating-linear-gradient(100deg,#fff_0%,#fff_7%,transparent_10%,transparent_12%,#fff_16%)",
   };
