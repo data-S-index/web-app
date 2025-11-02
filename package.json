@@ -18,6 +18,7 @@
     "prisma:db:push": "prisma db push",
     "prisma:db:pull": "prisma db pull",
     "postinstall": "nuxt prepare && prisma generate",
+    "scripts:fill:db": "tsx scripts/fill_db.ts",
     "reset": "rimraf node_modules && rimraf .nuxt && rimraf .output && rimraf dist && yarn install",
     "prune-branches": "git removed-branches --prune --force"
   },
