@@ -8,45 +8,45 @@ defineOgImageComponent("Pergel", {
   headline: "Coming Soon...",
 });
 
-// Generate fake dataset publication data for the last 12 months
-const generateDatasetPublicationData = () => {
-  const months = [];
-  const datasets = [];
-  const currentDate = new Date();
+const toast = useToast();
 
-  // Generate data for the last 12 months
-  for (let i = 11; i >= 0; i--) {
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() - i,
-      1,
-    );
-    const monthName = date.toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-    });
-    months.push(monthName);
+// Fetch metrics data from API
+const { data: metricsData, error, pending } = await useFetch("/api/metrics");
 
-    // Generate realistic dataset publication numbers with some variation
-    // Base number around 25-75 datasets per month with seasonal variations
-    const baseDatasets = 45;
-    const seasonalVariation = Math.sin((i / 12) * 2 * Math.PI) * 15; // Seasonal pattern
-    const randomVariation = (Math.random() - 0.5) * 20; // Random variation
-    const datasetCount = Math.max(
-      10,
-      Math.round(baseDatasets + seasonalVariation + randomVariation),
-    );
+if (error.value) {
+  toast.add({
+    title: "Error fetching metrics",
+    description: error.value.data?.statusMessage || "Failed to load metrics",
+    icon: "material-symbols:error",
+    color: "error",
+  });
+}
 
-    datasets.push(datasetCount);
-  }
-
-  return { months, datasets };
-};
-
-const { months, datasets } = generateDatasetPublicationData();
+// Extract data from API response
+const months = computed(
+  () => metricsData.value?.monthlyPublications?.months || [],
+);
+const datasets = computed(
+  () => metricsData.value?.monthlyPublications?.datasets || [],
+);
+const institutionData = computed(() => metricsData.value?.institutions || []);
+const fieldData = computed(() => metricsData.value?.fields || []);
+const sIndexMetrics = computed(
+  () =>
+    metricsData.value?.sIndexMetrics || {
+      averageFairScore: 0,
+      averageCitationCount: 0,
+      averageSIndex: 0,
+      totalDatasets: 0,
+      highFairDatasets: 0,
+      citedDatasets: 0,
+    },
+);
 
 // Calculate trend line data using linear regression
 const calculateTrendLine = (data: number[]) => {
+  if (data.length === 0) return [];
+
   const n = data.length;
   const x = Array.from({ length: n }, (_, i) => i);
 
@@ -63,16 +63,16 @@ const calculateTrendLine = (data: number[]) => {
     denominator += (x[i]! - xMean) * (x[i]! - xMean);
   }
 
-  const slope = numerator / denominator;
+  const slope = denominator === 0 ? 0 : numerator / denominator;
   const intercept = yMean - slope * xMean;
 
   // Generate trend line points
   return x.map((xVal) => Math.round(slope * xVal + intercept));
 };
 
-const trendLineData = calculateTrendLine(datasets);
+const trendLineData = computed(() => calculateTrendLine(datasets.value));
 
-const barChartOption = ref<ECOption>({
+const barChartOption = computed<ECOption>(() => ({
   title: {
     text: "Dataset Publications (Last 12 Months)",
     left: "center",
@@ -115,7 +115,7 @@ const barChartOption = ref<ECOption>({
   },
   xAxis: {
     type: "category",
-    data: months,
+    data: months.value,
     axisLabel: {
       rotate: 45,
       fontSize: 12,
@@ -134,7 +134,7 @@ const barChartOption = ref<ECOption>({
     {
       name: "Dataset Publications",
       type: "bar",
-      data: datasets,
+      data: datasets.value,
       itemStyle: {
         color: "#ec4899",
         borderRadius: [4, 4, 0, 0],
@@ -149,7 +149,7 @@ const barChartOption = ref<ECOption>({
     {
       name: "Trend Line",
       type: "line",
-      data: trendLineData,
+      data: trendLineData.value,
       smooth: true,
       lineStyle: {
         color: "#f9a8d4",
@@ -168,67 +168,9 @@ const barChartOption = ref<ECOption>({
   ],
   animationEasing: "elasticOut",
   animationDelayUpdate: (idx: number) => idx * 5,
-});
+}));
 
-// Generate fake data for datasets by institution
-const generateInstitutionData = () => {
-  const institutions = [
-    { name: "MIT", value: 89 },
-    { name: "Stanford University", value: 76 },
-    { name: "Harvard University", value: 72 },
-    { name: "UC Berkeley", value: 68 },
-    { name: "Carnegie Mellon", value: 54 },
-    { name: "Oxford University", value: 48 },
-    { name: "Cambridge University", value: 45 },
-    { name: "ETH Zurich", value: 42 },
-    { name: "University of Toronto", value: 38 },
-    { name: "Other Institutions", value: 95 },
-  ];
-
-  return institutions;
-};
-
-// Generate fake data for datasets by research field
-const generateFieldData = () => {
-  const fields = [
-    { name: "Machine Learning", value: 156 },
-    { name: "Genomics", value: 134 },
-    { name: "Climate Science", value: 98 },
-    { name: "Neuroscience", value: 87 },
-    { name: "Computer Vision", value: 76 },
-    { name: "Natural Language Processing", value: 65 },
-    { name: "Physics", value: 54 },
-    { name: "Chemistry", value: 43 },
-    { name: "Social Sciences", value: 38 },
-    { name: "Other Fields", value: 89 },
-  ];
-
-  return fields;
-};
-
-const institutionData = generateInstitutionData();
-const fieldData = generateFieldData();
-
-// Generate fake S-Index metrics
-const generateSIndexMetrics = () => {
-  return {
-    averageFairScore: 0.78,
-    averageCitationCount: 12.4,
-    averageAltMentionCount: 8.7,
-    averageSIndex: 6.2,
-    totalDatasets: datasets.reduce((sum, count) => sum + count, 0),
-    highFairDatasets: Math.round(
-      datasets.reduce((sum, count) => sum + count, 0) * 0.65,
-    ), // 65% have high FAIR scores
-    citedDatasets: Math.round(
-      datasets.reduce((sum, count) => sum + count, 0) * 0.42,
-    ), // 42% are cited
-  };
-};
-
-const sIndexMetrics = generateSIndexMetrics();
-
-const institutionPieChartOption = ref({
+const institutionPieChartOption = computed(() => ({
   title: {
     text: "Datasets by Institution",
     left: "center",
@@ -276,12 +218,12 @@ const institutionPieChartOption = ref({
       labelLine: {
         show: false,
       },
-      data: institutionData,
+      data: institutionData.value,
     },
   ],
-});
+}));
 
-const fieldPieChartOption = ref({
+const fieldPieChartOption = computed(() => ({
   title: {
     text: "Datasets by Research Field",
     left: "center",
@@ -305,7 +247,7 @@ const fieldPieChartOption = ref({
   },
   series: [
     {
-      name: "Conference",
+      name: "Research Field",
       type: "pie",
       radius: ["30%", "70%"],
       center: ["50%", "60%"],
@@ -329,10 +271,10 @@ const fieldPieChartOption = ref({
       labelLine: {
         show: false,
       },
-      data: fieldData,
+      data: fieldData.value,
     },
   ],
-});
+}));
 </script>
 
 <template>
@@ -343,7 +285,13 @@ const fieldPieChartOption = ref({
       variant="naked"
     />
 
-    <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div v-if="pending" class="flex items-center justify-center py-12">
+      <div class="text-center">
+        <div class="mb-4 text-2xl">Loading metrics...</div>
+      </div>
+    </div>
+
+    <div v-else class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
       <UCard>
         <template #header>
           <h3 class="text-lg font-semibold">Total Datasets</h3>
@@ -367,9 +315,12 @@ const fieldPieChartOption = ref({
 
         <div class="text-3xl font-bold text-pink-600">
           {{
-            Math.round(
-              datasets.reduce((sum, count) => sum + count, 0) / 12,
-            ).toLocaleString()
+            datasets.length > 0
+              ? Math.round(
+                  datasets.reduce((sum, count) => sum + count, 0) /
+                    datasets.length,
+                ).toLocaleString()
+              : 0
           }}
         </div>
 
@@ -382,17 +333,21 @@ const fieldPieChartOption = ref({
         </template>
 
         <div class="text-3xl font-bold text-pink-500">
-          {{ Math.max(...datasets).toLocaleString() }}
+          {{ datasets.length > 0 ? Math.max(...datasets).toLocaleString() : 0 }}
         </div>
 
         <p class="mt-2 text-sm text-gray-600">
-          {{ months[datasets.indexOf(Math.max(...datasets))] }}
+          {{
+            datasets.length > 0
+              ? months[datasets.indexOf(Math.max(...datasets))]
+              : "N/A"
+          }}
         </p>
       </UCard>
     </div>
 
     <!-- S-Index Specific Metrics -->
-    <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+    <div v-if="!pending" class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
       <UCard>
         <template #header>
           <h3 class="text-lg font-semibold">Average S-Index</h3>
@@ -431,7 +386,7 @@ const fieldPieChartOption = ref({
     </div>
 
     <ClientOnly>
-      <UCard>
+      <UCard v-if="!pending">
         <template #header>
           <h3 class="text-lg font-semibold">
             Monthly Dataset Publication Trends
@@ -439,22 +394,46 @@ const fieldPieChartOption = ref({
         </template>
 
         <div style="height: 500px">
-          <VChart :option="barChartOption" />
+          <VChart v-if="months.length > 0" :option="barChartOption" />
+
+          <div
+            v-else
+            class="flex h-full items-center justify-center text-gray-500"
+          >
+            No data available
+          </div>
         </div>
       </UCard>
     </ClientOnly>
 
     <ClientOnly>
-      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div v-if="!pending" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <UCard>
           <div style="height: 600px">
-            <VChart :option="institutionPieChartOption" />
+            <VChart
+              v-if="institutionData.length > 0"
+              :option="institutionPieChartOption"
+            />
+
+            <div
+              v-else
+              class="flex h-full items-center justify-center text-gray-500"
+            >
+              No institution data available
+            </div>
           </div>
         </UCard>
 
         <UCard>
           <div style="height: 600px">
-            <VChart :option="fieldPieChartOption" />
+            <VChart v-if="fieldData.length > 0" :option="fieldPieChartOption" />
+
+            <div
+              v-else
+              class="flex h-full items-center justify-center text-gray-500"
+            >
+              No field data available
+            </div>
           </div>
         </UCard>
       </div>

@@ -89,10 +89,6 @@ if (error.value) {
   });
 }
 
-if (userData.value) {
-  console.log(userData.value);
-}
-
 const searchForDatasets = async () => {
   searchLoading.value = true;
 
@@ -135,8 +131,6 @@ const attachDatasetsToUser = async () => {
       color: "error",
     });
   }
-
-  console.log(datasetIds);
 
   await $fetch("/api/user/datasets/", {
     method: "POST",
@@ -305,41 +299,48 @@ const openAddDatasetModal = () => {
 
         <div v-if="userData">
           <table class="w-full">
-            <tr class="bg-gray-100 text-left">
-              <th>Dataset</th>
+            <thead>
+              <tr class="bg-gray-100 text-left">
+                <th>Dataset</th>
 
-              <th>Cited by</th>
+                <th>Cited by</th>
 
-              <th>Year</th>
-            </tr>
+                <th>Year</th>
+              </tr>
+            </thead>
 
-            <tr
-              v-for="item in userData"
-              :key="item.datasetId"
-              class="border-b border-gray-200"
-            >
-              <td class="flex flex-col">
-                <div>
-                  <NuxtLink :to="`/datasets/${item.datasetId}`" target="_blank">
-                    {{ item.dataset.title }}
-                  </NuxtLink>
-                </div>
+            <tbody>
+              <tr
+                v-for="item in userData"
+                :key="item.datasetId"
+                class="border-b border-gray-200"
+              >
+                <td class="flex flex-col">
+                  <div>
+                    <NuxtLink
+                      :to="`/datasets/${item.datasetId}`"
+                      target="_blank"
+                    >
+                      {{ item.dataset.title }}
+                    </NuxtLink>
+                  </div>
 
-                <div class="text-sm text-gray-600">
-                  {{
-                    (item.dataset.authors as any)
-                      .map((author: any) =>
-                        `${author.givenName || author.name || ""} ${author.familyName || ""}`.trim(),
-                      )
-                      .join(", ")
-                  }}
-                </div>
-              </td>
+                  <div class="text-sm text-gray-600">
+                    {{
+                      (item.dataset.authors as any)
+                        .map((author: any) =>
+                          `${author.givenName || author.name || ""} ${author.familyName || ""}`.trim(),
+                        )
+                        .join(", ")
+                    }}
+                  </div>
+                </td>
 
-              <td>{{ item.dataset.Citation.length }}</td>
+                <td>{{ item.dataset.Citation.length }}</td>
 
-              <td>{{ item.dataset.publisherYear }}</td>
-            </tr>
+                <td>{{ item.dataset.publisherYear }}</td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </UPageBody>
