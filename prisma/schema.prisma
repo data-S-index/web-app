@@ -47,6 +47,8 @@ model Dataset {
 
     publishedAt DateTime
 
+    authors Json @default("[]") // [{ givenName: String, familyName: String, affiliation: String[], nameType: String, nameIdentifiers: { nameIdentifier : String, nameIdentifierScheme : String }[] }]
+
     doi String
 
     publisher     String

@@ -4,6 +4,7 @@ import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 
 const UCheckbox = resolveComponent("UCheckbox");
+const UButton = resolveComponent("UButton");
 
 definePageMeta({
   middleware: ["auth"],
@@ -63,7 +64,16 @@ const columns: TableColumn<{ id: number; title: string; doi: string }>[] = [
   {
     id: "doi",
     header: "DOI",
-    cell: ({ row }) => row.original.doi,
+    cell: ({ row }) =>
+      h(UButton, {
+        icon: "i-heroicons-link-20-solid",
+        trailing: true,
+        label: row.original.doi,
+        href: `https://doi.org/${row.original.doi}`,
+        target: "_blank",
+        size: "sm",
+        variant: "link",
+      }),
   },
 ];
 const rowSelection = ref<Record<string, boolean>>({});
@@ -248,7 +258,7 @@ const openAddDatasetModal = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{ faker.number.int({ min: 0, max: 100 }).toLocaleString() }}
+              {{ userData?.length }}
             </div>
 
             <p class="mt-2 text-sm text-gray-600">Attached to your account</p>
@@ -274,7 +284,13 @@ const openAddDatasetModal = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
-              {{ faker.number.int({ min: 0, max: 100 }).toLocaleString() }}
+              {{
+                userData?.reduce(
+                  (sum: number, item: any) =>
+                    sum + item.dataset.Citation.length,
+                  0,
+                )
+              }}
             </div>
 
             <p class="mt-2 text-sm text-gray-600">
@@ -287,7 +303,45 @@ const openAddDatasetModal = () => {
 
         <h2 class="text-2xl font-bold">Your datasets</h2>
 
-        <pre>{{ userData }}</pre>
+        <div v-if="userData">
+          <table class="w-full">
+            <tr class="bg-gray-100 text-left">
+              <th>Dataset</th>
+
+              <th>Cited by</th>
+
+              <th>Year</th>
+            </tr>
+
+            <tr
+              v-for="item in userData"
+              :key="item.datasetId"
+              class="border-b border-gray-200"
+            >
+              <td class="flex flex-col">
+                <div>
+                  <NuxtLink :to="`/datasets/${item.datasetId}`" target="_blank">
+                    {{ item.dataset.title }}
+                  </NuxtLink>
+                </div>
+
+                <div class="text-sm text-gray-600">
+                  {{
+                    (item.dataset.authors as any)
+                      .map((author: any) =>
+                        `${author.givenName || author.name || ""} ${author.familyName || ""}`.trim(),
+                      )
+                      .join(", ")
+                  }}
+                </div>
+              </td>
+
+              <td>{{ item.dataset.Citation.length }}</td>
+
+              <td>{{ item.dataset.publisherYear }}</td>
+            </tr>
+          </table>
+        </div>
       </UPageBody>
     </UPage>
   </UContainer>

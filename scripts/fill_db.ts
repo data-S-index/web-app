@@ -35,6 +35,52 @@ const main = async () => {
         "zh",
       ]),
       randomInt: faker.number.int(1000000),
+      authors: Array.from(
+        { length: faker.number.int({ min: 1, max: 5 }) },
+        () => {
+          const nameType = faker.helpers.arrayElement([
+            "Personal",
+            "Organizational",
+          ]);
+
+          return {
+            nameType,
+            givenName:
+              nameType === "Personal"
+                ? faker.person.firstName()
+                : faker.company.name(),
+            familyName: nameType === "Personal" ? faker.person.lastName() : "",
+            affiliation:
+              nameType === "Personal"
+                ? Array.from(
+                    { length: faker.number.int({ min: 0, max: 3 }) },
+                    () => faker.company.name(),
+                  )
+                : [],
+            nameIdentifiers:
+              nameType === "Personal"
+                ? Array.from(
+                    { length: faker.number.int({ min: 0, max: 3 }) },
+                    () => ({
+                      nameIdentifier: faker.string.nanoid(10),
+                      nameIdentifierScheme: faker.helpers.arrayElement([
+                        "ORCID",
+                        "ISNI",
+                      ]),
+                    }),
+                  )
+                : Array.from(
+                    { length: faker.number.int({ min: 0, max: 3 }) },
+                    () => ({
+                      nameIdentifier: faker.string.nanoid(10),
+                      nameIdentifierScheme: faker.helpers.arrayElement([
+                        "GRID",
+                      ]),
+                    }),
+                  ),
+          };
+        },
+      ),
     });
   }
 
