@@ -38,24 +38,22 @@ model User {
 }
 
 model Dataset {
-    id Int @id @default(autoincrement())
+    id  String @id @default(cuid(2))
+    doi String @unique
 
     title       String
     description String
+    version     String?
 
     imageUrl String
 
+    publisher   String
     publishedAt DateTime
 
-    authors Json @default("[]") // [{ givenName: String, familyName: String, affiliation: String[], nameType: String, nameIdentifiers: { nameIdentifier : String, nameIdentifierScheme : String }[] }]
+    authors Json @default("[]") // [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
 
-    doi String
-
-    publisher     String
-    publisherYear String
-
+    domain   String?
     subjects String[]
-    language String?
 
     randomInt Int @default(0) // a field to touch when data in a related table is updated - For sorting by last updated
 
@@ -66,6 +64,8 @@ model Dataset {
     FujiScore FujiScore[]
 
     datasetClaims UserDataset[]
+
+    @@index([doi])
 }
 
 model UserDataset {
@@ -73,7 +73,7 @@ model UserDataset {
     userId String
 
     dataset   Dataset @relation(fields: [datasetId], references: [id])
-    datasetId Int
+    datasetId String
 
     created DateTime @default(now())
     updated DateTime @updatedAt
@@ -85,9 +85,13 @@ model Citation {
     id String @id @default(cuid(2))
 
     dataset   Dataset @relation(fields: [datasetId], references: [id])
-    datasetId Int
+    datasetId String
 
     doi String
+
+    datacite Boolean @default(false)
+    mdc      Boolean @default(false)
+    openAlex Boolean @default(false)
 
     citedDate DateTime
 
@@ -97,7 +101,7 @@ model Citation {
 
 model FujiScore {
     dataset   Dataset @relation(fields: [datasetId], references: [id])
-    datasetId Int
+    datasetId String
 
     score Int @default(0) // 0-100
 
