@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const attachDatasetsSchema = z.object({
-  datasetIds: z.array(z.number()),
+  datasetIds: z.array(z.string()),
 });
 
 export default defineEventHandler(async (event) => {

@@ -2,13 +2,18 @@
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
-const { loggedIn } = useUserSession();
+const { loggedIn, user } = useUserSession();
 const route = useRoute();
 
 const routeQueryParams = route.query;
 
 if (loggedIn.value) {
-  await navigateTo("/dashboard");
+  const userId = user.value?.id;
+  if (userId) {
+    await navigateTo(`/users/${userId}`);
+  } else {
+    await navigateTo("/");
+  }
 }
 
 definePageMeta({
@@ -60,7 +65,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
         window.location.href = routeQueryParams.redirect as string;
       } else {
-        window.location.href = "/dashboard";
+        const userId = user.value?.id;
+        window.location.href = `/users/${userId}`;
       }
     })
     .catch((error) => {

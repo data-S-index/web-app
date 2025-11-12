@@ -10,57 +10,6 @@ import { createReadStream } from "fs";
 
 const prisma = new PrismaClient();
 
-const subjects = [
-  "Computer Science",
-  "Mathematics",
-  "Physics",
-  "Chemistry",
-  "Biology",
-  "Medicine",
-  "Engineering",
-  "Social Sciences",
-  "Humanities",
-  "Arts and Culture",
-  "Business",
-  "Law",
-  "Education",
-  "Health",
-  "Environmental Science",
-  "Geoscience",
-  "AI",
-  "Machine Learning",
-  "Deep Learning",
-  "Artificial Intelligence",
-  "Machine Learning",
-  "Deep Learning",
-  "Artificial Intelligence",
-  "Data Science",
-  "Data Mining",
-  "Data Visualization",
-  "Data Analysis",
-  "Data Engineering",
-  "Data Management",
-  "Data Security",
-  "Data Privacy",
-  "Data Governance",
-  "Enzymes",
-  "Proteins",
-  "DNA",
-  "RNA",
-  "Cell",
-  "Organism",
-  "Ecosystem",
-  "Environment",
-  "Climate",
-  "Weather",
-  "Hydrology",
-  "Geology",
-  "Geophysics",
-  "Geochemistry",
-  "Geobiology",
-  "Geoinformatics",
-];
-
 interface DataciteRecord {
   source?: string;
   doi?: string;
@@ -79,35 +28,7 @@ const convertCreatorsToAuthors = (
   creators?: Array<{ name?: string; [key: string]: any }>,
 ): any[] => {
   if (!creators || creators.length === 0) {
-    // Fallback: generate random authors
-    return Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => {
-      const nameType = faker.helpers.arrayElement([
-        "Personal",
-        "Organizational",
-      ]);
-
-      return {
-        nameType,
-        name:
-          nameType === "Personal"
-            ? `${faker.person.firstName()} ${faker.person.lastName()}`
-            : faker.company.name(),
-        affiliations: [],
-        nameIdentifiers:
-          nameType === "Personal"
-            ? Array.from(
-                { length: faker.number.int({ min: 0, max: 2 }) },
-                () => ({
-                  nameIdentifier: faker.string.nanoid(10),
-                  nameIdentifierScheme: faker.helpers.arrayElement([
-                    "ORCID",
-                    "ISNI",
-                  ]),
-                }),
-              )
-            : [],
-      };
-    });
+    return [];
   }
 
   return creators.map((creator) => {
@@ -124,64 +45,38 @@ const convertCreatorsToAuthors = (
       name === name.toUpperCase();
 
     return {
-      nameType: isOrganizational ? "Organizational" : "Personal",
+      nameType:
+        creator.nameType || (isOrganizational ? "Organizational" : "Personal"), // We might need to revert this
       name,
-      affiliations: [],
-      nameIdentifiers: !isOrganizational
-        ? Array.from({ length: faker.number.int({ min: 0, max: 1 }) }, () => ({
-            nameIdentifier: faker.string.nanoid(10),
-            nameIdentifierScheme: faker.helpers.arrayElement(["ORCID", "ISNI"]),
-          }))
-        : [],
+      affiliations: creator.affiliations || [],
+      nameIdentifiers: creator.nameIdentifiers || [],
     };
   });
 };
 
 // Parse a datacite record into dataset format
 const parseDataciteRecord = (record: DataciteRecord): any => {
-  const doi = (
-    record.doi || `10.1000/${faker.string.nanoid(10)}`
-  ).toLowerCase();
-  const title = record.title || faker.lorem.sentence();
-  const description =
-    record.description || record.title || faker.lorem.paragraph();
-  const publisher = record.publisher || "Unknown Publisher";
+  const doi = record.doi?.toLowerCase() || null;
+  const title = record.title || "";
+  const description = record.description || null;
+  const publisher = record.publisher || null;
   const version = record.version || null;
-
-  // Parse publication date
-  let publishedAt: Date;
-  if (record.publication_date) {
-    publishedAt = new Date(record.publication_date);
-    if (isNaN(publishedAt.getTime())) {
-      publishedAt = faker.date.past();
-    }
-  } else {
-    publishedAt = faker.date.past();
-  }
-
-  // Parse subjects
-  const recordSubjects = record.subjects || [];
-  const datasetSubjects =
-    recordSubjects.length > 0
-      ? recordSubjects
-      : [
-          ...new Set(
-            Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () =>
-              faker.helpers.arrayElement(subjects),
-            ),
-          ),
-        ];
+  const publishedAt = record.publication_date
+    ? new Date(record.publication_date)
+    : null;
+  const subjects = record.subjects || [];
+  const authors = convertCreatorsToAuthors(record.creators);
 
   return {
     doi,
     title,
     description,
     version,
-    imageUrl: faker.image.url(),
+    imageUrl: null,
     publisher,
     publishedAt,
-    subjects: datasetSubjects,
-    authors: convertCreatorsToAuthors(record.creators),
+    subjects,
+    authors,
     randomInt: faker.number.int(1000000),
   };
 };
@@ -248,11 +143,13 @@ const processNdjsonFile = async (
 const main = async () => {
   console.log("🚀 Starting database fill process...");
 
-  // Step 1: Get OS-agnostic path to Downloads/datacite-necessary-metadata
+  const folderName = "datacite-slim-records";
+
+  // Step 1: Get OS-agnostic path to Downloads/${folderName}
   console.log("📍 Step 1: Locating data directory...");
   const homeDir = os.homedir();
   const downloadsDir = path.join(homeDir, "Downloads");
-  const dataDir = path.join(downloadsDir, "datacite-necessary-metadata");
+  const dataDir = path.join(downloadsDir, folderName);
 
   console.log(`Reading ndjson files from: ${dataDir}`);
 
@@ -262,7 +159,7 @@ const main = async () => {
     console.log("✓ Data directory found");
   } catch {
     throw new Error(
-      `Directory not found: ${dataDir}. Please ensure the datacite-necessary-metadata folder exists in your Downloads directory.`,
+      `Directory not found: ${dataDir}. Please ensure the ${folderName} folder exists in your Downloads directory.`,
     );
   }
 
@@ -290,12 +187,12 @@ const main = async () => {
     throw new Error("No .ndjson files found in data directory");
   }
 
-  const batchSize = 5000;
+  const batchSize = 10000;
   let totalInserted = 0;
 
   // Allow recordLimit to be set via environment variable (0 = process all records)
   const recordLimitEnv = process.env.RECORD_LIMIT;
-  const recordLimit = recordLimitEnv ? parseInt(recordLimitEnv, 10) : 50000;
+  const recordLimit = recordLimitEnv ? parseInt(recordLimitEnv, 10) : 10000;
 
   if (recordLimit === 0) {
     console.log("  ⚠️  Record limit set to 0 - processing ALL records");

@@ -26,7 +26,10 @@ export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);
 
   if ("user" in session) {
-    return sendRedirect(event, "/dashboard");
+    const user = session.user;
+    if (user) {
+      return sendRedirect(event, `/users/${user?.id}`);
+    }
   }
 
   const body = await readValidatedBody(event, (b) => signupSchema.safeParse(b));

@@ -1,13 +1,5 @@
 import prisma from "../../utils/prisma";
 
-type DatasetWithRelations = {
-  publishedAt: Date;
-  authors: unknown;
-  subjects: string[] | null;
-  FujiScore: Array<{ score: number }>;
-  Citation: unknown[];
-};
-
 export default defineEventHandler(async (_event) => {
   const now = new Date();
   const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 12, 1);
@@ -26,6 +18,7 @@ export default defineEventHandler(async (_event) => {
     orderBy: {
       publishedAt: "asc",
     },
+    take: 300000,
   });
 
   // Get all datasets for overall metrics (not just last 12 months)
@@ -34,6 +27,7 @@ export default defineEventHandler(async (_event) => {
       Citation: true,
       FujiScore: true,
     },
+    take: 100000,
   });
 
   // Generate monthly publication data for the last 12 months
@@ -52,7 +46,7 @@ export default defineEventHandler(async (_event) => {
   }
 
   // Count datasets by month
-  datasets.forEach((dataset: DatasetWithRelations) => {
+  datasets.forEach((dataset) => {
     const date = new Date(dataset.publishedAt);
     const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
     if (monthlyData[monthKey] !== undefined) {
@@ -77,11 +71,16 @@ export default defineEventHandler(async (_event) => {
 
   // Extract institutions from authors' affiliations
   const institutionCounts: Record<string, number> = {};
-  allDatasets.forEach((dataset: DatasetWithRelations) => {
+  allDatasets.forEach((dataset) => {
     if (dataset.authors && Array.isArray(dataset.authors)) {
-      dataset.authors.forEach((author: { affiliation?: string[] }) => {
-        if (author.affiliation && Array.isArray(author.affiliation)) {
-          author.affiliation.forEach((affiliation: string) => {
+      dataset.authors.forEach((author) => {
+        if (
+          author &&
+          typeof author === "object" &&
+          "affiliations" in author &&
+          Array.isArray(author.affiliations)
+        ) {
+          author.affiliations.forEach((affiliation: unknown) => {
             if (affiliation && typeof affiliation === "string") {
               if (affiliation.trim()) {
                 institutionCounts[affiliation] =
@@ -114,7 +113,7 @@ export default defineEventHandler(async (_event) => {
 
   // Extract research fields from subjects
   const fieldCounts: Record<string, number> = {};
-  allDatasets.forEach((dataset: DatasetWithRelations) => {
+  allDatasets.forEach((dataset) => {
     if (dataset.subjects && Array.isArray(dataset.subjects)) {
       dataset.subjects.forEach((subject: string) => {
         if (subject && typeof subject === "string") {
@@ -142,29 +141,24 @@ export default defineEventHandler(async (_event) => {
   // Calculate S-Index metrics
   const totalDatasets = allDatasets.length;
   const datasetsWithFairScores = allDatasets.filter(
-    (d: DatasetWithRelations) => d.FujiScore && d.FujiScore.length > 0,
+    (d) => d.FujiScore !== null,
   );
   const datasetsWithCitations = allDatasets.filter(
-    (d: DatasetWithRelations) => d.Citation && d.Citation.length > 0,
+    (d) => d.Citation && Array.isArray(d.Citation) && d.Citation.length > 0,
   );
 
   const averageFairScore =
     datasetsWithFairScores.length > 0
-      ? datasetsWithFairScores.reduce(
-          (sum: number, d: DatasetWithRelations) => {
-            const latestScore = d.FujiScore[d.FujiScore.length - 1];
-
-            return sum + (latestScore?.score || 0) / 100; // Convert 0-100 to 0-1
-          },
-          0,
-        ) / datasetsWithFairScores.length
+      ? datasetsWithFairScores.reduce((sum: number, d) => {
+          return sum + (d.FujiScore?.score || 0) / 100; // Convert 0-100 to 0-1
+        }, 0) / datasetsWithFairScores.length
       : 0;
 
   const averageCitationCount =
     datasetsWithCitations.length > 0
       ? datasetsWithCitations.reduce(
-          (sum: number, d: DatasetWithRelations) =>
-            sum + (d.Citation?.length || 0),
+          (sum: number, d) =>
+            sum + (Array.isArray(d.Citation) ? d.Citation.length : 0),
           0,
         ) / datasetsWithCitations.length
       : 0;
@@ -172,12 +166,9 @@ export default defineEventHandler(async (_event) => {
   // For average S-Index, we'll use a simplified calculation
   // S-Index = (FAIR Score * 0.5) + (Citation Impact * 0.5)
   // Citation Impact = min(citation count / 20, 1) * 10
-  const sIndexValues = allDatasets.map((d: DatasetWithRelations) => {
-    const fairScore =
-      d.FujiScore && d.FujiScore.length > 0
-        ? (d.FujiScore[d.FujiScore.length - 1]?.score || 0) / 100
-        : 0;
-    const citationCount = d.Citation?.length || 0;
+  const sIndexValues = allDatasets.map((d) => {
+    const fairScore = d.FujiScore ? d.FujiScore.score / 100 : 0;
+    const citationCount = Array.isArray(d.Citation) ? d.Citation.length : 0;
     const citationImpact = Math.min(citationCount / 20, 1) * 10;
 
     return fairScore * 5 + citationImpact * 0.5; // Normalize to reasonable range
@@ -189,13 +180,9 @@ export default defineEventHandler(async (_event) => {
         sIndexValues.length
       : 0;
 
-  const highFairDatasets = datasetsWithFairScores.filter(
-    (d: DatasetWithRelations) => {
-      const latestScore = d.FujiScore[d.FujiScore.length - 1];
-
-      return latestScore && latestScore.score > 70; // FAIR Score > 0.7 (70/100)
-    },
-  ).length;
+  const highFairDatasets = datasetsWithFairScores.filter((d) => {
+    return d.FujiScore && d.FujiScore.score > 70; // FAIR Score > 70/100
+  }).length;
 
   return {
     monthlyPublications: {

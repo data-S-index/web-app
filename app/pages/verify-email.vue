@@ -1,8 +1,13 @@
 <script setup lang="ts">
-const { loggedIn } = useUserSession();
+const { loggedIn, user } = useUserSession();
 
 if (loggedIn.value) {
-  await navigateTo("/dashboard");
+  const userId = user.value?.id;
+  if (userId) {
+    await navigateTo(`/users/${userId}`);
+  } else {
+    await navigateTo("/");
+  }
 }
 
 definePageMeta({

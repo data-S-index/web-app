@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
       title: true,
       doi: true,
     },
+    take: 10000,
   });
 
   return datasets || [];

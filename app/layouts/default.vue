@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
 
-const { clear } = useUserSession();
+const { clear, user, loggedIn: loggedInSession } = useUserSession();
 const route = useRoute();
 
 const logout = async () => {
@@ -10,6 +10,15 @@ const logout = async () => {
 };
 
 const headerItems = computed<NavigationMenuItem[]>(() => [
+  ...(loggedInSession.value && user.value?.id
+    ? [
+        {
+          label: "My Profile",
+          to: `/users/${user.value?.id}`,
+          active: route.path.startsWith(`/users/${user.value?.id}`),
+        },
+      ]
+    : []),
   {
     label: "Dashboard",
     to: "/dashboard",

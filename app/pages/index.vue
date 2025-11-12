@@ -11,7 +11,7 @@ defineOgImageComponent("Pergel", {
 const links = ref([
   {
     label: "Find your S-Index Score",
-    to: "/dashboard",
+    to: "/login",
     size: "xl" as const,
     trailingIcon: "ic:outline-saved-search",
   },

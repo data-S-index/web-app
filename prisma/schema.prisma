@@ -42,12 +42,12 @@ model Dataset {
     doi String @unique
 
     title       String
-    description String
+    description String?
     version     String?
 
-    imageUrl String
+    imageUrl String?
 
-    publisher   String
+    publisher   String?
     publishedAt DateTime
 
     authors Json @default("[]") // [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
@@ -61,7 +61,7 @@ model Dataset {
     updated DateTime @updatedAt
 
     Citation  Citation[]
-    FujiScore FujiScore[]
+    FujiScore FujiScore?
 
     datasetClaims UserDataset[]
 

@@ -78,5 +78,5 @@ export default defineEventHandler(async (event) => {
     userSessionField: "",
   });
 
-  return sendRedirect(event, "/dashboard");
+  return sendRedirect(event, `/users/${user.id}`);
 });
