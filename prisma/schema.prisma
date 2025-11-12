@@ -101,7 +101,7 @@ model Citation {
 
 model FujiScore {
     dataset   Dataset @relation(fields: [datasetId], references: [id])
-    datasetId String
+    datasetId String  @unique
 
     score Int @default(0) // 0-100
 
