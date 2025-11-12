@@ -53,20 +53,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     body,
     method: "POST",
   })
-    .then(() => {
-      toast.add({
-        title: "Login successful",
-        description: "You can now access your account",
-        icon: "material-symbols:check-circle-outline",
-      });
+    .then((response) => {
+      // toast.add({
+      //   title: "Login successful",
+      //   description: "You can now access your account",
+      //   icon: "material-symbols:check-circle-outline",
+      // });
 
       if (routeQueryParams.redirect) {
         console.log("redirecting to", routeQueryParams.redirect);
 
         window.location.href = routeQueryParams.redirect as string;
       } else {
-        const userId = user.value?.id;
-        window.location.href = `/users/${userId}`;
+        const userId = response.userId;
+        if (userId) {
+          window.location.href = `/users/${userId}`;
+        } else {
+          window.location.href = "/";
+        }
       }
     })
     .catch((error) => {

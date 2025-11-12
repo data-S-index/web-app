@@ -10,20 +10,15 @@ const logout = async () => {
 };
 
 const headerItems = computed<NavigationMenuItem[]>(() => [
-  ...(loggedInSession.value && user.value?.id
-    ? [
-        {
-          label: "My Profile",
-          to: `/users/${user.value?.id}`,
-          active: route.path.startsWith(`/users/${user.value?.id}`),
-        },
-      ]
-    : []),
   {
-    label: "Dashboard",
-    to: "/dashboard",
-    active: route.path.startsWith("/dashboard"),
+    label: "My Profile",
+    to:
+      loggedInSession.value && user.value?.id
+        ? `/users/${user.value?.id}`
+        : "/login",
+    active: route.path.startsWith(`/users/${user.value?.id}`),
   },
+
   {
     label: "S-Index Metrics",
     to: "/metrics",

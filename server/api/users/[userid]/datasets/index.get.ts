@@ -1,8 +1,6 @@
 export default defineEventHandler(async (event) => {
-  const session = await requireUserSession(event);
-
-  const { user } = session;
-  const userId = user.id;
+  const { userid } = event.context.params as { userid: string };
+  const userId = userid;
 
   const userDatasets = await prisma.userDataset.findMany({
     where: {

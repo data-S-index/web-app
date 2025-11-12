@@ -2,19 +2,20 @@
 import { faker } from "@faker-js/faker";
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
+const { user, loggedIn } = useUserSession();
 
 const UCheckbox = resolveComponent("UCheckbox");
 const UButton = resolveComponent("UButton");
-
-definePageMeta({
-  middleware: ["auth"],
-});
 
 useSeoMeta({
   title: "User Profile",
 });
 
+const route = useRoute();
 const toast = useToast();
+
+// const { userid } = route.params as { userid: string };
+const userid = (route.params.userid as string).toUpperCase();
 
 // const { user } = useUserSession();
 
@@ -78,7 +79,9 @@ const columns: TableColumn<{ id: string; title: string; doi: string }>[] = [
 ];
 const rowSelection = ref<Record<string, boolean>>({});
 
-const { data: userData, error } = await useFetch("/api/user/datasets");
+const { data: userData, error } = await useFetch(
+  `/api/users/${userid}/datasets`,
+);
 
 if (error.value) {
   toast.add({
@@ -179,6 +182,7 @@ const openAddDatasetModal = () => {
               fullscreen
             >
               <UButton
+                v-if="loggedIn && user?.id === userid"
                 icon="i-heroicons-plus-20-solid"
                 label="Add dataset"
                 @click="openAddDatasetModal"
