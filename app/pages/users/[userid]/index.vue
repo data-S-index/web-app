@@ -79,9 +79,11 @@ const columns: TableColumn<{ id: string; title: string; doi: string }>[] = [
 ];
 const rowSelection = ref<Record<string, boolean>>({});
 
-const { data: userData, error } = await useFetch(
-  `/api/users/${userid}/datasets`,
-);
+const {
+  data: userData,
+  error,
+  refresh: refreshUserData,
+} = await useFetch(`/api/users/${userid}/datasets`);
 
 if (error.value) {
   toast.add({
@@ -143,6 +145,22 @@ const searchForDatasets = async () => {
           doi: result.doi,
         }),
       );
+
+      // Pre-select datasets that the user already has
+      if (userData.value) {
+        const existingDatasetIds = new Set(
+          userData.value.map((item: { datasetId: string }) => item.datasetId),
+        );
+
+        const preSelection: Record<string, boolean> = {};
+        searchResults.value.forEach((result, index) => {
+          if (existingDatasetIds.has(result.id)) {
+            preSelection[index.toString()] = true;
+          }
+        });
+
+        rowSelection.value = preSelection;
+      }
     })
     .catch((error) => {
       toast.add({
@@ -161,17 +179,37 @@ const attachDatasetsToUser = async () => {
   attachDatasetsToUserLoading.value = true;
 
   // rowSelection has an object with the index in string format of the row as the key and the value is true if the row is selected
-  const datasetIds = Object.keys(rowSelection.value)
+  const selectedDatasetIds = Object.keys(rowSelection.value)
     .filter((key) => rowSelection.value[key])
     .map((key) => searchResults.value[parseInt(key)]?.id);
 
+  // Filter out datasets that the user already has
+  const existingDatasetIds = new Set(
+    userData.value?.map((item: { datasetId: string }) => item.datasetId) || [],
+  );
+  const datasetIds = selectedDatasetIds
+    .filter((id): id is string => !!id)
+    .filter((id) => !existingDatasetIds.has(id));
+
   if (!datasetIds.length) {
-    toast.add({
-      title: "No datasets selected",
-      description: "Please select at least one dataset",
-      icon: "material-symbols:error",
-      color: "error",
-    });
+    if (selectedDatasetIds.length > 0) {
+      toast.add({
+        title: "All selected datasets are already in your list",
+        description: "Please select datasets that you don't already have",
+        icon: "material-symbols:info",
+        color: "info",
+      });
+    } else {
+      toast.add({
+        title: "No datasets selected",
+        description: "Please select at least one dataset",
+        icon: "material-symbols:error",
+        color: "error",
+      });
+    }
+    attachDatasetsToUserLoading.value = false;
+
+    return;
   }
 
   await $fetch("/api/user/datasets/", {
@@ -180,11 +218,22 @@ const attachDatasetsToUser = async () => {
       datasetIds,
     },
   })
-    .then(() => {
+    .then(async () => {
       toast.add({
         title: "Datasets attached to user",
         description: "Datasets attached to user successfully",
       });
+
+      // Refresh user data
+      await refreshUserData();
+
+      // Close the modal
+      addDatasetModal.value = false;
+
+      // Clear search state
+      searchResults.value = [];
+      rowSelection.value = {};
+      searchTerm.value = "";
     })
     .catch((error) => {
       toast.add({
@@ -261,7 +310,59 @@ const getAuthorTooltipText = (author: Author): string => {
           </div>
         </template>
 
-        <template #links>
+        <template #links />
+      </UPageHeader>
+
+      <UPageBody>
+        <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Total Datasets</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-600">
+              {{ userData?.length }}
+            </div>
+
+            <p class="mt-2 text-sm">Claimed by user</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">S-Index Score</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-600">
+              {{ faker.number.float({ min: 0, max: 100 }).toFixed(2) }}
+            </div>
+
+            <p class="mt-2 text-sm">S-Index score for the user's datasets</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Total Citations</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-500">
+              {{
+                userData?.reduce(
+                  (sum: number, item: any) =>
+                    sum + item.dataset.Citation.length,
+                  0,
+                )
+              }}
+            </div>
+
+            <p class="mt-2 text-sm">Total citations for the user's datasets</p>
+          </UCard>
+        </div>
+
+        <USeparator />
+
+        <div class="flex items-center justify-between">
+          <h2 class="text-2xl font-bold">Datasets</h2>
+
           <div class="flex items-center gap-2">
             <UModal
               v-model="addDatasetModal"
@@ -293,19 +394,22 @@ const getAuthorTooltipText = (author: Author): string => {
               </template>
 
               <template #body>
-                <div class="flex flex-col gap-4">
+                <div class="flex h-full flex-col gap-6 p-1">
                   <UFormField label="Search for a dataset" name="searchTerm">
                     <div class="flex items-center gap-2">
                       <UInput
                         v-model="searchTerm"
                         type="text"
-                        placeholder="Search for a dataset"
+                        placeholder="Search for a dataset by title, DOI, or keywords..."
+                        class="flex-1"
+                        @keyup.enter="searchForDatasets"
                       />
 
                       <UButton
                         icon="i-heroicons-magnifying-glass-20-solid"
                         label="Search"
                         :loading="searchLoading"
+                        :disabled="!searchTerm.trim()"
                         @click="searchForDatasets"
                       />
                     </div>
@@ -313,81 +417,77 @@ const getAuthorTooltipText = (author: Author): string => {
 
                   <USeparator />
 
-                  <div v-if="searchResults.length > 0">
-                    <pre>{{ rowSelection }}</pre>
+                  <div
+                    v-if="searchResults.length > 0"
+                    class="flex flex-1 flex-col overflow-hidden"
+                  >
+                    <div class="mb-4 flex items-center justify-between">
+                      <p
+                        class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >
+                        Found {{ searchResults.length }} result{{
+                          searchResults.length !== 1 ? "s" : ""
+                        }}
+                      </p>
 
-                    <UTable
-                      v-model:row-selection="rowSelection"
-                      :data="searchResults"
-                      :columns="columns"
-                      class="flex-1"
-                    />
+                      <p
+                        v-if="Object.keys(rowSelection).length > 0"
+                        class="text-primary-600 dark:text-primary-400 text-sm"
+                      >
+                        {{ Object.keys(rowSelection).length }} selected
+                      </p>
+                    </div>
+
+                    <div
+                      class="flex-1 overflow-auto rounded-lg border border-gray-200 dark:border-gray-800"
+                    >
+                      <UTable
+                        v-model:row-selection="rowSelection"
+                        :data="searchResults"
+                        :columns="columns"
+                        class="w-full"
+                      />
+                    </div>
                   </div>
 
-                  <div v-else>
-                    <p class="text-sm text-gray-600">No results found</p>
+                  <div
+                    v-else-if="!searchLoading"
+                    class="flex flex-1 flex-col items-center justify-center py-12 text-center"
+                  >
+                    <Icon
+                      name="i-heroicons-magnifying-glass-20-solid"
+                      class="dark: mb-4 h-12 w-12 text-gray-400"
+                    />
+
+                    <p class="text-base font-medium dark:text-gray-400">
+                      No results found
+                    </p>
+
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-500">
+                      Try searching with different keywords
+                    </p>
+                  </div>
+
+                  <div
+                    v-else
+                    class="flex flex-1 items-center justify-center py-12"
+                  >
+                    <div class="text-center">
+                      <Icon
+                        name="i-heroicons-arrow-path-20-solid"
+                        class="text-primary-500 mx-auto h-8 w-8 animate-spin"
+                      />
+
+                      <p class="mt-4 text-sm dark:text-gray-400">
+                        Searching...
+                      </p>
+                    </div>
                   </div>
                 </div>
               </template>
             </UModal>
           </div>
-        </template>
-      </UPageHeader>
-
-      <UPageBody>
-        <h2 class="text-2xl font-bold">Your data in a nutshell</h2>
-
-        <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-          <UCard>
-            <template #header>
-              <h3 class="text-lg font-semibold">Total Datasets</h3>
-            </template>
-
-            <div class="text-3xl font-bold text-pink-600">
-              {{ userData?.length }}
-            </div>
-
-            <p class="mt-2 text-sm text-gray-600">Attached to your account</p>
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <h3 class="text-lg font-semibold">Your S-Index Score</h3>
-            </template>
-
-            <div class="text-3xl font-bold text-pink-600">
-              {{ faker.number.float({ min: 0, max: 100 }).toFixed(2) }}
-            </div>
-
-            <p class="mt-2 text-sm text-gray-600">
-              Lorem ipsum dolor sit amet.
-            </p>
-          </UCard>
-
-          <UCard>
-            <template #header>
-              <h3 class="text-lg font-semibold">Total Citations</h3>
-            </template>
-
-            <div class="text-3xl font-bold text-pink-500">
-              {{
-                userData?.reduce(
-                  (sum: number, item: any) =>
-                    sum + item.dataset.Citation.length,
-                  0,
-                )
-              }}
-            </div>
-
-            <p class="mt-2 text-sm text-gray-600">
-              Lorem ipsum dolor sit amet.
-            </p>
-          </UCard>
         </div>
-
-        <USeparator />
-
-        <h2 class="text-2xl font-bold">Datasets</h2>
 
         <div v-if="userData" class="flex flex-col gap-4">
           <UCard v-for="item in userData" :key="item.datasetId">
@@ -399,7 +499,7 @@ const getAuthorTooltipText = (author: Author): string => {
                   class="group flex-1"
                 >
                   <h3
-                    class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-lg font-semibold text-gray-900 transition-colors dark:text-gray-100"
+                    class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-lg font-semibold transition-colors"
                   >
                     {{ item.dataset.title || "No title available" }}
                   </h3>
@@ -415,25 +515,17 @@ const getAuthorTooltipText = (author: Author): string => {
             </template>
 
             <div class="space-y-3">
-              <div>
-                <MarkdownRenderer
-                  :content="
-                    item.dataset.description || 'No description available'
-                  "
-                  truncate
-                />
-              </div>
+              <MarkdownRenderer
+                :content="
+                  item.dataset.description || 'No description available'
+                "
+                truncate
+              />
 
               <div>
-                <p
-                  class="mb-1 text-sm font-medium text-gray-700 dark:text-gray-300"
-                >
-                  Authors
-                </p>
+                <p class="mb-1 text-sm font-medium">Authors</p>
 
-                <div
-                  class="flex flex-wrap gap-1 text-sm text-gray-600 dark:text-gray-400"
-                >
+                <div class="flex flex-wrap gap-1 text-sm">
                   <template
                     v-for="(author, index) in item.dataset.authors as Author[]"
                     :key="index"
@@ -478,16 +570,21 @@ const getAuthorTooltipText = (author: Author): string => {
                   />
                 </UTooltip>
 
-                <UBadge
+                <a
                   v-if="item.dataset.doi"
-                  color="success"
-                  variant="subtle"
-                  :label="item.dataset.doi"
-                  icon="i-heroicons-link-20-solid"
                   :href="`https://doi.org/${item.dataset.doi}`"
                   target="_blank"
-                  class="cursor-pointer"
-                />
+                  rel="noopener noreferrer"
+                  class="inline-block"
+                >
+                  <UBadge
+                    color="success"
+                    variant="subtle"
+                    :label="item.dataset.doi"
+                    icon="i-heroicons-link-20-solid"
+                    class="cursor-pointer"
+                  />
+                </a>
               </div>
             </div>
           </UCard>

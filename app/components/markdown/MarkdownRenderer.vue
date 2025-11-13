@@ -32,7 +32,7 @@ if (props.content) {
 <template>
   <!-- eslint-disable vue/no-v-html -->
   <div
-    class="prose prose-md prose-li:text-base prose-li:marker:text-black max-w-none pt-2"
+    class="prose prose-md prose-li:text-base max-w-none pt-2 text-gray-900 dark:text-gray-100"
     :class="{ 'line-clamp-3': truncate }"
     v-html="renderedMarkdown"
   />
