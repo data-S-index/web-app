@@ -10,6 +10,10 @@ const props = defineProps({
     default: "",
     type: String,
   },
+  truncate: {
+    default: false,
+    type: Boolean,
+  },
 });
 
 const sanitize = (html: string) => sanitizeHtml(html);
@@ -29,6 +33,7 @@ if (props.content) {
   <!-- eslint-disable vue/no-v-html -->
   <div
     class="prose prose-md prose-li:text-base prose-li:marker:text-black max-w-none pt-2"
+    :class="{ 'line-clamp-3': truncate }"
     v-html="renderedMarkdown"
   />
 </template>
