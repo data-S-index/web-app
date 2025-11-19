@@ -1,5 +1,7 @@
 // returns a paginated list of datasets
 export default defineEventHandler(async (event) => {
+  const queryStartTime = performance.now();
+
   const query = getQuery(event);
   const searchTerm = query.q as string;
   const page = parseInt(query.page as string) || 1;
@@ -32,8 +34,7 @@ export default defineEventHandler(async (event) => {
     ],
   };
 
-  const queryStartTime = performance.now();
-  const datasets = await prisma.dataset.findMany({
+  const datasetsQuery = await prisma.dataset.findMany({
     where: whereClause,
     select: {
       id: true,
@@ -46,38 +47,59 @@ export default defineEventHandler(async (event) => {
     skip: offset,
     take: limit,
   });
-  const queryEndTime = performance.now();
-  const queryDuration = queryEndTime - queryStartTime;
-  console.log(
-    `[${new Date().toISOString()}] Query took ${queryDuration.toFixed(2)}ms`,
-  );
+
+  const datasets = datasetsQuery.map((dataset) => {
+    const authors = dataset.authors
+      ? JSON.parse(JSON.stringify(dataset.authors))
+      : [];
+
+    const authorsNamesString = authors
+      .map((author: Author) => author.name)
+      .join("; ");
+
+    return {
+      id: dataset.id,
+      title: dataset.title,
+      doi: dataset.doi,
+      authors: authorsNamesString,
+      description: dataset.description,
+      publishedAt: dataset.publishedAt,
+    };
+  });
 
   // only return the total if it is not -1
   if (total === -1) {
-    console.log(`[${new Date().toISOString()}] Doing total count`);
-    const countStartTime = performance.now();
     const totalCount = await prisma.dataset.count({
       where: whereClause,
     });
-    const countEndTime = performance.now();
-    const countDuration = countEndTime - countStartTime;
-    console.log(
-      `[${new Date().toISOString()}] Count query took ${countDuration.toFixed(2)}ms`,
-    );
+    const queryEndTime = performance.now();
+    const queryDuration = queryEndTime - queryStartTime;
+    const executionTime =
+      queryDuration > 1000
+        ? `${(queryDuration / 1000).toFixed(2)}s`
+        : `${queryDuration.toFixed(2)}ms`;
 
     return {
       datasets,
       total: totalCount,
       page,
       limit,
+      queryDuration: executionTime,
     };
   }
-  console.log(`[${new Date().toISOString()}] Skipping total count`);
+
+  const queryEndTime = performance.now();
+  const queryDuration = queryEndTime - queryStartTime;
+  const executionTime =
+    queryDuration > 1000
+      ? `${(queryDuration / 1000).toFixed(2)}s`
+      : `${queryDuration.toFixed(2)}ms`;
 
   return {
     datasets,
     total,
     page,
     limit,
+    queryDuration: executionTime,
   };
 });

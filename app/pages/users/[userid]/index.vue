@@ -25,21 +25,22 @@ const userid = (route.params.userid as string).toUpperCase();
 //     : "",
 // );
 
-const searchTerm = ref<string>("Hello");
+type SearchResult = {
+  id: string;
+  title: string;
+  doi: string;
+  authors: string;
+  description: string;
+  publishedAt: string;
+};
+
+const searchTerm = ref<string>("Covid 19");
 
 const searchLoading = ref(false);
-const searchResults = ref<
-  {
-    id: string;
-    title: string;
-    doi: string;
-    authors: Author[];
-    description: string;
-    publishedAt: string;
-  }[]
->([]);
+const searchResults = ref<SearchResult[]>([]);
 const searchPage = ref(0);
 const searchTotal = ref(-1);
+const searchDuration = ref<string>("0ms");
 const addDatasetModal = ref(true);
 const attachDatasetsToUserLoading = ref(false);
 
@@ -95,6 +96,8 @@ const columns: TableColumn<{
       }),
   },
 ];
+
+const selectAll = ref(false);
 const rowSelection = ref<Record<string, boolean>>({});
 
 const {
@@ -171,33 +174,10 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
   )
     .then((response) => {
       console.log(response);
-      searchResults.value = response.datasets.map(
-        (result: {
-          id: string;
-          title: string;
-          authors: unknown;
-          description: string | null;
-          publishedAt: Date | string;
-          doi: string;
-        }) => ({
-          id: result.id,
-          title: result.title,
-          authors: (Array.isArray(result.authors)
-            ? result.authors
-            : []) as Author[],
-          description: result.description || "",
-          publishedAt: new Date(
-            typeof result.publishedAt === "string"
-              ? result.publishedAt
-              : result.publishedAt,
-          )
-            .getFullYear()
-            .toString(),
-          doi: result.doi,
-        }),
-      );
+      searchResults.value = response.datasets as SearchResult[];
       searchTotal.value = response.total;
       searchPage.value = response.page;
+      searchDuration.value = response.queryDuration;
     })
     .catch((error) => {
       toast.add({
@@ -216,9 +196,11 @@ const attachDatasetsToUser = async () => {
   attachDatasetsToUserLoading.value = true;
 
   // rowSelection has an object with the index in string format of the row as the key and the value is true if the row is selected
-  const selectedDatasetIds = Object.keys(rowSelection.value)
-    .filter((key) => rowSelection.value[key])
-    .map((key) => searchResults.value[parseInt(key)]?.id);
+  const selectedDatasetIds = Object.keys(rowSelection.value).filter(
+    (key) => rowSelection.value[key],
+  );
+
+  console.log("selectedDatasetIds", selectedDatasetIds);
 
   // Filter out datasets that the user already has
   const existingDatasetIds = new Set(
@@ -289,28 +271,11 @@ const openAddDatasetModal = () => {
   addDatasetModal.value = true;
 };
 
-interface Author {
-  givenName?: string;
-  name?: string;
-  familyName?: string;
-  affiliations?: string[];
-  affiliation?: string[];
-  nameIdentifiers?: Array<
-    | string
-    | {
-        nameIdentifierScheme?: string;
-        scheme?: string;
-        nameIdentifier?: string;
-        value?: string;
-      }
-  >;
-}
-
 const getAuthorTooltipText = (author: Author): string => {
   const parts: string[] = [];
 
   // Add affiliations
-  const affiliations = author.affiliations || author.affiliation || [];
+  const affiliations = author.affiliations || [];
   if (Array.isArray(affiliations) && affiliations.length > 0) {
     parts.push(`${affiliations.join("; ")}`);
   }
@@ -402,8 +367,11 @@ const getAuthorTooltipText = (author: Author): string => {
 
           <div class="flex items-center gap-2">
             <UModal
-              v-model="addDatasetModal"
+              v-model:open="addDatasetModal"
               title="Add a dataset to your account"
+              :ui="{
+                content: 'max-w-3xl',
+              }"
             >
               <UButton
                 v-if="loggedIn && user?.id === userid"
@@ -413,14 +381,15 @@ const getAuthorTooltipText = (author: Author): string => {
               />
 
               <template #body>
-                <div class="space-y-4">
-                  <div class="flex items-center gap-2">
+                <div class="w-full space-y-4 overflow-auto">
+                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <UInput
                       v-model="searchTerm"
                       icon="i-lucide-search"
                       size="md"
                       variant="outline"
                       placeholder="Search for datasets by title, DOI, or keywords..."
+                      class="min-w-0 flex-1"
                       @keyup.enter="searchForDatasets"
                     />
 
@@ -430,6 +399,7 @@ const getAuthorTooltipText = (author: Author): string => {
                       size="md"
                       :disabled="!searchTerm.trim()"
                       :loading="searchLoading"
+                      class="shrink-0"
                       @click="searchForDatasets(searchPage, true)"
                     />
                   </div>
@@ -451,33 +421,82 @@ const getAuthorTooltipText = (author: Author): string => {
                         </div>
                       </div>
 
-                      <div
-                        v-for="result in searchResults"
-                        v-else
-                        :key="result.id"
-                      >
-                        <div class="flex gap-2">
-                          <UCheckbox v-model="rowSelection[result.id]" />
+                      <div v-else>
+                        <div
+                          class="flex flex-col gap-2 px-2 sm:flex-row sm:justify-between"
+                        >
+                          <UCheckbox v-model="selectAll" label="Select all" />
 
-                          <div class="flex flex-col">
-                            <p class="text-sm font-medium">
-                              {{ result.title }}
-                            </p>
+                          <div class="flex items-center gap-1">
+                            <div
+                              v-if="searchDuration !== '0ms' && !searchLoading"
+                              class="flex items-center gap-1"
+                            >
+                              <Icon
+                                name="i-heroicons-clock-20-solid"
+                                size="sm"
+                              />
 
-                            <div class="flex gap-2">
-                              <p class="text-sm">
-                                {{
-                                  (
-                                    result as unknown as { authors: Author[] }
-                                  ).authors
-                                    .map((author: Author) => author.name)
-                                    .join(", ")
-                                }}
-                              </p>
+                              <span class="text-xs">
+                                {{ searchDuration }}
+                              </span>
+                              |
+                            </div>
 
-                              <p class="text-sm">
-                                {{ result.publishedAt }}
-                              </p>
+                            <UButton
+                              icon="i-heroicons-plus-20-solid"
+                              label="Add selected datasets"
+                              size="sm"
+                              :disabled="
+                                searchLoading || searchResults.length === 0
+                              "
+                              :loading="attachDatasetsToUserLoading"
+                              @click="attachDatasetsToUser"
+                            />
+                          </div>
+                        </div>
+
+                        <USeparator class="my-2" />
+
+                        <div
+                          v-for="result in searchResults"
+                          :key="result.id"
+                          class="mb-1 border-b border-gray-200 px-2 pb-1"
+                        >
+                          <div class="flex gap-2">
+                            <UCheckbox
+                              v-model="rowSelection[result.id]"
+                              class="shrink-0"
+                            />
+
+                            <div class="flex min-w-0 flex-1 flex-col">
+                              <a
+                                :href="`/datasets/${result.id}`"
+                                target="_blank"
+                                class="group flex-1"
+                              >
+                                <p
+                                  class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-sm font-medium transition-colors"
+                                >
+                                  {{ result.title }}
+                                </p>
+                              </a>
+
+                              <div
+                                class="flex min-w-0 items-center justify-between gap-2"
+                              >
+                                <p class="flex-1 truncate text-xs">
+                                  {{ result.authors }}
+                                </p>
+
+                                <p class="w-max text-sm">
+                                  {{
+                                    $dayjs(result.publishedAt).format(
+                                      "MMMM YYYY",
+                                    )
+                                  }}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -537,22 +556,22 @@ const getAuthorTooltipText = (author: Author): string => {
 
                 <div class="flex flex-wrap gap-1 text-sm">
                   <template
-                    v-for="(author, index) in item.dataset.authors as Author[]"
+                    v-for="(author, index) in item.dataset
+                      .authors as unknown as Author[]"
                     :key="index"
                   >
                     <UTooltip :text="getAuthorTooltipText(author)">
                       <span
                         class="hover:text-primary-600 dark:hover:text-primary-400 cursor-help underline decoration-dotted underline-offset-2 transition-colors"
                       >
-                        {{
-                          `${author.givenName || author.name || ""} ${author.familyName || ""}`.trim()
-                        }}
+                        {{ `${author.name || ""}`.trim() }}
                       </span>
                     </UTooltip>
 
                     <span
                       v-if="
-                        index < (item.dataset.authors as Author[]).length - 1
+                        index <
+                        (item.dataset.authors as unknown as Author[]).length - 1
                       "
                     >
                       ,
