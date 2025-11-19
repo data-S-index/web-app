@@ -49,7 +49,7 @@ You will need the following installed on your system:
 
 ### Database
 
-The application uses a PostgreSQL database for storing data. You can use Docker to run these services locally.
+The application uses a PostgreSQL 18 database for storing data. You can use Docker to run these services locally.
 
 ```bash
 docker-compose -f ./dev-docker-compose.yaml up

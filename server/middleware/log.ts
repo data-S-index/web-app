@@ -1,3 +1,3 @@
 export default defineEventHandler((event) => {
-  console.log("New request: " + event.node.req.url);
+  console.log(`[${new Date().toISOString()}] New request: ${event.node.req.url}`);
 });

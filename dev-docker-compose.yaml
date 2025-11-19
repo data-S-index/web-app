@@ -9,7 +9,8 @@ services:
     ports:
       - 43997:5432
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql # postgres 18 data directory
+      # - postgres_data:/var/lib/postgresql/data # postgres 17- data directory
 
 volumes:
   postgres_data:

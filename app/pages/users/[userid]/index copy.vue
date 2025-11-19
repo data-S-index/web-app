@@ -25,32 +25,14 @@ const userid = (route.params.userid as string).toUpperCase();
 //     : "",
 // );
 
-const searchTerm = ref<string>("Hello");
+const searchTerm = ref<string>("");
 
-const searchLoading = ref(false);
-const searchResults = ref<
-  {
-    id: string;
-    title: string;
-    doi: string;
-    authors: Author[];
-    description: string;
-    publishedAt: string;
-  }[]
->([]);
-const searchPage = ref(0);
-const searchTotal = ref(-1);
-const addDatasetModal = ref(true);
-const attachDatasetsToUserLoading = ref(false);
+const searchLoading = ref<boolean>(false);
+const searchResults = ref<{ id: string; title: string; doi: string }[]>([]);
+const addDatasetModal = ref<boolean>(false);
+const attachDatasetsToUserLoading = ref<boolean>(false);
 
-const columns: TableColumn<{
-  id: string;
-  title: string;
-  doi: string;
-  authors: Author[];
-  description: string;
-  publishedAt: string;
-}>[] = [
+const columns: TableColumn<{ id: string; title: string; doi: string }>[] = [
   {
     id: "select",
     header: ({ table }) =>
@@ -151,53 +133,34 @@ const fullName = computed(() => {
   return `${givenName} ${familyName}`.trim() || "User";
 });
 
-const updateSearchPage = (page: number) => {
-  searchForDatasets(page, false);
-};
-
-const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
-  if (reset) {
-    searchPage.value = 1;
-    searchTotal.value = -1;
-    searchResults.value = [];
-    rowSelection.value = {};
-  }
-
+const searchForDatasets = async () => {
   searchLoading.value = true;
-  console.log("Searching for datasets on page", page);
 
-  await $fetch(
-    `/api/datasets/search?q=${searchTerm.value}&page=${searchPage.value}&total=${searchTotal.value}`,
-  )
+  await $fetch(`/api/datasets/search?q=${searchTerm.value}`)
     .then((response) => {
-      console.log(response);
-      searchResults.value = response.datasets.map(
-        (result: {
-          id: string;
-          title: string;
-          authors: unknown;
-          description: string | null;
-          publishedAt: Date | string;
-          doi: string;
-        }) => ({
+      searchResults.value = response.map(
+        (result: { id: string; title: string; doi: string }) => ({
           id: result.id,
           title: result.title,
-          authors: (Array.isArray(result.authors)
-            ? result.authors
-            : []) as Author[],
-          description: result.description || "",
-          publishedAt: new Date(
-            typeof result.publishedAt === "string"
-              ? result.publishedAt
-              : result.publishedAt,
-          )
-            .getFullYear()
-            .toString(),
           doi: result.doi,
         }),
       );
-      searchTotal.value = response.total;
-      searchPage.value = response.page;
+
+      // Pre-select datasets that the user already has
+      if (userData.value) {
+        const existingDatasetIds = new Set(
+          userData.value.map((item: { datasetId: string }) => item.datasetId),
+        );
+
+        const preSelection: Record<string, boolean> = {};
+        searchResults.value.forEach((result, index) => {
+          if (existingDatasetIds.has(result.id)) {
+            preSelection[index.toString()] = true;
+          }
+        });
+
+        rowSelection.value = preSelection;
+      }
     })
     .catch((error) => {
       toast.add({
@@ -403,7 +366,9 @@ const getAuthorTooltipText = (author: Author): string => {
           <div class="flex items-center gap-2">
             <UModal
               v-model="addDatasetModal"
-              title="Add a dataset to your account"
+              title="Add a dataset"
+              description="Add a dataset to your account"
+              fullscreen
             >
               <UButton
                 v-if="loggedIn && user?.id === userid"
@@ -412,85 +377,110 @@ const getAuthorTooltipText = (author: Author): string => {
                 @click="openAddDatasetModal"
               />
 
-              <template #body>
-                <div class="space-y-4">
-                  <div class="flex items-center gap-2">
-                    <UInput
-                      v-model="searchTerm"
-                      icon="i-lucide-search"
-                      size="md"
-                      variant="outline"
-                      placeholder="Search for datasets by title, DOI, or keywords..."
-                      @keyup.enter="searchForDatasets"
-                    />
+              <template #actions>
+                <div class="flex w-full items-center justify-end gap-2">
+                  <UButton
+                    icon="i-heroicons-plus-20-solid"
+                    label="Add dataset"
+                    :disabled="
+                      searchLoading ||
+                      searchResults.length === 0 ||
+                      Object.keys(rowSelection).length === 0
+                    "
+                    :loading="attachDatasetsToUserLoading"
+                    @click="attachDatasetsToUser"
+                  />
+                </div>
+              </template>
 
-                    <UButton
-                      icon="i-heroicons-magnifying-glass-20-solid"
-                      label="Search"
-                      size="md"
-                      :disabled="!searchTerm.trim()"
-                      :loading="searchLoading"
-                      @click="searchForDatasets(searchPage, true)"
-                    />
+              <template #body>
+                <div class="flex h-full flex-col gap-6 p-1">
+                  <UFormField label="Search for a dataset" name="searchTerm">
+                    <div class="flex items-center gap-2">
+                      <UInput
+                        v-model="searchTerm"
+                        type="text"
+                        placeholder="Search for a dataset by title, DOI, or keywords..."
+                        class="flex-1"
+                        @keyup.enter="searchForDatasets"
+                      />
+
+                      <UButton
+                        icon="i-heroicons-magnifying-glass-20-solid"
+                        label="Search"
+                        :loading="searchLoading"
+                        :disabled="!searchTerm.trim()"
+                        @click="searchForDatasets"
+                      />
+                    </div>
+                  </UFormField>
+
+                  <USeparator />
+
+                  <div
+                    v-if="searchResults.length > 0"
+                    class="flex flex-1 flex-col overflow-hidden"
+                  >
+                    <div class="mb-4 flex items-center justify-between">
+                      <p
+                        class="text-sm font-medium text-gray-700 dark:text-gray-300"
+                      >
+                        Found {{ searchResults.length }} result{{
+                          searchResults.length !== 1 ? "s" : ""
+                        }}
+                      </p>
+
+                      <p
+                        v-if="Object.keys(rowSelection).length > 0"
+                        class="text-primary-600 dark:text-primary-400 text-sm"
+                      >
+                        {{ Object.keys(rowSelection).length }} selected
+                      </p>
+                    </div>
+
+                    <div
+                      class="flex-1 overflow-auto rounded-lg border border-gray-200 dark:border-gray-800"
+                    >
+                      <UTable
+                        v-model:row-selection="rowSelection"
+                        :data="searchResults"
+                        :columns="columns"
+                        class="w-full"
+                      />
+                    </div>
                   </div>
 
-                  <div v-if="searchResults.length > 0">
-                    <USeparator />
+                  <div
+                    v-else-if="!searchLoading"
+                    class="flex flex-1 flex-col items-center justify-center py-12 text-center"
+                  >
+                    <Icon
+                      name="i-heroicons-magnifying-glass-20-solid"
+                      class="dark: mb-4 h-12 w-12 text-gray-400"
+                    />
 
-                    <div class="flex flex-col gap-4 py-4">
-                      <div v-if="searchLoading">
-                        <div class="py-6 text-center">
-                          <Icon
-                            name="i-heroicons-arrow-path-20-solid"
-                            class="text-primary-500 mx-auto h-8 w-8 animate-spin"
-                          />
+                    <p class="text-base font-medium dark:text-gray-400">
+                      No results found
+                    </p>
 
-                          <p class="mt-2 text-sm dark:text-gray-400">
-                            Searching...
-                          </p>
-                        </div>
-                      </div>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-500">
+                      Try searching with different keywords
+                    </p>
+                  </div>
 
-                      <div
-                        v-for="result in searchResults"
-                        v-else
-                        :key="result.id"
-                      >
-                        <div class="flex gap-2">
-                          <UCheckbox v-model="rowSelection[result.id]" />
+                  <div
+                    v-else
+                    class="flex flex-1 items-center justify-center py-12"
+                  >
+                    <div class="text-center">
+                      <Icon
+                        name="i-heroicons-arrow-path-20-solid"
+                        class="text-primary-500 mx-auto h-8 w-8 animate-spin"
+                      />
 
-                          <div class="flex flex-col">
-                            <p class="text-sm font-medium">
-                              {{ result.title }}
-                            </p>
-
-                            <div class="flex gap-2">
-                              <p class="text-sm">
-                                {{
-                                  (
-                                    result as unknown as { authors: Author[] }
-                                  ).authors
-                                    .map((author: Author) => author.name)
-                                    .join(", ")
-                                }}
-                              </p>
-
-                              <p class="text-sm">
-                                {{ result.publishedAt }}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="flex w-full justify-center">
-                        <UPagination
-                          v-model:page="searchPage"
-                          :total="searchTotal"
-                          :disabled="searchLoading"
-                          @update:page="updateSearchPage"
-                        />
-                      </div>
+                      <p class="mt-4 text-sm dark:text-gray-400">
+                        Searching...
+                      </p>
                     </div>
                   </div>
                 </div>
