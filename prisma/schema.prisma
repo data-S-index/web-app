@@ -1,6 +1,8 @@
 generator client {
-    provider        = "prisma-client-js"
+    provider        = "prisma-client"
     previewFeatures = ["strictUndefinedChecks"]
+    output          = "../shared/generated/"
+    engineType      = "client"
 }
 
 // generator kysely {
@@ -11,9 +13,9 @@ generator client {
 // }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
 }
+
 
 model User {
     id String @id @default(ulid())
@@ -64,6 +66,7 @@ model Dataset {
     FujiScore FujiScore?
 
     datasetClaims UserDataset[]
+    mentions      Mention[]
 
     @@index([doi])
 }
@@ -97,6 +100,8 @@ model Citation {
 
     created DateTime @default(now())
     updated DateTime @updatedAt
+
+    @@index([doi, datasetId])
 }
 
 model FujiScore {
@@ -109,4 +114,18 @@ model FujiScore {
     updated DateTime @updatedAt
 
     @@id([datasetId])
+}
+
+model Mention {
+    id String @id @default(cuid(2))
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id])
+    datasetId String
+
+    link          String
+    source        String //github, linkedin, twitter, etc.
+    mentionedDate DateTime
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
 }

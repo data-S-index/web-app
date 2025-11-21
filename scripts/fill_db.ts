@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
-import { faker } from "@faker-js/faker";
 import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
@@ -77,7 +76,7 @@ const parseDataciteRecord = (record: DataciteRecord): any => {
     publishedAt,
     subjects,
     authors,
-    randomInt: faker.number.int(1000000),
+    randomInt: Math.floor(Math.random() * 1000000),
   };
 };
 

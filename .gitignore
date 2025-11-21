@@ -28,3 +28,6 @@ logs
 postgres-data/*
 redis-data/*
 database.sqlite
+
+# Prisma generated files
+shared/generated/*
