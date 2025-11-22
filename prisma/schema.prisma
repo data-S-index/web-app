@@ -13,9 +13,8 @@ generator client {
 // }
 
 datasource db {
-  provider = "postgresql"
+    provider = "postgresql"
 }
-
 
 model User {
     id String @id @default(ulid())
@@ -52,7 +51,8 @@ model Dataset {
     publisher   String?
     publishedAt DateTime
 
-    authors Json @default("[]") // [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
+    authors       Json   @default("[]") // [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
+    authorsString String @default("") // A stringified version of the authors array for full text search (this will probably be removed in the future)
 
     domain   String?
     subjects String[]
@@ -69,7 +69,6 @@ model Dataset {
     mentions      Mention[]
 
     @@index([doi])
-    @@fulltext([title, description, authors, subjects])
 }
 
 model UserDataset {
@@ -92,13 +91,14 @@ model Citation {
     datasetId String
 
     citationLink String
-    doi String?
+    doi          String?
 
     datacite Boolean @default(false)
     mdc      Boolean @default(false)
     openAlex Boolean @default(false)
 
-    citedDate DateTime?
+    citedDate      DateTime?
+    citationWeight Float     @default(1.0) // The weight of the citation (1.0 = 100% of the citation impact)
 
     created DateTime @default(now())
     updated DateTime @updatedAt
@@ -124,9 +124,11 @@ model Mention {
     dataset   Dataset @relation(fields: [datasetId], references: [id])
     datasetId String
 
-    link          String
-    source        String //github, linkedin, twitter, etc.
+    link   String
+    source String // github, linkedin, twitter, etc.
+
     mentionedDate DateTime?
+    mentionWeight Float     @default(1.0) // The weight of the mention (1.0 = 100% of the mention impact)
 
     created DateTime @default(now())
     updated DateTime @updatedAt

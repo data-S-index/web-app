@@ -55,8 +55,33 @@ const readNdjsonFile = async (
   return records;
 };
 
+// Build hashtable of DOI (lowercase) -> dataset ID
+const buildDatasetHashtable = async (): Promise<Map<string, string>> => {
+  console.log("  📊 Loading all datasets into memory...");
+  const datasets = await prisma.dataset.findMany({
+    select: {
+      id: true,
+      doi: true,
+    },
+  });
+
+  const hashtable = new Map<string, string>();
+  for (const dataset of datasets) {
+    if (dataset.doi) {
+      hashtable.set(dataset.doi.toLowerCase(), dataset.id);
+    }
+  }
+
+  console.log(`  ✓ Loaded ${hashtable.size} datasets into hashtable`);
+
+  return hashtable;
+};
+
 // Process records: retrieve dataset IDs and create citations
-const processRecords = async (records: CitationRecord[]): Promise<number> => {
+const processRecords = async (
+  records: CitationRecord[],
+  datasetHashtable: Map<string, string>,
+): Promise<number> => {
   let insertedCount = 0;
   const totalRecords = records.length;
 
@@ -65,17 +90,11 @@ const processRecords = async (records: CitationRecord[]): Promise<number> => {
     const progress = `[${i + 1}/${totalRecords}]`;
 
     try {
-      // Get dataset ID
+      // Get dataset ID from hashtable
       const doi = record.doi?.toLowerCase() || null;
-      const dataset = doi
-        ? await prisma.dataset.findUnique({
-            where: {
-              doi: doi,
-            },
-          })
-        : null;
+      const datasetId = doi ? datasetHashtable.get(doi) : null;
 
-      if (!dataset?.id) {
+      if (!datasetId) {
         console.warn(
           `    ${progress} ⚠️  Dataset not found for DOI: ${record.doi}`,
         );
@@ -98,7 +117,7 @@ const processRecords = async (records: CitationRecord[]): Promise<number> => {
           citedDate: citationDate,
           dataset: {
             connect: {
-              id: dataset.id,
+              id: datasetId,
             },
           },
         },
@@ -160,12 +179,16 @@ const main = async () => {
   const records = await readNdjsonFile(citationFile, recordLimit);
   console.log(`  ✓ Read ${records.length} records from file`);
 
-  // Step 4: Process records and insert into citation table
+  // Step 4: Build dataset hashtable
+  console.log("\n🗂️  Step 4: Building dataset hashtable...");
+  const datasetHashtable = await buildDatasetHashtable();
+
+  // Step 5: Process records and insert into citation table
   console.log(
-    "\n🔄 Step 4: Processing records and inserting into citation table...",
+    "\n🔄 Step 5: Processing records and inserting into citation table...",
   );
 
-  const totalInserted = await processRecords(records);
+  const totalInserted = await processRecords(records, datasetHashtable);
 
   console.log(`\n✅ Successfully inserted ${totalInserted} citations`);
   console.log("🎉 Citation fill process completed!");

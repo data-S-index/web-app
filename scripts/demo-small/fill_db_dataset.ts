@@ -197,7 +197,7 @@ const main = async () => {
 
   // Allow recordLimit to be set via environment variable (0 = process all records)
   const recordLimitEnv = process.env.RECORD_LIMIT;
-  const recordLimit = recordLimitEnv ? parseInt(recordLimitEnv, 10) : 1000;
+  const recordLimit = recordLimitEnv ? parseInt(recordLimitEnv, 10) : 100;
 
   if (recordLimit === 0) {
     console.log("  ⚠️  Record limit set to 0 - processing ALL records");
