@@ -1,6 +1,6 @@
 generator client {
     provider        = "prisma-client"
-    previewFeatures = ["strictUndefinedChecks"]
+    previewFeatures = ["strictUndefinedChecks", "fullTextSearchPostgres"]
     output          = "../shared/generated/"
     engineType      = "client"
 }
@@ -69,6 +69,7 @@ model Dataset {
     mentions      Mention[]
 
     @@index([doi])
+    @@fulltext([title, description, authors, subjects])
 }
 
 model UserDataset {
@@ -87,16 +88,17 @@ model UserDataset {
 model Citation {
     id String @id @default(cuid(2))
 
-    dataset   Dataset @relation(fields: [datasetId], references: [id])
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId String
 
-    doi String
+    citationLink String
+    doi String?
 
     datacite Boolean @default(false)
     mdc      Boolean @default(false)
     openAlex Boolean @default(false)
 
-    citedDate DateTime
+    citedDate DateTime?
 
     created DateTime @default(now())
     updated DateTime @updatedAt
@@ -124,7 +126,7 @@ model Mention {
 
     link          String
     source        String //github, linkedin, twitter, etc.
-    mentionedDate DateTime
+    mentionedDate DateTime?
 
     created DateTime @default(now())
     updated DateTime @updatedAt
