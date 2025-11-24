@@ -4,9 +4,9 @@ const toast = useToast();
 
 const { datasetid } = route.params as { datasetid: string };
 
-const { data: datasetData, error } = await useFetch(
-  `/api/datasets/${datasetid}`,
-);
+const { data: dataset, error } = await useFetch(`/api/dataset/${datasetid}`, {
+  method: "GET",
+});
 
 if (error.value) {
   toast.add({
@@ -17,48 +17,14 @@ if (error.value) {
   });
 }
 
-const dataset = computed(() => {
-  if (!datasetData.value || Array.isArray(datasetData.value)) {
-    return null;
-  }
-
-  return datasetData.value;
-});
-
 useSeoMeta({
   title: dataset.value?.title || "Dataset Details",
   description: dataset.value?.description || "Dataset information",
 });
 
-interface Author {
-  givenName?: string;
-  name?: string;
-  familyName?: string;
-  affiliations?: string[];
-  affiliation?: string[];
-  nameIdentifiers?: Array<
-    | string
-    | {
-        nameIdentifierScheme?: string;
-        scheme?: string;
-        nameIdentifier?: string;
-        value?: string;
-      }
-  >;
-}
-
-const getAuthorName = (author: Author): string => {
-  if (author.name) return author.name;
-
-  const givenName = author.givenName || "";
-  const familyName = author.familyName || "";
-
-  return `${givenName} ${familyName}`.trim() || "Unknown Author";
-};
-
 const getAuthorTooltipText = (author: Author): string => {
   const parts: string[] = [];
-  const affiliations = author.affiliations || author.affiliation || [];
+  const affiliations = author.affiliations || [];
 
   if (Array.isArray(affiliations) && affiliations.length > 0) {
     parts.push(`Affiliations: ${affiliations.join("; ")}`);
@@ -68,6 +34,7 @@ const getAuthorTooltipText = (author: Author): string => {
 };
 
 const citationsCount = computed(() => dataset.value?.Citation?.length || 0);
+const mentionsCount = computed(() => dataset.value?.Mention?.length || 0);
 const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
 </script>
 
@@ -83,11 +50,12 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
               <p class="text-sm font-light">
                 Published on
                 {{ $dayjs(dataset.publishedAt).format("DD MMMM YYYY") }}
-                |
+                {{ dataset.version ? `| ` : "" }}
               </p>
             </div>
 
             <UBadge
+              v-if="dataset.version"
               color="success"
               variant="soft"
               size="sm"
@@ -96,9 +64,21 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
             />
           </div>
 
-          <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-            {{ dataset.title }}
-          </h1>
+          <div class="flex items-center justify-between gap-2">
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+              {{ dataset.title }}
+            </h1>
+
+            <UButton
+              color="primary"
+              variant="solid"
+              :to="`https://doi.org/${dataset.doi}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              icon="i-heroicons-arrow-top-right-on-square-20-solid"
+              label="View Dataset"
+            />
+          </div>
 
           <div
             v-if="
@@ -109,20 +89,18 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
           >
             <div class="flex flex-wrap gap-1 text-sm">
               <template
-                v-for="(author, index) in dataset.authors as Author[]"
+                v-for="(
+                  author, index
+                ) in dataset.authors as unknown as Author[]"
                 :key="index"
               >
                 <UTooltip :text="getAuthorTooltipText(author)">
                   <span
                     class="hover:text-primary-600 dark:hover:text-primary-400 cursor-help font-normal underline decoration-dotted underline-offset-2 transition-colors"
                   >
-                    {{ getAuthorName(author) }}
+                    {{ author.name || "Unknown Author" }};
                   </span>
                 </UTooltip>
-
-                <span v-if="index < (dataset.authors as Author[]).length - 1">
-                  ,
-                </span>
               </template>
             </div>
           </div>
@@ -152,80 +130,79 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
             </UCard>
 
             <!-- Citations -->
-            <UCard v-if="dataset.Citation && dataset.Citation.length > 0">
-              <template #header>
-                <div class="flex items-start justify-between gap-2">
-                  <h3 class="text-lg font-semibold">
-                    Citations ({{ citationsCount }})
-                  </h3>
-
-                  <UBadge
-                    color="primary"
-                    variant="subtle"
-                    :label="`${citationsCount} Citation${citationsCount !== 1 ? 's' : ''}`"
-                    icon="i-heroicons-book-open-20-solid"
-                  />
-                </div>
-              </template>
-
-              <div class="space-y-3">
-                <div
-                  v-for="citation in dataset.Citation"
-                  :key="citation.id"
-                  class="flex items-start gap-3 rounded-lg border border-gray-200 p-3 dark:border-gray-700"
-                >
-                  <Icon
-                    name="i-heroicons-book-open-20-solid"
-                    class="text-primary-500 mt-0.5 h-5 w-5 flex-shrink-0"
-                  />
-
-                  <div class="flex-1 space-y-1">
-                    <a
-                      :href="`https://doi.org/${citation.doi}`"
+            <CardCollapsibleContent
+              :title="`Citations (${citationsCount})`"
+              :collapse="false"
+            >
+              <ul class="list-none">
+                <li v-for="citation in dataset.Citation" :key="citation.id">
+                  <div
+                    class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
+                  >
+                    <NuxtLink
+                      :href="citation.citationLink"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="text-primary-600 dark:text-primary-400 font-mono text-sm hover:underline"
+                      class="font-mono text-blue-600 hover:underline dark:text-blue-400"
                     >
-                      {{ citation.doi }}
-                    </a>
+                      {{ citation.citationLink }}
+                    </NuxtLink>
 
-                    <div class="flex flex-wrap gap-2">
-                      <UBadge
-                        v-if="citation.datacite"
-                        color="success"
-                        variant="subtle"
-                        size="sm"
-                      >
-                        DataCite
-                      </UBadge>
+                    <div class="flex items-center justify-between gap-2">
+                      <p class="text-sm">
+                        Cited on
+                        {{ $dayjs(citation.citedDate).format("DD MMMM YYYY") }}
+                      </p>
 
-                      <UBadge
-                        v-if="citation.mdc"
-                        color="success"
-                        variant="subtle"
-                        size="sm"
-                      >
-                        MDC
-                      </UBadge>
+                      <div class="flex flex-wrap gap-2">
+                        <UBadge
+                          v-if="citation.datacite"
+                          color="success"
+                          variant="subtle"
+                          size="sm"
+                        >
+                          DataCite
+                        </UBadge>
 
-                      <UBadge
-                        v-if="citation.openAlex"
-                        color="success"
-                        variant="subtle"
-                        size="sm"
-                      >
-                        OpenAlex
-                      </UBadge>
+                        <UBadge
+                          v-if="citation.mdc"
+                          color="success"
+                          variant="subtle"
+                          size="sm"
+                        >
+                          MDC
+                        </UBadge>
+
+                        <UBadge
+                          v-if="citation.openAlex"
+                          color="success"
+                          variant="subtle"
+                          size="sm"
+                        >
+                          OpenAlex
+                        </UBadge>
+                      </div>
                     </div>
-
-                    <p class="text-xs text-gray-500 dark:text-gray-400">
-                      Cited on
-                      {{ $dayjs(citation.citedDate).format("DD MMMM YYYY") }}
-                    </p>
                   </div>
-                </div>
-              </div>
-            </UCard>
+                </li>
+              </ul>
+            </CardCollapsibleContent>
+
+            <!-- Mentions -->
+            <CardCollapsibleContent
+              :title="`Mentions (${mentionsCount})`"
+              :collapse="false"
+            >
+              <ul class="list-none">
+                <li v-for="mention in dataset.Mention" :key="mention.id">
+                  <div
+                    class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
+                  >
+                    <p class="text-sm">{{ mention.link }}</p>
+                  </div>
+                </li>
+              </ul>
+            </CardCollapsibleContent>
           </div>
 
           <!-- Sidebar -->
@@ -302,6 +279,10 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
             </UCard>
           </div>
         </div>
+
+        <pre
+          >{{ dataset }}
+        </pre>
       </UPageBody>
     </UPage>
   </UContainer>

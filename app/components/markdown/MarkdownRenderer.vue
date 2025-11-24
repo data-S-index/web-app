@@ -1,7 +1,13 @@
 <!-- eslint-disable vue/no-v-html -->
 <script setup lang="ts">
 import sanitizeHtml from "sanitize-html";
-import { parse } from "marked";
+import { parse, marked } from "marked";
+
+marked.use({
+  pedantic: false,
+  gfm: true,
+  breaks: false,
+});
 
 const renderedMarkdown = ref("");
 

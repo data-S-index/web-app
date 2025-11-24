@@ -148,7 +148,7 @@ const processNdjsonFile = async (
 const main = async () => {
   console.log("🚀 Starting database fill process...");
 
-  const folderName = "datacite-slim-records";
+  const folderName = "datacite-slim-records-parts";
 
   // Step 1: Get OS-agnostic path to Downloads/${folderName}
   console.log("📍 Step 1: Locating data directory...");

@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
     include: {
       Citation: true,
       FujiScore: true,
+      Mention: true,
     },
   });
 

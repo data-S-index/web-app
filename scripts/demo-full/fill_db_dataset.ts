@@ -224,7 +224,7 @@ const main = async () => {
   const batchSize = 10000;
   let totalInserted = 0;
 
-  const recordLimit = 0; //10000
+  const recordLimit = 0;
 
   if (recordLimit === 0) {
     console.log("  ⚠️  Record limit set to 0 - processing ALL records");

@@ -63,10 +63,10 @@ model Dataset {
     updated DateTime @updatedAt
 
     Citation  Citation[]
+    Mention   Mention[]
     FujiScore FujiScore?
 
     datasetClaims UserDataset[]
-    mentions      Mention[]
 
     @@index([doi])
 }
@@ -75,7 +75,7 @@ model UserDataset {
     user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
     userId String
 
-    dataset   Dataset @relation(fields: [datasetId], references: [id])
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId String
 
     created DateTime @default(now())
@@ -91,7 +91,7 @@ model Citation {
     datasetId String
 
     citationLink String
-    doi          String?
+    doi          String? // we might remove this one. Use citationLink instead.
 
     datacite Boolean @default(false)
     mdc      Boolean @default(false)
@@ -103,25 +103,29 @@ model Citation {
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    @@index([doi, datasetId])
+    @@index([datasetId])
 }
 
 model FujiScore {
-    dataset   Dataset @relation(fields: [datasetId], references: [id])
+    id String @id @default(cuid(2))
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId String  @unique
 
-    score Int @default(0) // 0-100
+    score          Float    @default(0.0) // 0.0-100.0
+    evaluationDate DateTime
+
+    metricVersion   String
+    softwareVersion String
 
     created DateTime @default(now())
     updated DateTime @updatedAt
-
-    @@id([datasetId])
 }
 
 model Mention {
     id String @id @default(cuid(2))
 
-    dataset   Dataset @relation(fields: [datasetId], references: [id])
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId String
 
     link   String

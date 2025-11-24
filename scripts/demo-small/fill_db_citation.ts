@@ -103,7 +103,10 @@ const processRecords = async (
 
       // Parse citation data
       const citationLink = record.citation_link;
-      const citationWeight = record.citation_weight || 1.0;
+      const citationWeight =
+        record.citation_weight != null
+          ? parseFloat(record.citation_weight.toString())
+          : 1.0;
       const citationDate = record.citation_date
         ? new Date(record.citation_date)
         : null;
