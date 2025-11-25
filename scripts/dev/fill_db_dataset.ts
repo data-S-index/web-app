@@ -221,10 +221,9 @@ const main = async () => {
     throw new Error("No .ndjson files found in data directory");
   }
 
-  const batchSize = 10000;
   let totalInserted = 0;
 
-  const recordLimit = 0; //10000
+  const recordLimit = 0;
 
   if (recordLimit === 0) {
     console.log("  ⚠️  Record limit set to 0 - processing ALL records");
@@ -236,6 +235,14 @@ const main = async () => {
     const file = ndjsonFiles[idx];
     const filePath = path.join(dataDir, file);
     console.log(`  [${idx + 1}/${ndjsonFiles.length}] Processing ${file}...`);
+
+    // Get file size to determine batch size
+    const fileStats = await fs.stat(filePath);
+    const fileSizeMB = fileStats.size / (1024 * 1024);
+    const batchSize = fileSizeMB > 40 ? 1000 : 10000;
+    console.log(
+      `    📦 File size: ${fileSizeMB.toFixed(2)}MB - Using batch size: ${batchSize}`,
+    );
 
     // Count total lines in file for progress tracking
     console.log(`    📊 Counting lines in ${file}...`);

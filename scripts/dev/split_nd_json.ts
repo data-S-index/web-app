@@ -4,7 +4,7 @@ import * as os from "os";
 import * as readline from "readline";
 import { createReadStream } from "fs";
 
-const RECORDS_PER_PART = 50000;
+const RECORDS_PER_PART = 20000;
 
 // Split a single ndjson file into parts
 const splitNdjsonFile = async (

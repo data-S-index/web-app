@@ -21,24 +21,6 @@ interface CitationRecord {
   citation_weight: number;
 }
 
-// Count the number of lines in a file
-const countLinesInFile = async (filePath: string): Promise<number> => {
-  const fileStream = createReadStream(filePath, { encoding: "utf-8" });
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity,
-  });
-
-  let lineCount = 0;
-  for await (const line of rl) {
-    if (line.trim()) {
-      lineCount++;
-    }
-  }
-
-  return lineCount;
-};
-
 // Read all records from ndjson file into an array
 const readNdjsonFile = async (
   filePath: string,
@@ -73,34 +55,46 @@ const readNdjsonFile = async (
   return records;
 };
 
+// Build hashtable of DOI (lowercase) -> dataset ID
+const buildDatasetHashtable = async (): Promise<Map<string, string>> => {
+  console.log("  📊 Loading all datasets into memory...");
+  const datasets = await prisma.dataset.findMany({
+    select: {
+      id: true,
+      doi: true,
+    },
+  });
+
+  const hashtable = new Map<string, string>();
+  for (const dataset of datasets) {
+    if (dataset.doi) {
+      hashtable.set(dataset.doi.toLowerCase(), dataset.id);
+    }
+  }
+
+  console.log(`  ✓ Loaded ${hashtable.size} datasets into hashtable`);
+
+  return hashtable;
+};
+
 // Process records: retrieve dataset IDs and create citations
 const processRecords = async (
   records: CitationRecord[],
-  totalLines: number = 0,
+  datasetHashtable: Map<string, string>,
 ): Promise<number> => {
   let insertedCount = 0;
   const totalRecords = records.length;
-  const effectiveTotal = totalLines > 0 ? totalLines : totalRecords;
 
   for (let i = 0; i < records.length; i++) {
     const record = records[i];
-    const progress =
-      totalLines > 0
-        ? `[${i + 1}/${effectiveTotal} - ${Math.round(((i + 1) / effectiveTotal) * 100)}%]`
-        : `[${i + 1}/${totalRecords}]`;
+    const progress = `[${i + 1}/${totalRecords}]`;
 
     try {
-      // Get dataset ID
+      // Get dataset ID from hashtable
       const doi = record.doi?.toLowerCase() || null;
-      const dataset = doi
-        ? await prisma.dataset.findUnique({
-            where: {
-              doi: doi,
-            },
-          })
-        : null;
+      const datasetId = doi ? datasetHashtable.get(doi) : null;
 
-      if (!dataset?.id) {
+      if (!datasetId) {
         console.warn(
           `    ${progress} ⚠️  Dataset not found for DOI: ${record.doi}`,
         );
@@ -120,13 +114,13 @@ const processRecords = async (
       // Create citation
       await prisma.citation.create({
         data: {
-          citationLink,
-          citationWeight,
+          citationLink: citationLink,
+          citationWeight: citationWeight,
           mdc: true,
           citedDate: citationDate,
           dataset: {
             connect: {
-              id: dataset.id,
+              id: datasetId,
             },
           },
         },
@@ -136,7 +130,9 @@ const processRecords = async (
 
       // Log progress every 100 records
       if ((i + 1) % 100 === 0 || i + 1 === totalRecords) {
-        console.log(`    ${progress} Processed ${insertedCount} citations`);
+        console.log(
+          `    ${progress} Processed ${insertedCount} citations (${Math.round(((i + 1) / totalRecords) * 100)}%)`,
+        );
       }
     } catch (error) {
       console.warn(`    ${progress} ⚠️  Failed to process record: ${error}`);
@@ -153,10 +149,7 @@ const main = async () => {
   console.log("📍 Step 1: Locating data directory...");
   const homeDir = os.homedir();
   const downloadsDir = path.join(homeDir, "Downloads");
-  const citationFile = path.join(
-    downloadsDir,
-    "citations-mdc-full-with-weight.ndjson",
-  );
+  const citationFile = path.join(downloadsDir, "citations-mdc-full.ndjson");
 
   // Check if file exists
   try {
@@ -173,13 +166,8 @@ const main = async () => {
   await prisma.citation.deleteMany();
   console.log("  ✓ Cleared citation table");
 
-  // Step 3: Count lines and read all records from file
+  // Step 3: Read all records from file
   console.log("\n📖 Step 3: Reading citation records from file...");
-
-  // Count total lines in file for progress tracking
-  console.log("  📊 Counting lines in citation file...");
-  const totalLines = await countLinesInFile(citationFile);
-  console.log(`  ✓ Found ${totalLines} lines in citation file`);
 
   // Allow recordLimit to be set via environment variable (0 = process all records)
   const recordLimitEnv = process.env.RECORD_LIMIT;
@@ -194,14 +182,16 @@ const main = async () => {
   const records = await readNdjsonFile(citationFile, recordLimit);
   console.log(`  ✓ Read ${records.length} records from file`);
 
-  // Step 4: Process records and insert into citation table
+  // Step 4: Build dataset hashtable
+  console.log("\n🗂️  Step 4: Building dataset hashtable...");
+  const datasetHashtable = await buildDatasetHashtable();
+
+  // Step 5: Process records and insert into citation table
   console.log(
-    "\n🔄 Step 4: Processing records and inserting into citation table...",
+    "\n🔄 Step 5: Processing records and inserting into citation table...",
   );
 
-  const effectiveTotalLines =
-    recordLimit > 0 ? Math.min(recordLimit, totalLines) : totalLines;
-  const totalInserted = await processRecords(records, effectiveTotalLines);
+  const totalInserted = await processRecords(records, datasetHashtable);
 
   console.log(`\n✅ Successfully inserted ${totalInserted} citations`);
   console.log("🎉 Citation fill process completed!");

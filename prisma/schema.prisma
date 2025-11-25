@@ -51,8 +51,7 @@ model Dataset {
     publisher   String?
     publishedAt DateTime
 
-    authors       Json   @default("[]") // [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
-    authorsString String @default("") // A stringified version of the authors array for full text search (this will probably be removed in the future)
+    authors String @default("[]") // A stringified version of the authors array for full text search : [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
 
     domain   String?
     subjects String[]
@@ -91,7 +90,6 @@ model Citation {
     datasetId String
 
     citationLink String
-    doi          String? // we might remove this one. Use citationLink instead.
 
     datacite Boolean @default(false)
     mdc      Boolean @default(false)
