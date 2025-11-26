@@ -1,17 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PrismaClient } from "../../shared/generated/client";
+import { PrismaClient } from "../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
+import { createId } from "@paralleldrive/cuid2";
 import * as fs from "fs/promises";
 import * as path from "path";
 import * as os from "os";
 import * as readline from "readline";
 import { createReadStream } from "fs";
 
+import { Client } from "pg";
+
+const connectionString = process.env.DATABASE_URL || "";
+
 const adapter = new PrismaPg({
-  connectionString: process.env.DATABASE_URL,
+  connectionString,
 });
+
 const prisma = new PrismaClient({ adapter });
+
+//postgresql://admin:root@localhost:43997/s_index_local?sslmode=disable
+
+//pg
+let c = connectionString.split("://")[1];
+c = c.split("?")[0];
+
+const user = c.split(":")[0];
+const password = c.split(":")[1].split("@")[0];
+const host = c.split("@")[1].split(":")[0];
+const port = c.split("@")[1].split(":")[1].split("/")[0];
+const database = c.split("@")[1].split(":")[1].split("/")[1];
+
+const client = new Client({
+  user,
+  password,
+  host,
+  port,
+  database,
+});
+await client.connect();
 
 interface DataciteRecord {
   source?: string;
@@ -26,36 +53,11 @@ interface DataciteRecord {
   [key: string]: any;
 }
 
-// Convert creators to authors format
-const convertCreatorsToAuthors = (
-  creators?: Array<{ name?: string; [key: string]: any }>,
-): any[] => {
-  if (!creators || creators.length === 0) {
-    return [];
-  }
-
-  return creators.map((creator) => {
-    const name = creator.name || "";
-    // Try to determine if it's personal or organizational
-    // Simple heuristic: if it contains common org words or is all caps, it's organizational
-    const isOrganizational =
-      name.includes("University") ||
-      name.includes("Institute") ||
-      name.includes("Service") ||
-      name.includes("Center") ||
-      name.includes("Laboratory") ||
-      name.includes("Department") ||
-      name === name.toUpperCase();
-
-    return {
-      nameType:
-        creator.nameType || (isOrganizational ? "Organizational" : "Personal"), // We might need to revert this
-      name,
-      affiliations: creator.affiliations || [],
-      nameIdentifiers: creator.nameIdentifiers || [],
-    };
-  });
-};
+const errorLines: {
+  fileName: string;
+  lineNumber: number;
+  error: string;
+}[] = [];
 
 // Count the number of lines in a file
 const countLinesInFile = async (filePath: string): Promise<number> => {
@@ -85,11 +87,12 @@ const parseDataciteRecord = (record: DataciteRecord): any => {
   const publishedAt = record.publication_date
     ? new Date(record.publication_date)
     : null;
+  const randomInt = Math.floor(Math.random() * 1000000);
   const subjects = record.subjects || [];
-  const authorsString = JSON.stringify(record.creators) || "";
-  const authors = convertCreatorsToAuthors(record.creators);
+  const authors = JSON.stringify(record.creators) || "[]"; // [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
 
   return {
+    id: createId(),
     doi,
     title,
     description,
@@ -98,13 +101,12 @@ const parseDataciteRecord = (record: DataciteRecord): any => {
     publisher,
     publishedAt,
     subjects,
-    authorsString,
     authors,
-    randomInt: Math.floor(Math.random() * 1000000),
+    randomInt,
   };
 };
 
-// Process a single ndjson file and insert records into database in batches
+// Process a single ndjson file and insert records into database in batches using raw SQL
 const processNdjsonFile = async (
   filePath: string,
   fileName: string,
@@ -135,12 +137,9 @@ const processNdjsonFile = async (
           break;
         }
 
-        // Insert batch when it reaches the batch size
+        // Insert batch when it reaches the batch size using raw SQL for better performance
         if (batch.length >= batchSize) {
-          await prisma.dataset.createMany({
-            data: batch,
-            skipDuplicates: true,
-          });
+          await insertBatchRawSQL(batch);
           const progress =
             effectiveTotalLines > 0
               ? `[${lineCount}/${effectiveTotalLines} - ${Math.round((lineCount / effectiveTotalLines) * 100)}%]`
@@ -152,16 +151,18 @@ const processNdjsonFile = async (
         }
       } catch (error) {
         console.warn(`    ⚠️  Failed to parse line in ${fileName}: ${error}`);
+        errorLines.push({
+          fileName,
+          lineNumber: lineCount,
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     }
   }
 
   // Insert any remaining records in the batch
   if (batch.length > 0) {
-    await prisma.dataset.createMany({
-      data: batch,
-      skipDuplicates: true,
-    });
+    await insertBatchRawSQL(batch);
     const progress =
       effectiveTotalLines > 0
         ? `[${lineCount}/${effectiveTotalLines} - ${Math.round((lineCount / effectiveTotalLines) * 100)}%]`
@@ -172,6 +173,60 @@ const processNdjsonFile = async (
   }
 
   return lineCount;
+};
+
+// Insert batch using raw SQL - much faster than createMany
+const insertBatchRawSQL = async (batch: any[]): Promise<void> => {
+  if (batch.length === 0) return;
+
+  const columns = [
+    "id",
+    "doi",
+    "title",
+    "description",
+    "version",
+    "publisher",
+    "publishedAt",
+    "authors",
+    "subjects",
+    "randomInt",
+    "created",
+    "updated",
+  ];
+  const quotedColumns = columns.map((col) => `"${col}"`).join(", ");
+
+  const valuePlaceholders = batch
+    .map((_, rowIdx) => {
+      const baseIdx = rowIdx * 10;
+      const placeholders = Array.from(
+        { length: 10 },
+        (_, colIdx) => `$${baseIdx + colIdx + 1}`,
+      ).join(", ");
+
+      return `(${placeholders}, NOW(), NOW())`;
+    })
+    .join(", ");
+
+  const insertQuery = `
+    INSERT INTO "Dataset" (${quotedColumns})
+    VALUES ${valuePlaceholders}
+    ON CONFLICT (doi) DO NOTHING
+  `;
+
+  const params = batch.flatMap((dataset) => [
+    dataset.id,
+    dataset.doi,
+    dataset.title,
+    dataset.description,
+    dataset.version,
+    dataset.publisher,
+    dataset.publishedAt ? dataset.publishedAt.toISOString() : null,
+    dataset.authors,
+    dataset.subjects,
+    dataset.randomInt,
+  ]);
+
+  await client.query(insertQuery, params);
 };
 
 const main = async () => {
@@ -237,9 +292,11 @@ const main = async () => {
     console.log(`  [${idx + 1}/${ndjsonFiles.length}] Processing ${file}...`);
 
     // Get file size to determine batch size
+    // Using raw SQL allows for much larger batches
     const fileStats = await fs.stat(filePath);
     const fileSizeMB = fileStats.size / (1024 * 1024);
-    const batchSize = fileSizeMB > 40 ? 1000 : 10000;
+    // const batchSize = fileSizeMB > 40 ? 5000 : 20000;
+    const batchSize = 1000;
     console.log(
       `    📦 File size: ${fileSizeMB.toFixed(2)}MB - Using batch size: ${batchSize}`,
     );
@@ -264,6 +321,10 @@ const main = async () => {
 
   console.log(`\n✅ Successfully inserted ${totalInserted} total datasets`);
   console.log("🎉 Database fill process completed!");
+
+  // write error lines to file
+  await fs.writeFile("error_lines.json", JSON.stringify(errorLines, null, 2));
+  console.log("  ✓ Error lines written to file");
 };
 
 main()

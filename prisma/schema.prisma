@@ -39,19 +39,17 @@ model User {
 }
 
 model Dataset {
-    id  String @id @default(cuid(2))
+    id  Int    @id @default(autoincrement())
     doi String @unique
 
     title       String
     description String?
     version     String?
 
-    imageUrl String?
-
     publisher   String?
     publishedAt DateTime
 
-    authors String @default("[]") // A stringified version of the authors array for full text search : [{ nameType: String, name: String, affiliations: String[], nameIdentifiers: string[]}]
+    authors String @default("[]") // A stringified version of the authors array for full text search : [{ nameType: String?, name: String, affiliations: String[], nameIdentifiers: string[]}]
 
     domain   String?
     subjects String[]
@@ -75,7 +73,7 @@ model UserDataset {
     userId String
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId String
+    datasetId Int
 
     created DateTime @default(now())
     updated DateTime @updatedAt
@@ -87,7 +85,7 @@ model Citation {
     id String @id @default(cuid(2))
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId String
+    datasetId Int
 
     citationLink String
 
@@ -100,15 +98,13 @@ model Citation {
 
     created DateTime @default(now())
     updated DateTime @updatedAt
-
-    @@index([datasetId])
 }
 
 model FujiScore {
     id String @id @default(cuid(2))
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId String  @unique
+    datasetId Int     @unique
 
     score          Float    @default(0.0) // 0.0-100.0
     evaluationDate DateTime
@@ -124,7 +120,7 @@ model Mention {
     id String @id @default(cuid(2))
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId String
+    datasetId Int
 
     link   String
     source String // github, linkedin, twitter, etc.

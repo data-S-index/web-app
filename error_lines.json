@@ -1,0 +1,2322 @@
+[
+  {
+    "fileName": "datacite-2014-05-29-2014-06-04-1.ndjson",
+    "lineNumber": 5915,
+    "error": "Unterminated string in JSON at position 1285 (line 1 column 1286)"
+  },
+  {
+    "fileName": "datacite-2014-05-29-2014-06-04-1.ndjson",
+    "lineNumber": 5915,
+    "error": "Unexpected token 's', \"strategies\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2014-05-29-2014-06-04-1.ndjson",
+    "lineNumber": 5915,
+    "error": "Unexpected token 'p', \"population\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-04-17-2015-04-23-1.ndjson",
+    "lineNumber": 6238,
+    "error": "Unterminated string in JSON at position 1013 (line 1 column 1014)"
+  },
+  {
+    "fileName": "datacite-2015-04-17-2015-04-23-1.ndjson",
+    "lineNumber": 6238,
+    "error": "Unexpected token 'R', \" Rijkswater\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unterminated string in JSON at position 658 (line 1 column 659)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token 'T', \"The XVIth \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token 'T', \"Topics for\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token 'L', \"Low Countr\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "Unexpected token 'O', \"Organizing\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7292,
+    "error": "No number after minus sign in JSON at position 1 (line 1 column 2)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7369,
+    "error": "Unterminated string in JSON at position 1426 (line 1 column 1427)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7369,
+    "error": "Unexpected token 'M', \"Mijn vader\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7369,
+    "error": "Unexpected token 'M', \" Mijn moede\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7369,
+    "error": "Unexpected token 'D', \" Daar ben i\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7369,
+    "error": "Unexpected token 'T', \"Toen ik in\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7369,
+    "error": "Unexpected token 'I', \"Ik leerde \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unterminated string in JSON at position 1200 (line 1 column 1201)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'O', \"Op mijn de\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"In 1974 be\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"Ik ben wel\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"In Nederla\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"Ik ben zo \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unterminated string in JSON at position 1633 (line 1 column 1634)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'H', \"Het was ha\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"Ik hoop da\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'E', \"En hoe je \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unterminated string in JSON at position 1119 (line 1 column 1120)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'V', \"Van de der\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'T', \"Toen ik ze\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'A', \"Als ik in \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'V', \"Van al mij\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"Ik heb eer\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'H', \"Het viel m\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'I', \"In 2001 we\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token 'T', \"Toen de wo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unterminated string in JSON at position 2022 (line 1 column 2023)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7370,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unterminated string in JSON at position 762 (line 1 column 763)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'I', \"Ik ben tot\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'T', \"Toen wij a\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'V', \"Volgens de\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'I', \"Ik heb gee\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'I', \"Ik heb 11 \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unterminated string in JSON at position 1403 (line 1 column 1404)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'M', \"Mijn ouder\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'M', \"Mijn schoo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'A', \"Als er in \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unterminated string in JSON at position 2045 (line 1 column 2046)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'T', \"Toen ik me\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token 'H', \"Het moeili\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unterminated string in JSON at position 1011 (line 1 column 1012)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7405,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unterminated string in JSON at position 1341 (line 1 column 1342)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'M', \"Mensen in \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'I', \"Ik hield v\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'K', \"Kantjil en\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unterminated string in JSON at position 1245 (line 1 column 1246)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'T', \"Toen wij n\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'I', \"Ik heb hie\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'B', \"Bij elkaar\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token 'H', \"Hier in To\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7408,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7732,
+    "error": "Unterminated string in JSON at position 1003 (line 1 column 1004)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7732,
+    "error": "Unexpected token 'I', \"In mijn Ne\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7732,
+    "error": "Unexpected token 'E', \"Eigenlijk \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7732,
+    "error": "Unexpected token ' ', \" &lt;br&gt\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unterminated string in JSON at position 2258 (line 1 column 2259)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'T', \"Toen ik in\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unterminated string in JSON at position 1935 (line 1 column 1936)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"Ik ben beg\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unterminated string in JSON at position 1645 (line 1 column 1646)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"In Nederla\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'N', \"Na aankoms\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"Ik ben uit\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"In Nederla\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'W', \"Wat ik leu\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unterminated string in JSON at position 1661 (line 1 column 1662)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'N', \" Niemand va\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"In Padang \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'E', \"En toen da\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'M', \"Mijn huwel\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token 'A', \" Als mijn v\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7736,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unterminated string in JSON at position 1752 (line 1 column 1753)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'I', \"Ik moest m\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'W', \"We woonden\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'M', \"Mijn vader\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'A', \"Als er nik\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unterminated string in JSON at position 2875 (line 1 column 2876)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unterminated string in JSON at position 1165 (line 1 column 1166)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'M', \"Mijn vader\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'I', \"Ik was een\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7738,
+    "error": "Unexpected token 'A', \"Aan de and\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unterminated string in JSON at position 1647 (line 1 column 1648)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"Ik heb mij\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'W', \"Wij hebben\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'T', \"Toen we ne\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unterminated string in JSON at position 2107 (line 1 column 2108)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"Ik heb de \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"In 1993 zi\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"Ik sta zel\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'M', \"Mijn moede\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'A', \"Alles is t\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"Ik probeer\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'O', \"Op het int\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unterminated string in JSON at position 1866 (line 1 column 1867)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token 'A', \"Als ik naa\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7739,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unterminated string in JSON at position 1896 (line 1 column 1897)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token 'P', \"Palmolie h\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unterminated string in JSON at position 1231 (line 1 column 1232)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token 'M', \"Mijn vader\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unterminated string in JSON at position 2402 (line 1 column 2403)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token 'I', \"Ik ben op \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unterminated string in JSON at position 1248 (line 1 column 1249)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token 'I', \"In het beg\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7740,
+    "error": "Unexpected token 'V', \"Vroeger wi\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 1086 (line 1 column 1087)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'V', \"Voor ons v\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In de ocht\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'A', \"Als kind h\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'T', \"Toen ik in\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token ' ', \" &lt;br&gt\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'V', \"Vanuit Ton\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 1415 (line 1 column 1416)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'D', \"De PBIS he\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In 1959 sc\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 2080 (line 1 column 2081)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Nickeri\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'T', \"Thuis maak\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'M', \"Mijn kinde\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'T', \"Toen ik ui\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'M', \"Mijn ouder\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'T', \"Toen we ne\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik ben noo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 5503 (line 1 column 5504)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'R', \"Reeds op d\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'A', \"Als je vro\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'W', \"Wanneer me\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 1994 (line 1 column 1995)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In 1959 dr\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'V', \"Vroeger we\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 2480 (line 1 column 2481)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'O', \"Om de drie\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik ben naa\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'O', \"Ondertusse\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'D', \"De reis na\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik voel sp\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;&lt;br&gt;\" is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'T', \"Toen ik ee\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 985 (line 1 column 986)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In het beg\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik heb nog\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik ben met\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik heb tot\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"Ik ben nie\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unterminated string in JSON at position 1581 (line 1 column 1582)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'N', \"Net als ve\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7741,
+    "error": "Unexpected token 'H', \"Het is geb\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unterminated string in JSON at position 1020 (line 1 column 1021)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token 'E', \"Er zijn ee\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token 'V', \"Vroeger ha\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token 'I', \"Ik ben gaa\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unterminated string in JSON at position 1901 (line 1 column 1902)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token 'M', \"Mijn vrouw\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token 'I', \"Ik heb in \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7742,
+    "error": "Unexpected token 'I', \"Ik heb voo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unterminated string in JSON at position 1170 (line 1 column 1171)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In Surinam\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'O', \"Op Allianc\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'H', \"Hier is er\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn man h\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'N', \"Nadat wij \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In het beg\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unterminated string in JSON at position 1737 (line 1 column 1738)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'T', \"Toen ik ne\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In Tongar \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unterminated string in JSON at position 1446 (line 1 column 1447)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'V', \"Van die ee\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'H', \"Het depart\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn hele \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'E', \"Elke begin\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"Ik vind da\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"Ik heb nog\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'E', \"Er is fami\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"Ik ben al \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'W', \"Wat je aan\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"Ik heb daa\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'V', \"Vroeger sp\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'W', \"Wat er op \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn vader\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'W', \"We deden a\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn ouder\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'H', \"Hier hield\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn famil\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unterminated string in JSON at position 698 (line 1 column 699)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"Ik heb kin\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn ouder\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'W', \"Wat ik nie\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'A', \"Aan jonger\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unterminated string in JSON at position 1201 (line 1 column 1202)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In 1968 ov\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'O', \"Op een geg\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In Frans G\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In 1986 be\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In Frans G\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'N', \"Nu ik hier\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unterminated string in JSON at position 2495 (line 1 column 2496)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"Ik was in \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'M', \"Mijn indru\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'I', \"In 1976 gi\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'T', \"Toen wij i\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token 'D', \"De baas va\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 7744,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unterminated string in JSON at position 940 (line 1 column 941)"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token 'M', \"Mijn vader\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token 'I', \"In 1995 is\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token 'I', \"Ik ben in \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token 'I', \"Ik ben bli\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token 'L', \"Lid zijn v\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-05-2015-06-11-8.ndjson",
+    "lineNumber": 8216,
+    "error": "Unexpected token 'A', \"Aan de and\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unterminated string in JSON at position 914 (line 1 column 915)"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'I', \"Ik kom uit\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'M', \"Mijn adopt\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'I', \"Ik was zes\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'I', \"Ik vond he\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'D', \"De eerste \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token '&', \"&lt;br&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'M', \"Mijn geboo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token 'V', \"Vroeger ha\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2015-06-12-2015-06-18-1.ndjson",
+    "lineNumber": 4219,
+    "error": "Unexpected token '&', \"&lt;/p&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2016-07-03-2016-07-09-1.ndjson",
+    "lineNumber": 3380,
+    "error": "Unterminated string in JSON at position 1211 (line 1 column 1212)"
+  },
+  {
+    "fileName": "datacite-2016-07-03-2016-07-09-1.ndjson",
+    "lineNumber": 3380,
+    "error": "Unexpected token 's', \" straight l\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2016-07-03-2016-07-09-1.ndjson",
+    "lineNumber": 3380,
+    "error": "Unterminated string in JSON at position 1130 (line 1 column 1131)"
+  },
+  {
+    "fileName": "datacite-2016-07-03-2016-07-09-1.ndjson",
+    "lineNumber": 3380,
+    "error": "Unexpected token 's', \" straight l\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-03-13-2018-03-19-2.ndjson",
+    "lineNumber": 11734,
+    "error": "Unterminated string in JSON at position 129 (line 1 column 130)"
+  },
+  {
+    "fileName": "datacite-2018-03-13-2018-03-19-2.ndjson",
+    "lineNumber": 11734,
+    "error": "Unexpected token 'r', \"republiky \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-03-20-2018-03-26-2.ndjson",
+    "lineNumber": 960,
+    "error": "Unterminated string in JSON at position 182 (line 1 column 183)"
+  },
+  {
+    "fileName": "datacite-2018-03-20-2018-03-26-2.ndjson",
+    "lineNumber": 960,
+    "error": "Unexpected token 'D', \" DataSet\", \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-04-17-2018-04-23-1.ndjson",
+    "lineNumber": 173,
+    "error": "Unterminated string in JSON at position 358 (line 1 column 359)"
+  },
+  {
+    "fileName": "datacite-2018-04-17-2018-04-23-1.ndjson",
+    "lineNumber": 173,
+    "error": "Unexpected token 'ใ', \"ในแนวรัศมี\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-04-17-2018-04-23-1.ndjson",
+    "lineNumber": 173,
+    "error": "Unexpected token 'โ', \"โทคาแมค HL\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-05-22-2018-05-28-1.ndjson",
+    "lineNumber": 5347,
+    "error": "Unterminated string in JSON at position 581 (line 1 column 582)"
+  },
+  {
+    "fileName": "datacite-2018-05-22-2018-05-28-1.ndjson",
+    "lineNumber": 5347,
+    "error": "Unexpected token 'ก', \"การเปิดรับ\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-08-21-2018-08-27-6.ndjson",
+    "lineNumber": 12561,
+    "error": "Unterminated string in JSON at position 129 (line 1 column 130)"
+  },
+  {
+    "fileName": "datacite-2018-08-21-2018-08-27-6.ndjson",
+    "lineNumber": 12561,
+    "error": "Unexpected token 'H', \"Hollow-Fib\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-08-21-2018-08-27-6.ndjson",
+    "lineNumber": 12561,
+    "error": "Unexpected token 'H', \"Hollow-Fib\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-08-21-2018-08-27-6.ndjson",
+    "lineNumber": 12561,
+    "error": "Unterminated string in JSON at position 131 (line 1 column 132)"
+  },
+  {
+    "fileName": "datacite-2018-08-21-2018-08-27-6.ndjson",
+    "lineNumber": 12561,
+    "error": "Unexpected token 'H', \"Hollow-Fib\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-08-21-2018-08-27-6.ndjson",
+    "lineNumber": 12561,
+    "error": "Unexpected token 'H', \"Hollow-Fib\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-08-28-2018-09-03-1.ndjson",
+    "lineNumber": 11856,
+    "error": "Unterminated string in JSON at position 472 (line 1 column 473)"
+  },
+  {
+    "fileName": "datacite-2018-08-28-2018-09-03-1.ndjson",
+    "lineNumber": 11856,
+    "error": "Unexpected token 'C', \" Creation, \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-10-09-2018-10-15-1.ndjson",
+    "lineNumber": 3101,
+    "error": "Unterminated string in JSON at position 138 (line 1 column 139)"
+  },
+  {
+    "fileName": "datacite-2018-10-09-2018-10-15-1.ndjson",
+    "lineNumber": 3101,
+    "error": "Unexpected non-whitespace character after JSON at position 4 (line 1 column 5)"
+  },
+  {
+    "fileName": "datacite-2018-11-13-2018-11-19-1.ndjson",
+    "lineNumber": 8078,
+    "error": "Unterminated string in JSON at position 399 (line 1 column 400)"
+  },
+  {
+    "fileName": "datacite-2018-11-13-2018-11-19-1.ndjson",
+    "lineNumber": 8078,
+    "error": "Unexpected token 'แ', \"แอปพลิเคชั\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-11-13-2018-11-19-1.ndjson",
+    "lineNumber": 8078,
+    "error": "Unexpected token 'แ', \"แอปพลิเคชั\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2018-12-04-2018-12-10-1.ndjson",
+    "lineNumber": 104,
+    "error": "Unterminated string in JSON at position 301 (line 1 column 302)"
+  },
+  {
+    "fileName": "datacite-2018-12-04-2018-12-10-1.ndjson",
+    "lineNumber": 104,
+    "error": "Unexpected token 'w', \"with the p\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2019-02-27-2019-03-05-1.ndjson",
+    "lineNumber": 12915,
+    "error": "Unterminated string in JSON at position 1110 (line 1 column 1111)"
+  },
+  {
+    "fileName": "datacite-2019-02-27-2019-03-05-1.ndjson",
+    "lineNumber": 12915,
+    "error": "Unexpected token 'ซ', \"ซึ่งการศึก\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2019-02-27-2019-03-05-1.ndjson",
+    "lineNumber": 12915,
+    "error": "Unexpected token 'ก', \"การใช้น้ำแ\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2019-02-27-2019-03-05-1.ndjson",
+    "lineNumber": 12915,
+    "error": "Unexpected token 'ท', \"ทั้งน้ำประ\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2019-08-07-2019-08-13-1.ndjson",
+    "lineNumber": 8567,
+    "error": "Unterminated string in JSON at position 1235 (line 1 column 1236)"
+  },
+  {
+    "fileName": "datacite-2019-08-07-2019-08-13-1.ndjson",
+    "lineNumber": 8567,
+    "error": "Unexpected token 'R', \"Results: M\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2019-08-07-2019-08-13-1.ndjson",
+    "lineNumber": 8567,
+    "error": "Unexpected token 'C', \"Conclusion\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-03-27-2020-04-02-1.ndjson",
+    "lineNumber": 1940,
+    "error": "Unterminated string in JSON at position 579 (line 1 column 580)"
+  },
+  {
+    "fileName": "datacite-2020-03-27-2020-04-02-1.ndjson",
+    "lineNumber": 1940,
+    "error": "Unexpected non-whitespace character after JSON at position 4 (line 1 column 5)"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unterminated string in JSON at position 526 (line 1 column 527)"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unexpected token '&', \"&lt;p&gt;T\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unexpected token '&', \"&lt;ul&gt;\" is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unexpected token '&', \"&lt;li&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unexpected token '&', \"&lt;li&gt;\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unexpected token '&', \"&lt;/ul&gt;\\r\\n\" is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-05-08-2020-05-14-1.ndjson",
+    "lineNumber": 5609,
+    "error": "Unexpected token '&', \"&lt;p&gt;T\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-05-29-2020-06-04-1.ndjson",
+    "lineNumber": 14784,
+    "error": "Unterminated string in JSON at position 279 (line 1 column 280)"
+  },
+  {
+    "fileName": "datacite-2020-05-29-2020-06-04-1.ndjson",
+    "lineNumber": 14784,
+    "error": "Unexpected non-whitespace character after JSON at position 4 (line 1 column 5)"
+  },
+  {
+    "fileName": "datacite-2020-06-05-2020-06-11-1.ndjson",
+    "lineNumber": 15028,
+    "error": "Unterminated string in JSON at position 514 (line 1 column 515)"
+  },
+  {
+    "fileName": "datacite-2020-06-05-2020-06-11-1.ndjson",
+    "lineNumber": 15028,
+    "error": "Unexpected token 'e', \"tell us abo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unterminated string in JSON at position 611 (line 1 column 612)"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'i', \"individual\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'v', \" variation \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'o', \"to quantify\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 's', \"studies. W\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'i', \"in individ\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'e', \" early stat\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'a', \"among thos\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'p', \" peak early\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'a', \"are potent\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2020-09-04-2020-09-10-1.ndjson",
+    "lineNumber": 19483,
+    "error": "Unexpected token 'i', \" identified\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2021-01-23-2021-01-29-1.ndjson",
+    "lineNumber": 11400,
+    "error": "Unterminated string in JSON at position 374 (line 1 column 375)"
+  },
+  {
+    "fileName": "datacite-2021-01-23-2021-01-29-1.ndjson",
+    "lineNumber": 11400,
+    "error": "Unexpected token 'h', \" history cl\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2021-01-23-2021-01-29-1.ndjson",
+    "lineNumber": 11400,
+    "error": "Unexpected token 'w', \"was used t\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2021-01-23-2021-01-29-1.ndjson",
+    "lineNumber": 11400,
+    "error": "Unexpected token 'c', \" component \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2021-06-26-2021-07-02-5.ndjson",
+    "lineNumber": 9407,
+    "error": "Unterminated string in JSON at position 934 (line 1 column 935)"
+  },
+  {
+    "fileName": "datacite-2021-06-26-2021-07-02-5.ndjson",
+    "lineNumber": 9407,
+    "error": "Unexpected token 'L', \"Location: \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 8704,
+    "error": "Unterminated string in JSON at position 719 (line 1 column 720)"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 8704,
+    "error": "Unexpected token 'P', \"Predators \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 8834,
+    "error": "Unterminated string in JSON at position 727 (line 1 column 728)"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 8834,
+    "error": "Unexpected token 'P', \"Predators \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 9002,
+    "error": "Unterminated string in JSON at position 717 (line 1 column 718)"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 9002,
+    "error": "Unexpected token 'P', \"Predators \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 9947,
+    "error": "Unterminated string in JSON at position 921 (line 1 column 922)"
+  },
+  {
+    "fileName": "datacite-2023-03-27-2023-04-02-2.ndjson",
+    "lineNumber": 9947,
+    "error": "Unexpected token 'P', \" Predators \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-02-14-2024-02-20-3.ndjson",
+    "lineNumber": 938,
+    "error": "Unterminated string in JSON at position 381 (line 1 column 382)"
+  },
+  {
+    "fileName": "datacite-2024-02-14-2024-02-20-3.ndjson",
+    "lineNumber": 938,
+    "error": "Unexpected token 'r', \"framing of \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-02-21-2024-02-27-3.ndjson",
+    "lineNumber": 7859,
+    "error": "Unterminated string in JSON at position 931 (line 1 column 932)"
+  },
+  {
+    "fileName": "datacite-2024-02-21-2024-02-27-3.ndjson",
+    "lineNumber": 7859,
+    "error": "Unexpected token 'M', \"Monitoring Program\" is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-02-21-2024-02-27-3.ndjson",
+    "lineNumber": 7859,
+    "error": "Unexpected token 'I', \"In those s\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-05-29-2024-06-04-1.ndjson",
+    "lineNumber": 7728,
+    "error": "Unterminated string in JSON at position 1042 (line 1 column 1043)"
+  },
+  {
+    "fileName": "datacite-2024-05-29-2024-06-04-1.ndjson",
+    "lineNumber": 7728,
+    "error": "Unexpected token '\\', \"\\r\\n* Cens\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-08-07-2024-08-13-5.ndjson",
+    "lineNumber": 9669,
+    "error": "Unterminated string in JSON at position 569 (line 1 column 570)"
+  },
+  {
+    "fileName": "datacite-2024-08-07-2024-08-13-5.ndjson",
+    "lineNumber": 9669,
+    "error": "Unexpected token 'ด', \"ด้านสิ่งแว\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-08-21-2024-08-27-6.ndjson",
+    "lineNumber": 9083,
+    "error": "Unterminated string in JSON at position 379 (line 1 column 380)"
+  },
+  {
+    "fileName": "datacite-2024-08-21-2024-08-27-6.ndjson",
+    "lineNumber": 9083,
+    "error": "Unexpected token 'P', \"Project Ac\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-08-21-2024-08-27-6.ndjson",
+    "lineNumber": 9085,
+    "error": "Unterminated string in JSON at position 379 (line 1 column 380)"
+  },
+  {
+    "fileName": "datacite-2024-08-21-2024-08-27-6.ndjson",
+    "lineNumber": 9085,
+    "error": "Unexpected token 'P', \"Project Ac\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-08-21-2024-08-27-7.ndjson",
+    "lineNumber": 270,
+    "error": "Unterminated string in JSON at position 1483 (line 1 column 1484)"
+  },
+  {
+    "fileName": "datacite-2024-08-21-2024-08-27-7.ndjson",
+    "lineNumber": 270,
+    "error": "Unexpected token 'D', \"Data files\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-09-18-2024-09-24-1.ndjson",
+    "lineNumber": 9808,
+    "error": "Unterminated string in JSON at position 1402 (line 1 column 1403)"
+  },
+  {
+    "fileName": "datacite-2024-09-18-2024-09-24-1.ndjson",
+    "lineNumber": 9808,
+    "error": "Unexpected token 'V', \"Views and \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unterminated string in JSON at position 409 (line 1 column 410)"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'l', \"largely be\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'a', \"ancestor o\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'c', \"comparable\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'm', \"mitochondr\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'g', \"gateway to\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'g', \"genomes, o\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'o', \"outcomes w\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'o', \"to which mt\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'd', \"describe e\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'e', \"evaluate c\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'h', \"hybridisat\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'c', \"complete r\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'h', \"haplotypes\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'o', \"or\\n genet\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 'i', \"introgress\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-11-20-2024-11-26-92.ndjson",
+    "lineNumber": 17567,
+    "error": "Unexpected token 's', \"simultaneo\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2024-12-11-2024-12-17-1.ndjson",
+    "lineNumber": 13844,
+    "error": "Unterminated string in JSON at position 749 (line 1 column 750)"
+  },
+  {
+    "fileName": "datacite-2024-12-11-2024-12-17-1.ndjson",
+    "lineNumber": 13844,
+    "error": "Unexpected token 'S', \"Samples ar\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-01-01-2025-01-07-1.ndjson",
+    "lineNumber": 1567,
+    "error": "Unterminated string in JSON at position 1300 (line 1 column 1301)"
+  },
+  {
+    "fileName": "datacite-2025-01-01-2025-01-07-1.ndjson",
+    "lineNumber": 1567,
+    "error": "Unexpected token 'P', \" Profiles o\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-01-01-2025-01-07-1.ndjson",
+    "lineNumber": 1567,
+    "error": "Unexpected token 'S', \" Sampling p\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-02-19-2025-02-25-1.ndjson",
+    "lineNumber": 16702,
+    "error": "Unterminated string in JSON at position 297 (line 1 column 298)"
+  },
+  {
+    "fileName": "datacite-2025-02-19-2025-02-25-1.ndjson",
+    "lineNumber": 16702,
+    "error": "Unexpected token 'h', \" history cl\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-02-19-2025-02-25-1.ndjson",
+    "lineNumber": 16702,
+    "error": "Unexpected token 'w', \"was used t\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-02-19-2025-02-25-1.ndjson",
+    "lineNumber": 16702,
+    "error": "Unexpected token 'c', \" component \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-04-23-2025-04-29-15.ndjson",
+    "lineNumber": 16465,
+    "error": "Unterminated string in JSON at position 209 (line 1 column 210)"
+  },
+  {
+    "fileName": "datacite-2025-04-23-2025-04-29-15.ndjson",
+    "lineNumber": 16465,
+    "error": "Unexpected token 'a', \"tachograph \"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-04-23-2025-04-29-15.ndjson",
+    "lineNumber": 16579,
+    "error": "Unterminated string in JSON at position 181 (line 1 column 182)"
+  },
+  {
+    "fileName": "datacite-2025-04-23-2025-04-29-15.ndjson",
+    "lineNumber": 16579,
+    "error": "Unexpected token 's', \"speed limi\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-05-21-2025-05-27-2.ndjson",
+    "lineNumber": 1585,
+    "error": "Unterminated string in JSON at position 763 (line 1 column 764)"
+  },
+  {
+    "fileName": "datacite-2025-05-21-2025-05-27-2.ndjson",
+    "lineNumber": 1585,
+    "error": "Unexpected token 'i', \"in the Dep\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-05-21-2025-05-27-2.ndjson",
+    "lineNumber": 1585,
+    "error": "Unterminated string in JSON at position 766 (line 1 column 767)"
+  },
+  {
+    "fileName": "datacite-2025-05-21-2025-05-27-2.ndjson",
+    "lineNumber": 1585,
+    "error": "Unexpected token 'i', \"in the Dep\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-06-11-2025-06-17-2.ndjson",
+    "lineNumber": 16127,
+    "error": "Unterminated string in JSON at position 206 (line 1 column 207)"
+  },
+  {
+    "fileName": "datacite-2025-06-11-2025-06-17-2.ndjson",
+    "lineNumber": 16127,
+    "error": "Unexpected token 'o', \"of the Mil\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-06-25-2025-07-01-34.ndjson",
+    "lineNumber": 18830,
+    "error": "Unterminated string in JSON at position 462 (line 1 column 463)"
+  },
+  {
+    "fileName": "datacite-2025-06-25-2025-07-01-34.ndjson",
+    "lineNumber": 18830,
+    "error": "Unexpected token 'E', \"Evidence F\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-08-20-2025-08-26-25.ndjson",
+    "lineNumber": 18289,
+    "error": "Unterminated string in JSON at position 1175 (line 1 column 1176)"
+  },
+  {
+    "fileName": "datacite-2025-08-20-2025-08-26-25.ndjson",
+    "lineNumber": 18289,
+    "error": "Unexpected token '“', \"“Key Drive\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-08-20-2025-08-26-25.ndjson",
+    "lineNumber": 18289,
+    "error": "Unterminated string in JSON at position 1177 (line 1 column 1178)"
+  },
+  {
+    "fileName": "datacite-2025-08-20-2025-08-26-25.ndjson",
+    "lineNumber": 18289,
+    "error": "Unexpected token '“', \"“Key Drive\"... is not valid JSON"
+  },
+  {
+    "fileName": "datacite-2025-09-10-2025-09-16-1.ndjson",
+    "lineNumber": 12385,
+    "error": "Unterminated string in JSON at position 1279 (line 1 column 1280)"
+  },
+  {
+    "fileName": "datacite-2025-09-10-2025-09-16-1.ndjson",
+    "lineNumber": 12385,
+    "error": "Unexpected token 'ค', \"ความน่าเชื\"... is not valid JSON"
+  }
+]
