@@ -86,6 +86,7 @@ model Dataset {
     datasetClaims UserDataset[]
 
     @@unique([identifierType, identifier])
+    @@index([title]) // for search
     @@index([identifier])
     @@index([publishedAt])
 }
