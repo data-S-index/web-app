@@ -34,13 +34,32 @@ model User {
     updated DateTime @updatedAt
 
     userDatasets UserDataset[]
+}
 
-    @@index([emailAddress])
+model UserDataset {
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@id([userId, datasetId])
+    @@index([userId])
+    @@index([datasetId])
 }
 
 model Dataset {
-    id  Int    @id @default(autoincrement())
-    doi String @unique
+    id Int @id @default(autoincrement())
+
+    source String? // The source of the dataset - e.g. "datacite", "emdb", "pmid", etc.
+
+    identifier     String @unique
+    identifierType String // doi, emdb, pmid, etc.
+
+    url String? // Might be important in the future for linking to the dataset if the identifier is not enough
 
     title       String
     description String?
@@ -63,26 +82,28 @@ model Dataset {
     Mention   Mention[]
     FujiScore FujiScore?
 
-    datasetClaims UserDataset[]
-
-    @@index([doi])
+    datasetClaims      UserDataset[]
+    fujiJob            FujiJob[]
+    datasetIdentifiers DatasetIdentifier[]
 }
 
-model UserDataset {
-    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-    userId String
+model DatasetIdentifier {
+    id Int @id @default(autoincrement())
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
 
+    identifier     String
+    identifierType String // doi, emdb, pmid, etc.
+
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    @@id([userId, datasetId])
+    @@unique([datasetId, identifierType, identifier])
 }
 
 model Citation {
-    id String @id @default(cuid(2))
+    id Int @id @default(autoincrement())
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
@@ -101,12 +122,12 @@ model Citation {
 }
 
 model FujiScore {
-    id String @id @default(cuid(2))
+    id Int @id @default(autoincrement())
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int     @unique
 
-    score          Float    @default(0.0) // 0.0-100.0
+    score          Float? // default is null so that we can store the score later
     evaluationDate DateTime
 
     metricVersion   String
@@ -116,14 +137,26 @@ model FujiScore {
     updated DateTime @updatedAt
 }
 
+model FujiJob {
+    id Int @id @default(autoincrement())
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@index([datasetId])
+}
+
 model Mention {
-    id String @id @default(cuid(2))
+    id BigInt @id @default(autoincrement())
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
 
     link   String
-    source String // github, linkedin, twitter, etc.
+    source String // github, linkedin, twitter, software heritage, etc.
 
     mentionedDate DateTime?
     mentionWeight Float     @default(1.0) // The weight of the mention (1.0 = 100% of the mention impact)
