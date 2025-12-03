@@ -56,7 +56,7 @@ model Dataset {
 
     source String? // The source of the dataset - e.g. "datacite", "emdb", "pmid", etc.
 
-    identifier     String @unique
+    identifier     String
     identifierType String // doi, emdb, pmid, etc.
 
     url String? // Might be important in the future for linking to the dataset if the identifier is not enough
@@ -68,23 +68,45 @@ model Dataset {
     publisher   String?
     publishedAt DateTime
 
-    authors String @default("[]") // A stringified version of the authors array for full text search : [{ nameType: String?, name: String, affiliations: String[], nameIdentifiers: string[]}]
-
     domain   String?
     subjects String[]
-
-    randomInt Int @default(0) // a field to touch when data in a related table is updated - For sorting by last updated
 
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    Citation  Citation[]
-    Mention   Mention[]
-    FujiScore FujiScore?
-
-    datasetClaims      UserDataset[]
-    fujiJob            FujiJob[]
     datasetIdentifiers DatasetIdentifier[]
+    datasetAuthors     DatasetAuthor[]
+
+    citations Citation[]
+    mentions  Mention[]
+    fujiScore FujiScore?
+
+    fujiJobs FujiJob[]
+
+    datasetClaims UserDataset[]
+
+    @@unique([identifierType, identifier])
+    @@index([identifier])
+    @@index([publishedAt])
+}
+
+model DatasetAuthor {
+    id BigInt @id @default(autoincrement())
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    nameType        String?
+    name            String
+    nameIdentifiers String[] @default([])
+
+    affiliations String[] @default([])
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@index([name, datasetId])
+    @@index([datasetId])
 }
 
 model DatasetIdentifier {
@@ -100,10 +122,11 @@ model DatasetIdentifier {
     updated DateTime @updatedAt
 
     @@unique([datasetId, identifierType, identifier])
+    @@index([identifierType, identifier])
 }
 
 model Citation {
-    id Int @id @default(autoincrement())
+    id BigInt @id @default(autoincrement())
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
@@ -119,6 +142,10 @@ model Citation {
 
     created DateTime @default(now())
     updated DateTime @updatedAt
+
+    @@unique([datasetId, citationLink])
+    @@index([datasetId])
+    @@index([citedDate])
 }
 
 model FujiScore {
@@ -163,4 +190,8 @@ model Mention {
 
     created DateTime @default(now())
     updated DateTime @updatedAt
+
+    @@unique([datasetId, link, source])
+    @@index([datasetId])
+    @@index([mentionedDate])
 }
