@@ -1,6 +1,6 @@
 generator client {
     provider        = "prisma-client"
-    previewFeatures = ["strictUndefinedChecks", "fullTextSearchPostgres"]
+    previewFeatures = ["strictUndefinedChecks"]
     output          = "../shared/generated/"
     engineType      = "client"
 }
