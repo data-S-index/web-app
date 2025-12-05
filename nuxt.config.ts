@@ -24,6 +24,8 @@ export default defineNuxtConfig({
     mailPass: process.env.MAIL_PASS || "password",
     mailPort: process.env.MAIL_PORT || "587",
     mailUser: process.env.MAIL_USER || "user",
+    searchApiKey: process.env.MEILISEARCH_API_KEY || "",
+    searchApiUrl: process.env.MEILISEARCH_API_URL || "",
     public: {
       ENABLE_EMAIL_VERIFICATION: process.env.ENABLE_EMAIL_VERIFICATION
         ? process.env.ENABLE_EMAIL_VERIFICATION === "true"

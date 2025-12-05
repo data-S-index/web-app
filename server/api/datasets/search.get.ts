@@ -1,4 +1,5 @@
 import prisma from "../../utils/prisma";
+import meilisearch from "../../utils/meilisearch";
 
 // returns a paginated list of datasets
 export default defineEventHandler(async (event) => {
@@ -9,8 +10,8 @@ export default defineEventHandler(async (event) => {
   const page = parseInt(query.page as string) || 1;
   const total = parseInt(query.total as string) || 0;
 
-  // we will only return 10 datasets per page
-  const limit = 10;
+  // Use Meilisearch default limit of 20 results per page
+  const limit = 20;
   const offset = (page - 1) * limit;
 
   // If no search term, return empty results
@@ -25,33 +26,57 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    // Full-text search using search_vector (indexed by title)
-    // This uses PostgreSQL's full-text search with ranking
-    type DatasetResult = {
-      id: number;
-      title: string;
-      identifier: string;
-      description: string | null;
-      rank: number;
-      datasetAuthors: Array<{ name: string }>;
-    };
+    // Search Meilisearch index for dataset IDs
+    const index = meilisearch.index("dataset");
+    const searchResults = await index.search(searchTerm, {
+      limit: limit,
+      offset: offset,
+    });
 
-    const datasets = await prisma.$queryRaw<DatasetResult[]>`
-      SELECT 
-        d.id,
-        d.title,
-        d.identifier,
-        d.description,
-        ts_rank(d.search_vector, plainto_tsquery('english', ${searchTerm})) AS rank
-      FROM "Dataset" d
-      WHERE d.search_vector @@ plainto_tsquery('english', ${searchTerm})
-      ORDER BY rank DESC
-      LIMIT ${limit}
-      OFFSET ${offset}
-    `;
+    // Extract dataset IDs from search results and convert to numbers
+    const datasetIds = searchResults.hits
+      .map((hit) => {
+        const id = (hit as Record<string, unknown>).id;
+
+        return typeof id === "string" ? parseInt(id, 10) : id;
+      })
+      .filter(
+        (id): id is number => typeof id === "number" && !isNaN(id),
+      ) as number[];
+
+    // If no results from Meilisearch, return empty
+    if (datasetIds.length === 0) {
+      const queryEndTime = performance.now();
+      const queryDuration = queryEndTime - queryStartTime;
+      const executionTime =
+        queryDuration > 1000
+          ? `${(queryDuration / 1000).toFixed(2)}s`
+          : `${queryDuration.toFixed(2)}ms`;
+
+      return {
+        datasets: [],
+        total: searchResults.estimatedTotalHits || 0,
+        page,
+        limit,
+        queryDuration: executionTime,
+      };
+    }
+
+    // Fetch full dataset details from database
+    const datasets = await prisma.dataset.findMany({
+      where: {
+        id: { in: datasetIds },
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        version: true,
+        publishedAt: true,
+      },
+    });
 
     // Get authors for each dataset
-    const datasetIds = datasets.map((d) => d.id);
     const authors = await prisma.datasetAuthor.findMany({
       where: {
         datasetId: { in: datasetIds },
@@ -64,7 +89,7 @@ export default defineEventHandler(async (event) => {
 
     // Group authors by dataset
     const authorsByDataset = authors.reduce(
-      (acc, author) => {
+      (acc: Record<number, Array<{ name: string }>>, author) => {
         if (!acc[author.datasetId]) {
           acc[author.datasetId] = [];
         }
@@ -75,29 +100,42 @@ export default defineEventHandler(async (event) => {
       {} as Record<number, Array<{ name: string }>>,
     );
 
-    // Format results
-    const formattedDatasets = datasets.map((dataset) => {
-      const authors = authorsByDataset[dataset.id] || [];
-      const authorsNamesString = authors
-        .map((author) => author.name)
-        .join("; ");
+    // Format results - maintain order from Meilisearch results
+    const datasetMap = new Map(datasets.map((d) => [d.id, d]));
+    const formattedDatasets = datasetIds
+      .map((id: number) => {
+        const dataset = datasetMap.get(id);
+        if (!dataset) return null;
 
-      return {
-        id: dataset.id,
-        title: dataset.title,
-        authors: authorsNamesString,
-      };
-    });
+        const datasetAuthors = authorsByDataset[dataset.id] || [];
+        const authorsNamesString = datasetAuthors
+          .map((author: { name: string }) => author.name)
+          .join("; ");
 
-    // Get total count if needed
+        return {
+          id: dataset.id,
+          title: dataset.title,
+          authors: authorsNamesString,
+          version: dataset.version,
+          publishedAt: dataset.publishedAt,
+        };
+      })
+      .filter(
+        (
+          item,
+        ): item is {
+          id: number;
+          title: string;
+          authors: string;
+          version: string | null;
+          publishedAt: Date;
+        } => item !== null,
+      );
+
+    // Get total count from Meilisearch
     let totalCount = total;
     if (total === -1) {
-      const countResult = await prisma.$queryRaw<[{ count: bigint }]>`
-        SELECT COUNT(*)::int AS count
-        FROM "Dataset" d
-        WHERE d.search_vector @@ plainto_tsquery('english', ${searchTerm})
-      `;
-      totalCount = Number(countResult[0]?.count || 0);
+      totalCount = searchResults.estimatedTotalHits || 0;
     }
 
     const queryEndTime = performance.now();
@@ -119,7 +157,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage:
-        "Search failed. Please ensure database indexes are set up.",
+        "Search failed. Please ensure Meilisearch is configured and the dataset index exists.",
     });
   }
 });

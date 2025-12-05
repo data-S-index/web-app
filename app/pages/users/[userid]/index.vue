@@ -1,11 +1,7 @@
 <script setup lang="ts">
 import { faker } from "@faker-js/faker";
-import { h, resolveComponent } from "vue";
-import type { TableColumn } from "@nuxt/ui";
+import type { Author } from "#shared/types/dataset";
 const { user, loggedIn } = useUserSession();
-
-const UCheckbox = resolveComponent("UCheckbox");
-const UButton = resolveComponent("UButton");
 
 useSeoMeta({
   title: "User Profile",
@@ -14,97 +10,11 @@ useSeoMeta({
 const route = useRoute();
 const toast = useToast();
 
-// const { userid } = route.params as { userid: string };
 const userid = (route.params.userid as string).toUpperCase();
 
-// const { user } = useUserSession();
-
-// const searchTerm = ref<string>(
-//   user.value?.givenName && user.value?.familyName
-//     ? `${user.value?.givenName} ${user.value?.familyName}`
-//     : "",
-// );
-
-type SearchResult = {
-  id: string;
-  title: string;
-  doi: string;
-  authors: string;
-  description: string;
-  publishedAt: string;
-};
-
-const searchTerm = ref<string>("Covid 19");
-
-const searchLoading = ref(false);
-const searchResults = ref<SearchResult[]>([]);
-const searchPage = ref(0);
-const searchTotal = ref(-1);
-const searchDuration = ref<string>("0ms");
-const addDatasetModal = ref(true);
-const attachDatasetsToUserLoading = ref(false);
-
-const columns: TableColumn<{
-  id: string;
-  title: string;
-  doi: string;
-  authors: Author[];
-  description: string;
-  publishedAt: string;
-}>[] = [
-  {
-    id: "select",
-    header: ({ table }) =>
-      h(UCheckbox, {
-        modelValue: table.getIsSomePageRowsSelected()
-          ? "indeterminate"
-          : table.getIsAllPageRowsSelected(),
-        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
-          table.toggleAllPageRowsSelected(!!value),
-        "aria-label": "Select all",
-      }),
-    cell: ({ row }) =>
-      h(UCheckbox, {
-        modelValue: row.getIsSelected(),
-        "onUpdate:modelValue": (value: boolean | "indeterminate") =>
-          row.toggleSelected(!!value),
-        "aria-label": "Select row",
-      }),
-  },
-  // {
-  //   id: "id",
-  //   header: "#",
-  //   cell: ({ row }) => row.original.id,
-  // },
-  {
-    id: "title",
-    header: "Title",
-    cell: ({ row }) => row.original.title,
-  },
-  {
-    id: "doi",
-    header: "DOI",
-    cell: ({ row }) =>
-      h(UButton, {
-        icon: "i-heroicons-link-20-solid",
-        trailing: true,
-        label: row.original.doi,
-        href: `https://doi.org/${row.original.doi}`,
-        target: "_blank",
-        size: "sm",
-        variant: "link",
-      }),
-  },
-];
-
-const selectAll = ref(false);
-const rowSelection = ref<Record<string, boolean>>({});
-
-const {
-  data: userData,
-  error,
-  refresh: refreshUserData,
-} = await useFetch(`/api/users/${userid}/datasets`);
+const { data: userData, error } = await useFetch(
+  `/api/users/${userid}/datasets`,
+);
 
 if (error.value) {
   toast.add({
@@ -153,123 +63,6 @@ const fullName = computed(() => {
 
   return `${givenName} ${familyName}`.trim() || "User";
 });
-
-const updateSearchPage = (page: number) => {
-  searchForDatasets(page, false);
-};
-
-const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
-  if (reset) {
-    searchPage.value = 1;
-    searchTotal.value = -1;
-    searchResults.value = [];
-    rowSelection.value = {};
-  }
-
-  searchLoading.value = true;
-  console.log("Searching for datasets on page", page);
-
-  await $fetch(
-    `/api/datasets/search?q=${searchTerm.value}&page=${searchPage.value}&total=${searchTotal.value}`,
-  )
-    .then((response) => {
-      console.log(response);
-      searchResults.value = response.datasets as SearchResult[];
-      searchTotal.value = response.total;
-      searchPage.value = response.page;
-      searchDuration.value = response.queryDuration;
-    })
-    .catch((error) => {
-      toast.add({
-        title: "Error searching for datasets",
-        description: error.data?.statusMessage,
-        icon: "material-symbols:error",
-        color: "error",
-      });
-    })
-    .finally(() => {
-      searchLoading.value = false;
-    });
-};
-
-const attachDatasetsToUser = async () => {
-  attachDatasetsToUserLoading.value = true;
-
-  // rowSelection has an object with the index in string format of the row as the key and the value is true if the row is selected
-  const selectedDatasetIds = Object.keys(rowSelection.value).filter(
-    (key) => rowSelection.value[key],
-  );
-
-  console.log("selectedDatasetIds", selectedDatasetIds);
-
-  // Filter out datasets that the user already has
-  const existingDatasetIds = new Set(
-    userData.value?.map((item: { datasetId: string }) => item.datasetId) || [],
-  );
-  const datasetIds = selectedDatasetIds
-    .filter((id): id is string => !!id)
-    .filter((id) => !existingDatasetIds.has(id));
-
-  if (!datasetIds.length) {
-    if (selectedDatasetIds.length > 0) {
-      toast.add({
-        title: "All selected datasets are already in your list",
-        description: "Please select datasets that you don't already have",
-        icon: "material-symbols:info",
-        color: "info",
-      });
-    } else {
-      toast.add({
-        title: "No datasets selected",
-        description: "Please select at least one dataset",
-        icon: "material-symbols:error",
-        color: "error",
-      });
-    }
-    attachDatasetsToUserLoading.value = false;
-
-    return;
-  }
-
-  await $fetch("/api/user/datasets/", {
-    method: "POST",
-    body: {
-      datasetIds,
-    },
-  })
-    .then(async () => {
-      toast.add({
-        title: "Datasets attached to user",
-        description: "Datasets attached to user successfully",
-      });
-
-      // Refresh user data
-      await refreshUserData();
-
-      // Close the modal
-      addDatasetModal.value = false;
-
-      // Clear search state
-      searchResults.value = [];
-      rowSelection.value = {};
-      searchTerm.value = "";
-    })
-    .catch((error) => {
-      toast.add({
-        title: "Error attaching datasets to user",
-        description: error.data?.statusMessage,
-        icon: "material-symbols:error",
-        color: "error",
-      });
-    })
-    .finally(() => {
-      attachDatasetsToUserLoading.value = false;
-    });
-};
-
-const openAddDatasetModal = () => {
-  addDatasetModal.value = true;
-};
 
 const getAuthorTooltipText = (author: Author): string => {
   const parts: string[] = [];
@@ -350,7 +143,7 @@ const getAuthorTooltipText = (author: Author): string => {
               {{
                 userData?.reduce(
                   (sum: number, item: any) =>
-                    sum + item.dataset.Citation.length,
+                    sum + item.dataset.citations.length,
                   0,
                 )
               }}
@@ -365,157 +158,12 @@ const getAuthorTooltipText = (author: Author): string => {
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold">Datasets</h2>
 
-          <div class="flex items-center gap-2">
-            <UModal
-              v-model:open="addDatasetModal"
-              title="Add a dataset to your account"
-              :ui="{
-                content: 'max-w-3xl',
-              }"
-            >
-              <UButton
-                v-if="loggedIn && user?.id === userid"
-                icon="i-heroicons-plus-20-solid"
-                label="Add a dataset"
-                @click="openAddDatasetModal"
-              />
-
-              <template #body>
-                <div class="w-full space-y-4 overflow-auto">
-                  <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <UInput
-                      v-model="searchTerm"
-                      icon="i-lucide-search"
-                      size="md"
-                      variant="outline"
-                      placeholder="Search for datasets by title, DOI, or keywords..."
-                      class="min-w-0 flex-1"
-                      @keyup.enter="searchForDatasets"
-                    />
-
-                    <UButton
-                      icon="i-heroicons-magnifying-glass-20-solid"
-                      label="Search"
-                      size="md"
-                      :disabled="!searchTerm.trim()"
-                      :loading="searchLoading"
-                      class="shrink-0"
-                      @click="searchForDatasets(searchPage, true)"
-                    />
-                  </div>
-
-                  <div v-if="searchResults.length > 0">
-                    <USeparator />
-
-                    <div class="flex flex-col gap-4 py-4">
-                      <div v-if="searchLoading">
-                        <div class="py-6 text-center">
-                          <Icon
-                            name="i-heroicons-arrow-path-20-solid"
-                            class="text-primary-500 mx-auto h-8 w-8 animate-spin"
-                          />
-
-                          <p class="mt-2 text-sm dark:text-gray-400">
-                            Searching...
-                          </p>
-                        </div>
-                      </div>
-
-                      <div v-else>
-                        <div
-                          class="flex flex-col gap-2 px-2 sm:flex-row sm:justify-between"
-                        >
-                          <UCheckbox v-model="selectAll" label="Select all" />
-
-                          <div class="flex items-center gap-1">
-                            <div
-                              v-if="searchDuration !== '0ms' && !searchLoading"
-                              class="flex items-center gap-1"
-                            >
-                              <Icon
-                                name="i-heroicons-clock-20-solid"
-                                size="sm"
-                              />
-
-                              <span class="text-xs">
-                                {{ searchDuration }}
-                              </span>
-                              |
-                            </div>
-
-                            <UButton
-                              icon="i-heroicons-plus-20-solid"
-                              label="Add selected datasets"
-                              size="sm"
-                              :disabled="
-                                searchLoading || searchResults.length === 0
-                              "
-                              :loading="attachDatasetsToUserLoading"
-                              @click="attachDatasetsToUser"
-                            />
-                          </div>
-                        </div>
-
-                        <USeparator class="my-2" />
-
-                        <div
-                          v-for="result in searchResults"
-                          :key="result.id"
-                          class="mb-1 border-b border-gray-200 px-2 pb-1"
-                        >
-                          <div class="flex gap-2">
-                            <UCheckbox
-                              v-model="rowSelection[result.id]"
-                              class="shrink-0"
-                            />
-
-                            <div class="flex min-w-0 flex-1 flex-col">
-                              <a
-                                :href="`/datasets/${result.id}`"
-                                target="_blank"
-                                class="group flex-1"
-                              >
-                                <p
-                                  class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-sm font-medium transition-colors"
-                                >
-                                  {{ result.title }}
-                                </p>
-                              </a>
-
-                              <div
-                                class="flex min-w-0 items-center justify-between gap-2"
-                              >
-                                <p class="flex-1 truncate text-xs">
-                                  {{ result.authors }}
-                                </p>
-
-                                <p class="w-max text-sm">
-                                  {{
-                                    $dayjs(result.publishedAt).format(
-                                      "MMMM YYYY",
-                                    )
-                                  }}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div class="flex w-full justify-center">
-                        <UPagination
-                          v-model:page="searchPage"
-                          :total="searchTotal"
-                          :disabled="searchLoading"
-                          @update:page="updateSearchPage"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-            </UModal>
-          </div>
+          <UButton
+            v-if="loggedIn && user?.id === userid"
+            icon="i-heroicons-plus-20-solid"
+            label="Add a dataset"
+            :to="`/users/${userid}/add`"
+          />
         </div>
 
         <div v-if="userData" class="flex flex-col gap-4">
@@ -537,7 +185,7 @@ const getAuthorTooltipText = (author: Author): string => {
                 <UBadge
                   color="primary"
                   variant="subtle"
-                  :label="`${item.dataset.Citation.length} Citation${item.dataset.Citation.length !== 1 ? 's' : ''}`"
+                  :label="`${item.dataset.citations.length} Citation${item.dataset.citations.length !== 1 ? 's' : ''}`"
                   icon="i-heroicons-book-open-20-solid"
                 />
               </div>
@@ -556,8 +204,8 @@ const getAuthorTooltipText = (author: Author): string => {
 
                 <div class="flex flex-wrap gap-1 text-sm">
                   <template
-                    v-for="(author, index) in item.dataset
-                      .authors as unknown as Author[]"
+                    v-for="(author, index) in (item.dataset as any)
+                      .datasetAuthors as unknown as Author[]"
                     :key="index"
                   >
                     <UTooltip :text="getAuthorTooltipText(author)">
@@ -571,7 +219,11 @@ const getAuthorTooltipText = (author: Author): string => {
                     <span
                       v-if="
                         index <
-                        (item.dataset.authors as unknown as Author[]).length - 1
+                        (
+                          (item.dataset as any)
+                            .datasetAuthors as unknown as Author[]
+                        ).length -
+                          1
                       "
                     >
                       ,
@@ -600,8 +252,8 @@ const getAuthorTooltipText = (author: Author): string => {
                 </UTooltip>
 
                 <a
-                  v-if="item.dataset.doi"
-                  :href="`https://doi.org/${item.dataset.doi}`"
+                  v-if="(item.dataset as any).identifierType === 'doi'"
+                  :href="`https://doi.org/${(item.dataset as any).identifier}`"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="inline-block"
@@ -609,7 +261,7 @@ const getAuthorTooltipText = (author: Author): string => {
                   <UBadge
                     color="success"
                     variant="subtle"
-                    :label="item.dataset.doi"
+                    :label="(item.dataset as any).identifier"
                     icon="i-heroicons-link-20-solid"
                     class="cursor-pointer"
                   />
