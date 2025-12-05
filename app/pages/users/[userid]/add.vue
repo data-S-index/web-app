@@ -182,6 +182,13 @@ watch(
   },
   { deep: true },
 );
+
+// Perform initial search on page load
+onMounted(() => {
+  if (searchTerm.value.trim()) {
+    searchForDatasets(1, true);
+  }
+});
 </script>
 
 <template>
