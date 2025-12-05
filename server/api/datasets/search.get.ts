@@ -42,31 +42,9 @@ export default defineEventHandler(async (event) => {
         d.title,
         d.identifier,
         d.description,
-        COALESCE(
-          ts_rank(d.search_vector, plainto_tsquery('english', ${searchTerm})),
-          0
-        ) + 
-        CASE 
-          WHEN d.identifier ILIKE '%' || ${searchTerm} || '%' THEN 0.3
-          ELSE 0
-        END +
-        CASE 
-          WHEN EXISTS (
-            SELECT 1 FROM "DatasetIdentifier" di 
-            WHERE di."datasetId" = d.id 
-            AND di.identifier ILIKE '%' || ${searchTerm} || '%'
-          ) THEN 0.3
-          ELSE 0
-        END AS rank
+        ts_rank(d.search_vector, plainto_tsquery('english', ${searchTerm})) AS rank
       FROM "Dataset" d
-      WHERE 
-        d.search_vector @@ plainto_tsquery('english', ${searchTerm})
-        OR d.identifier ILIKE '%' || ${searchTerm} || '%'
-        OR EXISTS (
-          SELECT 1 FROM "DatasetIdentifier" di 
-          WHERE di."datasetId" = d.id 
-          AND di.identifier ILIKE '%' || ${searchTerm} || '%'
-        )
+      WHERE d.search_vector @@ plainto_tsquery('english', ${searchTerm})
       ORDER BY rank DESC
       LIMIT ${limit}
       OFFSET ${offset}
@@ -115,16 +93,9 @@ export default defineEventHandler(async (event) => {
     let totalCount = total;
     if (total === -1) {
       const countResult = await prisma.$queryRaw<[{ count: bigint }]>`
-        SELECT COUNT(DISTINCT d.id)::int AS count
+        SELECT COUNT(*)::int AS count
         FROM "Dataset" d
-        WHERE 
-          d.search_vector @@ plainto_tsquery('english', ${searchTerm})
-          OR d.identifier ILIKE '%' || ${searchTerm} || '%'
-          OR EXISTS (
-            SELECT 1 FROM "DatasetIdentifier" di 
-            WHERE di."datasetId" = d.id 
-            AND di.identifier ILIKE '%' || ${searchTerm} || '%'
-          )
+        WHERE d.search_vector @@ plainto_tsquery('english', ${searchTerm})
       `;
       totalCount = Number(countResult[0]?.count || 0);
     }

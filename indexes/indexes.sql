@@ -7,8 +7,7 @@ CREATE EXTENSION IF NOT EXISTS unaccent;  -- optional but recommended
 ALTER TABLE "Dataset"
 ADD COLUMN search_vector tsvector
 GENERATED ALWAYS AS (
-  setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
-  setweight(to_tsvector('english', coalesce(identifier, '')), 'B')
+  setweight(to_tsvector('english', coalesce(title, '')), 'A')
 ) STORED;
 
 CREATE INDEX "Dataset_search_vector_idx"
