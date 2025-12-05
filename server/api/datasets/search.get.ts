@@ -13,11 +13,15 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const searchTerm = (query.q as string) || "";
   const page = parseInt(query.page as string) || 1;
-  const total = parseInt(query.total as string) || 0;
   const userid = userId;
 
   // Use Meilisearch default limit of 20 results per page
+  // Note: Meilisearch has a maximum of 1000 results per query
+  // So max offset is 1000 - limit = 980 (for limit 20, max page is 50)
   const limit = 20;
+  const MEILISEARCH_MAX_RESULTS = 1000;
+  const maxOffset = MEILISEARCH_MAX_RESULTS - limit; // 980
+  const maxPage = Math.floor(MEILISEARCH_MAX_RESULTS / limit); // 50
   const offset = (page - 1) * limit;
 
   // If no search term, return empty results
@@ -47,11 +51,19 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    // Validate offset doesn't exceed Meilisearch's limit
+    // Meilisearch can only return up to 1000 results total
+    const validatedOffset = Math.min(offset, maxOffset);
+    const validatedPageForOffset =
+      validatedOffset !== offset
+        ? Math.floor(validatedOffset / limit) + 1
+        : page;
+
     // Search Meilisearch index for dataset IDs
     const index = meilisearch.index("dataset");
     const searchResults = await index.search(searchTerm, {
       limit: limit,
-      offset: offset,
+      offset: validatedOffset,
     });
 
     // Extract dataset IDs from search results and convert to numbers
@@ -88,9 +100,13 @@ export default defineEventHandler(async (event) => {
         existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
       }
 
+      // Cap total at Meilisearch's maximum (1000) for pagination purposes
+      const rawTotalCount = searchResults.estimatedTotalHits || 0;
+      const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
+
       return {
         datasets: [],
-        total: searchResults.estimatedTotalHits || 0,
+        total: totalCount,
         page,
         limit,
         queryDuration: executionTime,
@@ -168,11 +184,22 @@ export default defineEventHandler(async (event) => {
         } => item !== null,
       );
 
-    // Get total count from Meilisearch
-    let totalCount = total;
-    if (total === -1) {
-      totalCount = searchResults.estimatedTotalHits || 0;
-    }
+    // Always get total count from Meilisearch (don't cache it)
+    // This ensures accuracy as Meilisearch's estimatedTotalHits is the source of truth
+    const rawTotalCount = searchResults.estimatedTotalHits || 0;
+
+    // Cap total at Meilisearch's maximum (1000) for pagination purposes
+    // This prevents trying to access pages beyond what Meilisearch can return
+    const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
+
+    // Validate page number - use the smaller of calculated max page or Meilisearch limit
+    const calculatedMaxPage =
+      totalCount > 0 ? Math.ceil(totalCount / limit) : 1;
+    const actualMaxPage = Math.min(calculatedMaxPage, maxPage);
+    const validatedPage = Math.max(
+      1,
+      Math.min(validatedPageForOffset, actualMaxPage),
+    );
 
     // Fetch existing dataset IDs for the user if userid is provided
     let existingDatasetIds: number[] = [];
@@ -195,10 +222,13 @@ export default defineEventHandler(async (event) => {
         ? `${(queryDuration / 1000).toFixed(2)}s`
         : `${queryDuration.toFixed(2)}ms`;
 
+    // Ensure total never exceeds Meilisearch's limit (safety check)
+    const finalTotal = Math.min(totalCount, MEILISEARCH_MAX_RESULTS);
+
     return {
       datasets: formattedDatasets,
-      total: totalCount,
-      page,
+      total: finalTotal, // Capped at 1000 to match Meilisearch's limit
+      page: validatedPage, // Return validated page to ensure frontend stays in sync
       limit,
       queryDuration: executionTime,
       existingDatasetIds,

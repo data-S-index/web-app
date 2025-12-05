@@ -48,14 +48,16 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
     searchTotal.value = -1;
     searchResults.value = [];
     rowSelection.value = {};
+    page = 1; // Reset page to 1 when resetting
+  } else {
+    // Update searchPage to the requested page
+    searchPage.value = page;
   }
 
   searchLoading.value = true;
   console.log("Searching for datasets on page", page);
 
-  await $fetch(
-    `/api/datasets/search?q=${searchTerm.value}&page=${searchPage.value}&total=${searchTotal.value}`,
-  )
+  await $fetch(`/api/datasets/search?q=${searchTerm.value}&page=${page}`)
     .then((response) => {
       console.log(response);
       searchResults.value = response.datasets as SearchResult[];
@@ -407,7 +409,8 @@ onMounted(() => {
               <div class="flex w-full justify-center">
                 <UPagination
                   v-model:page="searchPage"
-                  :total="searchTotal"
+                  :total="Math.min(searchTotal, 1000)"
+                  :page-size="20"
                   :disabled="searchLoading"
                   @update:page="updateSearchPage"
                 />
