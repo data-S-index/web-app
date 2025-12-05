@@ -20,6 +20,7 @@ services:
     environment:
       MEILI_ENV: development
       MEILI_MASTER_KEY: K8xP2mN9vQ5rT7wY3zA6bC1dE4fG8hJ0kL2mN5pQ8sT1vW4xZ7aB0cD3eF6gH9
+      MEILI_HTTP_PAYLOAD_SIZE_LIMIT: 500856700
     volumes:
       - meili_data:/meili_data
 
