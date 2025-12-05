@@ -35,9 +35,8 @@ const searchDuration = ref<string>("0ms");
 const attachDatasetsToUserLoading = ref(false);
 const rowSelection = ref<Record<string, boolean>>({});
 const selectAll = ref(false);
-
-// Fetch user datasets to check for existing ones
-const { data: userData } = await useFetch(`/api/users/${userid}/datasets`);
+const hasSearched = ref(false);
+const existingDatasetIds = ref<Set<number>>(new Set());
 
 const updateSearchPage = (page: number) => {
   searchForDatasets(page, false);
@@ -63,6 +62,11 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
       searchTotal.value = response.total;
       searchPage.value = response.page;
       searchDuration.value = response.queryDuration;
+      // Update existing dataset IDs from the response
+      if (response.existingDatasetIds) {
+        existingDatasetIds.value = new Set(response.existingDatasetIds);
+      }
+      hasSearched.value = true;
     })
     .catch((error) => {
       toast.add({
@@ -88,14 +92,9 @@ const attachDatasetsToUser = async () => {
   console.log("selectedDatasetIds", selectedDatasetIds);
 
   // Filter out datasets that the user already has
-  const existingDatasetIds = new Set(
-    userData.value?.map((item: { datasetId: number }) =>
-      String(item.datasetId),
-    ) || [],
-  );
   const datasetIds = selectedDatasetIds
-    .filter((id): id is string => !!id)
-    .filter((id) => !existingDatasetIds.has(id))
+    .filter((id) => !!id)
+    .filter((id) => !existingDatasetIds.value.has(Number(id)))
     .map((id) => Number(id));
 
   if (!datasetIds.length) {
@@ -147,11 +146,26 @@ const attachDatasetsToUser = async () => {
     });
 };
 
-// Watch selectAll to toggle all checkboxes
+// Computed property to check if all selectable items are selected
+const allSelectableSelected = computed(() => {
+  const selectableResults = searchResults.value.filter(
+    (result) => !existingDatasetIds.value.has(result.id),
+  );
+  if (selectableResults.length === 0) return false;
+
+  return selectableResults.every(
+    (result) => rowSelection.value[String(result.id)] === true,
+  );
+});
+
+// Watch selectAll to toggle all checkboxes (excluding disabled ones)
 watch(selectAll, (value) => {
   if (value) {
     searchResults.value.forEach((result) => {
-      rowSelection.value[String(result.id)] = true;
+      // Only select if not already owned
+      if (!existingDatasetIds.value.has(result.id)) {
+        rowSelection.value[String(result.id)] = true;
+      }
     });
   } else {
     searchResults.value.forEach((result) => {
@@ -159,6 +173,15 @@ watch(selectAll, (value) => {
     });
   }
 });
+
+// Watch searchResults to update selectAll state
+watch(
+  [searchResults, rowSelection, existingDatasetIds],
+  () => {
+    selectAll.value = allSelectableSelected.value;
+  },
+  { deep: true },
+);
 </script>
 
 <template>
@@ -209,7 +232,15 @@ watch(selectAll, (value) => {
                 <div
                   class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <UCheckbox v-model="selectAll" label="Select all" size="md" />
+                  <UCheckbox
+                    v-model="selectAll"
+                    label="Select all"
+                    size="md"
+                    :disabled="
+                      searchResults.filter((r) => !existingDatasetIds.has(r.id))
+                        .length === 0
+                    "
+                  />
 
                   <div class="flex items-center gap-3">
                     <div
@@ -242,16 +273,47 @@ watch(selectAll, (value) => {
                 <USeparator class="my-4" />
 
                 <div class="space-y-3">
-                  <UCard
+                  <div
                     v-for="result in searchResults"
                     :key="result.id"
-                    class="transition-all hover:shadow-md"
+                    :class="[
+                      'relative flex rounded-lg border-2 p-4 transition-all',
+                      existingDatasetIds.has(result.id)
+                        ? 'cursor-not-allowed border-gray-300 bg-gray-100 opacity-60 dark:border-gray-600 dark:bg-gray-800/30'
+                        : rowSelection[String(result.id)]
+                          ? 'border-primary-500 bg-primary-50 ring-primary-500/20 dark:border-primary-400 dark:bg-primary-950/30 dark:ring-primary-400/20 cursor-pointer ring-2'
+                          : 'cursor-pointer border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600',
+                    ]"
+                    @click="
+                      if (!existingDatasetIds.has(result.id)) {
+                        rowSelection[String(result.id)] =
+                          !rowSelection[String(result.id)];
+                      }
+                    "
                   >
-                    <div class="flex gap-4 p-4">
-                      <UCheckbox
-                        v-model="rowSelection[String(result.id)]"
-                        class="mt-1 shrink-0"
-                      />
+                    <div class="flex min-w-0 flex-1 items-start gap-3">
+                      <div
+                        :class="[
+                          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all',
+                          existingDatasetIds.has(result.id)
+                            ? 'border-gray-400 bg-gray-400 dark:border-gray-500 dark:bg-gray-500'
+                            : rowSelection[String(result.id)]
+                              ? 'border-primary-500 bg-primary-500 dark:border-primary-400 dark:bg-primary-400'
+                              : 'border-gray-300 dark:border-gray-600',
+                        ]"
+                      >
+                        <Icon
+                          v-if="existingDatasetIds.has(result.id)"
+                          name="i-heroicons-check-circle-20-solid"
+                          class="h-3 w-3 text-white"
+                        />
+
+                        <Icon
+                          v-else-if="rowSelection[String(result.id)]"
+                          name="i-heroicons-check-20-solid"
+                          class="h-3 w-3 text-white"
+                        />
+                      </div>
 
                       <div class="flex min-w-0 flex-1 flex-col gap-2">
                         <div class="flex items-start justify-between gap-3">
@@ -259,13 +321,30 @@ watch(selectAll, (value) => {
                             :href="`/datasets/${result.id}`"
                             target="_blank"
                             class="group min-w-0 flex-1"
+                            @click.stop
                           >
                             <h3
-                              class="group-hover:text-primary-600 dark:group-hover:text-primary-400 line-clamp-2 text-base leading-snug font-semibold transition-colors"
+                              :class="[
+                                'line-clamp-2 text-base leading-snug font-semibold transition-colors',
+                                existingDatasetIds.has(result.id)
+                                  ? 'text-gray-500 dark:text-gray-400'
+                                  : 'group-hover:text-primary-600 dark:group-hover:text-primary-400',
+                              ]"
                             >
                               {{ result.title }}
                             </h3>
                           </a>
+
+                          <UBadge
+                            v-if="existingDatasetIds.has(result.id)"
+                            color="neutral"
+                            variant="soft"
+                            size="sm"
+                            label="Already added"
+                            icon="i-heroicons-check-circle-20-solid"
+                            class="shrink-0"
+                            @click.stop
+                          />
 
                           <UBadge
                             v-if="result.version"
@@ -275,6 +354,7 @@ watch(selectAll, (value) => {
                             :label="`v${result.version}`"
                             icon="i-heroicons-tag-20-solid"
                             class="shrink-0"
+                            @click.stop
                           />
                         </div>
 
@@ -313,7 +393,7 @@ watch(selectAll, (value) => {
                         </div>
                       </div>
                     </div>
-                  </UCard>
+                  </div>
                 </div>
               </div>
 
@@ -329,7 +409,7 @@ watch(selectAll, (value) => {
           </div>
 
           <div
-            v-else-if="!searchLoading && searchTerm.trim()"
+            v-else-if="!searchLoading && hasSearched && searchTerm.trim()"
             class="py-6 text-center"
           >
             <p class="text-base text-gray-500 dark:text-gray-400">

@@ -9,8 +9,31 @@ export default defineEventHandler(async (event) => {
     include: {
       dataset: {
         include: {
-          citations: true,
-          fujiScore: true,
+          citations: {
+            select: {
+              citationLink: true,
+              datacite: true,
+              mdc: true,
+              openAlex: true,
+              citedDate: true,
+            },
+          },
+          fujiScore: {
+            select: {
+              score: true,
+              evaluationDate: true,
+              metricVersion: true,
+              softwareVersion: true,
+            },
+          },
+          datasetAuthors: {
+            select: {
+              name: true,
+              nameType: true,
+              affiliations: true,
+              nameIdentifiers: true,
+            },
+          },
         },
       },
     },

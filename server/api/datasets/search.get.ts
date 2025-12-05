@@ -3,12 +3,18 @@ import meilisearch from "../../utils/meilisearch";
 
 // returns a paginated list of datasets
 export default defineEventHandler(async (event) => {
+  const session = await requireUserSession(event);
+
+  const { user } = session;
+  const userId = user.id;
+
   const queryStartTime = performance.now();
 
   const query = getQuery(event);
   const searchTerm = (query.q as string) || "";
   const page = parseInt(query.page as string) || 1;
   const total = parseInt(query.total as string) || 0;
+  const userid = userId;
 
   // Use Meilisearch default limit of 20 results per page
   const limit = 20;
@@ -16,12 +22,27 @@ export default defineEventHandler(async (event) => {
 
   // If no search term, return empty results
   if (!searchTerm.trim()) {
+    // Still fetch existing dataset IDs if userid is provided
+    let existingDatasetIds: number[] = [];
+    if (userid) {
+      const userDatasets = await prisma.userDataset.findMany({
+        where: {
+          userId: userid,
+        },
+        select: {
+          datasetId: true,
+        },
+      });
+      existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
+    }
+
     return {
       datasets: [],
       total: 0,
       page,
       limit,
       queryDuration: "0ms",
+      existingDatasetIds,
     };
   }
 
@@ -53,12 +74,27 @@ export default defineEventHandler(async (event) => {
           ? `${(queryDuration / 1000).toFixed(2)}s`
           : `${queryDuration.toFixed(2)}ms`;
 
+      // Still fetch existing dataset IDs if userid is provided
+      let existingDatasetIds: number[] = [];
+      if (userid) {
+        const userDatasets = await prisma.userDataset.findMany({
+          where: {
+            userId: userid,
+          },
+          select: {
+            datasetId: true,
+          },
+        });
+        existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
+      }
+
       return {
         datasets: [],
         total: searchResults.estimatedTotalHits || 0,
         page,
         limit,
         queryDuration: executionTime,
+        existingDatasetIds,
       };
     }
 
@@ -138,6 +174,20 @@ export default defineEventHandler(async (event) => {
       totalCount = searchResults.estimatedTotalHits || 0;
     }
 
+    // Fetch existing dataset IDs for the user if userid is provided
+    let existingDatasetIds: number[] = [];
+    if (userid) {
+      const userDatasets = await prisma.userDataset.findMany({
+        where: {
+          userId: userid,
+        },
+        select: {
+          datasetId: true,
+        },
+      });
+      existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
+    }
+
     const queryEndTime = performance.now();
     const queryDuration = queryEndTime - queryStartTime;
     const executionTime =
@@ -151,6 +201,7 @@ export default defineEventHandler(async (event) => {
       page,
       limit,
       queryDuration: executionTime,
+      existingDatasetIds,
     };
   } catch (error) {
     console.error("Search error:", error);

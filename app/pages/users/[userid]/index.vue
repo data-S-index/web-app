@@ -202,10 +202,17 @@ const getAuthorTooltipText = (author: Author): string => {
               <div>
                 <p class="mb-1 text-sm font-medium">Authors</p>
 
-                <div class="flex flex-wrap gap-1 text-sm">
+                <div
+                  v-if="
+                    item.dataset.datasetAuthors &&
+                    Array.isArray(item.dataset.datasetAuthors) &&
+                    item.dataset.datasetAuthors.length > 0
+                  "
+                  class="flex flex-wrap gap-1 text-sm"
+                >
                   <template
-                    v-for="(author, index) in (item.dataset as any)
-                      .datasetAuthors as unknown as Author[]"
+                    v-for="(author, index) in item.dataset
+                      .datasetAuthors as Author[]"
                     :key="index"
                   >
                     <UTooltip :text="getAuthorTooltipText(author)">
@@ -216,20 +223,15 @@ const getAuthorTooltipText = (author: Author): string => {
                       </span>
                     </UTooltip>
 
-                    <span
-                      v-if="
-                        index <
-                        (
-                          (item.dataset as any)
-                            .datasetAuthors as unknown as Author[]
-                        ).length -
-                          1
-                      "
-                    >
+                    <span v-if="index < item.dataset.datasetAuthors.length - 1">
                       ,
                     </span>
                   </template>
                 </div>
+
+                <p v-else class="text-sm text-gray-500 dark:text-gray-400">
+                  No authors available
+                </p>
               </div>
 
               <div

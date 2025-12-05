@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const attachDatasetsSchema = z.object({
-  datasetIds: z.array(z.string()),
+  datasetIds: z.array(z.number()),
 });
 
 export default defineEventHandler(async (event) => {
@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   await prisma.userDataset.createMany({
     data: datasetIds.map((datasetId) => ({
       userId: userId,
-      datasetId: parseInt(datasetId),
+      datasetId: datasetId,
     })),
   });
 
