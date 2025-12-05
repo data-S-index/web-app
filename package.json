@@ -68,6 +68,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "eslint-plugin-unused-imports": "^4.2.0",
     "eslint-plugin-vue": "^10.5.0",
+    "meilisearch": "^0.54.0",
     "nuxt": "^4.1.2",
     "nuxt-auth-utils": "0.5.20",
     "nuxt-echarts": "1.0.1",

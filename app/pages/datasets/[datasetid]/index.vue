@@ -33,9 +33,9 @@ const getAuthorTooltipText = (author: Author): string => {
   return parts.length > 0 ? parts.join("\n") : "No additional information";
 };
 
-const citationsCount = computed(() => dataset.value?.Citation?.length || 0);
-const mentionsCount = computed(() => dataset.value?.Mention?.length || 0);
-const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
+const citationsCount = computed(() => dataset.value?.citations?.length || 0);
+const mentionsCount = computed(() => dataset.value?.mentions?.length || 0);
+const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
 </script>
 
 <template>
@@ -72,7 +72,7 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
             <UButton
               color="primary"
               variant="solid"
-              :to="`https://doi.org/${dataset.doi}`"
+              :to="`https://doi.org/${dataset.identifier}`"
               target="_blank"
               rel="noopener noreferrer"
               icon="i-heroicons-arrow-top-right-on-square-20-solid"
@@ -82,9 +82,9 @@ const fujiScore = computed(() => dataset.value?.FujiScore?.score || null);
 
           <div
             v-if="
-              dataset.authors &&
-              Array.isArray(dataset.authors) &&
-              dataset.authors.length > 0
+              dataset.datasetAuthors &&
+              Array.isArray(dataset.datasetAuthors) &&
+              dataset.datasetAuthors.length > 0
             "
           >
             <div class="flex flex-wrap gap-1 text-sm">

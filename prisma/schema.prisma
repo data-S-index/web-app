@@ -86,7 +86,7 @@ model Dataset {
     datasetClaims UserDataset[]
 
     @@unique([identifierType, identifier])
-    @@index([title]) // for search
+    // @@index([title]) // for search
     @@index([identifier])
     @@index([publishedAt])
 }
@@ -106,7 +106,7 @@ model DatasetAuthor {
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    @@index([name, datasetId])
+    // @@index([name])
     @@index([datasetId])
 }
 
@@ -183,8 +183,8 @@ model Mention {
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
 
-    link   String
-    source String // github, linkedin, twitter, software heritage, etc.
+    mentionLink String
+    source      String // github, linkedin, twitter, software heritage, etc.
 
     mentionedDate DateTime?
     mentionWeight Float     @default(1.0) // The weight of the mention (1.0 = 100% of the mention impact)
@@ -192,7 +192,7 @@ model Mention {
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    @@unique([datasetId, link, source])
+    @@unique([datasetId, mentionLink, source])
     @@index([datasetId])
     @@index([mentionedDate])
 }

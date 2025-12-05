@@ -1,4 +1,5 @@
 import prisma from "../../utils/prisma";
+import type { Author } from "#shared/types/dataset";
 
 export default defineEventHandler(async (_event) => {
   const now = new Date();
@@ -7,8 +8,9 @@ export default defineEventHandler(async (_event) => {
   // Get all datasets with their citations and FAIR scores
   const datasets = await prisma.dataset.findMany({
     include: {
-      Citation: true,
-      FujiScore: true,
+      citations: true,
+      fujiScore: true,
+      datasetAuthors: true,
     },
     where: {
       publishedAt: {
@@ -24,8 +26,9 @@ export default defineEventHandler(async (_event) => {
   // Get all datasets for overall metrics (not just last 12 months)
   const allDatasets = await prisma.dataset.findMany({
     include: {
-      Citation: true,
-      FujiScore: true,
+      citations: true,
+      fujiScore: true,
+      datasetAuthors: true,
     },
     take: 100000,
   });
@@ -72,8 +75,8 @@ export default defineEventHandler(async (_event) => {
   // Extract institutions from authors' affiliations
   const institutionCounts: Record<string, number> = {};
   allDatasets.forEach((dataset) => {
-    if (dataset.authors && Array.isArray(dataset.authors)) {
-      dataset.authors.forEach((author) => {
+    if (dataset.datasetAuthors && Array.isArray(dataset.datasetAuthors)) {
+      dataset.datasetAuthors.forEach((author: Author) => {
         if (
           author &&
           typeof author === "object" &&
@@ -141,16 +144,16 @@ export default defineEventHandler(async (_event) => {
   // Calculate S-Index metrics
   const totalDatasets = allDatasets.length;
   const datasetsWithFairScores = allDatasets.filter(
-    (d) => d.FujiScore !== null,
+    (d) => d.fujiScore !== null,
   );
   const datasetsWithCitations = allDatasets.filter(
-    (d) => d.Citation && Array.isArray(d.Citation) && d.Citation.length > 0,
+    (d) => d.citations && Array.isArray(d.citations) && d.citations.length > 0,
   );
 
   const averageFairScore =
     datasetsWithFairScores.length > 0
       ? datasetsWithFairScores.reduce((sum: number, d) => {
-          return sum + (d.FujiScore?.score || 0) / 100; // Convert 0-100 to 0-1
+          return sum + (d.fujiScore?.score || 0) / 100; // Convert 0-100 to 0-1
         }, 0) / datasetsWithFairScores.length
       : 0;
 
@@ -158,7 +161,7 @@ export default defineEventHandler(async (_event) => {
     datasetsWithCitations.length > 0
       ? datasetsWithCitations.reduce(
           (sum: number, d) =>
-            sum + (Array.isArray(d.Citation) ? d.Citation.length : 0),
+            sum + (Array.isArray(d.citations) ? d.citations.length : 0),
           0,
         ) / datasetsWithCitations.length
       : 0;
@@ -167,8 +170,8 @@ export default defineEventHandler(async (_event) => {
   // S-Index = (FAIR Score * 0.5) + (Citation Impact * 0.5)
   // Citation Impact = min(citation count / 20, 1) * 10
   const sIndexValues = allDatasets.map((d) => {
-    const fairScore = d.FujiScore ? d.FujiScore.score / 100 : 0;
-    const citationCount = Array.isArray(d.Citation) ? d.Citation.length : 0;
+    const fairScore = d.fujiScore ? d.fujiScore.score / 100 : 0;
+    const citationCount = Array.isArray(d.citations) ? d.citations.length : 0;
     const citationImpact = Math.min(citationCount / 20, 1) * 10;
 
     return fairScore * 5 + citationImpact * 0.5; // Normalize to reasonable range
@@ -181,7 +184,7 @@ export default defineEventHandler(async (_event) => {
       : 0;
 
   const highFairDatasets = datasetsWithFairScores.filter((d) => {
-    return d.FujiScore && d.FujiScore.score > 70; // FAIR Score > 70/100
+    return d.fujiScore && d.fujiScore.score > 70; // FAIR Score > 70/100
   }).length;
 
   return {

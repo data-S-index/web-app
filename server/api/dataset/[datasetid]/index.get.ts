@@ -3,12 +3,12 @@ export default defineEventHandler(async (event) => {
 
   const dataset = await prisma.dataset.findUnique({
     where: {
-      id: datasetid,
+      id: parseInt(datasetid),
     },
     include: {
-      Citation: true,
-      FujiScore: true,
-      Mention: true,
+      citations: true,
+      fujiScore: true,
+      mentions: true,
     },
   });
 

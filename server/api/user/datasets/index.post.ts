@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   await prisma.userDataset.createMany({
     data: datasetIds.map((datasetId) => ({
       userId: userId,
-      datasetId,
+      datasetId: parseInt(datasetId),
     })),
   });
 

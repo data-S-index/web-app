@@ -12,5 +12,17 @@ services:
       - postgres_data:/var/lib/postgresql/data # postgres 17- data directory
       # - postgres_data:/var/lib/postgresql # postgres 18 data directory
 
+  meilisearch:
+    image: getmeili/meilisearch:v1.16
+    restart: always
+    ports:
+      - 42341:7700
+    environment:
+      MEILI_ENV: development
+      MEILI_MASTER_KEY: K8xP2mN9vQ5rT7wY3zA6bC1dE4fG8hJ0kL2mN5pQ8sT1vW4xZ7aB0cD3eF6gH9
+    volumes:
+      - meili_data:/meili_data
+
 volumes:
   postgres_data:
+  meili_data:

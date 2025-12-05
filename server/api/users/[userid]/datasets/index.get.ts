@@ -9,8 +9,8 @@ export default defineEventHandler(async (event) => {
     include: {
       dataset: {
         include: {
-          Citation: true,
-          FujiScore: true,
+          citations: true,
+          fujiScore: true,
         },
       },
     },
