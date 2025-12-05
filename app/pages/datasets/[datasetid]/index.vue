@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { Author } from "#shared/types/dataset";
+
 const route = useRoute();
 const toast = useToast();
 
@@ -91,14 +93,17 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
               <template
                 v-for="(
                   author, index
-                ) in dataset.authors as unknown as Author[]"
+                ) in dataset.datasetAuthors as unknown as Author[]"
                 :key="index"
               >
                 <UTooltip :text="getAuthorTooltipText(author)">
                   <span
                     class="hover:text-primary-600 dark:hover:text-primary-400 cursor-help font-normal underline decoration-dotted underline-offset-2 transition-colors"
                   >
-                    {{ author.name || "Unknown Author" }};
+                    {{ author.name || "Unknown Author"
+                    }}<span v-if="index < dataset.datasetAuthors.length - 1"
+                      >;</span
+                    >
                   </span>
                 </UTooltip>
               </template>
@@ -135,7 +140,7 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
               :collapse="false"
             >
               <ul class="list-none">
-                <li v-for="citation in dataset.Citation" :key="citation.id">
+                <li v-for="(citation, index) in dataset.citations" :key="index">
                   <div
                     class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
                   >
@@ -194,11 +199,11 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
               :collapse="false"
             >
               <ul class="list-none">
-                <li v-for="mention in dataset.Mention" :key="mention.id">
+                <li v-for="(mention, index) in dataset.mentions" :key="index">
                   <div
                     class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
                   >
-                    <p class="text-sm">{{ mention.link }}</p>
+                    <p class="text-sm">{{ mention.mentionLink }}</p>
                   </div>
                 </li>
               </ul>
@@ -208,17 +213,17 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
           <!-- Sidebar -->
           <div class="space-y-6">
             <!-- Publisher and DOI -->
-            <UCard v-if="dataset.doi || dataset.publisher">
+            <UCard v-if="dataset.identifier || dataset.publisher">
               <template #header>
                 <h3 class="text-lg font-semibold">Publication Details</h3>
               </template>
 
               <div class="space-y-3">
-                <div v-if="dataset.doi">
+                <div v-if="dataset.identifier">
                   <p class="mb-1 text-sm font-medium">DOI</p>
 
                   <a
-                    :href="`https://doi.org/${dataset.doi}`"
+                    :href="`https://doi.org/${dataset.identifier}`"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="inline-block"
@@ -226,7 +231,7 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
                     <UBadge
                       color="success"
                       variant="subtle"
-                      :label="dataset.doi"
+                      :label="dataset.identifier"
                       icon="i-heroicons-link-20-solid"
                       class="cursor-pointer"
                     />
