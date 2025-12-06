@@ -268,6 +268,15 @@ const getAuthorTooltipText = (author: Author): string => {
                     class="cursor-pointer"
                   />
                 </a>
+
+                <UBadge
+                  v-if="(item.dataset as any).version"
+                  color="info"
+                  variant="subtle"
+                  :label="(item.dataset as any).version"
+                  icon="i-heroicons-tag-20-solid"
+                  class="cursor-pointer"
+                />
               </div>
             </div>
           </UCard>
