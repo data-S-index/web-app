@@ -24,6 +24,7 @@ type SearchResult = {
   authors: string;
   version: string | null;
   publishedAt: string | Date;
+  citationCount: number;
 };
 
 const searchTerm = ref<string>(userName || "");
@@ -185,6 +186,55 @@ watch(
   { deep: true },
 );
 
+// Helper functions for result item
+const isAlreadyAdded = (resultId: number) => {
+  return existingDatasetIds.value.has(resultId);
+};
+
+const isSelected = (resultId: number) => {
+  return rowSelection.value[String(resultId)] === true;
+};
+
+const toggleSelection = (resultId: number) => {
+  if (!isAlreadyAdded(resultId)) {
+    rowSelection.value[String(resultId)] = !isSelected(resultId);
+  }
+};
+
+const getCardClasses = (result: SearchResult) => {
+  const base = "relative flex rounded-lg border-2 p-4 transition-all";
+  if (isAlreadyAdded(result.id)) {
+    return `${base} cursor-not-allowed border-gray-300 bg-gray-100 opacity-60 dark:border-gray-600 dark:bg-gray-800/30`;
+  }
+  if (isSelected(result.id)) {
+    return `${base} cursor-pointer border-primary-500 bg-primary-50 ring-primary-500/20 dark:border-primary-400 dark:bg-primary-950/30 dark:ring-primary-400/20 ring-2`;
+  }
+
+  return `${base} cursor-pointer border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600`;
+};
+
+const getCheckboxClasses = (result: SearchResult) => {
+  const base =
+    "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all";
+  if (isAlreadyAdded(result.id)) {
+    return `${base} border-gray-400 bg-gray-400 dark:border-gray-500 dark:bg-gray-500`;
+  }
+  if (isSelected(result.id)) {
+    return `${base} border-primary-500 bg-primary-500 dark:border-primary-400 dark:bg-primary-400`;
+  }
+
+  return `${base} border-gray-300 dark:border-gray-600`;
+};
+
+const getTitleClasses = (result: SearchResult) => {
+  const base =
+    "line-clamp-2 text-base leading-snug font-semibold transition-colors";
+
+  return isAlreadyAdded(result.id)
+    ? `${base} text-gray-500 dark:text-gray-400`
+    : `${base} group-hover:text-primary-600 dark:group-hover:text-primary-400`;
+};
+
 // Perform initial search on page load
 onMounted(() => {
   if (searchTerm.value.trim()) {
@@ -246,7 +296,7 @@ onMounted(() => {
                     label="Select all"
                     size="md"
                     :disabled="
-                      searchResults.filter((r) => !existingDatasetIds.has(r.id))
+                      searchResults.filter((r) => !isAlreadyAdded(r.id))
                         .length === 0
                     "
                   />
@@ -285,40 +335,19 @@ onMounted(() => {
                   <div
                     v-for="result in searchResults"
                     :key="result.id"
-                    :class="[
-                      'relative flex rounded-lg border-2 p-4 transition-all',
-                      existingDatasetIds.has(result.id)
-                        ? 'cursor-not-allowed border-gray-300 bg-gray-100 opacity-60 dark:border-gray-600 dark:bg-gray-800/30'
-                        : rowSelection[String(result.id)]
-                          ? 'border-primary-500 bg-primary-50 ring-primary-500/20 dark:border-primary-400 dark:bg-primary-950/30 dark:ring-primary-400/20 cursor-pointer ring-2'
-                          : 'cursor-pointer border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600',
-                    ]"
-                    @click="
-                      if (!existingDatasetIds.has(result.id)) {
-                        rowSelection[String(result.id)] =
-                          !rowSelection[String(result.id)];
-                      }
-                    "
+                    :class="getCardClasses(result)"
+                    @click="toggleSelection(result.id)"
                   >
                     <div class="flex min-w-0 flex-1 items-start gap-3">
-                      <div
-                        :class="[
-                          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all',
-                          existingDatasetIds.has(result.id)
-                            ? 'border-gray-400 bg-gray-400 dark:border-gray-500 dark:bg-gray-500'
-                            : rowSelection[String(result.id)]
-                              ? 'border-primary-500 bg-primary-500 dark:border-primary-400 dark:bg-primary-400'
-                              : 'border-gray-300 dark:border-gray-600',
-                        ]"
-                      >
+                      <div :class="getCheckboxClasses(result)">
                         <Icon
-                          v-if="existingDatasetIds.has(result.id)"
+                          v-if="isAlreadyAdded(result.id)"
                           name="i-heroicons-check-circle-20-solid"
                           class="h-3 w-3 text-white"
                         />
 
                         <Icon
-                          v-else-if="rowSelection[String(result.id)]"
+                          v-else-if="isSelected(result.id)"
                           name="i-heroicons-check-20-solid"
                           class="h-3 w-3 text-white"
                         />
@@ -332,20 +361,13 @@ onMounted(() => {
                             class="group min-w-0 flex-1"
                             @click.stop
                           >
-                            <h3
-                              :class="[
-                                'line-clamp-2 text-base leading-snug font-semibold transition-colors',
-                                existingDatasetIds.has(result.id)
-                                  ? 'text-gray-500 dark:text-gray-400'
-                                  : 'group-hover:text-primary-600 dark:group-hover:text-primary-400',
-                              ]"
-                            >
+                            <h3 :class="getTitleClasses(result)">
                               {{ result.title }}
                             </h3>
                           </a>
 
                           <UBadge
-                            v-if="existingDatasetIds.has(result.id)"
+                            v-if="isAlreadyAdded(result.id)"
                             color="neutral"
                             variant="soft"
                             size="sm"
@@ -396,6 +418,19 @@ onMounted(() => {
                             <p class="text-xs text-gray-500 dark:text-gray-500">
                               {{
                                 $dayjs(result.publishedAt).format("MMMM YYYY")
+                              }}
+                            </p>
+                          </div>
+
+                          <div class="flex min-w-0 items-center gap-2">
+                            <Icon
+                              name="i-heroicons-book-open-20-solid"
+                              class="h-4 w-4 shrink-0 text-gray-400"
+                            />
+
+                            <p class="text-xs text-gray-500 dark:text-gray-500">
+                              {{ result.citationCount }} Citation{{
+                                result.citationCount !== 1 ? "s" : ""
                               }}
                             </p>
                           </div>

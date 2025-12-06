@@ -137,12 +137,12 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
             <!-- Citations -->
             <CardCollapsibleContent
               :title="`Citations (${citationsCount})`"
-              :collapse="false"
+              :collapse="citationsCount > 0 ? false : true"
             >
-              <ul class="list-none">
+              <ul v-if="citationsCount > 0" class="list-none">
                 <li v-for="(citation, index) in dataset.citations" :key="index">
                   <div
-                    class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
+                    class="mb-2 flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
                   >
                     <NuxtLink
                       :href="citation.citationLink"
@@ -154,7 +154,7 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
                     </NuxtLink>
 
                     <div class="flex items-center justify-between gap-2">
-                      <p class="text-sm">
+                      <p v-if="citation.citedDate" class="text-sm">
                         Cited on
                         {{ $dayjs(citation.citedDate).format("DD MMMM YYYY") }}
                       </p>
@@ -169,14 +169,19 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
                           DataCite
                         </UBadge>
 
-                        <UBadge
-                          v-if="citation.mdc"
-                          color="success"
-                          variant="subtle"
-                          size="sm"
+                        <UTooltip
+                          text="This citation was found in the Make Data Count (MDC) database."
                         >
-                          MDC
-                        </UBadge>
+                          <UBadge
+                            v-if="citation.mdc"
+                            color="success"
+                            variant="subtle"
+                            size="sm"
+                            class="cursor-help"
+                          >
+                            MDC
+                          </UBadge>
+                        </UTooltip>
 
                         <UBadge
                           v-if="citation.openAlex"
@@ -191,14 +196,20 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
                   </div>
                 </li>
               </ul>
+
+              <UEmpty
+                v-else
+                title="No citations found"
+                description="It looks like this dataset has no citations."
+              />
             </CardCollapsibleContent>
 
             <!-- Mentions -->
             <CardCollapsibleContent
               :title="`Mentions (${mentionsCount})`"
-              :collapse="false"
+              :collapse="mentionsCount > 0 ? false : true"
             >
-              <ul class="list-none">
+              <ul v-if="mentionsCount > 0" class="list-none">
                 <li v-for="(mention, index) in dataset.mentions" :key="index">
                   <div
                     class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
@@ -207,6 +218,12 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
                   </div>
                 </li>
               </ul>
+
+              <UEmpty
+                v-else
+                title="No mentions found"
+                description="It looks like this dataset has not been mentioned in any sources."
+              />
             </CardCollapsibleContent>
           </div>
 
@@ -284,10 +301,6 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
             </UCard>
           </div>
         </div>
-
-        <pre
-          >{{ dataset }}
-        </pre>
       </UPageBody>
     </UPage>
   </UContainer>

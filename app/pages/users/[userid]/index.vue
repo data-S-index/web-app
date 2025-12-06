@@ -12,6 +12,10 @@ const toast = useToast();
 
 const userid = (route.params.userid as string).toUpperCase();
 
+const isCurrentUser = computed(() => {
+  return loggedIn.value && user.value?.id === userid;
+});
+
 const { data: userData, error } = await useFetch(
   `/api/users/${userid}/datasets`,
 );
@@ -76,6 +80,25 @@ const getAuthorTooltipText = (author: Author): string => {
   return parts.length > 0
     ? parts.join("\n")
     : "No additional information available";
+};
+
+const copyToClipboard = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.add({
+      title: "Copied to clipboard",
+      description: text,
+      icon: "i-heroicons-check-circle-20-solid",
+      color: "success",
+    });
+  } catch {
+    toast.add({
+      title: "Failed to copy",
+      description: "Could not copy to clipboard",
+      icon: "i-heroicons-x-circle-20-solid",
+      color: "error",
+    });
+  }
 };
 </script>
 
@@ -159,7 +182,7 @@ const getAuthorTooltipText = (author: Author): string => {
           <h2 class="text-2xl font-bold">Datasets</h2>
 
           <UButton
-            v-if="loggedIn && user?.id === userid"
+            v-if="isCurrentUser"
             icon="i-heroicons-plus-20-solid"
             label="Add a dataset"
             :to="`/users/${userid}/add`"
@@ -170,24 +193,36 @@ const getAuthorTooltipText = (author: Author): string => {
           <UCard v-for="item in userData" :key="item.datasetId">
             <template #header>
               <div class="flex items-start justify-between gap-2">
-                <NuxtLink
-                  :to="`/datasets/${item.datasetId}`"
-                  target="_blank"
-                  class="group flex-1"
+                <h3
+                  class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-lg font-semibold transition-colors"
                 >
-                  <h3
-                    class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-lg font-semibold transition-colors"
-                  >
-                    {{ item.dataset.title || "No title available" }}
-                  </h3>
-                </NuxtLink>
+                  {{ item.dataset.title || "No title available" }}
+                </h3>
 
-                <UBadge
-                  color="primary"
-                  variant="subtle"
-                  :label="`${item.dataset.citations.length} Citation${item.dataset.citations.length !== 1 ? 's' : ''}`"
-                  icon="i-heroicons-book-open-20-solid"
-                />
+                <div class="flex flex-wrap gap-2">
+                  <NuxtLink
+                    :to="`/datasets/${item.datasetId}`"
+                    target="_blank"
+                    class="group flex-1"
+                  >
+                    <UButton
+                      color="primary"
+                      variant="solid"
+                      size="sm"
+                      label="View Dataset"
+                      icon="i-heroicons-arrow-top-right-on-square-20-solid"
+                    />
+                  </NuxtLink>
+
+                  <UButton
+                    v-if="isCurrentUser"
+                    color="error"
+                    variant="solid"
+                    size="sm"
+                    label="Remove Dataset"
+                    icon="i-heroicons-trash-20-solid"
+                  />
+                </div>
               </div>
             </template>
 
@@ -202,15 +237,15 @@ const getAuthorTooltipText = (author: Author): string => {
               <div>
                 <p class="mb-1 text-sm font-medium">Authors</p>
 
-                <div
+                <ul
                   v-if="
                     item.dataset.datasetAuthors &&
                     Array.isArray(item.dataset.datasetAuthors) &&
                     item.dataset.datasetAuthors.length > 0
                   "
-                  class="flex flex-wrap gap-1 text-sm"
+                  class="flex list-none flex-wrap gap-1 text-sm"
                 >
-                  <template
+                  <li
                     v-for="(author, index) in item.dataset
                       .datasetAuthors as Author[]"
                     :key="index"
@@ -219,15 +254,15 @@ const getAuthorTooltipText = (author: Author): string => {
                       <span
                         class="hover:text-primary-600 dark:hover:text-primary-400 cursor-help underline decoration-dotted underline-offset-2 transition-colors"
                       >
-                        {{ `${author.name || ""}`.trim() }}
-                      </span>
+                        {{ `${author.name || ""}`.trim() }}</span
+                      >
                     </UTooltip>
 
-                    <span v-if="index < item.dataset.datasetAuthors.length - 1">
-                      ,
+                    <span v-if="index < item.dataset.datasetAuthors.length - 1"
+                      >;
                     </span>
-                  </template>
-                </div>
+                  </li>
+                </ul>
 
                 <p v-else class="text-sm text-gray-500 dark:text-gray-400">
                   No authors available
@@ -235,48 +270,78 @@ const getAuthorTooltipText = (author: Author): string => {
               </div>
 
               <div
-                class="flex flex-wrap items-center gap-2 border-t border-gray-200 pt-2 dark:border-gray-700"
+                class="flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 pt-4 dark:border-gray-700"
               >
-                <UTooltip
-                  :text="`Published on ${$dayjs(item.dataset.publishedAt)
-                    .format('DD MMMM YYYY HH:mm:ss')
-                    .toString()}`"
-                >
+                <div class="flex flex-wrap gap-2">
                   <UBadge
                     color="neutral"
+                    size="sm"
                     variant="subtle"
-                    class="cursor-help"
-                    :label="
-                      $dayjs(item.dataset.publishedAt).format('MMMM YYYY ')
-                    "
-                    icon="i-heroicons-calendar-20-solid"
+                    :label="`${item.dataset.citations.length} Citation${item.dataset.citations.length !== 1 ? 's' : ''}`"
+                    icon="i-heroicons-book-open-20-solid"
                   />
-                </UTooltip>
 
-                <a
-                  v-if="(item.dataset as any).identifierType === 'doi'"
-                  :href="`https://doi.org/${(item.dataset as any).identifier}`"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-block"
-                >
                   <UBadge
-                    color="success"
+                    color="neutral"
+                    size="sm"
                     variant="subtle"
-                    :label="(item.dataset as any).identifier"
-                    icon="i-heroicons-link-20-solid"
-                    class="cursor-pointer"
+                    :label="`${item.dataset.mentions.length} Mention${item.dataset.mentions.length !== 1 ? 's' : ''}`"
+                    icon="i-heroicons-chat-bubble-bottom-center-text-20-solid"
                   />
-                </a>
 
-                <UBadge
-                  v-if="(item.dataset as any).version"
-                  color="info"
-                  variant="subtle"
-                  :label="(item.dataset as any).version"
-                  icon="i-heroicons-tag-20-solid"
-                  class="cursor-pointer"
-                />
+                  <UBadge
+                    color="neutral"
+                    size="sm"
+                    variant="subtle"
+                    :label="`${item.dataset.fujiScore?.score || 0} FAIR Score`"
+                    icon="i-heroicons-star-20-solid"
+                  />
+
+                  <UBadge
+                    color="neutral"
+                    size="sm"
+                    variant="subtle"
+                    :label="`${0} D-Index Score`"
+                    icon="i-heroicons-star-20-solid"
+                  />
+                </div>
+
+                <div class="flex flex-wrap gap-2">
+                  <UBadge
+                    v-if="item.dataset.version"
+                    color="neutral"
+                    variant="subtle"
+                    :label="item.dataset.version"
+                    icon="i-heroicons-tag-20-solid"
+                  />
+
+                  <UTooltip text="Click to copy identifier">
+                    <UBadge
+                      color="neutral"
+                      variant="outline"
+                      :label="item.dataset.identifier"
+                      icon="i-heroicons-link-20-solid"
+                      class="cursor-pointer"
+                      @click="copyToClipboard(item.dataset.identifier)"
+                    />
+                  </UTooltip>
+
+                  <UTooltip
+                    :text="`Published on ${$dayjs(item.dataset.publishedAt)
+                      .format('DD MMMM YYYY HH:mm:ss')
+                      .toString()}`"
+                  >
+                    <UBadge
+                      color="info"
+                      variant="subtle"
+                      class="cursor-help"
+                      :label="
+                        $dayjs(item.dataset.publishedAt).format('MMMM YYYY ')
+                      "
+                      icon="i-heroicons-calendar-20-solid"
+                    />
+                  </UTooltip>
+                </div>
               </div>
             </div>
           </UCard>

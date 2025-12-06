@@ -125,6 +125,11 @@ export default defineEventHandler(async (event) => {
         description: true,
         version: true,
         publishedAt: true,
+        _count: {
+          select: {
+            citations: true,
+          },
+        },
       },
     });
 
@@ -170,6 +175,7 @@ export default defineEventHandler(async (event) => {
           authors: authorsNamesString,
           version: dataset.version,
           publishedAt: dataset.publishedAt,
+          citationCount: dataset._count.citations,
         };
       })
       .filter(
@@ -181,6 +187,7 @@ export default defineEventHandler(async (event) => {
           authors: string;
           version: string | null;
           publishedAt: Date;
+          citationCount: number;
         } => item !== null,
       );
 

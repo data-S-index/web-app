@@ -22,6 +22,9 @@ export default defineEventHandler(async (event) => {
           openAlex: true,
           citedDate: true,
         },
+        orderBy: {
+          citedDate: "desc",
+        },
       },
       fujiScore: {
         select: {

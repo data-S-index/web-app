@@ -18,6 +18,13 @@ export default defineEventHandler(async (event) => {
               citedDate: true,
             },
           },
+          mentions: {
+            select: {
+              mentionLink: true,
+              source: true,
+              mentionedDate: true,
+            },
+          },
           fujiScore: {
             select: {
               score: true,
