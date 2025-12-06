@@ -199,29 +199,31 @@ const copyToClipboard = async (text: string) => {
                   {{ item.dataset.title || "No title available" }}
                 </h3>
 
-                <div class="flex flex-wrap gap-2">
+                <div class="flex items-center gap-2">
                   <NuxtLink
                     :to="`/datasets/${item.datasetId}`"
                     target="_blank"
                     class="group flex-1"
                   >
-                    <UButton
-                      color="primary"
-                      variant="solid"
-                      size="sm"
-                      label="View Dataset"
-                      icon="i-heroicons-arrow-top-right-on-square-20-solid"
-                    />
+                    <UTooltip text="View Dataset">
+                      <UButton
+                        color="primary"
+                        variant="solid"
+                        size="sm"
+                        icon="i-heroicons-arrow-top-right-on-square-20-solid"
+                      />
+                    </UTooltip>
                   </NuxtLink>
 
-                  <UButton
-                    v-if="isCurrentUser"
-                    color="error"
-                    variant="solid"
-                    size="sm"
-                    label="Remove Dataset"
-                    icon="i-heroicons-trash-20-solid"
-                  />
+                  <UTooltip text="Remove Dataset">
+                    <UButton
+                      v-if="isCurrentUser"
+                      color="error"
+                      variant="solid"
+                      size="sm"
+                      icon="i-heroicons-trash-20-solid"
+                    />
+                  </UTooltip>
                 </div>
               </div>
             </template>
@@ -293,16 +295,32 @@ const copyToClipboard = async (text: string) => {
                     color="neutral"
                     size="sm"
                     variant="subtle"
-                    :label="`${item.dataset.fujiScore?.score || 0} FAIR Score`"
-                    icon="i-heroicons-star-20-solid"
+                    :label="
+                      item.dataset.fujiScore?.score
+                        ? `${item.dataset.fujiScore?.score || 0} FAIR Score`
+                        : 'FAIR Score processing...'
+                    "
+                    :icon="
+                      item.dataset.fujiScore?.score
+                        ? 'i-heroicons-star-20-solid'
+                        : 'svg-spinners:90-ring'
+                    "
                   />
 
                   <UBadge
                     color="neutral"
                     size="sm"
                     variant="subtle"
-                    :label="`${0} D-Index Score`"
-                    icon="i-heroicons-star-20-solid"
+                    :label="
+                      item.dataset.fujiScore?.score
+                        ? `${item.dataset.fujiScore?.score || 0} D-Index Score`
+                        : 'D-Index Score processing...'
+                    "
+                    :icon="
+                      item.dataset.fujiScore?.score
+                        ? 'i-heroicons-star-20-solid'
+                        : 'svg-spinners:90-ring'
+                    "
                   />
                 </div>
 
