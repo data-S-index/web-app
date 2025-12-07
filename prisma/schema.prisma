@@ -154,10 +154,8 @@ model Citation {
 }
 
 model FujiScore {
-    id Int @id @default(autoincrement())
-
+    datasetId Int     @id
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId Int     @unique
 
     score          Float? // default is null so that we can store the score later
     evaluationDate DateTime

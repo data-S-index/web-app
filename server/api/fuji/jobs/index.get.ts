@@ -4,10 +4,10 @@ export default defineEventHandler(async (_event) => {
     SELECT d.id, d.identifier, d."identifierType"
     FROM "Dataset" d
     LEFT JOIN "FujiScore" fs ON fs."datasetId" = d.id
-    WHERE fs.id IS NULL
+    WHERE fs."datasetId" IS NULL
       AND d."identifierType" = 'doi'
     ORDER BY RANDOM()
-    LIMIT 3
+    LIMIT 10
   `;
 
   return datasets || [];

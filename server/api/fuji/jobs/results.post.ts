@@ -19,7 +19,8 @@ export default defineEventHandler(async (event) => {
   if (!body.success) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Missing result information",
+      // statusMessage: "Missing result information",
+      statusMessage: body.error.errors.map((error) => error.message).join(", "),
     });
   }
 
@@ -31,9 +32,6 @@ export default defineEventHandler(async (event) => {
     // Get the dataset from the database
     const dataset = await prisma.dataset.findUnique({
       where: { id: result.datasetId },
-      include: {
-        fujiScore: true,
-      },
     });
 
     if (!dataset) {
@@ -43,28 +41,31 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    const fujiScore = await prisma.fujiScore.findUnique({
+      where: { datasetId: datasetId },
+    });
+
     // Check if the score is the same or lower than the current score
 
-    if (dataset.fujiScore?.score && score <= dataset.fujiScore.score) {
+    if (fujiScore?.score && score <= fujiScore.score) {
       continue;
     }
 
     // Create or update the fuji score
     await prisma.fujiScore.upsert({
-      where: { datasetId: datasetId },
+      where: { datasetId },
       update: {
-        score: score,
-        evaluationDate: evaluationDate,
-        metricVersion: metricVersion,
-        softwareVersion: softwareVersion,
+        score,
+        evaluationDate,
+        metricVersion,
+        softwareVersion,
       },
       create: {
-        id: datasetId, // Use the datasetId as the id
-        datasetId: datasetId,
-        score: score,
-        evaluationDate: evaluationDate,
-        metricVersion: metricVersion,
-        softwareVersion: softwareVersion,
+        datasetId,
+        score,
+        evaluationDate,
+        metricVersion,
+        softwareVersion,
       },
     });
 
