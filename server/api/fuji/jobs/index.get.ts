@@ -7,7 +7,7 @@ export default defineEventHandler(async (_event) => {
     WHERE fs.id IS NULL
       AND d."identifierType" = 'doi'
     ORDER BY RANDOM()
-    LIMIT 10
+    LIMIT 3
   `;
 
   return datasets || [];
