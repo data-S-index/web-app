@@ -45,7 +45,7 @@ const footerItems: NavigationMenuItem[] = [
     <UHeader>
       <template #title>
         <NuxtLink to="/" class="flex text-2xl font-bold">
-          NIH S-Index
+          Scholar Data
         </NuxtLink>
       </template>
 

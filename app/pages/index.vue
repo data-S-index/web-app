@@ -21,7 +21,7 @@ const links = ref([
 <template>
   <section>
     <UPageHero
-      title="Scholar Data"
+      title="Creating a new metric for shareable science."
       description="Your most important metric as a scientist."
       headline="Coming Soon..."
       orientation="horizontal"
