@@ -85,15 +85,15 @@ const { data: fujiScoreData } = useFetch<{
       </template>
     </UHeader>
 
-    <UProgress
-      v-if="fujiScoreData"
-      :model-value="fujiScoreData.percentage"
-      :max="100"
-    />
-
-    <span v-if="fujiScoreData" class="text-muted-foreground hidden text-sm">
-      {{ fujiScoreData.percentage }}% with Fuji Score
-    </span>
+    <UTooltip
+      :text="`${fujiScoreData?.percentage}% of datasets have a Fuji Score`"
+    >
+      <UProgress
+        v-if="fujiScoreData"
+        :model-value="fujiScoreData.percentage"
+        :max="100"
+      />
+    </UTooltip>
 
     <UMain>
       <slot />
