@@ -22,8 +22,14 @@ model User {
     givenName  String @default("") // first name
     familyName String @default("") // last name
 
+    additionalNames String[] @default([])
+
     emailAddress String @unique
     password     String
+
+    affiliation     String?
+    homePage        String?
+    areasOfInterest String[] @default([])
 
     emailVerified                 Boolean   @default(false)
     emailVerifiedAt               DateTime?
@@ -86,7 +92,6 @@ model Dataset {
     datasetClaims UserDataset[]
 
     @@unique([identifierType, identifier])
-    // @@index([title]) // for search
     @@index([identifier])
     @@index([publishedAt])
 }
@@ -106,7 +111,6 @@ model DatasetAuthor {
     created DateTime @default(now())
     updated DateTime @updatedAt
 
-    // @@index([name])
     @@index([datasetId])
 }
 
