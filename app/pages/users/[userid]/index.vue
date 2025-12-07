@@ -100,6 +100,37 @@ const copyToClipboard = async (text: string) => {
     });
   }
 };
+
+const removeDataset = async (datasetId: number) => {
+  try {
+    await $fetch("/api/user/datasets/", {
+      method: "DELETE",
+      body: {
+        datasetId,
+      },
+    });
+
+    toast.add({
+      title: "Dataset removed successfully",
+      description: "The dataset has been removed from your collection",
+      icon: "i-heroicons-check-circle-20-solid",
+      color: "success",
+    });
+
+    // Reload the page
+    window.location.reload();
+  } catch (error: unknown) {
+    const errorMessage =
+      (error as { data?: { statusMessage?: string } })?.data?.statusMessage ||
+      "Failed to remove dataset";
+    toast.add({
+      title: "Error removing dataset",
+      description: errorMessage,
+      icon: "material-symbols:error",
+      color: "error",
+    });
+  }
+};
 </script>
 
 <template>
@@ -215,15 +246,46 @@ const copyToClipboard = async (text: string) => {
                     </UTooltip>
                   </NuxtLink>
 
-                  <UTooltip text="Remove Dataset">
-                    <UButton
-                      v-if="isCurrentUser"
-                      color="error"
-                      variant="solid"
-                      size="sm"
-                      icon="i-heroicons-trash-20-solid"
-                    />
-                  </UTooltip>
+                  <UPopover v-if="isCurrentUser" arrow>
+                    <UTooltip text="Remove Dataset">
+                      <UButton
+                        color="error"
+                        variant="solid"
+                        size="sm"
+                        icon="i-heroicons-trash-20-solid"
+                      />
+                    </UTooltip>
+
+                    <template #content>
+                      <div class="space-y-3 p-4">
+                        <p class="text-sm font-medium">
+                          Are you sure you want to remove this dataset?
+                        </p>
+
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                          This dataset will be removed from your collection.
+                        </p>
+
+                        <div class="flex justify-end gap-2">
+                          <UButton
+                            color="neutral"
+                            variant="ghost"
+                            size="sm"
+                            label="Cancel"
+                          />
+
+                          <UButton
+                            color="error"
+                            variant="solid"
+                            size="sm"
+                            label="Remove"
+                            icon="i-heroicons-trash-20-solid"
+                            @click="removeDataset(item.datasetId)"
+                          />
+                        </div>
+                      </div>
+                    </template>
+                  </UPopover>
                 </div>
               </div>
             </template>
@@ -272,7 +334,7 @@ const copyToClipboard = async (text: string) => {
               </div>
 
               <div
-                class="flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 pt-4 dark:border-gray-700"
+                class="flex flex-wrap items-center justify-between gap-2 border-t border-gray-200 pt-3 dark:border-gray-700"
               >
                 <div class="flex flex-wrap gap-2">
                   <UBadge
@@ -325,13 +387,16 @@ const copyToClipboard = async (text: string) => {
                 </div>
 
                 <div class="flex flex-wrap gap-2">
-                  <UBadge
-                    v-if="item.dataset.version"
-                    color="neutral"
-                    variant="subtle"
-                    :label="item.dataset.version"
-                    icon="i-heroicons-tag-20-solid"
-                  />
+                  <UTooltip :text="`Version ${item.dataset.version}`">
+                    <UBadge
+                      v-if="item.dataset.version"
+                      color="neutral"
+                      variant="subtle"
+                      :label="item.dataset.version"
+                      icon="i-heroicons-tag-20-solid"
+                      class="cursor-help"
+                    />
+                  </UTooltip>
 
                   <UTooltip text="Click to copy identifier">
                     <UBadge

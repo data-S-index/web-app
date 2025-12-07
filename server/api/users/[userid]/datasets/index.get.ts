@@ -46,6 +46,26 @@ export default defineEventHandler(async (event) => {
     },
   });
 
+  // Find dataset that don't have a fuji score
+  const datasetsWithoutFujiScore = userDatasets.filter(
+    (dataset) => !dataset.dataset.fujiScore,
+  );
+
+  const datasetIDsWithoutFujiScore = datasetsWithoutFujiScore.map(
+    (dataset) => dataset.datasetId,
+  );
+
+  console.log(datasetIDsWithoutFujiScore);
+
+  // Create a new job for each dataset that doesn't have a fuji score
+  // for (const datasetId of datasetIDsWithoutFujiScore) {
+  //   await prisma.fujiJob.create({
+  //     data: {
+  //       datasetId: datasetId,
+  //     },
+  //   });
+  // }
+
   return (
     userDatasets || {
       data: [],
