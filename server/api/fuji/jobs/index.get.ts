@@ -1,14 +1,50 @@
 // Returns a list of datasets that need to be scored. Uses database-level random selection to avoid bias.
-export default defineEventHandler(async (_event) => {
-  const datasets = await prisma.$queryRaw<{ id: number; identifier: string }[]>`
-    SELECT d.id, d.identifier, d."identifierType"
-    FROM "Dataset" d
-    LEFT JOIN "FujiScore" fs ON fs."datasetId" = d.id
-    WHERE fs."datasetId" IS NULL
-      AND d."identifierType" = 'doi'
-    ORDER BY RANDOM()
-    LIMIT 10
-  `;
+const MAX_ID = 49009522;
 
-  return datasets || [];
+export default defineEventHandler(async (_event) => {
+  const startId = Math.floor(Math.random() * MAX_ID) + 1;
+
+  // 1st pass: from random id upwards
+  const first = await prisma.dataset.findMany({
+    where: {
+      id: { gte: startId },
+      identifierType: "doi",
+      // If relation is 1-1:
+      fujiScore: null,
+      // If relation is 1-N instead, use this instead:
+      // FujiScore: { none: {} },
+    },
+    orderBy: { id: "asc" },
+    take: 20,
+    select: {
+      id: true,
+      identifier: true,
+      identifierType: true,
+    },
+  });
+
+  if (first.length >= 10) {
+    return first;
+  }
+
+  // 2nd pass: wrap around from beginning up to startId
+  const remaining = 10 - first.length;
+
+  const second = await prisma.dataset.findMany({
+    where: {
+      id: { lt: startId },
+      identifierType: "doi",
+      fujiScore: null,
+      // or FujiScore: { none: {} } as above
+    },
+    orderBy: { id: "asc" },
+    take: remaining,
+    select: {
+      id: true,
+      identifier: true,
+      identifierType: true,
+    },
+  });
+
+  return [...first, ...second];
 });
