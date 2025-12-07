@@ -38,7 +38,7 @@ COPY --from=builder /app/.output ./
 # COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma/
 # COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 # Copy the Prisma schema & migrations, so `prisma migrate deploy` can see them
-# COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma ./prisma
 
 # Copy our startup script and make it executable
 COPY scripts/start.sh /app/scripts/start.sh
