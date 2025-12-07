@@ -36,6 +36,13 @@ const footerItems: NavigationMenuItem[] = [
     label: "Made with ♥ by the S-Index Team",
   },
 ];
+
+// Fetch fuji score percentage
+const { data: fujiScoreData } = useFetch<{
+  percentage: number;
+  totalDatasets: number;
+  datasetsWithFujiScore: number;
+}>("/api/datasets/fuji-score-percentage");
 </script>
 
 <template>
@@ -77,6 +84,12 @@ const footerItems: NavigationMenuItem[] = [
         </AuthState>
       </template>
     </UHeader>
+
+    <UProgress
+      v-if="fujiScoreData"
+      :model-value="fujiScoreData.percentage"
+      :max="100"
+    />
 
     <UMain>
       <slot />
