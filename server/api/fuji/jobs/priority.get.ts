@@ -8,6 +8,7 @@ export default defineEventHandler(async (_event) => {
   const datasets = jobs.map((job) => ({
     id: job.dataset.id,
     identifier: job.dataset.identifier,
+    identifierType: job.dataset.identifierType,
   }));
 
   return datasets || [];
