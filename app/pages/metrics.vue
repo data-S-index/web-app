@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "Metrics",
-  description: "Metrics for the NIH S-Index platform",
+  description: "Metrics for the Scholar Data platform",
 });
 
 defineOgImageComponent("Pergel", {

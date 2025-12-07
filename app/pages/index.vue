@@ -1,7 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: "NIH S-Index",
-  description: "Your new metrics",
+  title: "Scholar Data",
+  description: "Your most important metric as a scientist.",
 });
 
 defineOgImageComponent("Pergel", {
@@ -21,7 +21,7 @@ const links = ref([
 <template>
   <section>
     <UPageHero
-      title="NIH S-Index"
+      title="Scholar Data"
       description="Your most important metric as a scientist."
       headline="Coming Soon..."
       orientation="horizontal"

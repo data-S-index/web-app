@@ -1,4 +1,4 @@
-# S-Index
+# Scholar Data
 
 As data sharing practices continue to gain traction, the research community still lacks a standardized, transparent, and equitable method for evaluating and incentivizing data sharing. To address this gap, we propose the S-index, a novel metric that evaluates the data sharing impact of a researcher by using a unified dataset-level metric that incorporates FAIRness, citations, and alternative mentions. Addressing limitations of existing metrics, our S-index is designed to be simple to interpret, field-sensitive, responsive to evolving data sharing and reuse practices, and feasible to implement using existing tools and resources.
 
