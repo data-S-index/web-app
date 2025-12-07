@@ -1,6 +1,37 @@
-// Returns a list of fuji jobs to the background worker
+// Returns a list of datasets that need to be scored. Uses a random ordering to avoid bias.
 export default defineEventHandler(async (_event) => {
-  const jobs = await prisma.fujiJob.findMany({ take: 10 });
+  const orderingFields = [
+    "created",
+    "id",
+    "identifier",
+    "title",
+    "publisher",
+    "publishedAt",
+  ];
 
-  return jobs || [];
+  const ordering = ["asc", "desc"];
+
+  const orderingField =
+    orderingFields[Math.floor(Math.random() * orderingFields.length)];
+  const orderingDirection =
+    ordering[Math.floor(Math.random() * ordering.length)];
+
+  console.log(orderingField, orderingDirection);
+
+  const datasets = await prisma.dataset.findMany({
+    select: {
+      id: true,
+      identifier: true,
+    },
+    where: {
+      fujiScore: null,
+      identifierType: "doi",
+    },
+    orderBy: {
+      [orderingField]: orderingDirection,
+    },
+    take: 30,
+  });
+
+  return datasets || [];
 });
