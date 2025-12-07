@@ -42,3 +42,5 @@ env:
   secret:
     - DATABASE_URL  # Database connection string
     - NUXT_SESSION_PASSWORD
+    - MEILISEARCH_API_URL
+    - MEILISEARCH_API_KEY
