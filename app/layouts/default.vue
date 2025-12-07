@@ -91,6 +91,10 @@ const { data: fujiScoreData } = useFetch<{
       :max="100"
     />
 
+    <span v-if="fujiScoreData" class="text-muted-foreground hidden text-sm">
+      {{ fujiScoreData.percentage }}% with Fuji Score
+    </span>
+
     <UMain>
       <slot />
     </UMain>
