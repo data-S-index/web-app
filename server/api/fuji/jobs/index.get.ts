@@ -28,7 +28,7 @@ export default defineEventHandler(async (_event) => {
     orderBy: {
       [orderingField]: orderingDirection,
     },
-    take: 30,
+    take: 10,
   });
 
   return datasets || [];
