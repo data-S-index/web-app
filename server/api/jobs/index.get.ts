@@ -16,8 +16,6 @@ export default defineEventHandler(async (_event) => {
   const orderingDirection =
     ordering[Math.floor(Math.random() * ordering.length)];
 
-  console.log(orderingField, orderingDirection);
-
   const datasets = await prisma.dataset.findMany({
     select: {
       id: true,
