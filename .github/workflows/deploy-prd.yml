@@ -1,27 +1,19 @@
-# GitHub Actions workflow for deploying the application to production environment
-# This workflow handles both UI deployment and database migrations
 name: Deploy to production environment
 
-# Concurrency control to prevent multiple deployments running simultaneously
-# If a new deployment is triggered while one is running, the previous one will be cancelled
 concurrency:
   group: production-app-deploy
   cancel-in-progress: true
 
-# Trigger conditions for this workflow
 on:
-  # push:
-  #   branches:
-  #     - main # Deploy on every push to main branch
-  workflow_dispatch: # Allow manual triggering from GitHub UI
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  # Job for deploying the UI/frontend application
   deploy-ui:
     runs-on: ubuntu-latest
-    environment: prd # Uses production environment secrets
 
-    # Environment variables for Kamal deployment and container registry
     env:
       DOCKER_BUILDKIT: 1 # Enable Docker BuildKit for faster builds
       KAMAL_REGISTRY_LOGIN_SERVER: ${{ secrets.KAMAL_REGISTRY_LOGIN_SERVER }}
@@ -32,6 +24,8 @@ jobs:
       KAMAL_APP_NAME: ${{ secrets.KAMAL_APP_NAME }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       NUXT_SESSION_PASSWORD: ${{ secrets.NUXT_SESSION_PASSWORD }}
+      MEILISEARCH_API_URL: ${{ secrets.MEILISEARCH_API_URL }}
+      MEILISEARCH_API_KEY: ${{ secrets.MEILISEARCH_API_KEY }}
 
     steps:
       # Step 1: Checkout the repository code
@@ -76,32 +70,3 @@ jobs:
       # Note: This step might need to be run manually on the server first time
       # to add the user to the docker group: `sudo usermod -aG docker $USER | newgrp docker | docker ps`
       - run: kamal setup
-
-  # Job for running database migrations
-  # migrate-db:
-  #   runs-on: ubuntu-latest
-  #   environment: prd  # Uses production environment secrets
-  #   defaults:
-  #     run:
-  #       working-directory: ui  # All commands run from the ui directory
-  #   env:
-  #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
-
-  #   steps:
-  #     # Step 1: Checkout the repository code
-  #     - uses: actions/checkout@v3
-
-  #     # Step 2: Setup Node.js environment for Prisma operations
-  #     - uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 20
-
-  #     # Step 3: Install Node.js dependencies
-  #     - run: yarn install
-
-  #     # Step 4: Generate Prisma client for database operations
-  #     - run: yarn prisma:generate
-
-  #     # Step 5: Deploy database migrations to production
-  #     # Redirects output to /dev/null to reduce log noise
-  #     - run: yarn prisma:migrate:deploy > /dev/null
