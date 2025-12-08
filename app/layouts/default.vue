@@ -38,7 +38,7 @@ const footerItems: NavigationMenuItem[] = [
 ];
 
 // Fetch fuji score percentage
-const { data: fujiScoreData } = useFetch<{
+const { data: fujiScoreData, status: fujiScoreStatus } = useFetch<{
   percentage: number;
   totalDatasets: number;
   datasetsWithFujiScore: number;
@@ -91,8 +91,10 @@ const { data: fujiScoreData } = useFetch<{
     >
       <UProgress
         v-if="fujiScoreData"
-        :model-value="fujiScoreData.percentage"
-        :max="100"
+        :model-value="
+          fujiScoreStatus === 'success' ? fujiScoreData.percentage : null
+        "
+        class="cursor-help"
       />
     </UTooltip>
 
