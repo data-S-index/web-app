@@ -20,9 +20,21 @@ export default defineEventHandler(async (_event) => {
       ? ((datasetsWithFujiScore / totalDatasets) * 100 * 1000) / 1000
       : 0;
 
+  // Get count of jobs done in the last 10 minutes
+  const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000);
+  console.log(tenMinutesAgo);
+  const jobsDoneLast10Minutes = await prisma.fujiScore.count({
+    where: {
+      updated: {
+        gte: tenMinutesAgo,
+      },
+    },
+  });
+
   return {
     percentage,
     totalDatasets,
     datasetsWithFujiScore,
+    jobsDoneLast10Minutes,
   };
 });

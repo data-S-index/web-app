@@ -42,6 +42,7 @@ const { data: fujiScoreData } = useFetch<{
   percentage: number;
   totalDatasets: number;
   datasetsWithFujiScore: number;
+  jobsDoneLast10Minutes: number;
 }>("/api/datasets/fuji-score-percentage");
 </script>
 
@@ -86,7 +87,7 @@ const { data: fujiScoreData } = useFetch<{
     </UHeader>
 
     <UTooltip
-      :text="`${fujiScoreData?.percentage}% of datasets have a Fuji Score`"
+      :text="`${fujiScoreData?.percentage}% of datasets have a Fuji Score. ${fujiScoreData?.jobsDoneLast10Minutes} jobs done in the last 10 minutes.`"
     >
       <UProgress
         v-if="fujiScoreData"
