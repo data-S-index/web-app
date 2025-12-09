@@ -9,51 +9,77 @@ const { data: fujiScoreData, status: fujiScoreStatus } = await useFetch<{
   server: false,
 });
 
-// Calculate dots to fill visible space
+// Canvas ref and drawing state
+const canvasRef = ref<HTMLCanvasElement | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
-const dotsPerRow = ref(0);
-const dotsPerCol = ref(0);
-const filledDotsCount = ref(0);
 
-const calculateDots = () => {
-  if (!containerRef.value) return;
+const drawDots = () => {
+  if (!canvasRef.value || !containerRef.value) return;
 
+  const canvas = canvasRef.value;
   const container = containerRef.value;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  // Set canvas size to match container
   const containerWidth = container.clientWidth;
   const containerHeight = container.clientHeight;
+  canvas.width = containerWidth;
+  canvas.height = containerHeight;
+
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Calculate how many 1px dots can fit (with 1px spacing between them)
   const dotSize = 1;
   const spacing = 1;
   const totalSize = dotSize + spacing; // 2px per dot (1px dot + 1px spacing)
 
-  dotsPerRow.value = Math.floor(containerWidth / totalSize);
-  dotsPerCol.value = Math.floor(containerHeight / totalSize);
-  const totalDots = dotsPerRow.value * dotsPerCol.value;
+  const dotsPerRow = Math.floor(containerWidth / totalSize);
+  const dotsPerCol = Math.floor(containerHeight / totalSize);
+  const totalDots = dotsPerRow * dotsPerCol;
 
   // Calculate how many dots should be filled based on percentage
   const percentage = fujiScoreData.value?.percentage || 0;
-  filledDotsCount.value = Math.floor((totalDots * percentage) / 100);
+  const filledDotsCount = Math.floor((totalDots * percentage) / 100);
+
+  // Get theme colors (you may need to adjust these based on your theme)
+  const isDark = document.documentElement.classList.contains("dark");
+  const filledColor = isDark ? "#60a5fa" : "#3b82f6"; // primary-400 or primary-500
+  const emptyColor = isDark ? "#374151" : "#d1d5db"; // gray-700 or gray-300
+
+  // Draw dots
+  let dotIndex = 0;
+  for (let row = 0; row < dotsPerCol; row++) {
+    for (let col = 0; col < dotsPerRow; col++) {
+      dotIndex++;
+      const x = col * totalSize;
+      const y = row * totalSize;
+
+      ctx.fillStyle = dotIndex <= filledDotsCount ? filledColor : emptyColor;
+      ctx.fillRect(x, y, dotSize, dotSize);
+    }
+  }
 };
 
-// Recalculate on mount and window resize
+// Draw on mount and window resize
 onMounted(() => {
   nextTick(() => {
-    calculateDots();
-    window.addEventListener("resize", calculateDots);
+    drawDots();
+    window.addEventListener("resize", drawDots);
   });
 });
 
 onUnmounted(() => {
-  window.removeEventListener("resize", calculateDots);
+  window.removeEventListener("resize", drawDots);
 });
 
-// Recalculate when data changes
+// Redraw when data changes
 watch(
   () => fujiScoreData.value?.percentage,
   () => {
     nextTick(() => {
-      calculateDots();
+      drawDots();
     });
   },
 );
@@ -61,31 +87,10 @@ watch(
 
 <template>
   <div
+    ref="containerRef"
     class="relative h-[calc(100vh-var(--ui-header-height))] w-full overflow-hidden"
   >
-    <div
-      ref="containerRef"
-      class="absolute inset-0 grid gap-[1px] p-0"
-      :style="{
-        gridTemplateColumns:
-          dotsPerRow > 0 ? `repeat(${dotsPerRow}, 1px)` : 'none',
-        gridTemplateRows:
-          dotsPerCol > 0 ? `repeat(${dotsPerCol}, 1px)` : 'none',
-      }"
-    >
-      <template v-if="dotsPerRow > 0 && dotsPerCol > 0">
-        <div
-          v-for="index in dotsPerRow * dotsPerCol"
-          :key="index"
-          class="h-[1px] w-[1px]"
-          :class="
-            index <= filledDotsCount
-              ? 'bg-primary-500 dark:bg-primary-400'
-              : 'bg-gray-300 dark:bg-gray-700'
-          "
-        />
-      </template>
-    </div>
+    <canvas ref="canvasRef" class="absolute inset-0" />
 
     <!-- Overlay with stats -->
     <div class="absolute inset-0 z-10 flex items-center justify-center">
