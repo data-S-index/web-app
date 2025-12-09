@@ -25,6 +25,11 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith("/metrics"),
   },
   {
+    label: "Fuji Status",
+    to: "/fuji",
+    active: route.path.startsWith("/fuji"),
+  },
+  {
     label: "GitHub",
     to: "https://github.com/data-S-index/web-app",
     target: "_blank",
@@ -36,14 +41,6 @@ const footerItems: NavigationMenuItem[] = [
     label: "Made with ♥ by the S-Index Team",
   },
 ];
-
-// Fetch fuji score percentage
-const { data: fujiScoreData, status: fujiScoreStatus } = useFetch<{
-  percentage: number;
-  totalDatasets: number;
-  datasetsWithFujiScore: number;
-  jobsDoneLast10Minutes: number;
-}>("/api/datasets/fuji-score-percentage");
 </script>
 
 <template>
@@ -85,18 +82,6 @@ const { data: fujiScoreData, status: fujiScoreStatus } = useFetch<{
         </AuthState>
       </template>
     </UHeader>
-
-    <UTooltip
-      :text="`${fujiScoreData?.percentage}% of datasets have a Fuji Score. ${fujiScoreData?.jobsDoneLast10Minutes} jobs done in the last 10 minutes.`"
-    >
-      <UProgress
-        v-if="fujiScoreData"
-        :model-value="
-          fujiScoreStatus === 'success' ? fujiScoreData.percentage : null
-        "
-        class="cursor-help"
-      />
-    </UTooltip>
 
     <UMain>
       <slot />

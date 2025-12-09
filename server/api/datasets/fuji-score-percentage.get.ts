@@ -5,13 +5,7 @@ export default defineEventHandler(async (_event) => {
   const totalDatasets = MAX_ID;
 
   // Get count of datasets with fuji scores
-  const datasetsWithFujiScore = await prisma.dataset.count({
-    where: {
-      fujiScore: {
-        isNot: null,
-      },
-    },
-  });
+  const datasetsWithFujiScore = await prisma.fujiScore.count();
 
   // Calculate percentage
   const percentage =
