@@ -1,9 +1,8 @@
-import prisma from "../../utils/prisma";
+const MAX_ID = 49009522;
 
 // Returns the percentage of datasets that have a fuji score
 export default defineEventHandler(async (_event) => {
-  // Get total count of datasets
-  const totalDatasets = await prisma.dataset.count();
+  const totalDatasets = MAX_ID;
 
   // Get count of datasets with fuji scores
   const datasetsWithFujiScore = await prisma.dataset.count({
