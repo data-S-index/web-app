@@ -51,7 +51,7 @@ export default defineEventHandler(async (event) => {
     .filter((dataset) => !dataset.dataset.fujiScore)
     .map((dataset) => dataset.datasetId);
 
-  Create a new job for each dataset that doesn't have a fuji score
+  // Create a new job for each dataset that doesn't have a fuji score
   for (const datasetId of datasetIDsWithoutFujiScore) {
     await prisma.fujiJob.create({
       data: {
