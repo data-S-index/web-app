@@ -124,6 +124,54 @@ watch(
     });
   },
 );
+
+// Calculate ETA based on jobsDoneLast10Minutes
+const etaMinutes = computed(() => {
+  if (!fujiScoreData.value) return null;
+
+  const { totalDatasets, datasetsWithFujiScore, jobsDoneLast10Minutes } =
+    fujiScoreData.value;
+  const remainingDatasets = totalDatasets - datasetsWithFujiScore;
+
+  // If no jobs done in last 10 minutes, can't calculate ETA
+  if (jobsDoneLast10Minutes === 0 || remainingDatasets <= 0) return null;
+
+  // Calculate rate: jobs per minute
+  const jobsPerMinute = jobsDoneLast10Minutes / 10;
+
+  // Calculate ETA in minutes
+  return remainingDatasets / jobsPerMinute;
+});
+
+// Format ETA nicely
+const formattedEta = computed(() => {
+  const minutes = etaMinutes.value;
+  if (minutes === null || minutes === undefined) return null;
+
+  if (minutes < 60) {
+    return `${Math.round(minutes)} minute${Math.round(minutes) !== 1 ? "s" : ""}`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = Math.round(minutes % 60);
+
+  if (hours < 24) {
+    if (remainingMinutes === 0) {
+      return `${hours} hour${hours !== 1 ? "s" : ""}`;
+    }
+
+    return `${hours} hour${hours !== 1 ? "s" : ""} ${remainingMinutes} minute${remainingMinutes !== 1 ? "s" : ""}`;
+  }
+
+  const days = Math.floor(hours / 24);
+  const remainingHours = hours % 24;
+
+  if (remainingHours === 0) {
+    return `${days} day${days !== 1 ? "s" : ""}`;
+  }
+
+  return `${days} day${days !== 1 ? "s" : ""} ${remainingHours} hour${remainingHours !== 1 ? "s" : ""}`;
+});
 </script>
 
 <template>
@@ -162,6 +210,13 @@ watch(
               :decimal-places="0"
             />
             jobs done in the last 10 minutes
+          </div>
+
+          <div
+            v-if="formattedEta"
+            class="text-primary-600 dark:text-primary-400 mt-4 text-sm font-semibold"
+          >
+            ETA: {{ formattedEta }}
           </div>
         </div>
 
