@@ -1,6 +1,10 @@
 <script setup lang="ts">
 // Fetch fuji score percentage (client-side only)
-const { data: fujiScoreData, status: fujiScoreStatus } = await useFetch<{
+const {
+  data: fujiScoreData,
+  status: fujiScoreStatus,
+  refresh: refreshFujiScore,
+} = await useFetch<{
   percentage: number;
   totalDatasets: number;
   datasetsWithFujiScore: number;
@@ -90,19 +94,25 @@ const drawDots = () => {
 };
 
 // Draw on mount and window resize
+let refreshInterval: ReturnType<typeof setInterval> | null = null;
+
 onMounted(() => {
   nextTick(() => {
     drawDots();
     window.addEventListener("resize", drawDots);
   });
 
-  setTimeout(() => {
-    window.location.reload();
+  // Refresh data every 7 seconds instead of reloading the page
+  refreshInterval = setInterval(() => {
+    refreshFujiScore();
   }, 7000);
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", drawDots);
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+  }
 });
 
 // Redraw when data changes
@@ -130,27 +140,42 @@ watch(
       >
         <h1 class="mb-4 text-4xl font-bold">Fuji Score Progress</h1>
 
-        <div v-if="fujiScoreStatus === 'pending'" class="text-gray-500">
-          <Icon name="svg-spinners:3-dots-fade" class="h-10 w-10" />
-        </div>
-
-        <div v-else-if="fujiScoreData" class="space-y-2">
+        <div v-if="fujiScoreData" class="space-y-2">
           <div class="text-primary-500 text-6xl font-bold">
-            {{ fujiScoreData.percentage.toFixed(6) }}%
+            <UiNumberTicker
+              :value="fujiScoreData.percentage"
+              :decimal-places="7"
+            />%
           </div>
 
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            {{ fujiScoreData.datasetsWithFujiScore.toLocaleString() }} of
-            {{ fujiScoreData.totalDatasets.toLocaleString() }} datasets
+            <UiNumberTicker
+              :value="fujiScoreData.datasetsWithFujiScore"
+              :decimal-places="0"
+            />
+            of {{ fujiScoreData.totalDatasets.toLocaleString() }} datasets
           </div>
 
           <div class="text-xs text-gray-500 dark:text-gray-500">
-            {{ fujiScoreData.jobsDoneLast10Minutes }} jobs done in the last 10
-            minutes
+            <UiNumberTicker
+              :value="fujiScoreData.jobsDoneLast10Minutes"
+              :decimal-places="0"
+            />
+            jobs done in the last 10 minutes
           </div>
         </div>
 
-        <div v-else class="text-pink-500">
+        <div
+          :class="{
+            'text-red-500':
+              fujiScoreStatus !== 'success' && fujiScoreStatus !== 'pending',
+            'text-gray-500': fujiScoreStatus === 'pending',
+            'opacity-0': fujiScoreStatus === 'success',
+            'opacity-100':
+              fujiScoreStatus !== 'success' && fujiScoreStatus !== 'pending',
+            'opacity-90': fujiScoreStatus === 'pending',
+          }"
+        >
           <Icon name="svg-spinners:3-dots-fade" class="h-10 w-10" />
         </div>
       </div>
