@@ -95,6 +95,10 @@ onMounted(() => {
     drawDots();
     window.addEventListener("resize", drawDots);
   });
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 7000);
 });
 
 onUnmounted(() => {
