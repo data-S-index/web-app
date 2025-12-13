@@ -48,15 +48,42 @@ const drawDots = () => {
   const filledColor = isDark ? "#60a5fa" : "#3b82f6"; // primary-400 or primary-500
   const emptyColor = isDark ? "#374151" : "#d1d5db"; // gray-700 or gray-300
 
-  // Draw dots
-  let dotIndex = 0;
+  // Create array of all dot positions
+  const dotPositions: Array<{ x: number; y: number }> = [];
   for (let row = 0; row < dotsPerCol; row++) {
     for (let col = 0; col < dotsPerRow; col++) {
-      dotIndex++;
+      dotPositions.push({
+        x: col * totalSize,
+        y: row * totalSize,
+      });
+    }
+  }
+
+  // Shuffle array randomly (Fisher-Yates shuffle)
+  for (let i = dotPositions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = dotPositions[i]!;
+    dotPositions[i] = dotPositions[j]!;
+    dotPositions[j] = temp;
+  }
+
+  // Create a Set of filled positions for quick lookup
+  const filledPositions = new Set<string>();
+  for (let i = 0; i < filledDotsCount; i++) {
+    const pos = dotPositions[i];
+    if (pos) {
+      filledPositions.add(`${pos.x},${pos.y}`);
+    }
+  }
+
+  // Draw dots
+  for (let row = 0; row < dotsPerCol; row++) {
+    for (let col = 0; col < dotsPerRow; col++) {
       const x = col * totalSize;
       const y = row * totalSize;
+      const isFilled = filledPositions.has(`${x},${y}`);
 
-      ctx.fillStyle = dotIndex <= filledDotsCount ? filledColor : emptyColor;
+      ctx.fillStyle = isFilled ? filledColor : emptyColor;
       ctx.fillRect(x, y, dotSize, dotSize);
     }
   }
@@ -100,7 +127,7 @@ watch(
         <h1 class="mb-4 text-4xl font-bold">Fuji Score Progress</h1>
 
         <div v-if="fujiScoreStatus === 'pending'" class="text-gray-500">
-          Loading...
+          <Icon name="svg-spinners:3-dots-fade" class="h-10 w-10" />
         </div>
 
         <div v-else-if="fujiScoreData" class="space-y-2">
@@ -119,7 +146,9 @@ watch(
           </div>
         </div>
 
-        <div v-else class="text-red-500">:)</div>
+        <div v-else class="text-pink-500">
+          <Icon name="svg-spinners:3-dots-fade" class="h-10 w-10" />
+        </div>
       </div>
     </div>
   </div>
