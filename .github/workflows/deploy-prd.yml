@@ -26,6 +26,8 @@ jobs:
       NUXT_SESSION_PASSWORD: ${{ secrets.NUXT_SESSION_PASSWORD }}
       MEILISEARCH_API_URL: ${{ secrets.MEILISEARCH_API_URL }}
       MEILISEARCH_API_KEY: ${{ secrets.MEILISEARCH_API_KEY }}
+      REDIS_HOST: ${{ secrets.REDIS_HOST }}
+      REDIS_PORT: ${{ secrets.REDIS_PORT }}
 
     steps:
       # Step 1: Checkout the repository code
