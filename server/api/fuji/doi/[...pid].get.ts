@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   // If not in cache, fetch the PID from the API
   const response = await fetch(`https://api.datacite.org/dois/${pid}`, {
     headers: {
-      "User-Agent": "s-index-app/1.0 (mailto:ssoundarajan@calmi2.org)",
+      "User-Agent": "ssoundarajan@calmi2.org",
       Accept: "application/json",
     },
   });
