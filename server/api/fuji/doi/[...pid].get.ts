@@ -40,7 +40,7 @@ export default defineEventHandler(async (event) => {
     .catch((error) => {
       console.error(error);
 
-      return { data: { exists: false }, status: 404 };
+      return { data: { exists: false, message: "DOI not found" }, status: 404 };
     });
 
   setResponseStatus(event, res.status);
