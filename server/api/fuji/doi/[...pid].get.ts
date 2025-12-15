@@ -1,0 +1,44 @@
+export default defineEventHandler(async (event) => {
+  const { pid } = event.context.params as { pid: string };
+  console.log("pid", pid);
+
+  if (!pid) {
+    setResponseStatus(event, 400);
+
+    return { exists: false };
+  }
+
+  // Check the cache for the PID
+  const key = await useStorage().getItem(`fuji:datacite-doi:${pid}`);
+
+  if (key) {
+    console.log(`PID ${pid} found in cache`);
+    setResponseStatus(event, 200);
+
+    return { exists: true };
+  }
+
+  // If not in cache, fetch the PID from the API
+  const response = await fetch(`https://api.datacite.org/dois/${pid}`);
+  console.log(`PID ${pid} not found in cache, fetching from API`);
+  const res = await response
+    .json()
+    .then(async (_data) => {
+      // Cache the PID for 1 week
+      console.log(`Caching PID ${pid} for 1 week`);
+      await useStorage().setItem(`fuji:datacite-doi:${pid}`, "exists", {
+        maxAge: 60 * 60 * 24 * 7,
+      });
+
+      return { data: { exists: true }, status: 200 };
+    })
+    .catch((error) => {
+      console.error(error);
+
+      return { data: { exists: false }, status: 404 };
+    });
+
+  setResponseStatus(event, res.status);
+
+  return res.data;
+});

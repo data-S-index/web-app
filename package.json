@@ -30,6 +30,7 @@
     "@vueuse/core": "13.4.0",
     "bcrypt": "^5.1.1",
     "date-fns": "^4.1.0",
+    "ioredis": "^5.8.2",
     "marked": "^15.0.7",
     "motion-v": "^1.7.2",
     "nodemailer": "^6.10.0",
