@@ -29,10 +29,10 @@ export default defineEventHandler(async (event) => {
   const res = await response
     .json()
     .then(async (_data) => {
-      // Cache the PID for 1 week
-      console.log(`Caching PID ${pid} for 1 week`);
+      // Cache the PID for 3 months
+      console.log(`Caching PID ${pid} for 3 months`);
       await useStorage().setItem(`fuji:datacite-doi:${pid}`, "exists", {
-        maxAge: 60 * 60 * 24 * 7,
+        maxAge: 60 * 60 * 24 * 30 * 3,
       });
 
       return { data: { exists: true }, status: 200 };
