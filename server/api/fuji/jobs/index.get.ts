@@ -15,7 +15,7 @@ export default defineEventHandler(async (_event) => {
       // FujiScore: { none: {} },
     },
     orderBy: { id: "asc" },
-    take: 5,
+    take: 10,
     select: {
       id: true,
       identifier: true,
@@ -23,12 +23,12 @@ export default defineEventHandler(async (_event) => {
     },
   });
 
-  if (first.length >= 5) {
+  if (first.length >= 10) {
     return first;
   }
 
   // 2nd pass: wrap around from beginning up to startId
-  const remaining = 5 - first.length;
+  const remaining = 10 - first.length;
 
   const second = await prisma.dataset.findMany({
     where: {
