@@ -18,32 +18,64 @@ export default defineEventHandler(async (event) => {
     return { exists: true };
   }
 
-  // If not in cache, fetch the PID from the API
-  const response = await fetch(`https://api.datacite.org/dois/${pid}`, {
-    headers: {
-      "User-Agent": "ssoundarajan@calmi2.org",
-      Accept: "application/json",
-    },
-  });
-  console.log(`PID ${pid} not found in cache, fetching from API`);
-  const res = await response
-    .json()
-    .then(async (_data) => {
-      // Cache the PID for 3 months
-      console.log(`Caching PID ${pid} for 3 months`);
-      await useStorage().setItem(`fuji:datacite-doi:${pid}`, "exists", {
-        maxAge: 60 * 60 * 24 * 30 * 3,
-      });
+  console.log(`PID ${pid} not found in cache, fetching from DataCite`);
 
-      return { data: { exists: true }, status: 200 };
-    })
-    .catch((error) => {
-      console.error(error);
-
-      return { data: { exists: false, message: "DOI not found" }, status: 404 };
+  try {
+    // If not in cache, fetch the PID from the DataCite API
+    const response = await fetch(`https://api.datacite.org/dois/${pid}`, {
+      headers: {
+        "User-Agent": "ssoundarajan@calmi2.org",
+        Accept: "application/json",
+      },
     });
 
-  setResponseStatus(event, res.status);
+    // Only treat as existing if DataCite returns a successful response
+    if (!response.ok) {
+      // DataCite returns 404 when the DOI does not exist
+      if (response.status === 404) {
+        setResponseStatus(event, 404);
 
-  return res.data;
+        return { exists: false, message: "DOI not found" };
+      }
+
+      // For any other error from DataCite, surface a generic server error
+      console.error(
+        `Error from DataCite for PID ${pid}: status ${response.status}`,
+      );
+      setResponseStatus(event, 502);
+
+      return { exists: false, message: "Error querying DataCite" };
+    }
+
+    const data = await response.json().catch((error) => {
+      console.error(`Failed to parse DataCite response for PID ${pid}`, error);
+
+      return null;
+    });
+
+    // If DataCite didn't return a usable body, treat as not found
+    if (!data) {
+      setResponseStatus(event, 404);
+
+      return { exists: false, message: "DOI not found" };
+    }
+
+    // Cache the PID for 3 months only when DataCite confirms it exists
+    console.log(`Caching PID ${pid} for 3 months`);
+    await useStorage().setItem(`fuji:datacite-doi:${pid}`, "exists", {
+      maxAge: 60 * 60 * 24 * 30 * 3,
+    });
+
+    setResponseStatus(event, 200);
+
+    return { exists: true };
+  } catch (error) {
+    console.error(
+      `Unexpected error while querying DataCite for PID ${pid}`,
+      error,
+    );
+    setResponseStatus(event, 502);
+
+    return { exists: false, message: "Error querying DataCite" };
+  }
 });
