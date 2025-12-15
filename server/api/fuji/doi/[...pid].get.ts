@@ -9,10 +9,10 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check the cache for the PID
-  const key = await useStorage().getItem(`fuji:datacite-doi:${pid}`);
+  const value = await useStorage().getItem(`fuji:datacite-doi:${pid}`);
 
-  if (key) {
-    console.log(`PID ${pid} found in cache`);
+  if (value) {
+    console.log(`PID ${pid} found in cache`, value);
     setResponseStatus(event, 200);
 
     return { exists: true };
