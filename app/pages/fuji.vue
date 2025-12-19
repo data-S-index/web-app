@@ -16,8 +16,38 @@ const {
 // Canvas ref and drawing state
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
+let animationFrameId: number | null = null;
+let animationStartTime: number | null = null;
+const ANIMATION_DURATION = 5000; // 5 seconds in milliseconds
 
-const drawDots = () => {
+// Helper function to convert hex color to rgba with opacity
+const hexToRgba = (hex: string, opacity: number): string => {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+interface DotInfo {
+  x: number;
+  y: number;
+  isFilled: boolean;
+  animationDelay: number; // Delay in milliseconds (0 to ANIMATION_DURATION)
+  fillIndex: number; // Index used for deterministic filling order
+}
+
+let dotInfos: DotInfo[] = [];
+let containerDimensions: { width: number; height: number } | null = null;
+
+// Simple seeded random function for deterministic randomness
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+
+  return x - Math.floor(x);
+};
+
+const drawDots = (timestamp?: number) => {
   if (!canvasRef.value || !containerRef.value) return;
 
   const canvas = canvasRef.value;
@@ -52,75 +82,140 @@ const drawDots = () => {
   const filledColor = isDark ? "#60a5fa" : "#3b82f6"; // primary-400 or primary-500
   const emptyColor = isDark ? "#374151" : "#d1d5db"; // gray-700 or gray-300
 
-  // Create array of all dot positions
-  const dotPositions: Array<{ x: number; y: number }> = [];
-  for (let row = 0; row < dotsPerCol; row++) {
-    for (let col = 0; col < dotsPerRow; col++) {
-      dotPositions.push({
-        x: col * totalSize,
-        y: row * totalSize,
-      });
+  // Check if we need to recalculate dot positions (container size changed)
+  const dimensionsChanged =
+    !containerDimensions ||
+    containerDimensions.width !== containerWidth ||
+    containerDimensions.height !== containerHeight;
+
+  if (dimensionsChanged) {
+    containerDimensions = { width: containerWidth, height: containerHeight };
+
+    // Create array of all dot positions in grid order
+    const dotPositions: Array<{ x: number; y: number; index: number }> = [];
+    for (let row = 0; row < dotsPerCol; row++) {
+      for (let col = 0; col < dotsPerRow; col++) {
+        dotPositions.push({
+          x: col * totalSize,
+          y: row * totalSize,
+          index: row * dotsPerRow + col,
+        });
+      }
+    }
+
+    // Shuffle once using seeded random for deterministic but random-looking order
+    // Use a fixed seed based on grid dimensions for consistency
+    const seed = dotsPerRow * 1000 + dotsPerCol;
+    for (let i = dotPositions.length - 1; i > 0; i--) {
+      const j = Math.floor(seededRandom(seed + i) * (i + 1));
+      const temp = dotPositions[i]!;
+      dotPositions[i] = dotPositions[j]!;
+      dotPositions[j] = temp;
+    }
+
+    // Initialize dot infos with static positions and random animation delays
+    dotInfos = dotPositions.map((pos, shuffledIndex) => ({
+      x: pos.x,
+      y: pos.y,
+      isFilled: false, // Will be updated based on percentage
+      animationDelay: seededRandom(pos.index) * (ANIMATION_DURATION - 1000),
+      fillIndex: shuffledIndex, // Used to determine which dots are filled
+    }));
+  }
+
+  // Update which dots are filled based on current percentage
+  // Dots with lower fillIndex are filled first
+  dotInfos = dotInfos.map((dot) => ({
+    ...dot,
+    isFilled: dot.fillIndex < filledDotsCount,
+  }));
+
+  // Start animation if not already started
+  if (animationStartTime === null && timestamp !== undefined) {
+    animationStartTime = timestamp;
+  }
+
+  // Calculate elapsed time
+  const currentTime = timestamp || performance.now();
+  const elapsed =
+    animationStartTime !== null ? currentTime - animationStartTime : 0;
+
+  // Draw dots with fade-in animation (only for filled dots)
+  for (const dot of dotInfos) {
+    if (dot.isFilled) {
+      // Filled dots fade in
+      const timeSinceDelay = elapsed - dot.animationDelay;
+      const opacity = Math.max(0, Math.min(1, timeSinceDelay / 1000)); // Fade in over 1 second per dot
+
+      if (opacity > 0) {
+        ctx.fillStyle = hexToRgba(filledColor, opacity);
+        ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
+      }
+    } else {
+      // Empty dots are always visible at full opacity
+      ctx.fillStyle = emptyColor;
+      ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
     }
   }
 
-  // Shuffle array randomly (Fisher-Yates shuffle)
-  for (let i = dotPositions.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    const temp = dotPositions[i]!;
-    dotPositions[i] = dotPositions[j]!;
-    dotPositions[j] = temp;
-  }
-
-  // Create a Set of filled positions for quick lookup
-  const filledPositions = new Set<string>();
-  for (let i = 0; i < filledDotsCount; i++) {
-    const pos = dotPositions[i];
-    if (pos) {
-      filledPositions.add(`${pos.x},${pos.y}`);
-    }
-  }
-
-  // Draw dots
-  for (let row = 0; row < dotsPerCol; row++) {
-    for (let col = 0; col < dotsPerRow; col++) {
-      const x = col * totalSize;
-      const y = row * totalSize;
-      const isFilled = filledPositions.has(`${x},${y}`);
-
-      ctx.fillStyle = isFilled ? filledColor : emptyColor;
-      ctx.fillRect(x, y, dotSize, dotSize);
-    }
+  // Continue animation if not complete
+  if (elapsed < ANIMATION_DURATION) {
+    animationFrameId = requestAnimationFrame(drawDots);
   }
 };
 
 // Draw on mount and window resize
 let refreshInterval: ReturnType<typeof setInterval> | null = null;
 
+const startAnimation = () => {
+  // Reset animation state
+  animationStartTime = null;
+
+  // Cancel any existing animation
+  if (animationFrameId !== null) {
+    cancelAnimationFrame(animationFrameId);
+  }
+
+  // Start new animation
+  requestAnimationFrame(drawDots);
+};
+
+const handleResize = () => {
+  // Reset positions on resize (dimensions changed)
+  containerDimensions = null;
+  dotInfos = [];
+  startAnimation();
+};
+
 onMounted(() => {
   nextTick(() => {
-    drawDots();
-    window.addEventListener("resize", drawDots);
+    startAnimation();
+    window.addEventListener("resize", handleResize);
   });
 
-  // Refresh data every 7 seconds instead of reloading the page
+  // Refresh data every 15 seconds instead of reloading the page
   refreshInterval = setInterval(() => {
     refreshFujiScore();
-  }, 7000);
+  }, 15000);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("resize", drawDots);
+  window.removeEventListener("resize", handleResize);
   if (refreshInterval) {
     clearInterval(refreshInterval);
   }
+  if (animationFrameId !== null) {
+    cancelAnimationFrame(animationFrameId);
+  }
 });
 
-// Redraw when data changes
+// Redraw when data changes - restart animation so newly filled dots can fade in
 watch(
   () => fujiScoreData.value?.percentage,
   () => {
     nextTick(() => {
-      drawDots();
+      // Only restart animation, don't reset positions
+      startAnimation();
     });
   },
 );
