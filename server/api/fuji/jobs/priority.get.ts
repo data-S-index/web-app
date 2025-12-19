@@ -5,6 +5,10 @@ export default defineEventHandler(async (_event) => {
     select: { dataset: true },
   });
 
+  if (!jobs) {
+    return [];
+  }
+
   const datasets = jobs.map((job) => ({
     id: job.dataset.id,
     identifier: job.dataset.identifier,
