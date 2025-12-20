@@ -18,16 +18,9 @@ const canvasRef = ref<HTMLCanvasElement | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
 let animationFrameId: number | null = null;
 let animationStartTime: number | null = null;
+let isReverseAnimation = false; // Track if we're in reverse animation mode
 const ANIMATION_DURATION = 5000; // 5 seconds in milliseconds
-
-// Helper function to convert hex color to rgba with opacity
-const hexToRgba = (hex: string, opacity: number): string => {
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
-
-  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
-};
+const REVERSE_ANIMATION_DURATION = 2000; // 2 seconds for reverse animation
 
 interface DotInfo {
   x: number;
@@ -38,6 +31,7 @@ interface DotInfo {
 }
 
 let dotInfos: DotInfo[] = [];
+let previousDotInfos: DotInfo[] = []; // Store previous state for reverse animation
 let containerDimensions: { width: number; height: number } | null = null;
 
 // Simple seeded random function for deterministic randomness
@@ -65,7 +59,7 @@ const drawDots = (timestamp?: number) => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   // Calculate how many 1px dots can fit (with 1px spacing between them)
-  const dotSize = 1;
+  const dotSize = 3;
   const spacing = 1;
   const totalSize = dotSize + spacing; // 2px per dot (1px dot + 1px spacing)
 
@@ -79,8 +73,8 @@ const drawDots = (timestamp?: number) => {
 
   // Get theme colors (you may need to adjust these based on your theme)
   const isDark = document.documentElement.classList.contains("dark");
-  const filledColor = isDark ? "#60a5fa" : "#3b82f6"; // primary-400 or primary-500
-  const emptyColor = isDark ? "#374151" : "#d1d5db"; // gray-700 or gray-300
+  const backgroundColor = isDark ? "#374151" : "#d1d5db"; // gray-700 or gray-300 - base color for all dots
+  const primaryColor = isDark ? "#60a5fa" : "#3b82f6"; // primary-400 or primary-500 - color for filled dots
 
   // Check if we need to recalculate dot positions (container size changed)
   const dimensionsChanged =
@@ -123,6 +117,11 @@ const drawDots = (timestamp?: number) => {
     }));
   }
 
+  // Store previous state before updating (for reverse animation)
+  if (!isReverseAnimation && dotInfos.length > 0) {
+    previousDotInfos = dotInfos.map((dot) => ({ ...dot }));
+  }
+
   // Update which dots are filled based on current percentage
   // Dots with lower fillIndex are filled first
   dotInfos = dotInfos.map((dot) => ({
@@ -140,27 +139,77 @@ const drawDots = (timestamp?: number) => {
   const elapsed =
     animationStartTime !== null ? currentTime - animationStartTime : 0;
 
-  // Draw dots with fade-in animation (only for filled dots)
-  for (const dot of dotInfos) {
-    if (dot.isFilled) {
-      // Filled dots fade in
-      const timeSinceDelay = elapsed - dot.animationDelay;
-      const opacity = Math.max(0, Math.min(1, timeSinceDelay / 1000)); // Fade in over 1 second per dot
+  // Parse colors once
+  const bgR = parseInt(backgroundColor.slice(1, 3), 16);
+  const bgG = parseInt(backgroundColor.slice(3, 5), 16);
+  const bgB = parseInt(backgroundColor.slice(5, 7), 16);
+  const primaryR = parseInt(primaryColor.slice(1, 3), 16);
+  const primaryG = parseInt(primaryColor.slice(3, 5), 16);
+  const primaryB = parseInt(primaryColor.slice(5, 7), 16);
 
-      if (opacity > 0) {
-        ctx.fillStyle = hexToRgba(filledColor, opacity);
+  // Draw dots
+  if (isReverseAnimation && previousDotInfos.length > 0) {
+    // Reverse animation: transition filled dots back to background color
+    const maxElapsed = REVERSE_ANIMATION_DURATION;
+    const reverseProgress = Math.min(1, elapsed / maxElapsed);
+
+    for (const dot of previousDotInfos) {
+      if (dot.isFilled) {
+        // Dots that were filled transition from primary back to background
+        // Use reverseProgress directly for smooth transition
+        const r = Math.round(primaryR + (bgR - primaryR) * reverseProgress);
+        const g = Math.round(primaryG + (bgG - primaryG) * reverseProgress);
+        const b = Math.round(primaryB + (bgB - primaryB) * reverseProgress);
+
+        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
+      } else {
+        // Empty dots stay at background color
+        ctx.fillStyle = backgroundColor;
         ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
       }
-    } else {
-      // Empty dots are always visible at full opacity
-      ctx.fillStyle = emptyColor;
-      ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
     }
-  }
 
-  // Continue animation if not complete
-  if (elapsed < ANIMATION_DURATION) {
-    animationFrameId = requestAnimationFrame(drawDots);
+    // Continue reverse animation if not complete
+    if (elapsed < REVERSE_ANIMATION_DURATION) {
+      animationFrameId = requestAnimationFrame(drawDots);
+    } else {
+      // Reverse animation complete, reset and prepare for forward animation
+      isReverseAnimation = false;
+      animationStartTime = null;
+    }
+  } else {
+    // Forward animation: all start with background color, filled ones transition to primary color
+    for (const dot of dotInfos) {
+      if (dot.isFilled) {
+        // Filled dots transition from background color to primary color
+        const timeSinceDelay = elapsed - dot.animationDelay;
+        const progress = Math.max(0, Math.min(1, timeSinceDelay / 1000)); // Transition over 1 second per dot
+
+        if (progress > 0) {
+          // Interpolate between background color and primary color
+          const r = Math.round(bgR + (primaryR - bgR) * progress);
+          const g = Math.round(bgG + (primaryG - bgG) * progress);
+          const b = Math.round(bgB + (primaryB - bgB) * progress);
+
+          ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+          ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
+        } else {
+          // Not started yet, use background color
+          ctx.fillStyle = backgroundColor;
+          ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
+        }
+      } else {
+        // Empty dots use background color at full opacity
+        ctx.fillStyle = backgroundColor;
+        ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
+      }
+    }
+
+    // Continue animation if not complete
+    if (elapsed < ANIMATION_DURATION) {
+      animationFrameId = requestAnimationFrame(drawDots);
+    }
   }
 };
 
@@ -170,6 +219,7 @@ let refreshInterval: ReturnType<typeof setInterval> | null = null;
 const startAnimation = () => {
   // Reset animation state
   animationStartTime = null;
+  isReverseAnimation = false;
 
   // Cancel any existing animation
   if (animationFrameId !== null) {
@@ -177,6 +227,20 @@ const startAnimation = () => {
   }
 
   // Start new animation
+  requestAnimationFrame(drawDots);
+};
+
+const startReverseAnimation = () => {
+  // Set reverse animation mode
+  isReverseAnimation = true;
+  animationStartTime = null;
+
+  // Cancel any existing animation
+  if (animationFrameId !== null) {
+    cancelAnimationFrame(animationFrameId);
+  }
+
+  // Start reverse animation
   requestAnimationFrame(drawDots);
 };
 
@@ -193,9 +257,16 @@ onMounted(() => {
     window.addEventListener("resize", handleResize);
   });
 
-  // Refresh data every 15 seconds instead of reloading the page
+  // Refresh data every 15 seconds, with reverse animation before refresh
+  // Start reverse animation 2 seconds before refresh
   refreshInterval = setInterval(() => {
-    refreshFujiScore();
+    // Start reverse animation
+    startReverseAnimation();
+
+    // Wait for reverse animation to complete, then refresh
+    setTimeout(() => {
+      refreshFujiScore();
+    }, REVERSE_ANIMATION_DURATION);
   }, 15000);
 });
 
