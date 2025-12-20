@@ -356,25 +356,16 @@ const formattedEta = computed(() => {
 
         <div v-if="fujiScoreData" class="space-y-2">
           <div class="text-primary-500 text-6xl font-bold">
-            <UiNumberTicker
-              :value="fujiScoreData.percentage"
-              :decimal-places="7"
-            />%
+            {{ fujiScoreData.percentage.toFixed(7) }}%
           </div>
 
           <div class="text-sm text-gray-600 dark:text-gray-400">
-            <UiNumberTicker
-              :value="fujiScoreData.datasetsWithFujiScore"
-              :decimal-places="0"
-            />
-            of {{ fujiScoreData.totalDatasets.toLocaleString() }} datasets
+            {{ fujiScoreData.datasetsWithFujiScore.toLocaleString() }} of
+            {{ fujiScoreData.totalDatasets.toLocaleString() }} datasets
           </div>
 
           <div class="text-xs text-gray-500 dark:text-gray-500">
-            <UiNumberTicker
-              :value="fujiScoreData.jobsDoneLast10Minutes"
-              :decimal-places="0"
-            />
+            {{ fujiScoreData.jobsDoneLast10Minutes.toLocaleString() }}
             jobs done in the last 10 minutes
           </div>
 
