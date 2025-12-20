@@ -3,7 +3,15 @@ export default defineEventHandler(async (_event) => {
   try {
     const jobs = await prisma.fujiJob.findMany({
       take: 30,
-      select: { dataset: true },
+      select: {
+        dataset: {
+          select: {
+            id: true,
+            identifier: true,
+            identifierType: true,
+          },
+        },
+      },
     });
 
     if (!jobs) {
