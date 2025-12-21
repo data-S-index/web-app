@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
   const uniqueId = `${timestamp}-${Math.random().toString(36).substring(7)}`;
 
   // Store results count with IP address using a simple key with 10 minute TTL
-  const key = `fuji:test:ip:${ip}:${uniqueId}`;
+  const key = `fuji:jobs:ip:${ip}:${uniqueId}`;
   const resultsCount = results.length;
 
   // Store count with 10 minute TTL (600 seconds)

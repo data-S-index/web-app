@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
 
   // If a specific IP is requested, return detailed stats for that IP
   if (requestedIp) {
-    const pattern = `fuji:test:ip:${requestedIp}:*`;
+    const pattern = `fuji:jobs:ip:${requestedIp}:*`;
     const keys: string[] = [];
     let cursor = "0";
 
@@ -103,7 +103,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Get stats for all IPs
-  const pattern = "fuji:test:ip:*";
+  const pattern = "fuji:jobs:ip:*";
   const keys: string[] = [];
   let cursor = "0";
 
