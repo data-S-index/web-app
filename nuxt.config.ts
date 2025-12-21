@@ -17,15 +17,6 @@ export default defineNuxtConfig({
     "nuxt-og-image",
     "nuxt-echarts",
   ],
-  nitro: {
-    storage: {
-      redis: {
-        driver: "redis",
-        port: process.env.REDIS_PORT || 44001,
-        host: process.env.REDIS_HOST || "127.0.0.1",
-      },
-    },
-  },
   runtimeConfig: {
     emailVerificationDomain: process.env.EMAIL_VERIFICATION_DOMAIN || "",
     mailFrom: process.env.MAIL_FROM || "noreply@example.com",

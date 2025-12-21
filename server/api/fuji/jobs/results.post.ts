@@ -1,5 +1,6 @@
 // Updates the result of a fuji job in the database
 import { z } from "zod";
+import { getRequestIP } from "h3";
 
 const resultSchema = z.object({
   results: z.array(
@@ -25,6 +26,20 @@ export default defineEventHandler(async (event) => {
   }
 
   const results = body.data.results;
+
+  const redis = getRedisClient();
+
+  // Get the IP address of the request and store the count
+  const ip = getRequestIP(event) || "unknown";
+  const timestamp = Date.now();
+  const uniqueId = `${timestamp}-${Math.random().toString(36).substring(7)}`;
+
+  // Store results count with IP address using a simple key with 10 minute TTL
+  const key = `fuji:test:ip:${ip}:${uniqueId}`;
+  const resultsCount = results.length;
+
+  // Store count with 10 minute TTL (600 seconds)
+  await redis.set(key, resultsCount.toString(), "EX", 10 * 60);
 
   for (const result of results) {
     const { datasetId, score, evaluationDate, metricVersion, softwareVersion } =
