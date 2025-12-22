@@ -32,6 +32,7 @@ export default defineEventHandler(async (event) => {
 
   // Get the IP address of the request and store the count
   const ip = getRequestIP(event);
+  console.log("ip from results.post", ip);
   const uniqueId = createId();
 
   // Store results count with IP address using a simple key with 10 minute TTL
