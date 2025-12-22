@@ -1,36 +1,50 @@
-const MAX_ID = 49009522;
-const CHECK_COUNT = 5; // Check 20 datasets after randomId
-
+// Atomically read and delete a job from the FujiJob table
+// Uses PostgreSQL's DELETE ... RETURNING for atomicity under high concurrency
 export default defineEventHandler(async () => {
-  const randomId = Math.floor(Math.random() * MAX_ID) + 1;
+  try {
+    // Atomically delete and return two jobs using raw SQL
+    // This ensures that even with thousands of concurrent requests,
+    // each job is only returned once
+    const deletedJobs = await prisma.$queryRaw<
+      Array<{ id: number; datasetId: number }>
+    >`
+      DELETE FROM "FujiJob"
+      WHERE id IN (
+        SELECT id FROM "FujiJob"
+        ORDER BY id ASC
+        LIMIT 2
+        FOR UPDATE SKIP LOCKED
+      )
+      RETURNING id, "datasetId"
+    `;
 
-  // Generate IDs to check (randomId + 1, randomId + 2, ..., randomId + CHECK_COUNT)
-  const idsToCheck = Array.from(
-    { length: CHECK_COUNT },
-    (_, i) => randomId + i + 1,
-  ).filter((id) => id <= MAX_ID);
+    // If no jobs were found, return empty array
+    if (!deletedJobs || deletedJobs.length === 0) {
+      return [];
+    }
 
-  if (idsToCheck.length === 0) {
+    // Fetch the dataset information for all deleted jobs
+    const datasetIds = deletedJobs.map((job) => job.datasetId);
+    const datasets = await prisma.dataset.findMany({
+      where: {
+        id: { in: datasetIds },
+      },
+      select: {
+        id: true,
+        identifier: true,
+        identifierType: true,
+      },
+    });
+
+    // Return datasets in the same order as the deleted jobs
+    const datasetMap = new Map(datasets.map((d) => [d.id, d]));
+
+    return deletedJobs
+      .map((job) => datasetMap.get(job.datasetId))
+      .filter((dataset) => dataset !== undefined);
+  } catch (error) {
+    console.error("Error fetching job:", error);
+
     return [];
   }
-
-  const datasets = await prisma.dataset.findMany({
-    where: {
-      id: { in: idsToCheck },
-    },
-    include: {
-      fujiScore: true,
-    },
-  });
-
-  // Only return datasets that don't have a fujiscore
-  const datasetsWithoutFujiScore = datasets
-    .filter((dataset) => !dataset.fujiScore)
-    .map((dataset) => ({
-      id: dataset.id,
-      identifier: dataset.identifier,
-      identifierType: dataset.identifierType,
-    }));
-
-  return datasetsWithoutFujiScore;
 });

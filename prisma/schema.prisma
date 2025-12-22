@@ -87,8 +87,6 @@ model Dataset {
     mentions  Mention[]
     fujiScore FujiScore?
 
-    fujiJobs FujiJob[]
-
     datasetClaims UserDataset[]
 
     @@unique([identifierType, identifier])
@@ -168,10 +166,9 @@ model FujiScore {
 }
 
 model FujiJob {
-    id Int @id @default(autoincrement())
+    id Int @id
 
-    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId Int     @unique
+    datasetId Int @unique
 
     created DateTime @default(now())
     updated DateTime @default(now()) @updatedAt
