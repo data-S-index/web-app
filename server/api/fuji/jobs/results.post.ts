@@ -106,6 +106,9 @@ export default defineEventHandler(async (event) => {
 
   // Also store duplicates count for overlap checking
   if (duplicatesCount > 0) {
+    console.log(`Duplicates found: ${duplicatesCount}`);
+    console.log(results);
+
     const duplicatesKey = `fuji:jobs:machine:duplicates:${uniqueId}`;
     await redis.set(duplicatesKey, duplicatesCount.toString(), "EX", 10 * 60);
   }
