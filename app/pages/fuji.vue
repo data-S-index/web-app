@@ -432,7 +432,9 @@ const formattedEta = computed(() => {
             {{ stat.machineName }}
           </span>
 
-          <span class="font-medium">{{ stat.totalResults }}</span>
+          <span class="font-medium"
+            >{{ stat.totalResults }} ({{ stat.totalRequests }} requests)</span
+          >
         </div>
       </div>
     </div>
