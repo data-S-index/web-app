@@ -1,9 +1,9 @@
 const MAX_ID = 49009522;
 
-// Returns the percentage of datasets that have a fuji score and IP stats
+// Returns the percentage of datasets that have a fuji score and machine stats
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
-  const requestedIp = query.ip as string | undefined;
+  const requestedMachineName = query.machineName as string | undefined;
 
   // Get percentage data
   const totalDatasets = MAX_ID;
@@ -22,30 +22,25 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  // Get IP stats
+  // Get machine stats
   const redis = getRedisClient();
-  const tenMinutesInMs = 10 * 60 * 1000;
-  const now = Date.now();
-  const tenMinutesAgo = now - tenMinutesInMs;
 
-  // Helper function to parse key and extract IP and timestamp
+  // Helper function to parse key and extract machine name
   const parseKey = (key: string) => {
     const parts = key.split(":");
     if (parts.length < 5) return null;
-    const ip = parts[3];
-    const timestampPart = parts[4]?.split("-")[0];
-    const timestamp = timestampPart ? Number.parseInt(timestampPart, 10) : null;
+    const machineName = parts[3];
 
-    return { ip, timestamp };
+    return { machineName };
   };
 
-  // If a specific IP is requested, return detailed stats for that IP
-  if (requestedIp) {
-    const pattern = `fuji:jobs:ip:${requestedIp}:*`;
+  // If a specific machine name is requested, return detailed stats for that machine
+  if (requestedMachineName) {
+    const pattern = `fuji:jobs:machine:${requestedMachineName}:*`;
     const keys: string[] = [];
     let cursor = "0";
 
-    // Scan for all keys matching this IP pattern
+    // Scan for all keys matching this machine pattern
     do {
       const [nextCursor, foundKeys] = await redis.scan(
         cursor,
@@ -58,18 +53,14 @@ export default defineEventHandler(async (event) => {
       keys.push(...(foundKeys as string[]));
     } while (cursor !== "0");
 
-    // Get all results and filter by timestamp
+    // Get all results (keys with TTL are automatically within last 10 minutes)
     const resultsData: Array<{
-      timestamp: number;
       count: number;
     }> = [];
 
     for (const key of keys) {
       const parsed = parseKey(key);
-      if (!parsed || !parsed.timestamp) continue;
-
-      // Only include results from the last 10 minutes
-      if (parsed.timestamp < tenMinutesAgo) continue;
+      if (!parsed) continue;
 
       const countStr = await redis.get(key);
       if (!countStr) continue;
@@ -79,7 +70,6 @@ export default defineEventHandler(async (event) => {
         if (Number.isNaN(count)) continue;
 
         resultsData.push({
-          timestamp: parsed.timestamp,
           count,
         });
       } catch (error) {
@@ -94,7 +84,7 @@ export default defineEventHandler(async (event) => {
       totalDatasets,
       datasetsWithFujiScore,
       jobsDoneLast10Minutes,
-      ip: requestedIp,
+      machineName: requestedMachineName,
       timeWindow: "10 minutes",
       totalRequests: resultsData.length,
       totalResults,
@@ -102,8 +92,8 @@ export default defineEventHandler(async (event) => {
     };
   }
 
-  // Get stats for all IPs
-  const pattern = "fuji:jobs:ip:*";
+  // Get stats for all machines
+  const pattern = "fuji:jobs:machine:*";
   const keys: string[] = [];
   let cursor = "0";
 
@@ -119,19 +109,17 @@ export default defineEventHandler(async (event) => {
     keys.push(...(foundKeys as string[]));
   } while (cursor !== "0");
 
-  // Group by IP and count
-  const ipStats = new Map<
+  // Group by machine name and count
+  const machineStats = new Map<
     string,
     { totalRequests: number; totalResults: number }
   >();
 
   for (const key of keys) {
     const parsed = parseKey(key);
-    if (!parsed || !parsed.timestamp || !parsed.ip) continue;
+    if (!parsed || !parsed.machineName) continue;
 
-    // Only include results from the last 10 minutes
-    if (parsed.timestamp < tenMinutesAgo) continue;
-
+    // Keys with TTL are automatically within last 10 minutes
     const countStr = await redis.get(key);
     if (!countStr) continue;
 
@@ -139,11 +127,11 @@ export default defineEventHandler(async (event) => {
       const count = Number.parseInt(countStr, 10);
       if (Number.isNaN(count)) continue;
 
-      const current = ipStats.get(parsed.ip) || {
+      const current = machineStats.get(parsed.machineName) || {
         totalRequests: 0,
         totalResults: 0,
       };
-      ipStats.set(parsed.ip, {
+      machineStats.set(parsed.machineName, {
         totalRequests: current.totalRequests + 1,
         totalResults: current.totalResults + count,
       });
@@ -152,19 +140,21 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  const statsResult = Array.from(ipStats.entries()).map(([ip, data]) => ({
-    ip,
-    ...data,
-  }));
+  const statsResult = Array.from(machineStats.entries()).map(
+    ([machineName, data]) => ({
+      machineName,
+      ...data,
+    }),
+  );
 
   return {
     percentage,
     totalDatasets,
     datasetsWithFujiScore,
     jobsDoneLast10Minutes,
-    ipStats: {
+    machineStats: {
       timeWindow: "10 minutes",
-      totalIPs: statsResult.length,
+      totalMachines: statsResult.length,
       stats: statsResult,
     },
   };

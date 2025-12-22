@@ -1,6 +1,5 @@
 // Updates the result of a fuji job in the database
 import { z } from "zod";
-import { getRequestHeader, type H3Event } from "h3";
 import { createId } from "@paralleldrive/cuid2";
 
 const resultSchema = z.object({
@@ -13,26 +12,8 @@ const resultSchema = z.object({
       softwareVersion: z.string(),
     }),
   ),
+  machineName: z.string(),
 });
-
-/**
- * Get the IP of the visitor to use as rate limit key
- *
- * @param event
- */
-function getIP(event: H3Event) {
-  const req = event?.node?.req;
-  const xForwardedFor =
-    getRequestHeader(event, "x-forwarded-for")?.split(",")?.pop()?.trim() || "";
-  const remoteAddress = req?.socket?.remoteAddress || "";
-  let ip = xForwardedFor || remoteAddress;
-
-  if (ip) {
-    ip = ip.split(":")[0];
-  }
-
-  return ip;
-}
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (b) => resultSchema.safeParse(b));
@@ -49,13 +30,10 @@ export default defineEventHandler(async (event) => {
 
   const redis = getRedisClient();
 
-  // Get the IP address of the request and store the count
-  const ip = getIP(event);
-  console.log("ip from results.post", ip);
   const uniqueId = createId();
 
   // Store results count with IP address using a simple key with 10 minute TTL
-  const key = `fuji:jobs:ip:${ip || "unknown"}:${uniqueId}`;
+  const key = `fuji:jobs:machine:${body.data.machineName || "unknown"}:${uniqueId}`;
   const resultsCount = results.length;
 
   // Store count with 10 minute TTL (600 seconds)
