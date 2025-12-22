@@ -1,6 +1,7 @@
 // Updates the result of a fuji job in the database
 import { z } from "zod";
 import { getRequestIP } from "h3";
+import { createId } from "@paralleldrive/cuid2";
 
 const resultSchema = z.object({
   results: z.array(
@@ -30,12 +31,11 @@ export default defineEventHandler(async (event) => {
   const redis = getRedisClient();
 
   // Get the IP address of the request and store the count
-  const ip = getRequestIP(event) || "unknown";
-  const timestamp = Date.now();
-  const uniqueId = `${timestamp}-${Math.random().toString(36).substring(7)}`;
+  const ip = getRequestIP(event);
+  const uniqueId = createId();
 
   // Store results count with IP address using a simple key with 10 minute TTL
-  const key = `fuji:jobs:ip:${ip}:${uniqueId}`;
+  const key = `fuji:jobs:ip:${ip || "unknown"}:${uniqueId}`;
   const resultsCount = results.length;
 
   // Store count with 10 minute TTL (600 seconds)
@@ -66,19 +66,22 @@ export default defineEventHandler(async (event) => {
       continue;
     }
 
+    // Convert evaluationDate string to Date object
+    const evaluationDateObj = new Date(evaluationDate);
+
     // Create or update the fuji score
     await prisma.fujiScore.upsert({
       where: { datasetId },
       update: {
         score,
-        evaluationDate,
+        evaluationDate: evaluationDateObj,
         metricVersion,
         softwareVersion,
       },
       create: {
         datasetId,
         score,
-        evaluationDate,
+        evaluationDate: evaluationDateObj,
         metricVersion,
         softwareVersion,
       },
