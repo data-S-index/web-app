@@ -27,7 +27,7 @@ export default defineEventHandler(async () => {
   const datasetsWithoutFujiScore = datasets
     .filter((dataset) => !dataset.fujiScore)
     .map((dataset) => ({
-      datasetId: dataset.id,
+      id: dataset.id,
       identifier: dataset.identifier,
       identifierType: dataset.identifierType,
     }));
