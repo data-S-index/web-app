@@ -32,12 +32,10 @@ export default defineEventHandler(async (event) => {
 
   const uniqueId = createId();
 
-  // Store results count with IP address using a simple key with 10 minute TTL
-  const key = `fuji:jobs:machine:${body.data.machineName || "unknown"}:${uniqueId}`;
-  const resultsCount = results.length;
-
-  // Store count with 10 minute TTL (600 seconds)
-  await redis.set(key, resultsCount.toString(), "EX", 10 * 60);
+  // Track the count of datasets that were actually updated/created
+  let actualUpdatesCount = 0;
+  // Track the count of datasets that already had a fujiScore (duplicates/overlap)
+  let duplicatesCount = 0;
 
   for (const result of results) {
     const { datasetId, score, evaluationDate, metricVersion, softwareVersion } =
@@ -57,6 +55,11 @@ export default defineEventHandler(async (event) => {
     const fujiScore = await prisma.fujiScore.findUnique({
       where: { datasetId: datasetId },
     });
+
+    // Track if this dataset already had a fujiScore (duplicate/overlap)
+    if (fujiScore) {
+      duplicatesCount++;
+    }
 
     // Check if the score is the same or lower than the current score
 
@@ -85,10 +88,26 @@ export default defineEventHandler(async (event) => {
       },
     });
 
+    // Increment counter for actual updates
+    actualUpdatesCount++;
+
     // remove any fuji jobs for this dataset
     await prisma.fujiJob.deleteMany({
       where: { datasetId: datasetId },
     });
+  }
+
+  // Store the count of datasets that were actually updated/created (not just submitted)
+  // This matches what jobsDoneLast10Minutes counts (records with updated field in last 10 min)
+  const key = `fuji:jobs:machine:${body.data.machineName || "unknown"}:${uniqueId}`;
+
+  // Store count with 10 minute TTL (600 seconds)
+  await redis.set(key, actualUpdatesCount.toString(), "EX", 10 * 60);
+
+  // Also store duplicates count for overlap checking
+  if (duplicatesCount > 0) {
+    const duplicatesKey = `fuji:jobs:machine:duplicates:${uniqueId}`;
+    await redis.set(duplicatesKey, duplicatesCount.toString(), "EX", 10 * 60);
   }
 
   return { message: "Results updated" };
