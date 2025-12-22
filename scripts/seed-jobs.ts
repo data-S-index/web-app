@@ -12,36 +12,40 @@ const seedJobs = async () => {
     where: {
       fujiScore: null,
     },
-    take: 500000,
+    take: 1000000,
   });
 
   const total = datasets.length;
-  console.log(`\n🌱 Seeding ${total} jobs...\n`);
+  const batchSize = 100;
+  console.log(`\n🌱 Seeding ${total} jobs in batches of ${batchSize}...\n`);
 
   const startTime = Date.now();
   const barLength = 40;
 
-  for (let i = 0; i < datasets.length; i++) {
-    const dataset = datasets[i];
-    await prisma.fujiJob.create({
-      data: {
-        id: i + 1,
-        datasetId: dataset.id,
-      },
+  for (let i = 0; i < datasets.length; i += batchSize) {
+    const batch = datasets.slice(i, i + batchSize);
+    const batchData = batch.map((dataset, index) => ({
+      id: i + index + 1,
+      datasetId: dataset.id,
+    }));
+
+    await prisma.fujiJob.createMany({
+      data: batchData,
     });
 
     // Update progress
-    const progress = ((i + 1) / total) * 100;
+    const processed = Math.min(i + batchSize, total);
+    const progress = (processed / total) * 100;
     const filled = Math.round((progress / 100) * barLength);
     const empty = barLength - filled;
     const bar = "█".repeat(filled) + "░".repeat(empty);
     const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    const rate = (i + 1) / (elapsed as unknown as number);
-    const remaining = total - (i + 1);
+    const rate = processed / (elapsed as unknown as number);
+    const remaining = total - processed;
     const eta = remaining / rate;
 
     process.stdout.write(
-      `\r${bar} ${progress.toFixed(1)}% | ${i + 1}/${total} | ⏱️  ${elapsed}s | ETA: ${eta.toFixed(1)}s`,
+      `\r${bar} ${progress.toFixed(1)}% | ${processed}/${total} | ⏱️  ${elapsed}s | ETA: ${eta.toFixed(1)}s`,
     );
   }
 

@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
       },
     },
   });
+  const jobsCount = await prisma.fujiJob.count();
 
   // Get machine stats
   const redis = getRedisClient();
@@ -169,6 +170,7 @@ export default defineEventHandler(async (event) => {
     totalDatasets,
     datasetsWithFujiScore,
     jobsDoneLast10Minutes,
+    jobsCount,
     machineStats: {
       timeWindow: "10 minutes",
       totalMachines: statsResult.length,

@@ -9,6 +9,7 @@ const {
   totalDatasets: number;
   datasetsWithFujiScore: number;
   jobsDoneLast10Minutes: number;
+  jobsCount: number;
   machineStats?: {
     timeWindow: string;
     totalMachines: number;
@@ -382,7 +383,10 @@ const formattedEta = computed(() => {
 
           <div class="text-xs text-gray-500 dark:text-gray-500">
             {{ fujiScoreData.jobsDoneLast10Minutes.toLocaleString() }}
-            jobs done in the last 10 minutes
+            datasets have been scored in the last 10 minutes ({{
+              fujiScoreData.jobsCount.toLocaleString()
+            }}
+            seeds left)
           </div>
 
           <div
