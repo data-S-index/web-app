@@ -1,6 +1,6 @@
 // Updates the result of a fuji job in the database
 import { z } from "zod";
-import { getRequestIP } from "h3";
+import { getRequestHeader, type H3Event } from "h3";
 import { createId } from "@paralleldrive/cuid2";
 
 const resultSchema = z.object({
@@ -14,6 +14,25 @@ const resultSchema = z.object({
     }),
   ),
 });
+
+/**
+ * Get the IP of the visitor to use as rate limit key
+ *
+ * @param event
+ */
+function getIP(event: H3Event) {
+  const req = event?.node?.req;
+  const xForwardedFor =
+    getRequestHeader(event, "x-forwarded-for")?.split(",")?.pop()?.trim() || "";
+  const remoteAddress = req?.socket?.remoteAddress || "";
+  let ip = xForwardedFor || remoteAddress;
+
+  if (ip) {
+    ip = ip.split(":")[0];
+  }
+
+  return ip;
+}
 
 export default defineEventHandler(async (event) => {
   const body = await readValidatedBody(event, (b) => resultSchema.safeParse(b));
@@ -31,7 +50,7 @@ export default defineEventHandler(async (event) => {
   const redis = getRedisClient();
 
   // Get the IP address of the request and store the count
-  const ip = getRequestIP(event);
+  const ip = getIP(event);
   console.log("ip from results.post", ip);
   const uniqueId = createId();
 
