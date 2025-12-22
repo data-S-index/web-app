@@ -106,8 +106,25 @@ export default defineEventHandler(async (event) => {
 
   // Also store duplicates count for overlap checking
   if (duplicatesCount > 0) {
-    console.log(`Duplicates found: ${duplicatesCount}`);
-    console.log(results);
+    const url =
+      "https://logwatch.fairdataihub.org/api/log/cmjgno6kb00067h01ukl411ya";
+
+    const data = {
+      level: "error",
+      message: JSON.stringify({
+        duplicatesCount,
+        results,
+      }),
+      type: "json",
+    };
+
+    await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     const duplicatesKey = `fuji:jobs:machine:duplicates:${uniqueId}`;
     await redis.set(duplicatesKey, duplicatesCount.toString(), "EX", 10 * 60);
