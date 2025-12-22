@@ -166,9 +166,7 @@ model FujiScore {
 }
 
 model FujiJob {
-    id Int @id
-
-    datasetId Int @unique
+    datasetId Int @id
 
     created DateTime @default(now())
     updated DateTime @default(now()) @updatedAt

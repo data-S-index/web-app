@@ -5,17 +5,15 @@ export default defineEventHandler(async () => {
     // Atomically delete and return two jobs using raw SQL
     // This ensures that even with thousands of concurrent requests,
     // each job is only returned once
-    const deletedJobs = await prisma.$queryRaw<
-      Array<{ id: number; datasetId: number }>
-    >`
+    const deletedJobs = await prisma.$queryRaw<Array<{ datasetId: number }>>`
       DELETE FROM "FujiJob"
-      WHERE id IN (
-        SELECT id FROM "FujiJob"
-        ORDER BY id ASC
+      WHERE "datasetId" IN (
+        SELECT "datasetId" FROM "FujiJob"
+        ORDER BY "datasetId" ASC
         LIMIT 2
         FOR UPDATE SKIP LOCKED
       )
-      RETURNING id, "datasetId"
+      RETURNING "datasetId"
     `;
 
     // If no jobs were found, return empty array
@@ -41,7 +39,7 @@ export default defineEventHandler(async () => {
 
     return deletedJobs
       .map((job) => datasetMap.get(job.datasetId))
-      .filter((dataset) => dataset !== undefined);
+      .filter((dataset) => dataset !== undefined) as typeof datasets;
   } catch (error) {
     console.error("Error fetching job:", error);
 

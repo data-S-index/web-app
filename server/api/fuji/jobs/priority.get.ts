@@ -29,5 +29,5 @@ export default defineEventHandler(async (_event) => {
   //   console.error(error);
 
   return [];
-  // 1}
+  // }
 });

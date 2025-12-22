@@ -24,8 +24,7 @@ const seedJobs = async () => {
 
   for (let i = 0; i < datasets.length; i += batchSize) {
     const batch = datasets.slice(i, i + batchSize);
-    const batchData = batch.map((dataset, index) => ({
-      id: i + index + 1,
+    const batchData = batch.map((dataset) => ({
       datasetId: dataset.id,
     }));
 
