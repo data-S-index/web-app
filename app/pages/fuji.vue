@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// Fetch fuji score percentage and IP stats (client-side only)
+// Fetch fuji score percentage and machine stats (client-side only)
 const {
   data: fujiScoreData,
   status: fujiScoreStatus,
@@ -9,25 +9,25 @@ const {
   totalDatasets: number;
   datasetsWithFujiScore: number;
   jobsDoneLast10Minutes: number;
-  ipStats?: {
+  machineStats?: {
     timeWindow: string;
-    totalIPs: number;
+    totalMachines: number;
     stats: Array<{
-      ip: string;
+      machineName: string;
       totalRequests: number;
       totalResults: number;
     }>;
   };
+  // When machineName query param is provided
+  machineName?: string;
+  totalRequests?: number;
+  totalResults?: number;
+  requests?: Array<{
+    count: number;
+  }>;
 }>("/api/datasets/fuji-score-percentage", {
   server: false,
 });
-
-// Helper function to get last part of IP address
-const getLastPartOfIp = (ip: string) => {
-  const parts = ip.split(".");
-
-  return parts[parts.length - 1] || ip;
-};
 
 // Canvas ref and drawing state
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -407,31 +407,29 @@ const formattedEta = computed(() => {
           <Icon name="svg-spinners:3-dots-fade" class="h-10 w-10" />
         </div>
       </div>
-
-      <pre>
-        {{ fujiScoreData }}
-      </pre>
     </div>
 
-    <!-- IP Stats - Minimal display in bottom right -->
+    <!-- Machine Stats - Minimal display in bottom right -->
     <div
       v-if="
-        fujiScoreData?.ipStats &&
-        fujiScoreData.ipStats.stats &&
-        fujiScoreData.ipStats.stats.length > 0
+        fujiScoreData?.machineStats &&
+        fujiScoreData.machineStats.stats &&
+        fujiScoreData.machineStats.stats.length > 0
       "
       class="absolute right-4 bottom-4 z-10 rounded-lg bg-white/90 p-3 text-xs shadow-lg dark:bg-gray-900/90"
     >
-      <div class="mb-1 font-semibold">IP Processing (10min)</div>
+      <div class="mb-1 font-semibold">
+        Machine Processing ({{ fujiScoreData.machineStats.timeWindow }})
+      </div>
 
       <div class="space-y-1">
         <div
-          v-for="stat in fujiScoreData.ipStats.stats"
-          :key="stat.ip"
+          v-for="stat in fujiScoreData.machineStats.stats"
+          :key="stat.machineName"
           class="flex items-center justify-between gap-3"
         >
           <span class="text-gray-600 dark:text-gray-400">
-            .{{ getLastPartOfIp(stat.ip) }}
+            {{ stat.machineName }}
           </span>
 
           <span class="font-medium">{{ stat.totalResults }}</span>

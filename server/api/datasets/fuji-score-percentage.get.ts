@@ -147,6 +147,11 @@ export default defineEventHandler(async (event) => {
     }),
   );
 
+  // sort statsResult by totalResults descending
+  const sortedStatsResult = statsResult.sort(
+    (a, b) => b.totalResults - a.totalResults,
+  );
+
   return {
     percentage,
     totalDatasets,
@@ -155,7 +160,7 @@ export default defineEventHandler(async (event) => {
     machineStats: {
       timeWindow: "10 minutes",
       totalMachines: statsResult.length,
-      stats: statsResult,
+      stats: sortedStatsResult,
     },
   };
 });
