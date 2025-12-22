@@ -171,12 +171,10 @@ model FujiJob {
     id Int @id @default(autoincrement())
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
-    datasetId Int
+    datasetId Int     @unique
 
     created DateTime @default(now())
-    updated DateTime @updatedAt
-
-    @@index([datasetId])
+    updated DateTime @default(now()) @updatedAt
 }
 
 model Mention {
