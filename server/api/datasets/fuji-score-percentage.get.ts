@@ -47,33 +47,39 @@ export default defineEventHandler(async (event) => {
         "MATCH",
         pattern,
         "COUNT",
-        100,
+        1000,
       );
       cursor = nextCursor as string;
       keys.push(...(foundKeys as string[]));
     } while (cursor !== "0");
 
     // Get all results (keys with TTL are automatically within last 10 minutes)
+    // Use MGET to fetch all values in a single Redis call instead of individual GETs
     const resultsData: Array<{
       count: number;
     }> = [];
 
-    for (const key of keys) {
-      const parsed = parseKey(key);
-      if (!parsed) continue;
+    if (keys.length > 0) {
+      const values = await redis.mget(...keys);
 
-      const countStr = await redis.get(key);
-      if (!countStr) continue;
+      for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        const parsed = parseKey(key);
+        if (!parsed) continue;
 
-      try {
-        const count = Number.parseInt(countStr, 10);
-        if (Number.isNaN(count)) continue;
+        const countStr = values[i];
+        if (!countStr) continue;
 
-        resultsData.push({
-          count,
-        });
-      } catch (error) {
-        console.error("Error parsing count:", error);
+        try {
+          const count = Number.parseInt(countStr, 10);
+          if (Number.isNaN(count)) continue;
+
+          resultsData.push({
+            count,
+          });
+        } catch (error) {
+          console.error("Error parsing count:", error);
+        }
       }
     }
 
@@ -103,7 +109,7 @@ export default defineEventHandler(async (event) => {
       "MATCH",
       pattern,
       "COUNT",
-      100,
+      1000,
     );
     cursor = nextCursor as string;
     keys.push(...(foundKeys as string[]));
@@ -115,28 +121,34 @@ export default defineEventHandler(async (event) => {
     { totalRequests: number; totalResults: number }
   >();
 
-  for (const key of keys) {
-    const parsed = parseKey(key);
-    if (!parsed || !parsed.machineName) continue;
+  // Use MGET to fetch all values in a single Redis call instead of individual GETs
+  if (keys.length > 0) {
+    const values = await redis.mget(...keys);
 
-    // Keys with TTL are automatically within last 10 minutes
-    const countStr = await redis.get(key);
-    if (!countStr) continue;
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const parsed = parseKey(key);
+      if (!parsed || !parsed.machineName) continue;
 
-    try {
-      const count = Number.parseInt(countStr, 10);
-      if (Number.isNaN(count)) continue;
+      // Keys with TTL are automatically within last 10 minutes
+      const countStr = values[i];
+      if (!countStr) continue;
 
-      const current = machineStats.get(parsed.machineName) || {
-        totalRequests: 0,
-        totalResults: 0,
-      };
-      machineStats.set(parsed.machineName, {
-        totalRequests: current.totalRequests + 1,
-        totalResults: current.totalResults + count,
-      });
-    } catch (error) {
-      console.error("Error parsing count:", error);
+      try {
+        const count = Number.parseInt(countStr, 10);
+        if (Number.isNaN(count)) continue;
+
+        const current = machineStats.get(parsed.machineName) || {
+          totalRequests: 0,
+          totalResults: 0,
+        };
+        machineStats.set(parsed.machineName, {
+          totalRequests: current.totalRequests + 1,
+          totalResults: current.totalResults + count,
+        });
+      } catch (error) {
+        console.error("Error parsing count:", error);
+      }
     }
   }
 
