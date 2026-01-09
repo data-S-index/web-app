@@ -88,6 +88,7 @@ model Dataset {
     fujiScore FujiScore?
 
     datasetClaims UserDataset[]
+    dindices      DIndex[]
 
     @@unique([identifierType, identifier])
     @@index([identifier])
@@ -106,8 +107,9 @@ model DatasetAuthor {
 
     affiliations String[] @default([])
 
-    created DateTime @default(now())
-    updated DateTime @updatedAt
+    created  DateTime @default(now())
+    updated  DateTime @updatedAt
+    sindices SIndex[]
 
     @@index([datasetId])
 }
@@ -190,4 +192,26 @@ model Mention {
     @@unique([datasetId, mentionLink, source])
     @@index([datasetId])
     @@index([mentionedDate])
+}
+
+model DIndex {
+    id BigInt @id @default(autoincrement())
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    score Float
+
+    created DateTime @default(now())
+}
+
+model SIndex {
+    id BigInt @id @default(autoincrement())
+
+    author   DatasetAuthor @relation(fields: [authorId], references: [id], onDelete: Cascade)
+    authorId BigInt
+
+    score Float
+
+    created DateTime @default(now())
 }
