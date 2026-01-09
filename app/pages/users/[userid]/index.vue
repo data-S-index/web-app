@@ -359,7 +359,7 @@ const removeDataset = async (datasetId: number) => {
                     variant="subtle"
                     :label="
                       item.dataset.fujiScore?.score
-                        ? `${item.dataset.fujiScore?.score || 0} FAIR Score`
+                        ? `${(item.dataset.fujiScore?.score || 0).toFixed(2)} FAIR Score`
                         : 'FAIR Score processing...'
                     "
                     :icon="
@@ -374,12 +374,12 @@ const removeDataset = async (datasetId: number) => {
                     size="sm"
                     variant="subtle"
                     :label="
-                      item.dataset.fujiScore?.score
-                        ? `${item.dataset.fujiScore?.score || 0} D-Index Score`
+                      item.dataset.dindices?.[0]?.score
+                        ? `${(item.dataset.dindices?.[0]?.score || 0).toFixed(2)} D-Index Score`
                         : 'D-Index Score processing...'
                     "
                     :icon="
-                      item.dataset.fujiScore?.score
+                      item.dataset.dindices?.[0]?.score
                         ? 'i-heroicons-star-20-solid'
                         : 'svg-spinners:90-ring'
                     "
