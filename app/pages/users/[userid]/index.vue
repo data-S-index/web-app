@@ -136,9 +136,13 @@ const removeDataset = async (datasetId: number) => {
 <template>
   <UContainer>
     <UPage>
-      <UPageHeader>
+      <UPageHeader
+        :ui="{
+          container: 'flex w-full flex-1',
+        }"
+      >
         <template #title>
-          <div class="flex items-center gap-2">
+          <div class="flex w-full items-center gap-2">
             <UAvatar :src="avatarUrl" :alt="fullName" size="3xl" />
 
             <div class="flex flex-col">
@@ -178,18 +182,6 @@ const removeDataset = async (datasetId: number) => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">S-Index Score</h3>
-            </template>
-
-            <div class="text-3xl font-bold text-pink-600">
-              {{ faker.number.float({ min: 0, max: 100 }).toFixed(2) }}
-            </div>
-
-            <p class="mt-2 text-sm">S-Index score for the user's datasets</p>
-          </UCard>
-
-          <UCard>
-            <template #header>
               <h3 class="text-lg font-semibold">Total Citations</h3>
             </template>
 
@@ -204,6 +196,26 @@ const removeDataset = async (datasetId: number) => {
             </div>
 
             <p class="mt-2 text-sm">Total citations for the user's datasets</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">S-Index Score</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-600">
+              {{
+                userData
+                  ?.reduce(
+                    (sum: number, item: any) =>
+                      sum + item.dataset.dindices?.[0]?.score || 0,
+                    0,
+                  )
+                  .toFixed(0)
+              }}
+            </div>
+
+            <p class="mt-2 text-sm">S-Index score for the user's datasets</p>
           </UCard>
         </div>
 
@@ -353,21 +365,26 @@ const removeDataset = async (datasetId: number) => {
                     icon="i-heroicons-chat-bubble-bottom-center-text-20-solid"
                   />
 
-                  <UBadge
-                    color="neutral"
-                    size="sm"
-                    variant="subtle"
-                    :label="
-                      item.dataset.fujiScore?.score
-                        ? `${(item.dataset.fujiScore?.score || 0).toFixed(2)} FAIR Score`
-                        : 'FAIR Score processing...'
-                    "
-                    :icon="
-                      item.dataset.fujiScore?.score
-                        ? 'i-heroicons-star-20-solid'
-                        : 'svg-spinners:90-ring'
-                    "
-                  />
+                  <UTooltip
+                    text="This score is calculated using the F-UJI automated FAIR data assessment tool"
+                  >
+                    <UBadge
+                      color="neutral"
+                      size="sm"
+                      variant="subtle"
+                      class="cursor-help"
+                      :label="
+                        item.dataset.fujiScore?.score
+                          ? `${(item.dataset.fujiScore?.score || 0).toFixed(0)}% FAIR`
+                          : 'FAIR Score processing...'
+                      "
+                      :icon="
+                        item.dataset.fujiScore?.score
+                          ? 'i-heroicons-star-20-solid'
+                          : 'svg-spinners:90-ring'
+                      "
+                    />
+                  </UTooltip>
 
                   <UBadge
                     color="neutral"
