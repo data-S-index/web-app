@@ -34,6 +34,15 @@ export default defineEventHandler(async (event) => {
           softwareVersion: true,
         },
       },
+      dindices: {
+        select: {
+          score: true,
+          created: true,
+        },
+        orderBy: {
+          created: "desc",
+        },
+      },
       mentions: {
         select: {
           mentionLink: true,

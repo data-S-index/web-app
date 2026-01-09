@@ -37,7 +37,168 @@ const getAuthorTooltipText = (author: Author): string => {
 
 const citationsCount = computed(() => dataset.value?.citations?.length || 0);
 const mentionsCount = computed(() => dataset.value?.mentions?.length || 0);
-const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
+
+// Pagination for citations
+const citationsPage = ref(1);
+const citationsPerPage = 10;
+const paginatedCitations = computed(() => {
+  if (!dataset.value?.citations || citationsCount.value <= citationsPerPage) {
+    return dataset.value?.citations || [];
+  }
+
+  const start = (citationsPage.value - 1) * citationsPerPage;
+  const end = start + citationsPerPage;
+
+  return dataset.value.citations.slice(start, end);
+});
+
+// Process d-index data for chart (by date)
+const dIndexChartData = computed(() => {
+  if (!dataset.value?.dindices || dataset.value.dindices.length === 0) {
+    return { dates: [], scores: [] };
+  }
+
+  // Sort by date ascending (earliest first)
+  const sorted = [...dataset.value.dindices].sort(
+    (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime(),
+  );
+
+  // Get earliest date and current date
+  const earliestDate = new Date(sorted[0]!.created);
+  const now = new Date();
+  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  // Generate monthly data points from earliest to now
+  const dates: string[] = [];
+  const scores: number[] = [];
+  let currentDate = new Date(earliestDate);
+  let lastKnownScore = sorted[0]!.score;
+
+  // Generate data points monthly
+  while (currentDate <= endDate) {
+    const dateStr = currentDate.toISOString().split("T")[0]!;
+    dates.push(dateStr);
+
+    // Find the most recent d-index value up to this date
+    const relevantDIndex = sorted
+      .filter((d) => new Date(d.created) <= currentDate)
+      .pop();
+
+    if (relevantDIndex) {
+      lastKnownScore = relevantDIndex.score;
+    }
+
+    scores.push(lastKnownScore);
+
+    // Move to next month
+    currentDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      1,
+    );
+  }
+
+  return { dates, scores, earliestDate, endDate };
+});
+
+// Chart option for d-index over time
+const dIndexChartOption = computed<ECOption>(() => ({
+  tooltip: {
+    trigger: "axis",
+    formatter: (params: unknown) => {
+      const data = params as Array<{
+        name: string;
+        value: number;
+      }>;
+
+      if (!data || data.length === 0) return "";
+
+      const dateStr = data[0]?.name;
+
+      if (!dateStr) return "";
+
+      const date = new Date(dateStr);
+      const formattedDate = date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+      });
+
+      return `${formattedDate}<br/>D-Index: ${data[0]?.value.toFixed(2)}`;
+    },
+  },
+  grid: {
+    left: "3%",
+    right: "4%",
+    bottom: "3%",
+    containLabel: true,
+  },
+  xAxis: {
+    type: "time",
+    min: dIndexChartData.value.earliestDate
+      ? dIndexChartData.value.earliestDate.toISOString().split("T")[0]
+      : undefined,
+    max: dIndexChartData.value.endDate
+      ? dIndexChartData.value.endDate.toISOString().split("T")[0]
+      : undefined,
+    axisLabel: {
+      fontSize: 12,
+      formatter: (value: number | string) => {
+        const date = new Date(typeof value === "number" ? value : value);
+
+        return date.getFullYear().toString();
+      },
+    },
+  },
+  yAxis: {
+    type: "value",
+    name: "D-Index",
+    nameLocation: "middle",
+    nameGap: 40,
+    axisLabel: {
+      formatter: "{value}",
+    },
+  },
+  series: [
+    {
+      name: "D-Index",
+      type: "line",
+      data: dIndexChartData.value.dates.map((date, index) => [
+        date,
+        dIndexChartData.value.scores[index],
+      ]),
+      step: "end",
+      lineStyle: {
+        color: "#3b82f6",
+        width: 2,
+      },
+      itemStyle: {
+        color: "#3b82f6",
+      },
+      symbol: "circle",
+      symbolSize: 2,
+      areaStyle: {
+        color: {
+          type: "linear",
+          x: 0,
+          y: 0,
+          x2: 0,
+          y2: 1,
+          colorStops: [
+            {
+              offset: 0,
+              color: "rgba(59, 130, 246, 0.3)",
+            },
+            {
+              offset: 1,
+              color: "rgba(59, 130, 246, 0.05)",
+            },
+          ],
+        },
+      },
+    },
+  ],
+}));
 </script>
 
 <template>
@@ -140,7 +301,10 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
               :collapse="citationsCount > 0 ? false : true"
             >
               <ul v-if="citationsCount > 0" class="list-none">
-                <li v-for="(citation, index) in dataset.citations" :key="index">
+                <li
+                  v-for="(citation, index) in paginatedCitations"
+                  :key="index"
+                >
                   <div
                     class="mb-2 flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
                   >
@@ -202,6 +366,17 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
                 title="No citations found"
                 description="It looks like this dataset has no citations."
               />
+
+              <div
+                v-if="citationsCount > citationsPerPage"
+                class="mt-4 flex justify-center"
+              >
+                <UPagination
+                  v-model:page="citationsPage"
+                  :total="citationsCount"
+                  :page-size="citationsPerPage"
+                />
+              </div>
             </CardCollapsibleContent>
 
             <!-- Mentions -->
@@ -229,6 +404,98 @@ const fujiScore = computed(() => dataset.value?.fujiScore?.score || null);
 
           <!-- Sidebar -->
           <div class="space-y-6">
+            <!-- Metrics -->
+            <UCard
+              v-if="
+                (dataset.fujiScore && dataset.fujiScore.score !== null) ||
+                (dataset.dindices && dataset.dindices.length > 0)
+              "
+            >
+              <template #header>
+                <h3 class="text-lg font-semibold">Metrics</h3>
+              </template>
+
+              <div class="space-y-4">
+                <div class="grid grid-cols-2 gap-6">
+                  <div
+                    v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
+                    class="flex flex-col items-center text-center"
+                  >
+                    <p class="mb-2 text-sm font-medium">FAIR Score</p>
+
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                      >
+                        {{ Math.round(dataset.fujiScore.score) }}
+                      </div>
+
+                      <div class="text-sm text-gray-500 dark:text-gray-400">
+                        / 100
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    v-if="
+                      dataset.dindices &&
+                      dataset.dindices.length > 0 &&
+                      dataset.dindices[0]
+                    "
+                    class="flex flex-col items-center text-center"
+                  >
+                    <p class="mb-2 text-sm font-medium">D-Index</p>
+
+                    <div class="flex items-center gap-2">
+                      <div
+                        class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                      >
+                        {{ Math.round(dataset.dindices[0].score) }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <ClientOnly>
+                  <div class="border-t border-gray-200 dark:border-gray-700">
+                    <div style="height: 200px" class="relative">
+                      <div
+                        v-if="
+                          !dataset.dindices ||
+                          dataset.dindices.length === 0 ||
+                          dIndexChartData.dates.length === 0
+                        "
+                        class="flex h-full items-center justify-center"
+                      >
+                        <Icon
+                          name="i-lucide-loader-circle"
+                          class="h-14 w-14 animate-spin text-gray-500 dark:text-gray-400"
+                        />
+                      </div>
+
+                      <VChart
+                        v-else
+                        :option="dIndexChartOption"
+                        class="h-full w-full"
+                      />
+                    </div>
+                  </div>
+
+                  <template #fallback>
+                    <div
+                      style="height: 200px"
+                      class="flex items-center justify-center"
+                    >
+                      <Icon
+                        name="i-lucide-loader-circle"
+                        class="h-14 w-14 animate-spin text-gray-500 dark:text-gray-400"
+                      />
+                    </div>
+                  </template>
+                </ClientOnly>
+              </div>
+            </UCard>
+
             <!-- Publisher and DOI -->
             <UCard v-if="dataset.identifier || dataset.publisher">
               <template #header>
