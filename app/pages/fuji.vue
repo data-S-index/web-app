@@ -33,22 +33,15 @@ const {
 // Canvas ref and drawing state
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const containerRef = ref<HTMLElement | null>(null);
-let animationFrameId: number | null = null;
-let animationStartTime: number | null = null;
-let isReverseAnimation = false; // Track if we're in reverse animation mode
-const ANIMATION_DURATION = 5000; // 5 seconds in milliseconds
-const REVERSE_ANIMATION_DURATION = 2000; // 2 seconds for reverse animation
 
 interface DotInfo {
   x: number;
   y: number;
   isFilled: boolean;
-  animationDelay: number; // Delay in milliseconds (0 to ANIMATION_DURATION)
   fillIndex: number; // Index used for deterministic filling order
 }
 
 let dotInfos: DotInfo[] = [];
-let previousDotInfos: DotInfo[] = []; // Store previous state for reverse animation
 let containerDimensions: { width: number; height: number } | null = null;
 
 // Simple seeded random function for deterministic randomness
@@ -58,7 +51,7 @@ const seededRandom = (seed: number) => {
   return x - Math.floor(x);
 };
 
-const drawDots = (timestamp?: number) => {
+const drawDots = () => {
   if (!canvasRef.value || !containerRef.value) return;
 
   const canvas = canvasRef.value;
@@ -124,19 +117,13 @@ const drawDots = (timestamp?: number) => {
       dotPositions[j] = temp;
     }
 
-    // Initialize dot infos with static positions and random animation delays
+    // Initialize dot infos with static positions
     dotInfos = dotPositions.map((pos, shuffledIndex) => ({
       x: pos.x,
       y: pos.y,
       isFilled: false, // Will be updated based on percentage
-      animationDelay: seededRandom(pos.index) * (ANIMATION_DURATION - 1000),
       fillIndex: shuffledIndex, // Used to determine which dots are filled
     }));
-  }
-
-  // Store previous state before updating (for reverse animation)
-  if (!isReverseAnimation && dotInfos.length > 0) {
-    previousDotInfos = dotInfos.map((dot) => ({ ...dot }));
   }
 
   // Update which dots are filled based on current percentage
@@ -146,164 +133,64 @@ const drawDots = (timestamp?: number) => {
     isFilled: dot.fillIndex < filledDotsCount,
   }));
 
-  // Start animation if not already started
-  if (animationStartTime === null && timestamp !== undefined) {
-    animationStartTime = timestamp;
-  }
-
-  // Calculate elapsed time
-  const currentTime = timestamp || performance.now();
-  const elapsed =
-    animationStartTime !== null ? currentTime - animationStartTime : 0;
-
-  // Parse colors once
-  const bgR = parseInt(backgroundColor.slice(1, 3), 16);
-  const bgG = parseInt(backgroundColor.slice(3, 5), 16);
-  const bgB = parseInt(backgroundColor.slice(5, 7), 16);
-  const primaryR = parseInt(primaryColor.slice(1, 3), 16);
-  const primaryG = parseInt(primaryColor.slice(3, 5), 16);
-  const primaryB = parseInt(primaryColor.slice(5, 7), 16);
-
-  // Draw dots
-  if (isReverseAnimation && previousDotInfos.length > 0) {
-    // Reverse animation: transition filled dots back to background color
-    const maxElapsed = REVERSE_ANIMATION_DURATION;
-    const reverseProgress = Math.min(1, elapsed / maxElapsed);
-
-    for (const dot of previousDotInfos) {
-      if (dot.isFilled) {
-        // Dots that were filled transition from primary back to background
-        // Use reverseProgress directly for smooth transition
-        const r = Math.round(primaryR + (bgR - primaryR) * reverseProgress);
-        const g = Math.round(primaryG + (bgG - primaryG) * reverseProgress);
-        const b = Math.round(primaryB + (bgB - primaryB) * reverseProgress);
-
-        ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-        ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
-      } else {
-        // Empty dots stay at background color
-        ctx.fillStyle = backgroundColor;
-        ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
-      }
-    }
-
-    // Continue reverse animation if not complete
-    if (elapsed < REVERSE_ANIMATION_DURATION) {
-      animationFrameId = requestAnimationFrame(drawDots);
+  // Draw dots immediately in their final state
+  for (const dot of dotInfos) {
+    if (dot.isFilled) {
+      ctx.fillStyle = primaryColor;
     } else {
-      // Reverse animation complete, reset and prepare for forward animation
-      isReverseAnimation = false;
-      animationStartTime = null;
+      ctx.fillStyle = backgroundColor;
     }
-  } else {
-    // Forward animation: all start with background color, filled ones transition to primary color
-    for (const dot of dotInfos) {
-      if (dot.isFilled) {
-        // Filled dots transition from background color to primary color
-        const timeSinceDelay = elapsed - dot.animationDelay;
-        const progress = Math.max(0, Math.min(1, timeSinceDelay / 1000)); // Transition over 1 second per dot
-
-        if (progress > 0) {
-          // Interpolate between background color and primary color
-          const r = Math.round(bgR + (primaryR - bgR) * progress);
-          const g = Math.round(bgG + (primaryG - bgG) * progress);
-          const b = Math.round(bgB + (primaryB - bgB) * progress);
-
-          ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-          ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
-        } else {
-          // Not started yet, use background color
-          ctx.fillStyle = backgroundColor;
-          ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
-        }
-      } else {
-        // Empty dots use background color at full opacity
-        ctx.fillStyle = backgroundColor;
-        ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
-      }
-    }
-
-    // Continue animation if not complete
-    if (elapsed < ANIMATION_DURATION) {
-      animationFrameId = requestAnimationFrame(drawDots);
-    }
+    ctx.fillRect(dot.x, dot.y, dotSize, dotSize);
   }
 };
 
 // Draw on mount and window resize
-let refreshInterval: ReturnType<typeof setInterval> | null = null;
-
-const startAnimation = () => {
-  // Reset animation state
-  animationStartTime = null;
-  isReverseAnimation = false;
-
-  // Cancel any existing animation
-  if (animationFrameId !== null) {
-    cancelAnimationFrame(animationFrameId);
-  }
-
-  // Start new animation
-  requestAnimationFrame(drawDots);
-};
-
-const startReverseAnimation = () => {
-  // Set reverse animation mode
-  isReverseAnimation = true;
-  animationStartTime = null;
-
-  // Cancel any existing animation
-  if (animationFrameId !== null) {
-    cancelAnimationFrame(animationFrameId);
-  }
-
-  // Start reverse animation
-  requestAnimationFrame(drawDots);
-};
+let isRefreshing = false;
+let shouldContinueRefreshing = true;
 
 const handleResize = () => {
   // Reset positions on resize (dimensions changed)
   containerDimensions = null;
   dotInfos = [];
-  startAnimation();
+  drawDots();
+};
+
+const scheduleNextRefresh = async () => {
+  if (!shouldContinueRefreshing || isRefreshing) return;
+
+  isRefreshing = true;
+  try {
+    await refreshFujiScore();
+  } finally {
+    isRefreshing = false;
+    // Schedule next refresh after current one completes
+    if (shouldContinueRefreshing) {
+      scheduleNextRefresh();
+    }
+  }
 };
 
 onMounted(() => {
   nextTick(() => {
-    startAnimation();
+    drawDots();
     window.addEventListener("resize", handleResize);
   });
 
-  // Refresh data every 15 seconds, with reverse animation before refresh
-  // Start reverse animation 2 seconds before refresh
-  refreshInterval = setInterval(() => {
-    // Start reverse animation
-    startReverseAnimation();
-
-    // Wait for reverse animation to complete, then refresh
-    setTimeout(() => {
-      refreshFujiScore();
-    }, REVERSE_ANIMATION_DURATION);
-  }, 15000);
+  // Start sequential refresh: when one request returns, submit the next one
+  scheduleNextRefresh();
 });
 
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
-  if (refreshInterval) {
-    clearInterval(refreshInterval);
-  }
-  if (animationFrameId !== null) {
-    cancelAnimationFrame(animationFrameId);
-  }
+  shouldContinueRefreshing = false;
 });
 
-// Redraw when data changes - restart animation so newly filled dots can fade in
+// Redraw when data changes - update grid immediately without animation
 watch(
   () => fujiScoreData.value?.percentage,
   () => {
     nextTick(() => {
-      // Only restart animation, don't reset positions
-      startAnimation();
+      drawDots();
     });
   },
 );
@@ -395,20 +282,6 @@ const formattedEta = computed(() => {
           >
             ETA: {{ formattedEta }}
           </div>
-        </div>
-
-        <div
-          :class="{
-            'text-red-500':
-              fujiScoreStatus !== 'success' && fujiScoreStatus !== 'pending',
-            'text-gray-500': fujiScoreStatus === 'pending',
-            'opacity-0': fujiScoreStatus === 'success',
-            'opacity-100':
-              fujiScoreStatus !== 'success' && fujiScoreStatus !== 'pending',
-            'opacity-90': fujiScoreStatus === 'pending',
-          }"
-        >
-          <Icon name="svg-spinners:3-dots-fade" class="h-10 w-10" />
         </div>
       </div>
     </div>
