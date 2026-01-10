@@ -1,7 +1,7 @@
 // Atomically read and delete a job from the FujiJob table
 // Uses PostgreSQL's DELETE ... RETURNING for atomicity under high concurrency
 export default defineEventHandler(async () => {
-  const limit = 3;
+  const limit = 1;
   try {
     // Atomically delete and return the specified number of jobs using raw SQL
     // This ensures that even with thousands of concurrent requests,
