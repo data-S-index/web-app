@@ -30,6 +30,11 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith("/fuji"),
   },
   {
+    label: "Resolver",
+    to: "/resolve",
+    active: route.path.startsWith("/resolve"),
+  },
+  {
     label: "GitHub",
     to: "https://github.com/data-S-index/web-app",
     target: "_blank",
