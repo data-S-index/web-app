@@ -21,6 +21,15 @@ const isLoading = ref(false);
 const dataset = ref<any>(null);
 const error = ref<any>(null);
 
+// Simple list of tasks happening during loading
+const loadingTasks = [
+  "Fetching dataset metadata",
+  "Collecting citations",
+  "Gathering mentions",
+  "Evaluating FAIR score",
+  "Calculating D-index",
+];
+
 // Check for query parameters and fetch data if present
 const query = route.query;
 const queryDoi = query.doi as string | undefined;
@@ -320,25 +329,14 @@ const handleSubmit = async () => {
   <UContainer>
     <!-- Form Display (always visible) -->
     <UPage>
-      <UPageHeader>
-        <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          Get Dataset D-index score
-        </h1>
+      <UPageHeader
+        v-if="!isLoading && !dataset"
+        title="Get Dataset D-index score"
+        description="Enter a DOI or dataset URL to view the corresponding dataset details"
+      />
 
-        <p class="mt-2 text-gray-600 dark:text-gray-400">
-          Enter a DOI or dataset URL to view the corresponding dataset details
-        </p>
-      </UPageHeader>
-
-      <UPageBody>
-        <div v-if="isLoading" class="flex items-center justify-center py-12">
-          <Icon
-            name="i-lucide-loader-circle"
-            class="h-14 w-14 animate-spin text-gray-500 dark:text-gray-400"
-          />
-        </div>
-
-        <div v-else class="space-y-6">
+      <UPageBody v-if="!dataset">
+        <div v-if="!isLoading && !dataset" class="space-y-6">
           <!-- DOI Selection -->
           <div>
             <label
@@ -347,7 +345,7 @@ const handleSubmit = async () => {
               Do you have a DOI?
             </label>
 
-            <UFieldGroup>
+            <UFieldGroup :disabled="isLoading">
               <UButton
                 color="neutral"
                 :variant="hasDoi === true ? 'solid' : 'subtle'"
@@ -479,6 +477,7 @@ const handleSubmit = async () => {
                 size="xl"
                 block
                 :loading="isLoading"
+                :disabled="isLoading"
                 @click="handleSubmit"
               >
                 {{ hasDoi ? "Resolve DOI" : "Resolve Dataset URL" }}
@@ -486,10 +485,39 @@ const handleSubmit = async () => {
             </div>
           </UCard>
         </div>
-      </UPageBody>
-    </UPage>
 
-    <!-- Dataset Display (when data is loaded, shown below form) -->
-    <DatasetResponseDisplay v-if="dataset && !isLoading" :dataset="dataset" />
+        <UEmpty
+          v-if="isLoading"
+          icon="svg-spinners:blocks-shuffle-3"
+          title="Processing dataset..."
+          description="We're gathering and analyzing information about your dataset. This may take up to a minute."
+          variant="naked"
+        >
+          <template #footer>
+            <USeparator class="my-4" />
+
+            <ul class="space-y-2">
+              <li
+                v-for="(task, index) in loadingTasks"
+                :key="index"
+                class="flex items-center gap-3 text-sm"
+              >
+                <UIcon
+                  name="svg-spinners:ring-resize"
+                  class="text-primary-500 h-5 w-5"
+                />
+
+                <span class="text-gray-600 dark:text-gray-300">
+                  {{ task }}
+                </span>
+              </li>
+            </ul>
+          </template>
+        </UEmpty>
+      </UPageBody>
+
+      <!-- Dataset Display (when data is loaded, shown below form) -->
+      <DatasetResponseDisplay v-if="dataset && !isLoading" :dataset="dataset" />
+    </UPage>
   </UContainer>
 </template>
