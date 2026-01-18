@@ -1,0 +1,35 @@
+import crypto from "crypto";
+
+function md5hex(s: string) {
+  return crypto.createHash("md5").update(s, "utf8").digest("hex");
+}
+
+// create
+await prisma.datasetAuthor.create({
+  data: {
+    datasetId,
+    name,
+    nameHash: md5hex(name),
+    // ...
+  },
+});
+
+// update (if name changes)
+await prisma.datasetAuthor.update({
+  where: { id },
+  data: {
+    name,
+    nameHash: md5hex(name),
+  },
+});
+
+// Query for names
+
+const hash = md5hex(name);
+
+const rows = await prisma.datasetAuthor.findMany({
+  where: { nameHash: hash },
+});
+
+// (optional safety) filter exact matches in case of md5 collision
+const exact = rows.filter(r => r.name === name);

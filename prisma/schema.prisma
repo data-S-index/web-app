@@ -101,11 +101,12 @@ model DatasetAuthor {
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
 
-    nameType        String?
-    name            String
-    nameIdentifiers String[] @default([])
+    nameType String?
+    name     String  @db.Text // keep the big string here
+    nameHash String? @db.Char(32) // md5 hex (32 chars)
 
-    affiliations String[] @default([])
+    nameIdentifiers String[] @default([])
+    affiliations    String[] @default([])
 
     created  DateTime @default(now())
     updated  DateTime @updatedAt
