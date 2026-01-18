@@ -15,6 +15,11 @@ const dIndexChartData = computed(() => {
     (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime(),
   );
 
+  // Don't plot if there's only one data point (no trend to show)
+  if (sorted.length === 1) {
+    return { dates: [], scores: [], earliestDate: null, endDate: null };
+  }
+
   // Get earliest date and current date
   const earliestDate = new Date(sorted[0]!.created);
   const now = new Date();
@@ -53,6 +58,11 @@ const dIndexChartData = computed(() => {
   return { dates, scores, earliestDate, endDate };
 });
 
+// Check if there's only one data point (not enough for a trend)
+const hasOnlyOneDataPoint = computed(() => {
+  return props.dindices && props.dindices.length === 1;
+});
+
 // Chart option for d-index over time
 const dIndexChartOption = computed<ECOption>(() => ({
   tooltip: {
@@ -82,7 +92,8 @@ const dIndexChartOption = computed<ECOption>(() => ({
   grid: {
     left: "3%",
     right: "4%",
-    bottom: "3%",
+    top: 8,
+    bottom: "0%",
     containLabel: true,
   },
   xAxis: {
@@ -106,7 +117,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
     type: "value",
     name: "D-Index",
     nameLocation: "middle",
-    nameGap: 40,
+    nameGap: 32,
     axisLabel: {
       formatter: "{value}",
     },
@@ -156,7 +167,20 @@ const dIndexChartOption = computed<ECOption>(() => ({
 <template>
   <ClientOnly>
     <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
-      <div style="height: 200px" class="relative">
+      <p class="mb-2 text-sm font-medium">D-Index Over Time</p>
+
+      <div
+        v-if="hasOnlyOneDataPoint"
+        class="flex h-full items-center justify-center"
+      >
+        <UAlert
+          title="Not enough data points to show trend over time"
+          color="warning"
+          variant="subtle"
+        />
+      </div>
+
+      <div v-else style="height: 200px" class="relative">
         <div
           v-if="
             !dindices ||

@@ -2,7 +2,7 @@
 <script setup lang="ts">
 import type { Author } from "#shared/types/dataset";
 
-const props = defineProps<{
+defineProps<{
   dataset: any;
 }>();
 
@@ -16,23 +16,6 @@ const getAuthorTooltipText = (author: Author): string => {
 
   return parts.length > 0 ? parts.join("\n") : "No additional information";
 };
-
-const citationsCount = computed(() => props.dataset?.citations?.length || 0);
-const mentionsCount = computed(() => props.dataset?.mentions?.length || 0);
-
-// Pagination for citations
-const citationsPage = ref(1);
-const citationsPerPage = 10;
-const paginatedCitations = computed(() => {
-  if (!props.dataset?.citations || citationsCount.value <= citationsPerPage) {
-    return props.dataset?.citations || [];
-  }
-
-  const start = (citationsPage.value - 1) * citationsPerPage;
-  const end = start + citationsPerPage;
-
-  return props.dataset.citations.slice(start, end);
-});
 
 const reloadPage = () => {
   window.location.reload();
@@ -151,151 +134,16 @@ const reloadPage = () => {
         </UCard>
 
         <!-- Citations -->
-        <CardCollapsibleContent
-          :title="`Citations (${citationsCount})`"
-          :collapse="citationsCount > 0 ? false : true"
-        >
-          <ul v-if="citationsCount > 0" class="list-none">
-            <li v-for="(citation, index) in paginatedCitations" :key="index">
-              <div
-                class="mb-2 flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
-              >
-                <NuxtLink
-                  :href="citation.citationLink"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-mono text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  {{ citation.citationLink }}
-                </NuxtLink>
-
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex flex-col gap-1">
-                    <p v-if="citation.citedDate" class="text-sm">
-                      Cited on
-                      {{ $dayjs(citation.citedDate).format("DD MMMM YYYY") }}
-                    </p>
-
-                    <p
-                      v-if="citation.citationWeight"
-                      class="text-xs text-gray-500 dark:text-gray-400"
-                    >
-                      Weight: {{ citation.citationWeight.toFixed(2) }}
-                    </p>
-                  </div>
-
-                  <div class="flex flex-wrap gap-2">
-                    <UBadge
-                      v-if="citation.datacite"
-                      color="success"
-                      variant="subtle"
-                      size="sm"
-                    >
-                      DataCite
-                    </UBadge>
-
-                    <UTooltip
-                      text="This citation was found in the Make Data Count (MDC) database."
-                    >
-                      <UBadge
-                        v-if="citation.mdc"
-                        color="success"
-                        variant="subtle"
-                        size="sm"
-                        class="cursor-help"
-                      >
-                        MDC
-                      </UBadge>
-                    </UTooltip>
-
-                    <UBadge
-                      v-if="citation.openAlex"
-                      color="success"
-                      variant="subtle"
-                      size="sm"
-                    >
-                      OpenAlex
-                    </UBadge>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          <UEmpty
-            v-else
-            title="No citations found"
-            description="It looks like this dataset has no citations."
-          />
-
-          <div
-            v-if="citationsCount > citationsPerPage"
-            class="mt-4 flex justify-center"
-          >
-            <UPagination
-              v-model:page="citationsPage"
-              :total="citationsCount"
-              :page-size="citationsPerPage"
-            />
-          </div>
-        </CardCollapsibleContent>
+        <DatasetCitationsDisplay
+          v-if="dataset.citations"
+          :citations="dataset.citations"
+        />
 
         <!-- Mentions -->
-        <CardCollapsibleContent
-          :title="`Mentions (${mentionsCount})`"
-          :collapse="mentionsCount > 0 ? false : true"
-        >
-          <ul v-if="mentionsCount > 0" class="list-none">
-            <li v-for="(mention, index) in dataset.mentions" :key="index">
-              <div
-                class="mb-2 flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
-              >
-                <NuxtLink
-                  :href="mention.mentionLink"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="font-mono text-blue-600 hover:underline dark:text-blue-400"
-                >
-                  {{ mention.mentionLink }}
-                </NuxtLink>
-
-                <div class="flex items-center justify-between gap-2">
-                  <div class="flex flex-col gap-1">
-                    <p v-if="mention.mentionedDate" class="text-sm">
-                      Mentioned on
-                      {{ $dayjs(mention.mentionedDate).format("DD MMMM YYYY") }}
-                    </p>
-
-                    <p
-                      v-if="mention.mentionWeight"
-                      class="text-xs text-gray-500 dark:text-gray-400"
-                    >
-                      Weight: {{ mention.mentionWeight.toFixed(2) }}
-                    </p>
-                  </div>
-
-                  <div class="flex flex-wrap gap-2">
-                    <UBadge
-                      v-for="(source, sourceIndex) in mention.source"
-                      :key="sourceIndex"
-                      color="info"
-                      variant="subtle"
-                      size="sm"
-                    >
-                      {{ source }}
-                    </UBadge>
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          <UEmpty
-            v-else
-            title="No mentions found"
-            description="It looks like this dataset has not been mentioned in any sources."
-          />
-        </CardCollapsibleContent>
+        <DatasetMentionsDisplay
+          v-if="dataset.mentions"
+          :mentions="dataset.mentions"
+        />
       </div>
 
       <!-- Sidebar -->
@@ -361,44 +209,6 @@ const reloadPage = () => {
               v-if="dataset.dindices && dataset.dindices.length > 0"
               :dindices="dataset.dindices"
             />
-
-            <!-- D-Index List -->
-            <div
-              v-if="dataset.dindices && dataset.dindices.length > 0"
-              class="border-t border-gray-200 pt-4 dark:border-gray-700"
-            >
-              <h4 class="mb-3 text-sm font-medium">D-Index History</h4>
-
-              <div class="flex flex-col gap-2">
-                <UCollapsible
-                  v-for="(dindex, index) in [...dataset.dindices].reverse()"
-                  :key="index"
-                  class="flex w-full flex-col gap-2"
-                >
-                  <UButton
-                    :label="`${$dayjs(dindex.created).format('DD MMM YYYY')} - ${dindex.score.toFixed(2)}`"
-                    color="neutral"
-                    variant="subtle"
-                    trailing-icon="i-lucide-chevron-down"
-                    block
-                  />
-
-                  <template #content>
-                    <div class="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
-                      <p class="text-sm">
-                        <span class="font-medium">Date:</span>
-                        {{ $dayjs(dindex.created).format("DD MMMM YYYY") }}
-                      </p>
-
-                      <p class="text-sm">
-                        <span class="font-medium">D-Index:</span>
-                        {{ dindex.score.toFixed(4) }}
-                      </p>
-                    </div>
-                  </template>
-                </UCollapsible>
-              </div>
-            </div>
           </div>
         </UCard>
 
@@ -472,6 +282,12 @@ const reloadPage = () => {
             </div>
           </div>
         </UCard>
+
+        <!-- Normalization Factors Card -->
+        <DatasetNormalizationFactors
+          v-if="dataset.normalization_factors"
+          :normalization-factors="dataset.normalization_factors"
+        />
       </div>
     </div>
   </UPageBody>

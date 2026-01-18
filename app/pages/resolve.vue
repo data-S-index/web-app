@@ -107,6 +107,7 @@ const transformApiResponse = (apiData: any) => {
       (a: any, b: any) =>
         new Date(a.created).getTime() - new Date(b.created).getTime(),
     ),
+    normalization_factors: apiData.normalization_factors || null,
   };
 };
 
