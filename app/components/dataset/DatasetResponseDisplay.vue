@@ -277,22 +277,8 @@ const reloadPage = () => {
           </div>
         </UCard>
 
-        <!-- Additional Information Card -->
-        <UCard v-if="dataset.domain">
-          <template #header>
-            <h3 class="text-lg font-semibold">Additional Information</h3>
-          </template>
-
-          <div class="space-y-3">
-            <div v-if="dataset.domain">
-              <p class="mb-1 text-sm font-medium">Domain</p>
-
-              <p class="text-sm text-gray-700 dark:text-gray-300">
-                {{ dataset.domain }}
-              </p>
-            </div>
-          </div>
-        </UCard>
+        <!-- Domain Information -->
+        <DatasetDomainInfo v-if="dataset.domain" :domain="dataset.domain" />
 
         <!-- Normalization Factors Card -->
         <DatasetNormalizationFactors
@@ -301,5 +287,7 @@ const reloadPage = () => {
         />
       </div>
     </div>
+
+    <pre>{{ dataset }}</pre>
   </UPageBody>
 </template>
