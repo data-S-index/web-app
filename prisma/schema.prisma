@@ -113,6 +113,7 @@ model DatasetAuthor {
     sindices SIndex[]
 
     @@index([datasetId])
+    @@index([nameHash])
 }
 
 model DatasetIdentifier {
