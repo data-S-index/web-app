@@ -1,5 +1,8 @@
+<!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-const router = useRouter();
+import { openAlexTopics } from "@/utils/data";
+
+const route = useRoute();
 const toast = useToast();
 
 useSeoMeta({
@@ -15,25 +18,171 @@ const publicationDate = ref("");
 const datasetDomain = ref("");
 
 const isLoading = ref(false);
+const dataset = ref<any>(null);
+const error = ref<any>(null);
 
-// Common dataset domains
-const domainOptions = [
-  { label: "Select a domain (optional)", value: "" },
-  { label: "Life Sciences", value: "Life Sciences" },
-  { label: "Physical Sciences", value: "Physical Sciences" },
-  { label: "Social Sciences", value: "Social Sciences" },
-  { label: "Earth Sciences", value: "Earth Sciences" },
-  { label: "Computer Science", value: "Computer Science" },
-  { label: "Mathematics", value: "Mathematics" },
-  { label: "Engineering", value: "Engineering" },
-  { label: "Medicine", value: "Medicine" },
-  { label: "Chemistry", value: "Chemistry" },
-  { label: "Physics", value: "Physics" },
-  { label: "Biology", value: "Biology" },
-  { label: "Astronomy", value: "Astronomy" },
-  { label: "Environmental Science", value: "Environmental Science" },
-  { label: "Other", value: "Other" },
-];
+// Check for query parameters and fetch data if present
+const query = route.query;
+const queryDoi = query.doi as string | undefined;
+const queryUrl = query.url as string | undefined;
+
+// Transform API response to match dataset structure
+const transformApiResponse = (apiData: any) => {
+  if (!apiData) return null;
+
+  const metadata = apiData.metadata || {};
+  const fair = apiData.fair || {};
+  const citations = apiData.citations || [];
+  const mentions = apiData.mentions || [];
+  const datasetIndexSeries = apiData.dataset_index_series || [];
+
+  // Transform creators to datasetAuthors format
+  const datasetAuthors = (metadata.creators || []).map((creator: any) => ({
+    name: creator.name || "Unknown Author",
+    nameType: "Personal",
+    affiliations: creator.affiliations || [],
+    nameIdentifiers: creator.identifiers || [],
+  }));
+
+  // Transform citations
+  const transformedCitations = citations.map((citation: any) => ({
+    citationLink: citation.citation_link || citation.citationLink,
+    datacite: citation.source?.includes("datacite") || false,
+    mdc: citation.source?.includes("mdc") || false,
+    openAlex: citation.source?.includes("openalex") || false,
+    citedDate: citation.citation_date || citation.citedDate,
+    citationWeight: citation.citation_weight || null,
+  }));
+
+  // Transform mentions
+  const transformedMentions = mentions.map((mention: any) => ({
+    mentionLink: mention.mention_link || mention.mentionLink,
+    source: mention.source || [],
+    mentionedDate: mention.mention_date || mention.mentionDate,
+    mentionWeight: mention.mention_weight || null,
+  }));
+
+  // Transform dataset_index_series to dindices format
+  const dindices = datasetIndexSeries.map((item: any) => ({
+    score: item.dataset_index || 0,
+    created: item.date || new Date().toISOString(),
+  }));
+
+  return {
+    title: metadata?.title || "Untitled Dataset",
+    description: metadata?.description || "",
+    version: metadata?.version || null,
+    publisher: metadata?.publisher || null,
+    publishedAt: metadata?.publication_date || null,
+    identifier:
+      apiData.norm_doi ||
+      apiData.norm_identifier ||
+      metadata?.identifiers?.[0]?.identifier ||
+      null,
+    url: apiData.norm_url || metadata?.url || null,
+    domain: apiData.topic || null,
+    subjects: metadata?.subjects || [],
+    datasetAuthors,
+    citations: transformedCitations,
+    mentions: transformedMentions,
+    fujiScore:
+      fair.fair_score !== undefined
+        ? {
+            score: fair.fair_score,
+            evaluationDate: fair.evaluation_date || null,
+            metricVersion: fair.fuji_metric_version || null,
+            softwareVersion: fair.fuji_software_version || null,
+          }
+        : null,
+    dindices: dindices.sort(
+      (a: any, b: any) =>
+        new Date(a.created).getTime() - new Date(b.created).getTime(),
+    ),
+  };
+};
+
+// Fetch data from external API using DOI
+const fetchDatasetData = async (doi: string) => {
+  isLoading.value = true;
+  error.value = null;
+
+  try {
+    const apiUrl = `http://s-index-api.tailb70b88.ts.net:6405/dataset-index-series-from-doi?doi=${encodeURIComponent(doi)}`;
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch dataset: ${response.statusText}`);
+    }
+
+    const apiData = await response.json();
+    dataset.value = transformApiResponse(apiData);
+
+    useSeoMeta({
+      title: dataset.value?.title || "Dataset Details",
+      description: dataset.value?.description || "Dataset information",
+    });
+  } catch (err: any) {
+    error.value = err;
+    toast.add({
+      title: "Error fetching dataset",
+      description:
+        err.message || "An error occurred while fetching the dataset",
+      icon: "material-symbols:error",
+      color: "error",
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Fetch data from external API using URL
+const fetchDatasetDataFromUrl = async (
+  url: string,
+  pubdate?: string,
+  topicId?: string,
+) => {
+  isLoading.value = true;
+  error.value = null;
+
+  try {
+    const params = new URLSearchParams();
+    params.append("url", url);
+
+    if (pubdate) {
+      params.append("pubdate", pubdate);
+    }
+
+    if (topicId) {
+      params.append("topic_id", topicId);
+    }
+
+    const apiUrl = `http://s-index-api.tailb70b88.ts.net:6405/dataset-index-series-from-url?${params.toString()}`;
+    const response = await fetch(apiUrl);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch dataset: ${response.statusText}`);
+    }
+
+    const apiData = await response.json();
+    dataset.value = transformApiResponse(apiData);
+
+    useSeoMeta({
+      title: dataset.value?.title || "Dataset Details",
+      description: dataset.value?.description || "Dataset information",
+    });
+  } catch (err: any) {
+    error.value = err;
+    toast.add({
+      title: "Error fetching dataset",
+      description:
+        err.message || "An error occurred while fetching the dataset",
+      icon: "material-symbols:error",
+      color: "error",
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const extractDoi = (input: string): string | null => {
   if (!input || !input.trim()) return null;
@@ -52,7 +201,55 @@ const extractDoi = (input: string): string | null => {
   return cleanDoi || null;
 };
 
-const handleSubmit = () => {
+// Check if a URL is a doi.org URL
+const isDoiUrl = (url: string): boolean => {
+  if (!url || !url.trim()) return false;
+
+  const trimmedUrl = url.trim().toLowerCase();
+
+  return /^https?:\/\/(dx\.)?doi\.org\//i.test(trimmedUrl);
+};
+
+// Fetch data if DOI is in query params
+if (queryDoi) {
+  fetchDatasetData(queryDoi);
+}
+
+// Fetch data if URL is in query params
+if (queryUrl) {
+  // Check if query URL is a doi.org URL
+  if (isDoiUrl(queryUrl)) {
+    const doi = extractDoi(queryUrl);
+    if (doi) {
+      fetchDatasetData(doi);
+    }
+  } else {
+    const queryPubdate = query.pubdate as string | undefined;
+    const queryTopicId = query.topic_id as string | undefined;
+    fetchDatasetDataFromUrl(queryUrl, queryPubdate, queryTopicId);
+  }
+}
+
+// Watch for doi.org URLs in the URL input field
+watch(datasetUrl, (newUrl) => {
+  if (newUrl && isDoiUrl(newUrl) && hasDoi.value === false) {
+    const doi = extractDoi(newUrl);
+    if (doi) {
+      // Automatically switch to DOI mode
+      hasDoi.value = true;
+      doiInput.value = doi;
+      datasetUrl.value = "";
+      toast.add({
+        title: "DOI detected",
+        description: "Detected DOI from URL. Switched to DOI mode.",
+        icon: "i-heroicons-information-circle-20-solid",
+        color: "primary",
+      });
+    }
+  }
+});
+
+const handleSubmit = async () => {
   if (hasDoi.value === null) {
     toast.add({
       title: "Please select an option",
@@ -78,8 +275,8 @@ const handleSubmit = () => {
       return;
     }
 
-    // Handle DOI resolution
-    router.push(`/resolve?doi=${encodeURIComponent(doi)}`);
+    // Handle DOI resolution - fetch data and display on same page
+    await fetchDatasetData(doi);
   } else {
     if (!datasetUrl.value.trim()) {
       toast.add({
@@ -92,30 +289,36 @@ const handleSubmit = () => {
       return;
     }
 
-    // Handle URL-based resolution
-    const params = new URLSearchParams();
+    // Check if the URL is a doi.org URL
+    if (isDoiUrl(datasetUrl.value)) {
+      const doi = extractDoi(datasetUrl.value);
 
-    params.append("url", datasetUrl.value);
+      if (doi) {
+        // Automatically switch to DOI mode and fetch using DOI
+        await fetchDatasetData(doi);
 
-    if (datasetId.value.trim()) {
-      params.append("datasetId", datasetId.value);
+        return;
+      }
     }
 
-    if (publicationDate.value) {
-      params.append("publishedAt", publicationDate.value);
-    }
+    // Handle URL-based resolution - fetch data and display on same page
+    const topicId = datasetDomain.value
+      ? openAlexTopics.find((topic) => topic.label === datasetDomain.value)
+          ?.value
+      : undefined;
 
-    if (datasetDomain.value) {
-      params.append("domain", datasetDomain.value);
-    }
-
-    router.push(`/resolve?${params.toString()}`);
+    await fetchDatasetDataFromUrl(
+      datasetUrl.value,
+      publicationDate.value || undefined,
+      topicId,
+    );
   }
 };
 </script>
 
 <template>
   <UContainer>
+    <!-- Form Display (always visible) -->
     <UPage>
       <UPageHeader>
         <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">
@@ -128,7 +331,14 @@ const handleSubmit = () => {
       </UPageHeader>
 
       <UPageBody>
-        <div class="space-y-6">
+        <div v-if="isLoading" class="flex items-center justify-center py-12">
+          <Icon
+            name="i-lucide-loader-circle"
+            class="h-14 w-14 animate-spin text-gray-500 dark:text-gray-400"
+          />
+        </div>
+
+        <div v-else class="space-y-6">
           <!-- DOI Selection -->
           <div>
             <label
@@ -250,11 +460,13 @@ const handleSubmit = () => {
                     Dataset Domain (optional)
                   </label>
 
-                  <USelect
+                  <USelectMenu
                     id="domain-select"
                     v-model="datasetDomain"
-                    :options="domainOptions"
+                    value-key="value"
+                    :items="openAlexTopics"
                     size="xl"
+                    class="w-full"
                     :disabled="isLoading"
                   />
                 </div>
@@ -269,12 +481,15 @@ const handleSubmit = () => {
                 :loading="isLoading"
                 @click="handleSubmit"
               >
-                {{ hasDoi ? "Resolve DOI" : "Resolve Dataset" }}
+                {{ hasDoi ? "Resolve DOI" : "Resolve Dataset URL" }}
               </UButton>
             </div>
           </UCard>
         </div>
       </UPageBody>
     </UPage>
+
+    <!-- Dataset Display (when data is loaded, shown below form) -->
+    <DatasetResponseDisplay v-if="dataset && !isLoading" :dataset="dataset" />
   </UContainer>
 </template>

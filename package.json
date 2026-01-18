@@ -44,7 +44,7 @@
     "@faker-js/faker": "^9.4.0",
     "@nuxt/devtools": "2.5.0",
     "@nuxt/eslint": "^1.9.0",
-    "@nuxt/ui": "^4.1.0",
+    "@nuxt/ui": "4.3.0",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@paralleldrive/cuid2": "^3.0.4",
     "@prisma/adapter-pg": "^7.0.0",
