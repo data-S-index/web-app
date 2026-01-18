@@ -1,0 +1,1128 @@
+{
+  "url": "http://s-index-api.tailb70b88.ts.net:6405/dataset-index-series-from-doi",
+  "params": {
+    "doi": "10.13026/kpb9-mt58"
+  },
+  "method": "GET",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "response": {
+    "input_doi": "10.13026/kpb9-mt58",
+    "norm_doi": "10.13026/kpb9-mt58",
+    "norm_doi_url": "https://doi.org/10.13026/kpb9-mt58",
+    "metadata": {
+      "source": "datacite",
+      "identifiers": [
+        {
+          "identifier": "10.13026/kpb9-mt58",
+          "identifier_type": "doi"
+        }
+      ],
+      "url": "https://physionet.org/content/mimiciv/3.1/",
+      "title": "MIMIC-IV",
+      "description": "Retrospectively collected medical data has the opportunity to improve patient\ncare through knowledge discovery and algorithm development. Broad reuse of\nmedical data is desirable for the greatest public good, but data sharing must\nbe done in a manner which protects patient privacy. Here we present Medical\nInformation Mart for Intensive Care (MIMIC)-IV, a large deidentified dataset\nof patients admitted to the emergency department or an intensive care unit at\nthe Beth Israel Deaconess Medical Center in Boston, MA. MIMIC-IV contains data\nfor over 65,000 patients admitted to an ICU and over 200,000 patients admitted\nto the emergency department. MIMIC-IV incorporates contemporary data and\nadopts a modular approach to data organization, highlighting data provenance\nand facilitating both individual and combined use of disparate data sources.\nMIMIC-IV is intended to carry on the success of MIMIC-III and support a broad\nset of applications within healthcare.",
+      "version": "3.1",
+      "publisher": "PhysioNet",
+      "publication_date": "2024-10-10T21:27:19+00:00",
+      "creators": [
+        {
+          "name": "Johnson, Alistair",
+          "affiliations": [
+            "Massachusetts Institute of Technology"
+          ]
+        },
+        {
+          "name": "Bulgarelli, Lucas",
+          "affiliations": [
+            "Massachusetts Institute of Technology"
+          ]
+        },
+        {
+          "name": "Pollard, Tom",
+          "identifiers": [
+            "https://orcid.org/0000-0002-5676-7898"
+          ],
+          "affiliations": [
+            "Massachusetts Institute of Technology, USA"
+          ]
+        },
+        {
+          "name": "Gow, Brian",
+          "identifiers": [
+            "https://orcid.org/0000-0002-7682-1943"
+          ],
+          "affiliations": [
+            "Massachusetts Institute of Technology"
+          ]
+        },
+        {
+          "name": "Moody, Benjamin",
+          "affiliations": [
+            "Massachusetts Institute of Technology"
+          ]
+        },
+        {
+          "name": "Horng, Steven",
+          "affiliations": [
+            "Beth Israel Deaconess Medical Center",
+            "Harvard Medical School"
+          ]
+        },
+        {
+          "name": "Celi, Leo Anthony",
+          "affiliations": [
+            "Massachusetts Institute of Technology, Cambridge, USA",
+            "Beth Israel Deaconess Medical Center, Boston, USA"
+          ]
+        },
+        {
+          "name": "Mark, Roger",
+          "identifiers": [
+            "https://orcid.org/0000-0002-6318-2978"
+          ],
+          "affiliations": [
+            "Massachusetts Institute of Technology"
+          ]
+        }
+      ],
+      "citations": {
+        "dois": [
+          "10.1093/jamia/ocae303",
+          "10.1101/2025.02.11.25321833",
+          "10.32628/cseit251112256",
+          "10.2196/preprints.74142",
+          "10.1101/2025.03.26.25324714",
+          "10.1002/alz.14564",
+          "10.1016/j.numecd.2025.103973",
+          "10.1186/s40560-025-00797-9",
+          "10.1089/pmr.2025.0015",
+          "10.7759/cureus.86370",
+          "10.1101/2025.06.26.25330281",
+          "10.1186/s12871-025-03243-3",
+          "10.1007/s40520-025-03115-3",
+          "10.1038/s41598-025-14028-6",
+          "10.21203/rs.3.rs-6680914/v1",
+          "10.1038/s41598-025-12496-4",
+          "10.1101/2025.07.20.25322556",
+          "10.1186/s40779-025-00641-z",
+          "10.1101/2025.08.15.25333725",
+          "10.3389/fphar.2025.1622440",
+          "10.2196/74142",
+          "10.1145/3705328.3748022",
+          "10.1530/ec-25-0377",
+          "10.1093/gigascience/giaf107",
+          "10.1038/s41597-025-05915-8",
+          "10.1016/j.diabres.2025.112105",
+          "10.1186/s13054-025-05642-x",
+          "10.1016/j.jad.2025.120465",
+          "10.1101/2025.08.25.25334266",
+          "10.21203/rs.3.rs-7886784/v1",
+          "10.3389/fcvm.2025.1599318",
+          "10.1016/j.aucc.2025.101489",
+          "10.1186/s12872-025-05231-4",
+          "10.1101/2025.11.11.25340038",
+          "10.1016/j.bja.2025.10.043",
+          "10.1038/s41598-025-26223-6",
+          "10.1177/08850666251358154",
+          "10.1080/15563650.2025.2555970",
+          "10.1016/j.mcna.2025.07.011",
+          "10.1016/j.inffus.2025.104021",
+          "10.1001/jamainternmed.2025.6572",
+          "10.4121/e10219cf-4f84-4ff2-843b-5e37068f84b4.v1",
+          "10.4121/e10219cf-4f84-4ff2-843b-5e37068f84b4",
+          "10.64898/2025.12.04.25341678",
+          "10.1186/s12876-025-04564-w",
+          "10.21203/rs.3.rs-8419139/v1",
+          "10.1016/j.ailsci.2026.100153",
+          "10.1007/s13755-025-00424-9",
+          "10.21203/rs.3.rs-8312482/v1"
+        ]
+      }
+    },
+    "topic": null,
+    "fair": {
+      "fair_score": 76.92,
+      "evaluation_date": "2026-01-18T01:17:26+00:00",
+      "fuji_metric_version": "0.8",
+      "fuji_software_version": "3.5.1"
+    },
+    "citations": [
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "mdc"
+        ],
+        "citation_link": "https://doi.org/10.1136/bmjopen-2024-087427",
+        "citation_weight": 1.09,
+        "citation_date": "2025-02-01T00:00:00+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "mdc",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.3389/fcimb.2025.1545979",
+        "citation_weight": 1.14,
+        "citation_date": "2025-04-17T00:00:00+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "mdc",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1002/alz.14564",
+        "citation_weight": 1.11,
+        "citation_date": "2025-03-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "mdc"
+        ],
+        "citation_link": "https://doi.org/10.3389/fneur.2025.1529415",
+        "citation_weight": 1.1,
+        "citation_date": "2025-02-12T00:00:00+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "mdc",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1093/jamia/ocae303",
+        "citation_weight": 1.05,
+        "citation_date": "2024-12-13T00:00:00+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.diabres.2025.112105",
+        "citation_weight": 1.12,
+        "citation_date": "2025-03-15T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.numecd.2025.103973",
+        "citation_weight": 1.11,
+        "citation_date": "2025-03-08T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1186/s12872-024-04358-0",
+        "citation_weight": 1.04,
+        "citation_date": "2024-11-26T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1038/s41746-025-01649-4",
+        "citation_weight": 1.15,
+        "citation_date": "2025-05-13T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.04.23.25326294",
+        "citation_weight": 1.14,
+        "citation_date": "2025-04-25T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1186/s40560-025-00797-9",
+        "citation_weight": 1.16,
+        "citation_date": "2025-05-21T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1186/s12871-025-03243-3",
+        "citation_weight": 1.19,
+        "citation_date": "2025-07-30T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1093/gigascience/giaf107",
+        "citation_weight": 1.07,
+        "citation_date": "2025-01-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.02.11.25321833",
+        "citation_weight": 1.1,
+        "citation_date": "2025-02-13T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.32628/cseit251112256",
+        "citation_weight": 1.1,
+        "citation_date": "2025-02-10T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.2196/preprints.74142",
+        "citation_weight": 1.12,
+        "citation_date": "2025-03-21T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1089/pmr.2025.0015",
+        "citation_weight": 1.16,
+        "citation_date": "2025-06-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.7759/cureus.86370",
+        "citation_weight": 1.17,
+        "citation_date": "2025-06-19T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.06.26.25330281",
+        "citation_weight": 1.18,
+        "citation_date": "2025-06-27T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1007/s40520-025-03115-3",
+        "citation_weight": 1.18,
+        "citation_date": "2025-07-09T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.3389/fphar.2025.1622440",
+        "citation_weight": 1.19,
+        "citation_date": "2025-07-24T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.07.22.25332000",
+        "citation_weight": 1.19,
+        "citation_date": "2025-07-23T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.08.11.25333434",
+        "citation_weight": 1.2,
+        "citation_date": "2025-08-13T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.08.15.25333725",
+        "citation_weight": 1.2,
+        "citation_date": "2025-08-19T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1186/s40779-025-00641-z",
+        "citation_weight": 1.2,
+        "citation_date": "2025-08-21T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1145/3705328.3748022",
+        "citation_weight": 1.21,
+        "citation_date": "2025-09-06T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1080/15563650.2025.2555970",
+        "citation_weight": 1.22,
+        "citation_date": "2025-09-19T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1038/s41597-025-05915-8",
+        "citation_weight": 1.23,
+        "citation_date": "2025-10-09T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.21203/rs.3.rs-7386815/v1",
+        "citation_weight": 1.23,
+        "citation_date": "2025-10-20T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.7759/cureus.95083",
+        "citation_weight": 1.23,
+        "citation_date": "2025-10-21T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.3389/fcvm.2025.1599318",
+        "citation_weight": 1.24,
+        "citation_date": "2025-11-03T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.21203/rs.3.rs-7886784/v1",
+        "citation_weight": 1.24,
+        "citation_date": "2025-11-03T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1186/s12872-025-05231-4",
+        "citation_weight": 1.24,
+        "citation_date": "2025-11-14T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.11.11.25340038",
+        "citation_weight": 1.24,
+        "citation_date": "2025-11-13T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1177/08850666251358154",
+        "citation_weight": 1.25,
+        "citation_date": "2025-11-26T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1038/s41598-025-26223-6",
+        "citation_weight": 1.25,
+        "citation_date": "2025-11-26T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.64898/2025.12.04.25341678",
+        "citation_weight": 1.25,
+        "citation_date": "2025-12-05T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.1007/978-3-032-10670-4_14",
+        "citation_weight": 1.26,
+        "citation_date": "2026-01-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.21203/rs.3.rs-8419139/v1",
+        "citation_weight": 1.27,
+        "citation_date": "2026-01-06T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite",
+          "openalex"
+        ],
+        "citation_link": "https://doi.org/10.21203/rs.3.rs-8312482/v1",
+        "citation_weight": 1.27,
+        "citation_date": "2026-01-12T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.03.26.25324714",
+        "citation_weight": 1.12,
+        "citation_date": "2025-03-27T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1038/s41598-025-14028-6",
+        "citation_weight": 1.2,
+        "citation_date": "2025-08-02T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.21203/rs.3.rs-6680914/v1",
+        "citation_weight": 1.17,
+        "citation_date": "2025-06-18T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1038/s41598-025-12496-4",
+        "citation_weight": 1.19,
+        "citation_date": "2025-07-23T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.07.20.25322556",
+        "citation_weight": 1.19,
+        "citation_date": "2025-07-21T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.2196/74142",
+        "citation_weight": 1.17,
+        "citation_date": "2025-06-10T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1530/ec-25-0377",
+        "citation_weight": 1.21,
+        "citation_date": "2025-08-27T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1186/s13054-025-05642-x",
+        "citation_weight": 1.23,
+        "citation_date": "2025-10-17T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.jad.2025.120465",
+        "citation_weight": 1.23,
+        "citation_date": "2025-10-15T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1101/2025.08.25.25334266",
+        "citation_weight": 1.21,
+        "citation_date": "2025-08-28T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.aucc.2025.101489",
+        "citation_weight": 1.24,
+        "citation_date": "2025-11-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.bja.2025.10.043",
+        "citation_weight": 1.24,
+        "citation_date": "2025-11-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.mcna.2025.07.011",
+        "citation_weight": 1.25,
+        "citation_date": "2025-12-01T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.inffus.2025.104021",
+        "citation_weight": 1.25,
+        "citation_date": "2025-12-03T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1001/jamainternmed.2025.6572",
+        "citation_weight": 1.25,
+        "citation_date": "2025-12-08T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.4121/e10219cf-4f84-4ff2-843b-5e37068f84b4.v1",
+        "citation_weight": 1.27,
+        "citation_date": "2026-01-06T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.4121/e10219cf-4f84-4ff2-843b-5e37068f84b4",
+        "citation_weight": 1.27,
+        "citation_date": "2026-01-06T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1186/s12876-025-04564-w",
+        "citation_weight": 1.26,
+        "citation_date": "2025-12-23T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1016/j.ailsci.2026.100153",
+        "citation_weight": 1.26,
+        "citation_date": "2026-01-03T00:00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "datacite"
+        ],
+        "citation_link": "https://doi.org/10.1007/s13755-025-00424-9",
+        "citation_weight": 1.27,
+        "citation_date": "2026-01-07T00:00:00"
+      }
+    ],
+    "mentions": [
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/AnovaYoung/Aegis-Cardiac-Event-Forecasting",
+        "mention_weight": 1.16,
+        "mention_date": "2025-05-18T20:02:37+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/CUB-CORR/reprodICU",
+        "mention_weight": 1.14,
+        "mention_date": "2025-04-29T17:10:26+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/Crazz-Zaac/informative-missingness",
+        "mention_weight": 1.15,
+        "mention_date": "2025-05-09T09:32:17+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/SimonYip22/Time-Series-ICU-Patient-Deterioration-Predictor",
+        "mention_weight": 1.22,
+        "mention_date": "2025-09-11T23:13:37+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/WannaLearnCodingForFun/HeartRate-SPO2-Glucose-Predictor",
+        "mention_weight": 1.24,
+        "mention_date": "2025-11-04T08:32:29+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/bbleier/multimodal-icu-mortality",
+        "mention_weight": 1.07,
+        "mention_date": "2025-01-06T19:34:58+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/emilymcdonald1117-svg/mimic_postpartum_hemorrhage_prediction",
+        "mention_weight": 1.21,
+        "mention_date": "2025-09-08T18:44:43+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/leetheoiv/Readmission-Rate-Risk-Analysis",
+        "mention_weight": 1.14,
+        "mention_date": "2025-04-18T14:38:42+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/lefischerander/Hospital-System",
+        "mention_weight": 1.03,
+        "mention_date": "2024-11-10T21:00:19+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/makotoy56/mimic-iv-copd-raas-analysis",
+        "mention_weight": 1.27,
+        "mention_date": "2026-01-05T10:59:54+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/makotoy56/mimic-iv-nonicu-medication",
+        "mention_weight": 1.27,
+        "mention_date": "2026-01-05T10:26:11+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/sqy941013/Knowledge-Embedded-Large-Language-Models-for-Emergency-Triage",
+        "mention_weight": 1.04,
+        "mention_date": "2024-12-03T05:44:50+00:00"
+      },
+      {
+        "dataset_id": "10.13026/kpb9-mt58",
+        "source": [
+          "github"
+        ],
+        "mention_link": "https://github.com/suhasio/icu-mortality-analysis",
+        "mention_weight": 1.26,
+        "mention_date": "2025-12-11T18:57:26+00:00"
+      }
+    ],
+    "normalization_factors": {
+      "FT": 0.643,
+      "CTw": 5.526,
+      "MTw": 3.771,
+      "topic_id_used": "ALL",
+      "year_used": 2024,
+      "topic_id_requested": null,
+      "year_requested": 2024,
+      "used_year_clamp": false
+    },
+    "dataset_index_series": [
+      {
+        "date": "2024-10-10T21:27:19Z",
+        "dataset_index": 0.398755832037325
+      },
+      {
+        "date": "2024-11-10T21:00:19Z",
+        "dataset_index": 0.4898015316749101
+      },
+      {
+        "date": "2024-11-26T00:00:00Z",
+        "dataset_index": 0.5525352751904126
+      },
+      {
+        "date": "2024-12-03T05:44:50Z",
+        "dataset_index": 0.6444649136594306
+      },
+      {
+        "date": "2024-12-13T00:00:00Z",
+        "dataset_index": 0.7078018662471974
+      },
+      {
+        "date": "2025-01-01T00:00:00Z",
+        "dataset_index": 0.7723452369794933
+      },
+      {
+        "date": "2025-01-06T19:34:58Z",
+        "dataset_index": 0.8669266919428099
+      },
+      {
+        "date": "2025-02-01T00:00:00Z",
+        "dataset_index": 0.9326764808196346
+      },
+      {
+        "date": "2025-02-10T00:00:00Z",
+        "dataset_index": 0.9990294787687238
+      },
+      {
+        "date": "2025-02-12T00:00:00Z",
+        "dataset_index": 1.0653824767178128
+      },
+      {
+        "date": "2025-02-13T00:00:00Z",
+        "dataset_index": 1.131735474666902
+      },
+      {
+        "date": "2025-03-01T00:00:00Z",
+        "dataset_index": 1.1986916816882556
+      },
+      {
+        "date": "2025-03-08T00:00:00Z",
+        "dataset_index": 1.2656478887096092
+      },
+      {
+        "date": "2025-03-15T00:00:00Z",
+        "dataset_index": 1.3332073048032271
+      },
+      {
+        "date": "2025-03-21T00:00:00Z",
+        "dataset_index": 1.4007667208968453
+      },
+      {
+        "date": "2025-03-27T00:00:00Z",
+        "dataset_index": 1.4683261369904634
+      },
+      {
+        "date": "2025-04-17T00:00:00Z",
+        "dataset_index": 1.5370919712286104
+      },
+      {
+        "date": "2025-04-18T14:38:42Z",
+        "dataset_index": 1.6378609980119567
+      },
+      {
+        "date": "2025-04-25T00:00:00Z",
+        "dataset_index": 1.7066268322501037
+      },
+      {
+        "date": "2025-04-29T17:10:26Z",
+        "dataset_index": 1.8073958590334502
+      },
+      {
+        "date": "2025-05-09T09:32:17Z",
+        "dataset_index": 1.90904882464823
+      },
+      {
+        "date": "2025-05-13T00:00:00Z",
+        "dataset_index": 1.9784178679586413
+      },
+      {
+        "date": "2025-05-18T20:02:37Z",
+        "dataset_index": 2.0809547724048536
+      },
+      {
+        "date": "2025-05-21T00:00:00Z",
+        "dataset_index": 2.150927024787529
+      },
+      {
+        "date": "2025-06-01T00:00:00Z",
+        "dataset_index": 2.220899277170205
+      },
+      {
+        "date": "2025-06-10T00:00:00Z",
+        "dataset_index": 2.2914747386251455
+      },
+      {
+        "date": "2025-06-18T00:00:00Z",
+        "dataset_index": 2.362050200080086
+      },
+      {
+        "date": "2025-06-19T00:00:00Z",
+        "dataset_index": 2.432625661535026
+      },
+      {
+        "date": "2025-06-27T00:00:00Z",
+        "dataset_index": 2.503804332062231
+      },
+      {
+        "date": "2025-07-09T00:00:00Z",
+        "dataset_index": 2.5749830025894354
+      },
+      {
+        "date": "2025-07-21T00:00:00Z",
+        "dataset_index": 2.6467648821889047
+      },
+      {
+        "date": "2025-07-23T00:00:00Z",
+        "dataset_index": 2.7903286413878434
+      },
+      {
+        "date": "2025-07-24T00:00:00Z",
+        "dataset_index": 2.862110520987313
+      },
+      {
+        "date": "2025-07-30T00:00:00Z",
+        "dataset_index": 2.9338924005867817
+      },
+      {
+        "date": "2025-08-02T00:00:00Z",
+        "dataset_index": 3.0062774892585153
+      },
+      {
+        "date": "2025-08-13T00:00:00Z",
+        "dataset_index": 3.078662577930249
+      },
+      {
+        "date": "2025-08-19T00:00:00Z",
+        "dataset_index": 3.1510476666019827
+      },
+      {
+        "date": "2025-08-21T00:00:00Z",
+        "dataset_index": 3.2234327552737168
+      },
+      {
+        "date": "2025-08-27T00:00:00Z",
+        "dataset_index": 3.296421053017715
+      },
+      {
+        "date": "2025-08-28T00:00:00Z",
+        "dataset_index": 3.3694093507617127
+      },
+      {
+        "date": "2025-09-06T00:00:00Z",
+        "dataset_index": 3.442397648505711
+      },
+      {
+        "date": "2025-09-08T18:44:43Z",
+        "dataset_index": 3.549354247109088
+      },
+      {
+        "date": "2025-09-11T23:13:37Z",
+        "dataset_index": 3.6571947845438975
+      },
+      {
+        "date": "2025-09-19T00:00:00Z",
+        "dataset_index": 3.7307862913601597
+      },
+      {
+        "date": "2025-10-09T00:00:00Z",
+        "dataset_index": 3.8049810072486867
+      },
+      {
+        "date": "2025-10-15T00:00:00Z",
+        "dataset_index": 3.8791757231372137
+      },
+      {
+        "date": "2025-10-17T00:00:00Z",
+        "dataset_index": 3.9533704390257403
+      },
+      {
+        "date": "2025-10-20T00:00:00Z",
+        "dataset_index": 4.027565154914267
+      },
+      {
+        "date": "2025-10-21T00:00:00Z",
+        "dataset_index": 4.101759870802794
+      },
+      {
+        "date": "2025-11-01T00:00:00Z",
+        "dataset_index": 4.251355720724377
+      },
+      {
+        "date": "2025-11-03T00:00:00Z",
+        "dataset_index": 4.40095157064596
+      },
+      {
+        "date": "2025-11-04T08:32:29Z",
+        "dataset_index": 4.510559985743636
+      },
+      {
+        "date": "2025-11-13T00:00:00Z",
+        "dataset_index": 4.585357910704427
+      },
+      {
+        "date": "2025-11-14T00:00:00Z",
+        "dataset_index": 4.660155835665218
+      },
+      {
+        "date": "2025-11-26T00:00:00Z",
+        "dataset_index": 4.8109581037313305
+      },
+      {
+        "date": "2025-12-01T00:00:00Z",
+        "dataset_index": 4.886359237764386
+      },
+      {
+        "date": "2025-12-03T00:00:00Z",
+        "dataset_index": 4.961760371797442
+      },
+      {
+        "date": "2025-12-05T00:00:00Z",
+        "dataset_index": 5.037161505830498
+      },
+      {
+        "date": "2025-12-08T00:00:00Z",
+        "dataset_index": 5.112562639863554
+      },
+      {
+        "date": "2025-12-11T18:57:26Z",
+        "dataset_index": 5.223938932624095
+      },
+      {
+        "date": "2025-12-23T00:00:00Z",
+        "dataset_index": 5.299943275729414
+      },
+      {
+        "date": "2026-01-01T00:00:00Z",
+        "dataset_index": 5.3759476188347355
+      },
+      {
+        "date": "2026-01-03T00:00:00Z",
+        "dataset_index": 5.451951961940055
+      },
+      {
+        "date": "2026-01-05T10:26:11Z",
+        "dataset_index": 5.564212193532029
+      },
+      {
+        "date": "2026-01-05T10:59:54Z",
+        "dataset_index": 5.676472425124003
+      },
+      {
+        "date": "2026-01-06T00:00:00Z",
+        "dataset_index": 5.906295081656757
+      },
+      {
+        "date": "2026-01-07T00:00:00Z",
+        "dataset_index": 5.982902633834342
+      },
+      {
+        "date": "2026-01-12T00:00:00Z",
+        "dataset_index": 6.059510186011926
+      }
+    ]
+  }
+}

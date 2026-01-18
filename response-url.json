@@ -1,0 +1,58 @@
+{
+  "url": "http://s-index-api.tailb70b88.ts.net:6405/dataset-index-series-from-url",
+  "params": {
+    "url": "https://ghdx.healthdata.org/lbd-data",
+    "pubdate": "2020-01-15",
+    "topic_id": "https://openalex.org/T11396"
+  },
+  "method": "GET",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "response": {
+    "input_url": "https://ghdx.healthdata.org/lbd-data",
+    "norm_url": "https://ghdx.healthdata.org/lbd-data",
+    "input_identifier": null,
+    "norm_identifier": "",
+    "metadata": null,
+    "topic": null,
+    "fair": {
+      "fair_score": 11.54,
+      "evaluation_date": "2026-01-18T01:36:34+00:00",
+      "fuji_metric_version": "0.8",
+      "fuji_software_version": "3.5.1"
+    },
+    "citations": [
+      {
+        "dataset_id": "https://ghdx.healthdata.org/lbd-data",
+        "source": [
+          "mdc"
+        ],
+        "citation_link": "https://doi.org/10.1136/bmjgh-2021-005238",
+        "citation_weight": 1.29,
+        "citation_date": "2021-06-01T00:00:00+00:00"
+      }
+    ],
+    "mentions": null,
+    "normalization_factors": {
+      "FT": 0.628,
+      "CTw": 4.812,
+      "MTw": 3.213,
+      "topic_id_used": "ALL",
+      "year_used": 2020,
+      "topic_id_requested": null,
+      "year_requested": 2020,
+      "used_year_clamp": false
+    },
+    "dataset_index_series": [
+      {
+        "date": "2020-01-15T00:00:00Z",
+        "dataset_index": 0.06125265392781316
+      },
+      {
+        "date": "2021-06-01T00:00:00Z",
+        "dataset_index": 0.15061258742739755
+      }
+    ]
+  }
+}
