@@ -4,6 +4,7 @@ import type { Author } from "#shared/types/dataset";
 
 defineProps<{
   dataset: any;
+  isFromCache?: boolean;
 }>();
 
 const getAuthorTooltipText = (author: Author): string => {
@@ -148,6 +149,16 @@ const reloadPage = () => {
 
       <!-- Sidebar -->
       <div class="space-y-6">
+        <!-- Cache Alert -->
+        <UAlert
+          v-if="isFromCache"
+          color="primary"
+          variant="subtle"
+          icon="i-heroicons-information-circle-20-solid"
+          title="Cached Result"
+          description="This data was loaded from cache and may be up to 1 hour old. As this is a beta platform, caching helps us stay within third-party rate limits while we improve performance."
+        />
+
         <!-- Metrics -->
         <UCard
           v-if="

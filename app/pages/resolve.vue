@@ -20,6 +20,7 @@ const datasetDomain = ref("");
 const isLoading = ref(false);
 const dataset = ref<any>(null);
 const error = ref<any>(null);
+const isFromCache = ref(false);
 
 // Simple list of tasks happening during loading
 const loadingTasks = [
@@ -117,15 +118,41 @@ const fetchDatasetData = async (doi: string) => {
   error.value = null;
 
   try {
-    const apiUrl = `http://s-index-api.tailb70b88.ts.net:6405/dataset-index-series-from-doi?doi=${encodeURIComponent(doi)}`;
+    const apiUrl = `/api/resolve/doi?doi=${encodeURIComponent(doi)}`;
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
+      if (response.status === 429) {
+        const errorData = await response.json().catch(() => ({}));
+        const resetAt = errorData.resetAt
+          ? new Date(errorData.resetAt * 1000).toLocaleTimeString()
+          : "soon";
+        throw new Error(
+          `Rate limit exceeded. Please try again after ${resetAt}.`,
+        );
+      }
       throw new Error(`Failed to fetch dataset: ${response.statusText}`);
     }
 
     const apiData = await response.json();
-    dataset.value = transformApiResponse(apiData);
+
+    // Check if data is from cache
+    isFromCache.value = apiData._cached === true;
+
+    // Remove cache flag before transforming
+    const { _cached, ...dataWithoutCache } = apiData;
+    dataset.value = transformApiResponse(dataWithoutCache);
+
+    // Show cache notification if data is from cache
+    if (isFromCache.value) {
+      toast.add({
+        title: "Data from cache",
+        description:
+          "This dataset information was retrieved from cache and may be up to 1 hour old.",
+        icon: "material-symbols:info",
+        color: "primary",
+      });
+    }
 
     useSeoMeta({
       title: dataset.value?.title || "Dataset Details",
@@ -166,15 +193,41 @@ const fetchDatasetDataFromUrl = async (
       params.append("topic_id", topicId);
     }
 
-    const apiUrl = `http://s-index-api.tailb70b88.ts.net:6405/dataset-index-series-from-url?${params.toString()}`;
+    const apiUrl = `/api/resolve/url?${params.toString()}`;
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
+      if (response.status === 429) {
+        const errorData = await response.json().catch(() => ({}));
+        const resetAt = errorData.resetAt
+          ? new Date(errorData.resetAt * 1000).toLocaleTimeString()
+          : "soon";
+        throw new Error(
+          `Rate limit exceeded. Please try again after ${resetAt}.`,
+        );
+      }
       throw new Error(`Failed to fetch dataset: ${response.statusText}`);
     }
 
     const apiData = await response.json();
-    dataset.value = transformApiResponse(apiData);
+
+    // Check if data is from cache
+    isFromCache.value = apiData._cached === true;
+
+    // Remove cache flag before transforming
+    const { _cached, ...dataWithoutCache } = apiData;
+    dataset.value = transformApiResponse(dataWithoutCache);
+
+    // Show cache notification if data is from cache
+    if (isFromCache.value) {
+      toast.add({
+        title: "Data from cache",
+        description:
+          "This dataset information was retrieved from cache and may be up to 1 hour old.",
+        icon: "material-symbols:info",
+        color: "primary",
+      });
+    }
 
     useSeoMeta({
       title: dataset.value?.title || "Dataset Details",
@@ -518,7 +571,11 @@ const handleSubmit = async () => {
       </UPageBody>
 
       <!-- Dataset Display (when data is loaded, shown below form) -->
-      <DatasetResponseDisplay v-if="dataset && !isLoading" :dataset="dataset" />
+      <DatasetResponseDisplay
+        v-if="dataset && !isLoading"
+        :dataset="dataset"
+        :is-from-cache="isFromCache"
+      />
     </UPage>
   </UContainer>
 </template>
