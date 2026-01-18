@@ -103,7 +103,7 @@ model DatasetAuthor {
 
     nameType String?
     name     String  @db.Text // keep the big string here
-    nameHash String? @db.Char(32) // md5 hex (32 chars)
+    nameHash String  @db.Char(32) // md5 hex (32 chars)
 
     nameIdentifiers String[] @default([])
     affiliations    String[] @default([])
