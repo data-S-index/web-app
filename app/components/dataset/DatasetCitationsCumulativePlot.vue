@@ -113,29 +113,52 @@ const hasEnoughData = computed(() => {
 const citationsChartOption = computed<ECOption>(() => ({
   tooltip: {
     trigger: "axis",
+    axisPointer: {
+      type: "cross",
+      crossStyle: {
+        color: "#999",
+      },
+      label: {
+        show: true,
+        backgroundColor: "#6b7280",
+        formatter: (params: { axisDimension: string; value: number }) => {
+          if (params.axisDimension === "x") {
+            const date = new Date(params.value);
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const year = date.getFullYear();
+
+            return `${month}/${year}`;
+          }
+
+          return params.value.toFixed(1);
+        },
+      },
+    },
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: number;
+        value: [string, number];
         seriesName: string;
+        marker: string;
       }>;
 
       if (!data || data.length === 0) return "";
 
-      const dateStr = data[0]?.name;
+      const dateStr = data[0]?.value?.[0] || data[0]?.name;
       if (!dateStr) return "";
 
       const date = new Date(dateStr);
       const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = String(date.getFullYear()).slice(-2);
+      const year = date.getFullYear();
       const formattedDate = `${month}/${year}`;
 
-      let tooltip = `${formattedDate}<br/>`;
+      let tooltip = `<strong>${formattedDate}</strong><br/>`;
       data.forEach((item) => {
+        const value = Array.isArray(item.value) ? item.value[1] : item.value;
         if (item.seriesName === "Raw Citations") {
-          tooltip += `Raw: ${item.value.toFixed(0)}<br/>`;
+          tooltip += `${item.marker} Raw: <strong>${value.toFixed(0)}</strong><br/>`;
         } else if (item.seriesName === "Weighted Citations") {
-          tooltip += `Weighted: ${item.value.toFixed(2)}<br/>`;
+          tooltip += `${item.marker} Weighted: <strong>${value.toFixed(2)}</strong><br/>`;
         }
       });
 

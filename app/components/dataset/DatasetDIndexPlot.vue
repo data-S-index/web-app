@@ -67,24 +67,49 @@ const hasOnlyOneDataPoint = computed(() => {
 const dIndexChartOption = computed<ECOption>(() => ({
   tooltip: {
     trigger: "axis",
+    axisPointer: {
+      type: "cross",
+      crossStyle: {
+        color: "#999",
+      },
+      label: {
+        show: true,
+        backgroundColor: "#6b7280",
+        formatter: (params: { axisDimension: string; value: number }) => {
+          if (params.axisDimension === "x") {
+            const date = new Date(params.value);
+            const month = String(date.getMonth() + 1).padStart(2, "0");
+            const year = date.getFullYear();
+
+            return `${month}/${year}`;
+          }
+
+          return params.value.toFixed(2);
+        },
+      },
+    },
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: number;
+        value: [string, number];
+        marker: string;
       }>;
 
       if (!data || data.length === 0) return "";
 
-      const dateStr = data[0]?.name;
-
+      const dateStr = data[0]?.value?.[0] || data[0]?.name;
       if (!dateStr) return "";
 
       const date = new Date(dateStr);
       const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = String(date.getFullYear()).slice(-2);
+      const year = date.getFullYear();
       const formattedDate = `${month}/${year}`;
 
-      return `${formattedDate}<br/>D-Index: ${data[0]?.value.toFixed(2)}`;
+      const value = Array.isArray(data[0]?.value)
+        ? data[0]?.value[1]
+        : data[0]?.value;
+
+      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} D-Index: <strong>${value?.toFixed(2)}</strong>`;
     },
   },
   grid: {
