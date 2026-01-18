@@ -80,11 +80,9 @@ const dIndexChartOption = computed<ECOption>(() => ({
       if (!dateStr) return "";
 
       const date = new Date(dateStr);
-      const formattedDate = date.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "numeric",
-      });
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const year = String(date.getFullYear()).slice(-2);
+      const formattedDate = `${month}/${year}`;
 
       return `${formattedDate}<br/>D-Index: ${data[0]?.value.toFixed(2)}`;
     },
@@ -92,8 +90,8 @@ const dIndexChartOption = computed<ECOption>(() => ({
   grid: {
     left: "3%",
     right: "4%",
-    top: 8,
-    bottom: "0%",
+    top: "10%",
+    bottom: "15%",
     containLabel: true,
   },
   xAxis: {
@@ -105,11 +103,13 @@ const dIndexChartOption = computed<ECOption>(() => ({
       ? dIndexChartData.value.endDate.toISOString().split("T")[0]
       : undefined,
     axisLabel: {
-      fontSize: 12,
+      fontSize: 8,
       formatter: (value: number | string) => {
         const date = new Date(typeof value === "number" ? value : value);
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const year = String(date.getFullYear()).slice(-2);
 
-        return date.getFullYear().toString();
+        return `${month}/${year}`;
       },
     },
   },
@@ -166,7 +166,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
 
 <template>
   <ClientOnly>
-    <div class="border-t border-gray-200 pt-4 dark:border-gray-700">
+    <div>
       <p class="mb-2 text-sm font-medium">D-Index Over Time</p>
 
       <div
@@ -180,7 +180,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
         />
       </div>
 
-      <div v-else style="height: 200px" class="relative">
+      <div v-else style="height: 250px" class="relative">
         <div
           v-if="
             !dindices ||
@@ -201,7 +201,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
 
     <template #fallback>
       <div
-        style="height: 200px"
+        style="height: 250px"
         class="flex items-center justify-center border-t border-gray-200 pt-4 dark:border-gray-700"
       >
         <Icon

@@ -199,7 +199,7 @@ const reloadPage = () => {
                 "
                 class="flex flex-col items-center text-center"
               >
-                <p class="mb-2 text-sm font-medium">D-Index</p>
+                <p class="mb-2 text-sm font-medium">D-Index Score</p>
 
                 <div class="flex items-center gap-2">
                   <div
@@ -214,12 +214,17 @@ const reloadPage = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </UCard>
 
-            <!-- D-Index Plot -->
-            <DatasetDIndexPlot
-              v-if="dataset.dindices && dataset.dindices.length > 0"
-              :dindices="dataset.dindices"
-            />
+        <!-- Metrics Over Time -->
+        <UCard>
+          <template #header>
+            <h3 class="text-lg font-semibold">Metrics Over Time</h3>
+          </template>
+
+          <div class="space-y-4">
+            <DatasetMetricsTabs :dataset="dataset" />
           </div>
         </UCard>
 
@@ -287,7 +292,5 @@ const reloadPage = () => {
         />
       </div>
     </div>
-
-    <pre>{{ dataset }}</pre>
   </UPageBody>
 </template>

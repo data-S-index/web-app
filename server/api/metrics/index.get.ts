@@ -1,206 +1,191 @@
 import prisma from "../../utils/prisma";
-import type { Author } from "#shared/types/dataset";
+import { getRedisClient } from "../../utils/redis";
 
-export default defineEventHandler(async (_event) => {
-  const now = new Date();
-  const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 12, 1);
+// Cache configuration: 1 week expiration
+const CACHE_EXPIRATION_SECONDS = 7 * 24 * 60 * 60; // 7 days in seconds
+const CACHE_KEY = "metrics:cache";
 
-  // Get all datasets with their citations and FAIR scores
-  const datasets = await prisma.dataset.findMany({
-    include: {
-      citations: true,
-      fujiScore: true,
-      datasetAuthors: true,
-    },
-    where: {
-      publishedAt: {
-        gte: twelveMonthsAgo,
-      },
-    },
-    orderBy: {
-      publishedAt: "asc",
-    },
-    take: 300000,
-  });
+export default defineEventHandler(async (event) => {
+  // Check cache first
+  const redis = getRedisClient();
+  const cachedData = await redis.get(CACHE_KEY);
 
-  // Get all datasets for overall metrics (not just last 12 months)
-  const allDatasets = await prisma.dataset.findMany({
-    include: {
-      citations: true,
-      fujiScore: true,
-      datasetAuthors: true,
-    },
-    take: 100000,
-  });
+  if (cachedData) {
+    const data = JSON.parse(cachedData);
+    setHeader(event, "X-Cache", "HIT");
 
-  // Generate monthly publication data for the last 12 months
-  const monthlyData: Record<string, number> = {};
-  const currentDate = new Date();
-
-  // Initialize all months to 0
-  for (let i = 11; i >= 0; i--) {
-    const date = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() - i,
-      1,
-    );
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-    monthlyData[monthKey] = 0;
+    return { ...data, _cached: true };
   }
 
-  // Count datasets by month
-  datasets.forEach((dataset) => {
-    const date = new Date(dataset.publishedAt);
-    const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-    if (monthlyData[monthKey] !== undefined) {
-      monthlyData[monthKey]++;
-    }
-  });
+  // Fixed date for metrics calculation: 2025-09-30
+  const fixedNow = "2025-09-30";
 
-  // Format monthly data for frontend
-  const months: string[] = [];
-  const datasetCounts: number[] = [];
+  const rows = await prisma.$queryRaw<{ response: Record<string, unknown> }[]>`
+WITH
+params AS (SELECT ${fixedNow}::date AS now_date),
 
-  Object.keys(monthlyData).forEach((monthKey) => {
-    const [year, month] = monthKey.split("-");
-    const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-    const monthName = date.toLocaleDateString("en-US", {
-      month: "short",
-      year: "numeric",
-    });
-    months.push(monthName);
-    datasetCounts.push(monthlyData[monthKey]!);
-  });
+twelve_months AS (
+  SELECT date_trunc('month', (now_date - interval '12 months'))::date AS start_month
+  FROM params
+),
 
-  // Extract institutions from authors' affiliations
-  const institutionCounts: Record<string, number> = {};
-  allDatasets.forEach((dataset) => {
-    if (dataset.datasetAuthors && Array.isArray(dataset.datasetAuthors)) {
-      dataset.datasetAuthors.forEach((author: Author) => {
-        if (
-          author &&
-          typeof author === "object" &&
-          "affiliations" in author &&
-          Array.isArray(author.affiliations)
-        ) {
-          author.affiliations.forEach((affiliation: unknown) => {
-            if (affiliation && typeof affiliation === "string") {
-              if (affiliation.trim()) {
-                institutionCounts[affiliation] =
-                  (institutionCounts[affiliation] || 0) + 1;
-              }
-            }
-          });
-        }
-      });
-    }
-  });
+months AS (
+  SELECT date_trunc('month', (now_date - (i || ' months')::interval))::date AS month_start
+  FROM params, generate_series(11, 0, -1) AS i
+),
 
-  // Get top 9 institutions and group the rest
-  const sortedInstitutions = Object.entries(institutionCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 9)
-    .map(([name, value]) => ({ name, value }));
+monthly_counts AS (
+  SELECT date_trunc('month', d."publishedAt")::date AS month_start,
+         count(*)::int AS cnt
+  FROM "Dataset" d, params
+  WHERE d."publishedAt" >= (SELECT start_month FROM twelve_months)
+  GROUP BY 1
+),
 
-  const otherInstitutionsCount = Object.entries(institutionCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(9)
-    .reduce((sum, [, count]) => sum + count, 0);
+monthly AS (
+  SELECT
+    jsonb_agg(to_char(m.month_start, 'Mon YYYY') ORDER BY m.month_start) AS months,
+    jsonb_agg(COALESCE(c.cnt, 0) ORDER BY m.month_start) AS datasets
+  FROM months m
+  LEFT JOIN monthly_counts c USING (month_start)
+),
 
-  if (otherInstitutionsCount > 0) {
-    sortedInstitutions.push({
-      name: "Other Institutions",
-      value: otherInstitutionsCount,
-    });
-  }
+institutions AS (
+  WITH aff AS (
+    SELECT btrim(affiliation) AS affiliation
+    FROM "DatasetAuthor" da
+    CROSS JOIN LATERAL unnest(da."affiliations") AS affiliation
+  ),
+  counts AS (
+    SELECT affiliation, count(*)::int AS cnt
+    FROM aff
+    WHERE affiliation IS NOT NULL AND affiliation <> ''
+    GROUP BY 1
+  ),
+  ranked AS (
+    SELECT affiliation, cnt,
+           row_number() OVER (ORDER BY cnt DESC) AS rn
+    FROM counts
+  )
+  SELECT jsonb_agg(
+    jsonb_build_object('name', name, 'value', value)
+    ORDER BY sort_key, value DESC
+  ) AS items
+  FROM (
+    SELECT
+      CASE WHEN rn <= 9 THEN affiliation ELSE 'Other Institutions' END AS name,
+      sum(cnt)::int AS value,
+      CASE WHEN rn <= 9 THEN 1 ELSE 2 END AS sort_key
+    FROM ranked
+    GROUP BY 1, 3
+  ) x
+),
 
-  // Extract research fields from subjects
-  const fieldCounts: Record<string, number> = {};
-  allDatasets.forEach((dataset) => {
-    if (dataset.subjects && Array.isArray(dataset.subjects)) {
-      dataset.subjects.forEach((subject: string) => {
-        if (subject && typeof subject === "string") {
-          fieldCounts[subject] = (fieldCounts[subject] || 0) + 1;
-        }
-      });
-    }
-  });
+fields AS (
+  WITH subj AS (
+    SELECT btrim(subject) AS subject
+    FROM "Dataset" d
+    CROSS JOIN LATERAL unnest(d."subjects") AS subject
+  ),
+  counts AS (
+    SELECT subject, count(*)::int AS cnt
+    FROM subj
+    WHERE subject IS NOT NULL AND subject <> ''
+    GROUP BY 1
+  ),
+  ranked AS (
+    SELECT subject, cnt,
+           row_number() OVER (ORDER BY cnt DESC) AS rn
+    FROM counts
+  )
+  SELECT jsonb_agg(
+    jsonb_build_object('name', name, 'value', value)
+    ORDER BY sort_key, value DESC
+  ) AS items
+  FROM (
+    SELECT
+      CASE WHEN rn <= 9 THEN subject ELSE 'Other Fields' END AS name,
+      sum(cnt)::int AS value,
+      CASE WHEN rn <= 9 THEN 1 ELSE 2 END AS sort_key
+    FROM ranked
+    GROUP BY 1, 3
+  ) x
+),
 
-  // Get top 9 fields and group the rest
-  const sortedFields = Object.entries(fieldCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(0, 9)
-    .map(([name, value]) => ({ name, value }));
+sindex AS (
+  WITH per_dataset AS (
+    SELECT
+      d."id",
+      fs."score" AS fuji_score_0_100,
+      COALESCE(c.citation_count, 0)::int AS citation_count
+    FROM "Dataset" d
+    LEFT JOIN "FujiScore" fs ON fs."datasetId" = d."id"
+    LEFT JOIN (
+      SELECT "datasetId", count(*)::int AS citation_count
+      FROM "Citation"
+      GROUP BY 1
+    ) c ON c."datasetId" = d."id"
+  ),
+  s AS (
+    SELECT
+      "id",
+      fuji_score_0_100,
+      citation_count,
+      (COALESCE(fuji_score_0_100, 0) / 100.0) AS fair_score_0_1,
+      (
+        (COALESCE(fuji_score_0_100, 0) / 100.0) * 5.0
+        + (LEAST(citation_count, 20) * 0.25)
+      ) AS s_index
+    FROM per_dataset
+  )
+  SELECT jsonb_build_object(
+    'averageFairScore',
+      round(COALESCE(avg(fair_score_0_1) FILTER (WHERE fuji_score_0_100 IS NOT NULL), 0)::numeric, 2),
+    'averageCitationCount',
+      round(COALESCE(avg(citation_count) FILTER (WHERE citation_count > 0), 0)::numeric, 1),
+    'averageSIndex',
+      round(COALESCE(avg(s_index), 0)::numeric, 1),
+    'totalDatasets',
+      count(*)::int,
+    'highFairDatasets',
+      count(*) FILTER (WHERE fuji_score_0_100 > 70)::int,
+    'citedDatasets',
+      count(*) FILTER (WHERE citation_count > 0)::int
+  ) AS obj
+  FROM s
+)
 
-  const otherFieldsCount = Object.entries(fieldCounts)
-    .sort(([, a], [, b]) => b - a)
-    .slice(9)
-    .reduce((sum, [, count]) => sum + count, 0);
+SELECT jsonb_build_object(
+  'monthlyPublications', jsonb_build_object(
+    'months', (SELECT months FROM monthly),
+    'datasets', (SELECT datasets FROM monthly)
+  ),
+  'institutions', COALESCE((SELECT items FROM institutions), '[]'::jsonb),
+  'fields', COALESCE((SELECT items FROM fields), '[]'::jsonb),
+  'sIndexMetrics', (SELECT obj FROM sindex)
+) AS response;
+`;
 
-  if (otherFieldsCount > 0) {
-    sortedFields.push({ name: "Other Fields", value: otherFieldsCount });
-  }
-
-  // Calculate S-Index metrics
-  const totalDatasets = allDatasets.length;
-  const datasetsWithFairScores = allDatasets.filter(
-    (d) => d.fujiScore !== null,
-  );
-  const datasetsWithCitations = allDatasets.filter(
-    (d) => d.citations && Array.isArray(d.citations) && d.citations.length > 0,
-  );
-
-  const averageFairScore =
-    datasetsWithFairScores.length > 0
-      ? datasetsWithFairScores.reduce((sum: number, d) => {
-          return sum + (d.fujiScore?.score || 0) / 100; // Convert 0-100 to 0-1
-        }, 0) / datasetsWithFairScores.length
-      : 0;
-
-  const averageCitationCount =
-    datasetsWithCitations.length > 0
-      ? datasetsWithCitations.reduce(
-          (sum: number, d) =>
-            sum + (Array.isArray(d.citations) ? d.citations.length : 0),
-          0,
-        ) / datasetsWithCitations.length
-      : 0;
-
-  // For average S-Index, we'll use a simplified calculation
-  // S-Index = (FAIR Score * 0.5) + (Citation Impact * 0.5)
-  // Citation Impact = min(citation count / 20, 1) * 10
-  const sIndexValues = allDatasets.map((d) => {
-    const fairScore = d.fujiScore ? d.fujiScore.score / 100 : 0;
-    const citationCount = Array.isArray(d.citations) ? d.citations.length : 0;
-    const citationImpact = Math.min(citationCount / 20, 1) * 10;
-
-    return fairScore * 5 + citationImpact * 0.5; // Normalize to reasonable range
-  });
-
-  const averageSIndex =
-    sIndexValues.length > 0
-      ? sIndexValues.reduce((sum: number, val: number) => sum + val, 0) /
-        sIndexValues.length
-      : 0;
-
-  const highFairDatasets = datasetsWithFairScores.filter((d) => {
-    return d.fujiScore && d.fujiScore.score > 70; // FAIR Score > 70/100
-  }).length;
-
-  return {
-    monthlyPublications: {
-      months,
-      datasets: datasetCounts,
-    },
-    institutions: sortedInstitutions,
-    fields: sortedFields,
+  const responseData = rows?.[0]?.response ?? {
+    monthlyPublications: { months: [], datasets: [] },
+    institutions: [],
+    fields: [],
     sIndexMetrics: {
-      averageFairScore: Math.round(averageFairScore * 100) / 100,
-      averageCitationCount: Math.round(averageCitationCount * 10) / 10,
-      averageSIndex: Math.round(averageSIndex * 10) / 10,
-      totalDatasets,
-      highFairDatasets,
-      citedDatasets: datasetsWithCitations.length,
+      averageFairScore: 0,
+      averageCitationCount: 0,
+      averageSIndex: 0,
+      totalDatasets: 0,
+      highFairDatasets: 0,
+      citedDatasets: 0,
     },
   };
+
+  await redis.setex(
+    CACHE_KEY,
+    CACHE_EXPIRATION_SECONDS,
+    JSON.stringify(responseData),
+  );
+  setHeader(event, "X-Cache", "MISS");
+
+  return { ...responseData, _cached: false };
 });
