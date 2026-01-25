@@ -43,7 +43,7 @@ export default defineEventHandler(async (event) => {
   if (!(await compare(body.data.password, user.password))) {
     throw createError({
       statusCode: 401,
-      statusMessage: "Invalid email address or password",
+      statusMessage: "Invalid username or password",
     });
   }
 

@@ -33,15 +33,8 @@ const { data: userData } = await useFetch("/api/user");
               </h1>
 
               <p class="text-gray-600 dark:text-gray-400">
-                {{ userData?.emailAddress }}
+                {{ userData?.username }}
               </p>
-
-              <div class="mt-2">
-                <UBadge
-                  :color="userData?.emailVerified ? 'green' : 'red'"
-                  :label="userData?.emailVerified ? 'Verified' : 'Not Verified'"
-                />
-              </div>
             </div>
           </div>
         </div>
@@ -74,18 +67,6 @@ const { data: userData } = await useFetch("/api/user");
 
               <p class="mt-1 text-gray-900 dark:text-white">
                 {{ userData?.familyName }}
-              </p>
-            </div>
-
-            <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Email
-              </label>
-
-              <p class="mt-1 text-gray-900 dark:text-white">
-                {{ userData?.emailAddress }}
               </p>
             </div>
 

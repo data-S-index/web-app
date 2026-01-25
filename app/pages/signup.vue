@@ -56,9 +56,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       toast.add({
         title: "Account created successfully",
         color: "info",
-        description: config.public.ENABLE_EMAIL_VERIFICATION
-          ? "Please check your email to verify your account before logging in."
-          : "You can now log in to your account.",
+        description: "You can now log in to your account.",
         icon: "material-symbols:mail-outline",
       });
 
