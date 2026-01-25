@@ -25,11 +25,6 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith("/metrics"),
   },
   {
-    label: "Fuji Status",
-    to: "/fuji",
-    active: route.path.startsWith("/fuji"),
-  },
-  {
     label: "Resolver",
     to: "/resolve",
     active: route.path.startsWith("/resolve"),
