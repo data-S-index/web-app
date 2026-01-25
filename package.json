@@ -33,9 +33,9 @@
     "ioredis": "^5.8.2",
     "marked": "^15.0.7",
     "motion-v": "^1.7.2",
-    "nodemailer": "^6.10.0",
     "nuxt-og-image": "^5.1.12",
     "sanitize-html": "^2.14.0",
+    "unique-username-generator": "^1.5.1",
     "vue": "latest",
     "vue3-lottie": "^3.3.1"
   },

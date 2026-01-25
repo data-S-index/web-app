@@ -38,7 +38,6 @@ builder:
 env:
   clear:
     NODE_ENV: production
-    ENABLE_EMAIL_VERIFICATION: false
   secret:
     - DATABASE_URL  # Database connection string
     - NUXT_SESSION_PASSWORD

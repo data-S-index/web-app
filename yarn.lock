@@ -9814,11 +9814,6 @@ node-releases@^2.0.21:
   resolved "https://registry.yarnpkg.com/node-releases/-/node-releases-2.0.23.tgz#2ecf3d7ba571ece05c67c77e5b7b1b6fb9e18cea"
   integrity sha512-cCmFDMSm26S6tQSDpBCg/NR8NENrVPhAJSf+XbxBG4rPFaaonlEoE9wHQmun+cls499TQGSb7ZyPBRlzgKfpeg==
 
-nodemailer@^6.10.0:
-  version "6.10.1"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.10.1.tgz#cbc434c54238f83a51c07eabd04e2b3e832da623"
-  integrity sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==
-
 nopt@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/nopt/-/nopt-5.0.0.tgz#530942bb58a512fccafe53fe210f13a25355dc88"
@@ -12686,6 +12681,11 @@ unimport@^5.5.0:
     tinyglobby "^0.2.15"
     unplugin "^2.3.11"
     unplugin-utils "^0.3.1"
+
+unique-username-generator@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/unique-username-generator/-/unique-username-generator-1.5.1.tgz#7b4f31b0823f791785932f9551fbf443774e7df0"
+  integrity sha512-Q0pSKPyij4L7Tm6Bo3XsWeFG9qbyWTtwb3jTN+XgGhCFdlvQn6Fj0DCfYElw0kp/Xp7Jv1Q+CL+aA8S07RMChA==
 
 unist-util-is@^6.0.0:
   version "6.0.0"

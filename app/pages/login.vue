@@ -30,20 +30,20 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const schema = z.object({
-  emailAddress: z.string().email(),
+  username: z.string().min(3, "Must be at least 3 characters"),
   password: z.string().min(8, "Must be at least 8 characters"),
 });
 
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
-  emailAddress: "rick@example.com",
+  username: "lonesomevermouth",
   password: "12345678",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const body = {
-    emailAddress: event.data.emailAddress,
+    username: event.data.username,
     password: event.data.password,
   };
 
@@ -111,8 +111,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         class="mt-6 space-y-4"
         @submit="onSubmit"
       >
-        <UFormField label="Email Address" name="emailAddress">
-          <UInput v-model="state.emailAddress" type="email" />
+        <UFormField label="Username" name="username">
+          <UInput v-model="state.username" type="text" />
         </UFormField>
 
         <UFormField label="Password" name="password">
@@ -156,6 +156,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     <template #footer>
       <p class="text-center text-sm">
+        Accounts generated on this platform are temporary and may be deleted at
+        any time.
+      </p>
+
+      <p class="hidden text-center text-sm">
         By signing in, you agree to our
         <NuxtLink to="/terms" class="text-primary-500 text-sm font-medium">
           Terms of Service</NuxtLink
