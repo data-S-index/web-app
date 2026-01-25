@@ -5,9 +5,7 @@ declare module "#auth-utils" {
 
     givenName: string;
     familyName: string;
-    emailAddress: string;
-
-    emailVerified: boolean;
+    username: string;
   }
 
   interface UserSession {

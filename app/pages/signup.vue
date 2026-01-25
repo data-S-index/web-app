@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
+import { generateUsername } from "unique-username-generator";
 
 const config = useRuntimeConfig();
 const { loggedIn, user } = useUserSession();
@@ -28,26 +29,20 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const schema = z.object({
-  emailAddress: z.string().email(),
-  familyName: z.string(),
-  givenName: z.string(),
+  username: z.string().min(3, "Must be at least 3 characters"),
   password: z.string().min(8, "Must be at least 8 characters"),
 });
 
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
-  emailAddress: "rick@example.com",
-  familyName: "Sanchez",
-  givenName: "Rick",
-  password: "12345678",
+  username: "",
+  password: "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const body = {
-    emailAddress: event.data.emailAddress,
-    familyName: event.data.familyName,
-    givenName: event.data.givenName,
+    username: event.data.username,
     password: event.data.password,
   };
 
@@ -82,6 +77,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       loading.value = false;
     });
 }
+
+onMounted(() => {
+  state.username = generateUsername();
+  state.password = "12345678";
+});
 </script>
 
 <template>
@@ -104,16 +104,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         class="mt-6 space-y-4"
         @submit="onSubmit"
       >
-        <UFormField label="Given or First Name" name="givenName">
-          <UInput v-model="state.givenName" type="text" />
-        </UFormField>
-
-        <UFormField label="Family or Last Name" name="familyName">
-          <UInput v-model="state.familyName" type="text" />
-        </UFormField>
-
-        <UFormField label="Email Address" name="emailAddress">
-          <UInput v-model="state.emailAddress" type="email" />
+        <UFormField
+          label="Username"
+          name="username"
+          description="Your username is automatically generated."
+        >
+          <UInput v-model="state.username" type="text" />
         </UFormField>
 
         <UFormField label="Password" name="password">
@@ -145,6 +141,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     <template #footer>
       <p class="text-center text-sm">
+        Accounts generated on this platform are temporary and may be deleted at
+        any time.
+      </p>
+
+      <p class="hidden text-center text-sm">
         By signing up, you agree to our
         <NuxtLink to="/terms" class="text-primary-500 text-sm font-medium">
           Terms of Service</NuxtLink

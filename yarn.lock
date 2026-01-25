@@ -12687,6 +12687,11 @@ unimport@^5.5.0:
     unplugin "^2.3.11"
     unplugin-utils "^0.3.1"
 
+unique-username-generator@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/unique-username-generator/-/unique-username-generator-1.5.1.tgz#7b4f31b0823f791785932f9551fbf443774e7df0"
+  integrity sha512-Q0pSKPyij4L7Tm6Bo3XsWeFG9qbyWTtwb3jTN+XgGhCFdlvQn6Fj0DCfYElw0kp/Xp7Jv1Q+CL+aA8S07RMChA==
+
 unist-util-is@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/unist-util-is/-/unist-util-is-6.0.0.tgz#b775956486aff107a9ded971d996c173374be424"

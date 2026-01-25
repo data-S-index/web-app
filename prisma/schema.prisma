@@ -19,22 +19,16 @@ datasource db {
 model User {
     id String @id @default(ulid())
 
-    givenName  String @default("") // first name
-    familyName String @default("") // last name
+    username String @unique
+    password String
 
+    givenName       String   @default("") // first name
+    familyName      String   @default("") // last name
     additionalNames String[] @default([])
-
-    emailAddress String @unique
-    password     String
 
     affiliation     String?
     homePage        String?
     areasOfInterest String[] @default([])
-
-    emailVerified                 Boolean   @default(false)
-    emailVerifiedAt               DateTime?
-    emailVerificationToken        String?   @unique
-    emailVerificationTokenExpires DateTime?
 
     created DateTime @default(now())
     updated DateTime @updatedAt

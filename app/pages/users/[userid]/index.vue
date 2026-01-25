@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { faker } from "@faker-js/faker";
 import type { Author } from "#shared/types/dataset";
 const { user, loggedIn } = useUserSession();
 
@@ -43,19 +42,9 @@ if (userProfileError.value) {
   });
 }
 
-// Generate fake affiliation with faker
-const affiliation = computed(() => {
-  if (!userProfile.value) return "";
-
-  // Use userid as seed for consistent fake data
-  faker.seed([...userid].reduce((acc, char) => acc + char.charCodeAt(0), 0));
-
-  return faker.company.name();
-});
-
 // Generate avatar URL from dicebear using userid as seed
 const avatarUrl = computed(() => {
-  return `https://api.dicebear.com/7.x/avataaars/svg?seed=${userid}`;
+  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${userid}`;
 });
 
 // Get user's full name
@@ -146,18 +135,14 @@ const removeDataset = async (datasetId: number) => {
             <UAvatar :src="avatarUrl" :alt="fullName" size="3xl" />
 
             <div class="flex flex-col">
-              <h1
-                v-if="fullName"
-                class="text-2xl font-bold text-gray-900 dark:text-gray-100"
-              >
-                {{ fullName }}
+              <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {{ userProfile?.username || "Unknown User" }}
               </h1>
 
               <p
-                v-if="affiliation"
                 class="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400"
               >
-                {{ affiliation }}
+                {{ "Unknown Affiliation" }}
               </p>
             </div>
           </div>

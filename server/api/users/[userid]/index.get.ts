@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
       id: true,
       givenName: true,
       familyName: true,
-      emailAddress: true,
+      username: true,
     },
   });
 
