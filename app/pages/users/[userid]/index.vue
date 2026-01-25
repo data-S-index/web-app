@@ -1,5 +1,16 @@
 <script setup lang="ts">
 import type { Author } from "#shared/types/dataset";
+
+interface UserDatasetItem {
+  datasetId: number;
+  dataset: {
+    dindices?: Array<{ score: number; created: string }>;
+    citations: Array<unknown>;
+    mentions: Array<unknown>;
+    fujiScore?: { score: number | null };
+  };
+}
+
 const { user, loggedIn } = useUserSession();
 
 useSeoMeta({
@@ -120,6 +131,56 @@ const removeDataset = async (datasetId: number) => {
     });
   }
 };
+
+// Computed metrics for the 6 cards
+const sindex = computed(() => {
+  if (!userData.value) return 0;
+
+  return (userData.value as UserDatasetItem[]).reduce(
+    (sum: number, item: UserDatasetItem) =>
+      sum + (item.dataset.dindices?.[0]?.score || 0),
+    0,
+  );
+});
+
+const datasetCount = computed(() => {
+  return userData.value?.length || 0;
+});
+
+const totalCitations = computed(() => {
+  if (!userData.value) return 0;
+
+  return (userData.value as UserDatasetItem[]).reduce(
+    (sum: number, item: UserDatasetItem) => sum + item.dataset.citations.length,
+    0,
+  );
+});
+
+const totalMentions = computed(() => {
+  if (!userData.value) return 0;
+
+  return (userData.value as UserDatasetItem[]).reduce(
+    (sum: number, item: UserDatasetItem) => sum + item.dataset.mentions.length,
+    0,
+  );
+});
+
+const averageFairScore = computed(() => {
+  if (!userData.value) return 0;
+  const datasetsWithFairScore = (userData.value as UserDatasetItem[]).filter(
+    (item: UserDatasetItem) =>
+      item.dataset.fujiScore?.score !== null &&
+      item.dataset.fujiScore?.score !== undefined,
+  );
+  if (datasetsWithFairScore.length === 0) return 0;
+  const sum = datasetsWithFairScore.reduce(
+    (sum: number, item: UserDatasetItem) =>
+      sum + (item.dataset.fujiScore?.score || 0),
+    0,
+  );
+
+  return sum / datasetsWithFairScore.length;
+});
 </script>
 
 <template>
@@ -152,17 +213,53 @@ const removeDataset = async (datasetId: number) => {
       </UPageHeader>
 
       <UPageBody>
-        <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+        <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Total Datasets</h3>
+              <h3 class="text-lg font-semibold">Current S-Index</h3>
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{ userData?.length }}
+              {{ Math.round(sindex) }}
             </div>
 
-            <p class="mt-2 text-sm">Claimed by user</p>
+            <p class="mt-2 text-sm">Sum of D-Index scores for all datasets</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Average D-Index per Dataset</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-500">
+              {{ Math.round(sindex / datasetCount) }}
+            </div>
+
+            <p class="mt-2 text-sm">Average D-Index score per dataset</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Average FAIR Score</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-500">
+              {{ averageFairScore.toFixed(1) }}%
+            </div>
+
+            <p class="mt-2 text-sm">Average FAIR Score per dataset</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Total Claimed Datasets</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-600">
+              {{ datasetCount }}
+            </div>
+
+            <p class="mt-2 text-sm">Total datasets claimed by the user</p>
           </UCard>
 
           <UCard>
@@ -171,36 +268,22 @@ const removeDataset = async (datasetId: number) => {
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
-              {{
-                userData?.reduce(
-                  (sum: number, item: any) =>
-                    sum + item.dataset.citations.length,
-                  0,
-                )
-              }}
+              {{ totalCitations }}
             </div>
 
-            <p class="mt-2 text-sm">Total citations for the user's datasets</p>
+            <p class="mt-2 text-sm">Total citations to the user's datasets</p>
           </UCard>
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">S-Index Score</h3>
+              <h3 class="text-lg font-semibold">Total Mentions</h3>
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{
-                userData
-                  ?.reduce(
-                    (sum: number, item: any) =>
-                      sum + item.dataset.dindices?.[0]?.score || 0,
-                    0,
-                  )
-                  .toFixed(0)
-              }}
+              {{ totalMentions }}
             </div>
 
-            <p class="mt-2 text-sm">S-Index score for the user's datasets</p>
+            <p class="mt-2 text-sm">Total mentions of the user's datasets</p>
           </UCard>
         </div>
 
