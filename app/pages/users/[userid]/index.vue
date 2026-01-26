@@ -579,7 +579,11 @@ const handleDatasetsAdded = () => {
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold">Datasets</h2>
 
-          <UModal v-model="showAddDatasetModal" fullscreen>
+          <UModal
+            v-model="showAddDatasetModal"
+            fullscreen
+            title="Add a dataset"
+          >
             <UButton
               v-if="isCurrentUser"
               icon="i-heroicons-plus-20-solid"

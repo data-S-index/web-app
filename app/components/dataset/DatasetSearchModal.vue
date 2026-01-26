@@ -251,229 +251,212 @@ watch(
 </script>
 
 <template>
-  <UCard>
-    <template #header>
-      <div class="flex items-center justify-between">
-        <h3 class="text-xl font-semibold">Add datasets for {{ userName }}</h3>
+  <div class="w-full space-y-5">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <UInput
+        v-model="searchTerm"
+        icon="i-lucide-search"
+        size="lg"
+        variant="outline"
+        placeholder="Search for datasets by title, DOI, or keywords..."
+        class="min-w-0 flex-1"
+        @keyup.enter="searchForDatasets(searchPage, true)"
+      />
 
-        <UButton
-          color="neutral"
-          variant="ghost"
-          icon="i-heroicons-x-mark-20-solid"
-          square
-          @click="emit('close')"
-        />
-      </div>
-    </template>
+      <UButton
+        icon="i-heroicons-magnifying-glass-20-solid"
+        label="Search"
+        size="lg"
+        :disabled="!searchTerm.trim()"
+        :loading="searchLoading"
+        class="shrink-0"
+        @click="searchForDatasets(searchPage, true)"
+      />
+    </div>
 
-    <div class="w-full space-y-5">
-      <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <UInput
-          v-model="searchTerm"
-          icon="i-lucide-search"
-          size="lg"
-          variant="outline"
-          placeholder="Search for datasets by title, DOI, or keywords..."
-          class="min-w-0 flex-1"
-          @keyup.enter="searchForDatasets(searchPage, true)"
-        />
-
-        <UButton
-          icon="i-heroicons-magnifying-glass-20-solid"
-          label="Search"
-          size="lg"
-          :disabled="!searchTerm.trim()"
-          :loading="searchLoading"
-          class="shrink-0"
-          @click="searchForDatasets(searchPage, true)"
-        />
-      </div>
-
-      <div v-if="searchResults.length > 0" class="mt-6">
-        <div class="flex flex-col gap-5">
-          <div v-if="searchLoading">
-            <div class="py-6 text-center">
-              <Icon
-                name="i-heroicons-arrow-path-20-solid"
-                class="text-primary-500 mx-auto h-10 w-10 animate-spin"
-              />
-
-              <p class="mt-2 text-base dark:text-gray-400">Searching...</p>
-            </div>
-          </div>
-
-          <div v-else>
-            <div
-              class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
-            >
-              <UCheckbox
-                v-model="selectAll"
-                label="Select all"
-                size="md"
-                :disabled="
-                  searchResults.filter((r) => !isAlreadyAdded(r.id)).length ===
-                  0
-                "
-              />
-
-              <div class="flex items-center gap-3">
-                <div
-                  v-if="searchDuration !== '0ms' && !searchLoading"
-                  class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 dark:bg-gray-800"
-                >
-                  <Icon
-                    name="i-heroicons-clock-20-solid"
-                    class="h-4 w-4 text-gray-500 dark:text-gray-400"
-                  />
-
-                  <span
-                    class="text-xs font-medium text-gray-600 dark:text-gray-400"
-                  >
-                    {{ searchDuration }}
-                  </span>
-                </div>
-
-                <UButton
-                  icon="i-heroicons-plus-20-solid"
-                  label="Add selected datasets"
-                  size="md"
-                  :disabled="searchLoading || searchResults.length === 0"
-                  :loading="attachDatasetsToUserLoading"
-                  @click="attachDatasetsToUser"
-                />
-              </div>
-            </div>
-
-            <USeparator class="my-4" />
-
-            <div class="max-h-[60vh] space-y-3 overflow-y-auto">
-              <div
-                v-for="result in searchResults"
-                :key="result.id"
-                :class="getCardClasses(result)"
-                @click="toggleSelection(result.id)"
-              >
-                <div class="flex min-w-0 flex-1 items-start gap-3">
-                  <div :class="getCheckboxClasses(result)">
-                    <Icon
-                      v-if="isAlreadyAdded(result.id)"
-                      name="i-heroicons-check-circle-20-solid"
-                      class="h-3 w-3 text-white"
-                    />
-
-                    <Icon
-                      v-else-if="isSelected(result.id)"
-                      name="i-heroicons-check-20-solid"
-                      class="h-3 w-3 text-white"
-                    />
-                  </div>
-
-                  <div class="flex min-w-0 flex-1 flex-col gap-2">
-                    <div class="flex items-start justify-between gap-3">
-                      <a
-                        :href="`/datasets/${result.id}`"
-                        target="_blank"
-                        class="group min-w-0 flex-1"
-                        @click.stop
-                      >
-                        <h3 :class="getTitleClasses(result)">
-                          {{ result.title }}
-                        </h3>
-                      </a>
-
-                      <UBadge
-                        v-if="isAlreadyAdded(result.id)"
-                        color="neutral"
-                        variant="soft"
-                        size="sm"
-                        label="Already added"
-                        icon="i-heroicons-check-circle-20-solid"
-                        class="shrink-0"
-                        @click.stop
-                      />
-
-                      <UBadge
-                        v-if="result.version"
-                        color="primary"
-                        variant="soft"
-                        size="sm"
-                        :label="`v${result.version}`"
-                        icon="i-heroicons-tag-20-solid"
-                        class="shrink-0"
-                        @click.stop
-                      />
-                    </div>
-
-                    <div class="flex min-w-0 flex-col gap-1.5">
-                      <div
-                        v-if="result.authors"
-                        class="flex min-w-0 items-center gap-2"
-                      >
-                        <Icon
-                          name="i-heroicons-user-group-20-solid"
-                          class="h-4 w-4 shrink-0 text-gray-400"
-                        />
-
-                        <p
-                          class="flex-1 truncate text-sm text-gray-600 dark:text-gray-400"
-                        >
-                          {{ result.authors }}
-                        </p>
-                      </div>
-
-                      <div
-                        v-if="result.publishedAt"
-                        class="flex min-w-0 items-center gap-2"
-                      >
-                        <Icon
-                          name="i-heroicons-calendar-20-solid"
-                          class="h-4 w-4 shrink-0 text-gray-400"
-                        />
-
-                        <p class="text-xs text-gray-500 dark:text-gray-500">
-                          {{ $dayjs(result.publishedAt).format("MMMM YYYY") }}
-                        </p>
-                      </div>
-
-                      <div class="flex min-w-0 items-center gap-2">
-                        <Icon
-                          name="i-heroicons-book-open-20-solid"
-                          class="h-4 w-4 shrink-0 text-gray-400"
-                        />
-
-                        <p class="text-xs text-gray-500 dark:text-gray-500">
-                          {{ result.citationCount }} Citation{{
-                            result.citationCount !== 1 ? "s" : ""
-                          }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex w-full justify-center">
-            <UPagination
-              v-model:page="searchPage"
-              :total="Math.min(searchTotal, 1000)"
-              :page-size="20"
-              :disabled="searchLoading"
-              @update:page="updateSearchPage"
+    <div v-if="searchResults.length > 0" class="mt-6">
+      <div class="flex flex-col gap-5">
+        <div v-if="searchLoading">
+          <div class="py-6 text-center">
+            <Icon
+              name="i-heroicons-arrow-path-20-solid"
+              class="text-primary-500 mx-auto h-10 w-10 animate-spin"
             />
+
+            <p class="mt-2 text-base dark:text-gray-400">Searching...</p>
           </div>
         </div>
-      </div>
 
-      <div
-        v-else-if="!searchLoading && hasSearched && searchTerm.trim()"
-        class="py-6 text-center"
-      >
-        <p class="text-base text-gray-500 dark:text-gray-400">
-          No results found. Try a different search term.
-        </p>
+        <div v-else>
+          <div
+            class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <UCheckbox
+              v-model="selectAll"
+              label="Select all"
+              size="md"
+              :disabled="
+                searchResults.filter((r) => !isAlreadyAdded(r.id)).length === 0
+              "
+            />
+
+            <div class="flex items-center gap-3">
+              <div
+                v-if="searchDuration !== '0ms' && !searchLoading"
+                class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 dark:bg-gray-800"
+              >
+                <Icon
+                  name="i-heroicons-clock-20-solid"
+                  class="h-4 w-4 text-gray-500 dark:text-gray-400"
+                />
+
+                <span
+                  class="text-xs font-medium text-gray-600 dark:text-gray-400"
+                >
+                  {{ searchDuration }}
+                </span>
+              </div>
+
+              <UButton
+                icon="i-heroicons-plus-20-solid"
+                label="Add selected datasets"
+                size="md"
+                :disabled="searchLoading || searchResults.length === 0"
+                :loading="attachDatasetsToUserLoading"
+                @click="attachDatasetsToUser"
+              />
+            </div>
+          </div>
+
+          <USeparator class="my-4" />
+
+          <div class="max-h-[60vh] space-y-3 overflow-y-auto">
+            <div
+              v-for="result in searchResults"
+              :key="result.id"
+              :class="getCardClasses(result)"
+              @click="toggleSelection(result.id)"
+            >
+              <div class="flex min-w-0 flex-1 items-start gap-3">
+                <div :class="getCheckboxClasses(result)">
+                  <Icon
+                    v-if="isAlreadyAdded(result.id)"
+                    name="i-heroicons-check-circle-20-solid"
+                    class="h-3 w-3 text-white"
+                  />
+
+                  <Icon
+                    v-else-if="isSelected(result.id)"
+                    name="i-heroicons-check-20-solid"
+                    class="h-3 w-3 text-white"
+                  />
+                </div>
+
+                <div class="flex min-w-0 flex-1 flex-col gap-2">
+                  <div class="flex items-start justify-between gap-3">
+                    <a
+                      :href="`/datasets/${result.id}`"
+                      target="_blank"
+                      class="group min-w-0 flex-1"
+                      @click.stop
+                    >
+                      <h3 :class="getTitleClasses(result)">
+                        {{ result.title }}
+                      </h3>
+                    </a>
+
+                    <UBadge
+                      v-if="isAlreadyAdded(result.id)"
+                      color="neutral"
+                      variant="soft"
+                      size="sm"
+                      label="Already added"
+                      icon="i-heroicons-check-circle-20-solid"
+                      class="shrink-0"
+                      @click.stop
+                    />
+
+                    <UBadge
+                      v-if="result.version"
+                      color="primary"
+                      variant="soft"
+                      size="sm"
+                      :label="`v${result.version}`"
+                      icon="i-heroicons-tag-20-solid"
+                      class="shrink-0"
+                      @click.stop
+                    />
+                  </div>
+
+                  <div class="flex min-w-0 flex-col gap-1.5">
+                    <div
+                      v-if="result.authors"
+                      class="flex min-w-0 items-center gap-2"
+                    >
+                      <Icon
+                        name="i-heroicons-user-group-20-solid"
+                        class="h-4 w-4 shrink-0 text-gray-400"
+                      />
+
+                      <p
+                        class="flex-1 truncate text-sm text-gray-600 dark:text-gray-400"
+                      >
+                        {{ result.authors }}
+                      </p>
+                    </div>
+
+                    <div
+                      v-if="result.publishedAt"
+                      class="flex min-w-0 items-center gap-2"
+                    >
+                      <Icon
+                        name="i-heroicons-calendar-20-solid"
+                        class="h-4 w-4 shrink-0 text-gray-400"
+                      />
+
+                      <p class="text-xs text-gray-500 dark:text-gray-500">
+                        {{ $dayjs(result.publishedAt).format("MMMM YYYY") }}
+                      </p>
+                    </div>
+
+                    <div class="flex min-w-0 items-center gap-2">
+                      <Icon
+                        name="i-heroicons-book-open-20-solid"
+                        class="h-4 w-4 shrink-0 text-gray-400"
+                      />
+
+                      <p class="text-xs text-gray-500 dark:text-gray-500">
+                        {{ result.citationCount }} Citation{{
+                          result.citationCount !== 1 ? "s" : ""
+                        }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex w-full justify-center">
+          <UPagination
+            v-model:page="searchPage"
+            :total="Math.min(searchTotal, 1000)"
+            :page-size="20"
+            :disabled="searchLoading"
+            @update:page="updateSearchPage"
+          />
+        </div>
       </div>
     </div>
-  </UCard>
+
+    <div
+      v-else-if="!searchLoading && hasSearched && searchTerm.trim()"
+      class="py-6 text-center"
+    >
+      <p class="text-base text-gray-500 dark:text-gray-400">
+        No results found. Try a different search term.
+      </p>
+    </div>
+  </div>
 </template>
