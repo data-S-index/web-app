@@ -26,31 +26,17 @@ defineProps<{
 </script>
 
 <template>
-  <UCollapsible class="mb-6 flex flex-col gap-2">
-    <UButton
-      label="Metrics and Trends Over Time"
-      color="neutral"
-      variant="subtle"
-      trailing-icon="i-lucide-chevron-down"
-      class="group"
-      block
-    />
+  <div class="flex flex-col gap-2">
+    <UserSIndexInterpretation :sindex="sindex" :dataset-count="datasetCount" />
 
-    <template #content>
-      <div class="space-y-6 px-1 pt-4">
-        <UserSIndexInterpretation
-          :sindex="sindex"
-          :dataset-count="datasetCount"
-        />
+    <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+      <UserSIndexPlot :sindex-over-time="sindexOverTime" />
 
-        <UserSIndexPlot :sindex-over-time="sindexOverTime" />
+      <UserCumulativeCitationsPlot
+        :cumulative-citations="cumulativeCitations"
+      />
 
-        <UserCumulativeCitationsPlot
-          :cumulative-citations="cumulativeCitations"
-        />
-
-        <UserCumulativeMentionsPlot :cumulative-mentions="cumulativeMentions" />
-      </div>
-    </template>
-  </UCollapsible>
+      <UserCumulativeMentionsPlot :cumulative-mentions="cumulativeMentions" />
+    </div>
+  </div>
 </template>
