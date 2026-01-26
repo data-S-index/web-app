@@ -451,6 +451,15 @@ const cumulativeMentions = computed(() => {
 
   return { dates, rawValues, weightedValues, earliestDate: startDate, endDate };
 });
+
+// Modal state for dataset search
+const showAddDatasetModal = ref(false);
+
+// Handle datasets added event
+const handleDatasetsAdded = () => {
+  // Refresh the page data
+  window.location.reload();
+};
 </script>
 
 <template>
@@ -570,12 +579,27 @@ const cumulativeMentions = computed(() => {
         <div class="flex items-center justify-between">
           <h2 class="text-2xl font-bold">Datasets</h2>
 
-          <UButton
-            v-if="isCurrentUser"
-            icon="i-heroicons-plus-20-solid"
-            label="Add a dataset"
-            :to="`/users/${userid}/add`"
-          />
+          <UModal
+            v-model="showAddDatasetModal"
+            fullscreen
+            title="Add a dataset"
+          >
+            <UButton
+              v-if="isCurrentUser"
+              icon="i-heroicons-plus-20-solid"
+              label="Add a dataset"
+            />
+
+            <template #body>
+              <DatasetSearchModal
+                :userid="userid"
+                :user-name="fullName"
+                :is-open="showAddDatasetModal"
+                @close="showAddDatasetModal = false"
+                @datasets-added="handleDatasetsAdded"
+              />
+            </template>
+          </UModal>
         </div>
 
         <div v-if="userData" class="flex flex-col gap-4">
