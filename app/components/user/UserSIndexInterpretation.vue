@@ -13,10 +13,10 @@ defineProps<{
 
     <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
       <p>
-        The <strong>S-Index</strong> (Scholar Index) is a comprehensive
-        metric that represents the cumulative impact of all your datasets.
-        It is calculated as the sum of D-Index scores across all your
-        claimed datasets.
+        The <strong>S-Index</strong> (Scholar Index) is a comprehensive metric
+        that represents the cumulative impact of all your datasets. It is
+        calculated as the sum of D-Index scores across all your claimed
+        datasets.
       </p>
 
       <p>
@@ -25,18 +25,18 @@ defineProps<{
 
       <ul class="ml-6 list-disc space-y-1">
         <li>
-          A higher S-Index indicates greater overall impact across your
-          dataset portfolio
+          A higher S-Index indicates greater overall impact across your dataset
+          portfolio
         </li>
 
         <li>
-          The S-Index grows as you add more datasets or as existing
-          datasets gain more citations and improve their FAIR scores
+          The S-Index grows as you add more datasets or as existing datasets
+          gain more citations and improve their FAIR scores
         </li>
 
         <li>
-          It provides a single number to track your research data impact
-          over time
+          It provides a single number to track your research data impact over
+          time
         </li>
       </ul>
 
