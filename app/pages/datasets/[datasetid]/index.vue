@@ -34,23 +34,6 @@ const getAuthorTooltipText = (author: Author): string => {
 
   return parts.length > 0 ? parts.join("\n") : "No additional information";
 };
-
-const citationsCount = computed(() => dataset.value?.citations?.length || 0);
-const mentionsCount = computed(() => dataset.value?.mentions?.length || 0);
-
-// Pagination for citations
-const citationsPage = ref(1);
-const citationsPerPage = 10;
-const paginatedCitations = computed(() => {
-  if (!dataset.value?.citations || citationsCount.value <= citationsPerPage) {
-    return dataset.value?.citations || [];
-  }
-
-  const start = (citationsPage.value - 1) * citationsPerPage;
-  const end = start + citationsPerPage;
-
-  return dataset.value.citations.slice(start, end);
-});
 </script>
 
 <template>
@@ -148,110 +131,16 @@ const paginatedCitations = computed(() => {
             </UCard>
 
             <!-- Citations -->
-            <CardCollapsibleContent
-              :title="`Citations (${citationsCount})`"
-              :collapse="citationsCount > 0 ? false : true"
-            >
-              <ul v-if="citationsCount > 0" class="list-none">
-                <li
-                  v-for="(citation, index) in paginatedCitations"
-                  :key="index"
-                >
-                  <div
-                    class="mb-2 flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
-                  >
-                    <NuxtLink
-                      :href="citation.citationLink"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="font-mono text-blue-600 hover:underline dark:text-blue-400"
-                    >
-                      {{ citation.citationLink }}
-                    </NuxtLink>
-
-                    <div class="flex items-center justify-between gap-2">
-                      <p v-if="citation.citedDate" class="text-sm">
-                        Cited on
-                        {{ $dayjs(citation.citedDate).format("DD MMMM YYYY") }}
-                      </p>
-
-                      <div class="flex flex-wrap gap-2">
-                        <UBadge
-                          v-if="citation.datacite"
-                          color="success"
-                          variant="subtle"
-                          size="sm"
-                        >
-                          DataCite
-                        </UBadge>
-
-                        <UTooltip
-                          text="This citation was found in the Make Data Count (MDC) database."
-                        >
-                          <UBadge
-                            v-if="citation.mdc"
-                            color="success"
-                            variant="subtle"
-                            size="sm"
-                            class="cursor-help"
-                          >
-                            MDC
-                          </UBadge>
-                        </UTooltip>
-
-                        <UBadge
-                          v-if="citation.openAlex"
-                          color="success"
-                          variant="subtle"
-                          size="sm"
-                        >
-                          OpenAlex
-                        </UBadge>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-
-              <UEmpty
-                v-else
-                title="No citations found"
-                description="It looks like this dataset has no citations."
-              />
-
-              <div
-                v-if="citationsCount > citationsPerPage"
-                class="mt-4 flex justify-center"
-              >
-                <UPagination
-                  v-model:page="citationsPage"
-                  :total="citationsCount"
-                  :page-size="citationsPerPage"
-                />
-              </div>
-            </CardCollapsibleContent>
+            <DatasetCitationsDisplay
+              v-if="dataset.citations"
+              :citations="dataset.citations"
+            />
 
             <!-- Mentions -->
-            <CardCollapsibleContent
-              :title="`Mentions (${mentionsCount})`"
-              :collapse="mentionsCount > 0 ? false : true"
-            >
-              <ul v-if="mentionsCount > 0" class="list-none">
-                <li v-for="(mention, index) in dataset.mentions" :key="index">
-                  <div
-                    class="flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
-                  >
-                    <p class="text-sm">{{ mention.mentionLink }}</p>
-                  </div>
-                </li>
-              </ul>
-
-              <UEmpty
-                v-else
-                title="No mentions found"
-                description="It looks like this dataset has not been mentioned in any sources."
-              />
-            </CardCollapsibleContent>
+            <DatasetMentionsDisplay
+              v-if="dataset.mentions"
+              :mentions="dataset.mentions"
+            />
           </div>
 
           <!-- Sidebar -->
@@ -291,28 +180,36 @@ const paginatedCitations = computed(() => {
                   <div
                     v-if="
                       dataset.dindices &&
-                      dataset.dindices.length > 0 &&
-                      dataset.dindices[0]
+                      dataset.dindices.length > 0
                     "
                     class="flex flex-col items-center text-center"
                   >
-                    <p class="mb-2 text-sm font-medium">D-Index</p>
+                    <p class="mb-2 text-sm font-medium">D-Index Score</p>
 
                     <div class="flex items-center gap-2">
                       <div
                         class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
                       >
-                        {{ Math.round(dataset.dindices[0].score) }}
+                        {{
+                          Math.round(
+                            dataset.dindices[dataset.dindices.length - 1]?.score || 0,
+                          )
+                        }}
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+            </UCard>
 
-                <!-- D-Index Plot -->
-                <DatasetDIndexPlot
-                  v-if="dataset.dindices && dataset.dindices.length > 0"
-                  :dindices="dataset.dindices"
-                />
+            <!-- Metrics Over Time -->
+            <UCard>
+              <template #header>
+                <h3 class="text-lg font-semibold">Metrics Over Time</h3>
+              </template>
+
+              <div class="space-y-4">
+                <DatasetMetricsTabs :dataset="dataset" />
               </div>
             </UCard>
 
@@ -370,22 +267,14 @@ const paginatedCitations = computed(() => {
               </div>
             </UCard>
 
-            <!-- Additional Information Card -->
-            <UCard v-if="dataset.domain">
-              <template #header>
-                <h3 class="text-lg font-semibold">Additional Information</h3>
-              </template>
+            <!-- Domain Information -->
+            <DatasetDomainInfo v-if="dataset.domain" :domain="dataset.domain" />
 
-              <div class="space-y-3">
-                <div v-if="dataset.domain">
-                  <p class="mb-1 text-sm font-medium">Domain</p>
-
-                  <p class="text-sm text-gray-700 dark:text-gray-300">
-                    {{ dataset.domain }}
-                  </p>
-                </div>
-              </div>
-            </UCard>
+            <!-- Normalization Factors Card -->
+            <DatasetNormalizationFactors
+              v-if="(dataset as any).normalization_factors"
+              :normalization-factors="(dataset as any).normalization_factors"
+            />
           </div>
         </div>
       </UPageBody>
