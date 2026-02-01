@@ -25,6 +25,33 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith("/metrics"),
   },
   {
+    label: "Search",
+    active: route.path.startsWith("/search"),
+    children: [
+      {
+        label: "Datasets",
+        to: "/search/datasets",
+        icon: "hugeicons:file-search",
+        description: "Find datasets by title, identifier, or author",
+        active: route.path.startsWith("/search/datasets"),
+      },
+      {
+        label: "Users",
+        to: "/au",
+        icon: "mingcute:user-search-fill",
+        description: "Find users by name, identifiers, or affiliations",
+        active: route.path.startsWith("/search/au"),
+      },
+      {
+        label: "Organizations",
+        to: "/search/ao",
+        icon: "gis:search-poi",
+        description: "Find organizations by name",
+        active: route.path.startsWith("/search/ao"),
+      },
+    ],
+  },
+  {
     label: "Resolver",
     to: "/resolve",
     active: route.path.startsWith("/resolve"),

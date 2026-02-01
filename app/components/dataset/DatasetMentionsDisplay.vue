@@ -84,7 +84,7 @@ const paginatedMentions = computed(() => {
       <UPagination
         v-model:page="mentionsPage"
         :total="mentionsCount"
-        :page-size="mentionsPerPage"
+        :items-per-page="mentionsPerPage"
       />
     </div>
   </CardCollapsibleContent>
