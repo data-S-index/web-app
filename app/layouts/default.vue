@@ -11,11 +11,6 @@ const logout = async () => {
 
 const headerItems = computed<NavigationMenuItem[]>(() => [
   {
-    label: "Profile",
-    to: loggedInSession.value ? "/profile" : "/login",
-    active: route.path === "/profile",
-  },
-  {
     label: "My Profile",
     to:
       loggedInSession.value && user.value?.id
@@ -92,14 +87,21 @@ const footerItems: NavigationMenuItem[] = [
         <UColorModeButton />
 
         <AuthState v-slot="{ loggedIn }">
-          <UButton
-            v-if="loggedIn"
-            color="neutral"
-            variant="outline"
-            @click="logout"
-          >
-            Logout
-          </UButton>
+          <div v-if="loggedIn" class="flex items-center justify-center gap-3">
+            <NuxtLink to="/profile">
+              <UTooltip text="View your account settings">
+                <UAvatar
+                  :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.id}`"
+                  :alt="user?.username"
+                  class="cursor-pointer"
+                />
+              </UTooltip>
+            </NuxtLink>
+
+            <UButton color="neutral" variant="outline" @click="logout">
+              Logout
+            </UButton>
+          </div>
 
           <div v-else class="flex items-center justify-center gap-3">
             <UButton to="/login" variant="outline"> Sign in </UButton>
