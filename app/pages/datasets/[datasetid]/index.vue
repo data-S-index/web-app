@@ -178,10 +178,7 @@ const getAuthorTooltipText = (author: Author): string => {
                   </div>
 
                   <div
-                    v-if="
-                      dataset.dindices &&
-                      dataset.dindices.length > 0
-                    "
+                    v-if="dataset.dindices && dataset.dindices.length > 0"
                     class="flex flex-col items-center text-center"
                   >
                     <p class="mb-2 text-sm font-medium">D-Index Score</p>
@@ -192,7 +189,8 @@ const getAuthorTooltipText = (author: Author): string => {
                       >
                         {{
                           Math.round(
-                            dataset.dindices[dataset.dindices.length - 1]?.score || 0,
+                            dataset.dindices[dataset.dindices.length - 1]
+                              ?.score || 0,
                           )
                         }}
                       </div>
@@ -266,9 +264,6 @@ const getAuthorTooltipText = (author: Author): string => {
                 </UBadge>
               </div>
             </UCard>
-
-            <!-- Domain Information -->
-            <DatasetDomainInfo v-if="dataset.domain" :domain="dataset.domain" />
 
             <!-- Normalization Factors Card -->
             <DatasetNormalizationFactors

@@ -4,15 +4,6 @@ const toast = useToast();
 
 const aoid = computed(() => (route.params.aoid as string) ?? "");
 
-useSeoMeta({
-  title: () =>
-    org.value ? `${org.value.name} | Organization` : "Organization",
-  description: () =>
-    org.value
-      ? `View automated organization: ${org.value.name}`
-      : "Automated organization profile",
-});
-
 const {
   data: org,
   error,
@@ -30,8 +21,18 @@ if (error.value) {
   });
 }
 
+useSeoMeta({
+  title: () =>
+    org.value ? `${org.value.name} | Organization` : "Organization",
+  description: () =>
+    org.value
+      ? `View automated organization: ${org.value.name}`
+      : "Automated organization profile",
+});
+
 const avatarUrl = computed(() => {
   const seed = org.value?.id || org.value?.name || "org";
+
   return `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(seed)}`;
 });
 
@@ -83,6 +84,7 @@ const displayName = computed(
           <p class="text-base text-gray-500 dark:text-gray-400">
             Organization not found or failed to load.
           </p>
+
           <UButton to="/search/ao" color="primary" variant="soft" class="mt-4">
             Search organizations
           </UButton>
@@ -95,6 +97,7 @@ const displayName = computed(
             name="i-heroicons-arrow-path-20-solid"
             class="text-primary-500 mx-auto h-10 w-10 animate-spin"
           />
+
           <p class="mt-2 text-base text-gray-500 dark:text-gray-400">
             Loading organization...
           </p>
