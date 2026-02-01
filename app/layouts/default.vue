@@ -37,7 +37,7 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
       },
       {
         label: "Users",
-        to: "/au",
+        to: "/search/au",
         icon: "mingcute:user-search-fill",
         description: "Find users by name, identifiers, or affiliations",
         active: route.path.startsWith("/search/au"),
