@@ -11,6 +11,11 @@ const logout = async () => {
 
 const headerItems = computed<NavigationMenuItem[]>(() => [
   {
+    label: "Profile",
+    to: loggedInSession.value ? "/profile" : "/login",
+    active: route.path === "/profile",
+  },
+  {
     label: "My Profile",
     to:
       loggedInSession.value && user.value?.id
