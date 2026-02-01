@@ -1,4 +1,5 @@
-// Get a single automated organization by id from Meilisearch.
+import prisma from "../../../utils/prisma";
+
 export default defineEventHandler(async (event) => {
   const { aoid } = event.context.params as { aoid: string };
 
@@ -9,39 +10,23 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  try {
-    const index = meilisearch.index("automated-organization");
-    const doc = (await index.getDocument(aoid)) as {
-      id: string;
-      name?: string;
-    } | null;
+  const org = await prisma.automatedOrganization.findUnique({
+    where: { id: aoid },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
 
-    if (!doc) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Organization not found",
-      });
-    }
-
-    return {
-      id: doc.id,
-      name: doc.name ?? "",
-    };
-  } catch (error: unknown) {
-    const err = error as { httpStatus?: number; message?: string };
-    if (
-      err?.httpStatus === 404 ||
-      err?.message?.toLowerCase().includes("not found")
-    ) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "Organization not found",
-      });
-    }
-    console.error("AO fetch error:", error);
+  if (!org) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch organization",
+      statusCode: 404,
+      statusMessage: "Organization not found",
     });
   }
+
+  return {
+    id: org.id,
+    name: org.name ?? "",
+  };
 });

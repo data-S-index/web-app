@@ -1,4 +1,5 @@
-// Get a single automated user by id from Meilisearch.
+import prisma from "../../../utils/prisma";
+
 export default defineEventHandler(async (event) => {
   const { auid } = event.context.params as { auid: string };
 
@@ -9,43 +10,29 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  try {
-    const index = meilisearch.index("automated-users");
-    const doc = (await index.getDocument(auid)) as {
-      id: string;
-      name?: string;
-      nameIdentifiers?: string[];
-      affiliations?: string[];
-    } | null;
+  const automatedUser = await prisma.automatedUser.findUnique({
+    where: { id: auid },
+    select: {
+      id: true,
+      nameType: true,
+      name: true,
+      nameIdentifiers: true,
+      affiliations: true,
+    },
+  });
 
-    if (!doc) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "User not found",
-      });
-    }
-
-    return {
-      id: doc.id,
-      name: doc.name ?? "",
-      nameIdentifiers: doc.nameIdentifiers ?? [],
-      affiliations: doc.affiliations ?? [],
-    };
-  } catch (error: unknown) {
-    const err = error as { httpStatus?: number; message?: string };
-    if (
-      err?.httpStatus === 404 ||
-      err?.message?.toLowerCase().includes("not found")
-    ) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: "User not found",
-      });
-    }
-    console.error("AU fetch error:", error);
+  if (!automatedUser) {
     throw createError({
-      statusCode: 500,
-      statusMessage: "Failed to fetch user",
+      statusCode: 404,
+      statusMessage: "User not found",
     });
   }
+
+  return {
+    id: automatedUser.id,
+    nameType: automatedUser.nameType ?? undefined,
+    name: automatedUser.name ?? "",
+    nameIdentifiers: automatedUser.nameIdentifiers ?? [],
+    affiliations: automatedUser.affiliations ?? [],
+  };
 });

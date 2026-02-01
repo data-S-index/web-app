@@ -128,22 +128,18 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
               <div v-else>
                 <div
                   v-if="searchDuration !== '0ms' && !searchLoading"
-                  class="flex items-center justify-end"
+                  class="flex items-center justify-between"
                 >
-                  <div
-                    class="flex items-center gap-1.5 rounded-lg bg-gray-100 px-3 py-1.5 dark:bg-gray-800"
-                  >
-                    <Icon
-                      name="i-heroicons-clock-20-solid"
-                      class="h-4 w-4 text-gray-500 dark:text-gray-400"
-                    />
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Total results: {{ searchTotal }}
+                  </p>
 
-                    <span
-                      class="text-xs font-medium text-gray-600 dark:text-gray-400"
-                    >
-                      {{ searchDuration }}
-                    </span>
-                  </div>
+                  <UBadge
+                    icon="i-heroicons-clock-20-solid"
+                    color="primary"
+                    variant="soft"
+                    :label="searchDuration"
+                  />
                 </div>
 
                 <USeparator class="my-4" />
