@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const index = meilisearch.index("automated-organizations");
+    const index = meilisearch.index("automated-organization");
     const doc = (await index.getDocument(aoid)) as {
       id: string;
       name?: string;

@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
         ? Math.floor(validatedOffset / limit) + 1
         : page;
 
-    const index = meilisearch.index("automated-organizations");
+    const index = meilisearch.index("automated-organization");
     const searchResults = await index.search(searchTerm, {
       limit,
       offset: validatedOffset,

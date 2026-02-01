@@ -13,7 +13,7 @@ type SearchResult = {
 };
 
 const toast = useToast();
-const searchTerm = ref("");
+const searchTerm = ref("bhavesh patel");
 const searchLoading = ref(false);
 const searchResults = ref<SearchResult[]>([]);
 const searchPage = ref(1);
@@ -153,35 +153,57 @@ const getUserAvatarUrl = (user: SearchResult) => {
 
                     <div class="min-w-0 flex-1">
                       <h3
-                        class="line-clamp-1 text-base font-semibold text-gray-900 dark:text-gray-100"
+                        class="line-clamp-1 text-lg font-semibold text-gray-900 dark:text-gray-100"
                       >
                         {{ result.name || result.id }}
                       </h3>
 
-                      <p
-                        v-if="
-                          result.affiliations?.length ||
-                          result.nameIdentifiers?.length
-                        "
-                        class="mt-0.5 line-clamp-1 text-sm text-gray-500 dark:text-gray-400"
-                      >
-                        {{
-                          [
-                            result.affiliations?.[0],
-                            result.nameIdentifiers?.[0],
-                          ]
-                            .filter(Boolean)
-                            .join(" · ")
-                        }}
-                      </p>
+                      <div class="flex flex-col gap-2">
+                        <div
+                          v-if="result.nameIdentifiers?.length"
+                          class="mt-1 flex flex-wrap items-center gap-3"
+                        >
+                          <span
+                            class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                          >
+                            Identifiers:
+                          </span>
 
-                      <p
-                        class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400"
-                      >
-                        {{ result.datasetCount }} dataset{{
-                          result.datasetCount === 1 ? "" : "s"
-                        }}
-                      </p>
+                          <UBadge
+                            v-for="id in result.nameIdentifiers"
+                            :key="id"
+                            size="sm"
+                            variant="subtle"
+                            color="neutral"
+                            :icon="
+                              id.includes('orcid')
+                                ? 'simple-icons:orcid'
+                                : 'mdi:identifier'
+                            "
+                            :label="id"
+                          />
+                        </div>
+
+                        <div
+                          v-if="result.affiliations?.length"
+                          class="flex flex-wrap items-center gap-3"
+                        >
+                          <span
+                            class="text-sm font-medium text-gray-500 dark:text-gray-400"
+                          >
+                            Affiliations:
+                          </span>
+
+                          <UBadge
+                            v-for="aff in result.affiliations"
+                            :key="aff"
+                            size="sm"
+                            variant="subtle"
+                            color="primary"
+                            :label="aff"
+                          />
+                        </div>
+                      </div>
                     </div>
 
                     <UButton
