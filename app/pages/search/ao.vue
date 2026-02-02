@@ -1,7 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "Search Organizations",
-  description: "Search for automated organizations by name.",
+  description: "Search for organizations by name.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Search Organizations",
 });
 
 type SearchResult = {

@@ -19,11 +19,13 @@ useHead({
 
 useSeoMeta({
   titleTemplate: "%s - Scholar Data",
-  description: "Get credit for the data you share",
+  description:
+    "Get credit for the data you share - clearly, fairly, and publicly.",
   twitterCard: "summary_large_image",
   ogUrl: "https://beta.scholardata.io",
   twitterTitle: "Scholar Data",
-  twitterDescription: "Get credit for the data you share",
+  twitterDescription:
+    "Get credit for the data you share - clearly, fairly, and publicly.",
 });
 </script>
 

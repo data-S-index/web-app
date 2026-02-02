@@ -1,11 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "Metrics",
-  description: "Metrics for the Scholar Data platform",
+  description: "Platform statistics and metrics for Scholar Data.",
 });
 
 defineOgImageComponent("Pergel", {
-  headline: "Coming Soon...",
+  headline: "Platform Metrics",
 });
 
 const toast = useToast();

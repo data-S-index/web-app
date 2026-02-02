@@ -22,6 +22,11 @@ definePageMeta({
 
 useSeoMeta({
   title: "Login",
+  description: "Sign in to Scholar Data to get credit for the data you share.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Sign In",
 });
 
 const toast = useToast();

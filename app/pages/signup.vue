@@ -20,7 +20,12 @@ definePageMeta({
 });
 
 useSeoMeta({
-  title: "Signup",
+  title: "Sign Up",
+  description: "Create your Scholar Data account and get credit for your data.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Join Scholar Data",
 });
 
 const toast = useToast();

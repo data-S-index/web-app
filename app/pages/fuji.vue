@@ -1,4 +1,14 @@
 <script setup lang="ts">
+useSeoMeta({
+  title: "Fuji Score",
+  description:
+    "FAIR assessment and machine stats for datasets on Scholar Data.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Fuji Score",
+});
+
 // Fetch fuji score percentage and machine stats (client-side only)
 const {
   data: fujiScoreData,

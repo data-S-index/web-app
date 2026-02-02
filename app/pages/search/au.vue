@@ -1,7 +1,11 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "Search Users",
-  description: "Search for automated users by name.",
+  description: "Search for researchers by name, identifiers, or affiliations.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Search Users",
 });
 
 type SearchResult = {

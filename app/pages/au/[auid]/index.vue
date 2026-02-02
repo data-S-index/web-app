@@ -23,7 +23,12 @@ const toast = useToast();
 const auid = (route.params.auid as string) ?? "";
 
 useSeoMeta({
-  title: "Author Profile",
+  title: "Researcher Profile",
+  description: "View this researcher's profile and datasets on Scholar Data.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Scholar Data",
 });
 
 const { data: author, error: authorError } = await useFetch(`/api/au/${auid}`);
@@ -51,6 +56,11 @@ if (error.value) {
 const displayName = computed(
   () => author.value?.name || author.value?.id || "Author",
 );
+
+useSeoMeta({
+  title: `${displayName.value}`,
+  description: "View this researcher's profile and datasets on Scholar Data.",
+});
 
 // Computed metrics for the 6 cards
 const sindex = computed(() => {

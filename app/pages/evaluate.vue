@@ -6,8 +6,12 @@ const route = useRoute();
 const toast = useToast();
 
 useSeoMeta({
-  title: "Get Dataset D-index score",
-  description: "Get Dataset D-index score by entering a DOI or dataset URL",
+  title: "Evaluate Dataset D-index",
+  description: "Enter a DOI or dataset URL to get your D-Index score.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Get your D-Index score",
 });
 
 const hasDoi = ref<boolean | null>(null);

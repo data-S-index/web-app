@@ -9,11 +9,17 @@ interface UserDatasetItem {
   };
 }
 
-const { user, loggedIn } = useUserSession();
-
 useSeoMeta({
-  title: "User Profile",
+  title: "Researcher Profile",
+  description:
+    "View this researcher's profile, S-Index, and shared datasets on Scholar Data.",
 });
+
+defineOgImageComponent("Pergel", {
+  headline: "Scholar Data",
+});
+
+const { user, loggedIn } = useUserSession();
 
 const route = useRoute();
 const toast = useToast();
@@ -64,6 +70,12 @@ const fullName = computed(() => {
   const familyName = userProfile.value.familyName || "";
 
   return `${givenName} ${familyName}`.trim() || "User";
+});
+
+useSeoMeta({
+  title: `${fullName.value}`,
+  description:
+    "View this researcher's profile, S-Index, and shared datasets on Scholar Data.",
 });
 
 const removeDataset = async (datasetId: number) => {

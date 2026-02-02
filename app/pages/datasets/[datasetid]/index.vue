@@ -20,8 +20,14 @@ if (error.value) {
 }
 
 useSeoMeta({
-  title: dataset.value?.title || "Dataset Details",
-  description: dataset.value?.description || "Dataset information",
+  title: "Scholar Data",
+  description:
+    dataset.value?.description ||
+    "View this dataset's details and metrics on Scholar Data.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: dataset.value?.title || "Dataset Details",
 });
 
 const getAuthorTooltipText = (author: Author): string => {

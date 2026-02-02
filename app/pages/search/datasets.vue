@@ -4,6 +4,10 @@ useSeoMeta({
   description: "Search for datasets by title, DOI, or keywords.",
 });
 
+defineOgImageComponent("Pergel", {
+  headline: "Search Datasets",
+});
+
 type SearchResult = {
   id: number;
   title: string;

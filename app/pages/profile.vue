@@ -8,6 +8,11 @@ definePageMeta({
 
 useSeoMeta({
   title: "Profile",
+  description: "Manage your Scholar Data profile and preferences.",
+});
+
+defineOgImageComponent("Pergel", {
+  headline: "Your Profile",
 });
 
 const toast = useToast();
