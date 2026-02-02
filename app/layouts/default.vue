@@ -20,25 +20,56 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
   },
 
   {
-    label: "S-Index Metrics",
+    label: "Platform Metrics",
     to: "/metrics",
     active: route.path.startsWith("/metrics"),
+  },
+  {
+    label: "Search",
+    active: route.path.startsWith("/search"),
+    children: [
+      {
+        label: "Datasets",
+        to: "/search/datasets",
+        icon: "hugeicons:file-search",
+        description: "Find datasets by title, identifier, or author",
+        active: route.path.startsWith("/search/datasets"),
+      },
+      {
+        label: "Users",
+        to: "/search/au",
+        icon: "mingcute:user-search-fill",
+        description: "Find users by name, identifiers, or affiliations",
+        active: route.path.startsWith("/search/au"),
+      },
+      {
+        label: "Organizations",
+        to: "/search/ao",
+        icon: "gis:search-poi",
+        description: "Find organizations by name",
+        active: route.path.startsWith("/search/ao"),
+      },
+    ],
   },
   {
     label: "Resolver",
     to: "/resolve",
     active: route.path.startsWith("/resolve"),
   },
+]);
+
+const footerMiddleItems: NavigationMenuItem[] = [
+  {
+    label: "Made with ♥ by the S-Index Team",
+  },
+];
+
+const footerRightItems: NavigationMenuItem[] = [
   {
     label: "GitHub",
     to: "https://github.com/data-S-index/web-app",
     target: "_blank",
-  },
-]);
-
-const footerItems: NavigationMenuItem[] = [
-  {
-    label: "Made with ♥ by the S-Index Team",
+    icon: "i-simple-icons-github",
   },
 ];
 </script>
@@ -60,14 +91,21 @@ const footerItems: NavigationMenuItem[] = [
         <UColorModeButton />
 
         <AuthState v-slot="{ loggedIn }">
-          <UButton
-            v-if="loggedIn"
-            color="neutral"
-            variant="outline"
-            @click="logout"
-          >
-            Logout
-          </UButton>
+          <div v-if="loggedIn" class="flex items-center justify-center gap-3">
+            <NuxtLink to="/profile">
+              <UTooltip text="View your account settings">
+                <UAvatar
+                  :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.id}`"
+                  :alt="user?.username"
+                  class="cursor-pointer"
+                />
+              </UTooltip>
+            </NuxtLink>
+
+            <UButton color="neutral" variant="outline" @click="logout">
+              Logout
+            </UButton>
+          </div>
 
           <div v-else class="flex items-center justify-center gap-3">
             <UButton to="/login" variant="outline"> Sign in </UButton>
@@ -94,18 +132,19 @@ const footerItems: NavigationMenuItem[] = [
         </p>
       </template>
 
-      <UNavigationMenu :items="footerItems" variant="link" color="primary" />
+      <UNavigationMenu
+        :items="footerMiddleItems"
+        variant="link"
+        color="primary"
+      />
 
       <template #right>
         <UColorModeButton />
 
-        <UButton
-          icon="i-simple-icons-github"
-          color="neutral"
-          variant="ghost"
-          to="https://github.com/data-S-index/web-app"
-          target="_blank"
-          aria-label="GitHub"
+        <UNavigationMenu
+          :items="footerRightItems"
+          variant="link"
+          color="primary"
         />
       </template>
     </UFooter>

@@ -1,32 +1,43 @@
 <script setup lang="ts">
-interface UserDatasetItem {
+import UserDatasetList from "~/components/user/UserDatasetList.vue";
+
+interface OrgDatasetItem {
   datasetId: number;
   dataset: {
     dindices?: Array<{ score: number; created: string }>;
     citations: Array<unknown>;
     mentions: Array<unknown>;
     fujiScore?: { score: number | null };
+    datasetAuthors?: Array<{ name?: string; affiliations?: string[] }>;
+    title?: string;
+    description?: string | null;
+    identifier?: string;
+    version?: string | null;
+    publishedAt?: Date | string;
   };
 }
-
-const { user, loggedIn } = useUserSession();
-
-useSeoMeta({
-  title: "User Profile",
-});
 
 const route = useRoute();
 const toast = useToast();
 
-const userid = (route.params.userid as string).toUpperCase();
+const aoid = (route.params.aoid as string) ?? "";
 
-const isCurrentUser = computed(() => {
-  return loggedIn.value && user.value?.id === userid;
+useSeoMeta({
+  title: "Organization Profile",
 });
 
-const { data: userData, error } = await useFetch(
-  `/api/users/${userid}/datasets`,
-);
+const { data: org, error: orgError } = await useFetch(`/api/ao/${aoid}`);
+
+if (orgError.value) {
+  toast.add({
+    title: "Error loading organization",
+    description: orgError.value.data?.statusMessage,
+    icon: "material-symbols:error",
+    color: "error",
+  });
+}
+
+const { data: orgData, error } = await useFetch(`/api/ao/${aoid}/datasets`);
 
 if (error.value) {
   toast.add({
@@ -37,109 +48,61 @@ if (error.value) {
   });
 }
 
-// Fetch user profile info
-const { data: userProfile, error: userProfileError } = await useFetch(
-  `/api/users/${userid}`,
-);
-
-if (userProfileError.value) {
-  toast.add({
-    title: "Error fetching user profile",
-    description: userProfileError.value.data?.statusMessage,
-    icon: "material-symbols:error",
-    color: "error",
-  });
-}
-
-// Generate avatar URL from dicebear using userid as seed
 const avatarUrl = computed(() => {
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${userid}`;
+  const seed = org.value?.id || org.value?.name || "org";
+
+  return `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(seed)}`;
 });
 
-// Get user's full name
-const fullName = computed(() => {
-  if (!userProfile.value) return "";
-
-  const givenName = userProfile.value.givenName || "";
-  const familyName = userProfile.value.familyName || "";
-
-  return `${givenName} ${familyName}`.trim() || "User";
-});
-
-const removeDataset = async (datasetId: number) => {
-  try {
-    await $fetch("/api/user/datasets/", {
-      method: "DELETE",
-      body: {
-        datasetId,
-      },
-    });
-
-    toast.add({
-      title: "Dataset removed successfully",
-      description: "The dataset has been removed from your collection",
-      icon: "i-heroicons-check-circle-20-solid",
-      color: "success",
-    });
-
-    // Reload the page
-    window.location.reload();
-  } catch (error: unknown) {
-    const errorMessage =
-      (error as { data?: { statusMessage?: string } })?.data?.statusMessage ||
-      "Failed to remove dataset";
-    toast.add({
-      title: "Error removing dataset",
-      description: errorMessage,
-      icon: "material-symbols:error",
-      color: "error",
-    });
-  }
-};
+const displayName = computed(
+  () => org.value?.name || org.value?.id || "Organization",
+);
 
 // Computed metrics for the 6 cards
 const sindex = computed(() => {
-  if (!userData.value) return 0;
+  if (!orgData.value) return 0;
 
-  return (userData.value as UserDatasetItem[]).reduce(
-    (sum: number, item: UserDatasetItem) =>
+  return (orgData.value as OrgDatasetItem[]).reduce(
+    (sum: number, item: OrgDatasetItem) =>
       sum + (item.dataset.dindices?.[0]?.score || 0),
     0,
   );
 });
 
 const datasetCount = computed(() => {
-  return userData.value?.length || 0;
+  return orgData.value?.length || 0;
 });
 
 const totalCitations = computed(() => {
-  if (!userData.value) return 0;
+  if (!orgData.value) return 0;
 
-  return (userData.value as UserDatasetItem[]).reduce(
-    (sum: number, item: UserDatasetItem) => sum + item.dataset.citations.length,
+  return (orgData.value as OrgDatasetItem[]).reduce(
+    (sum: number, item: OrgDatasetItem) => sum + item.dataset.citations.length,
     0,
   );
 });
 
 const totalMentions = computed(() => {
-  if (!userData.value) return 0;
+  if (!orgData.value) return 0;
 
-  return (userData.value as UserDatasetItem[]).reduce(
-    (sum: number, item: UserDatasetItem) => sum + item.dataset.mentions.length,
+  return (orgData.value as OrgDatasetItem[]).reduce(
+    (sum: number, item: OrgDatasetItem) => sum + item.dataset.mentions.length,
     0,
   );
 });
 
 const averageFairScore = computed(() => {
-  if (!userData.value) return 0;
-  const datasetsWithFairScore = (userData.value as UserDatasetItem[]).filter(
-    (item: UserDatasetItem) =>
+  if (!orgData.value) return 0;
+
+  const datasetsWithFairScore = (orgData.value as OrgDatasetItem[]).filter(
+    (item: OrgDatasetItem) =>
       item.dataset.fujiScore?.score !== null &&
       item.dataset.fujiScore?.score !== undefined,
   );
   if (datasetsWithFairScore.length === 0) return 0;
+
   const sum = datasetsWithFairScore.reduce(
-    (sum: number, item: UserDatasetItem) =>
+    (sum: number, item: OrgDatasetItem) =>
       sum + (item.dataset.fujiScore?.score || 0),
     0,
   );
@@ -149,12 +112,10 @@ const averageFairScore = computed(() => {
 
 // S-index over time (aggregated across all datasets)
 const sindexOverTime = computed(() => {
-  if (!userData.value)
+  if (!orgData.value)
     return { dates: [], scores: [], earliestDate: null, endDate: null };
 
-  const datasets = userData.value as UserDatasetItem[];
-
-  // Collect all d-index entries from all datasets
+  const datasets = orgData.value as OrgDatasetItem[];
   const allDIndices: Array<{ date: Date; score: number; datasetId: number }> =
     [];
 
@@ -174,25 +135,18 @@ const sindexOverTime = computed(() => {
     return { dates: [], scores: [], earliestDate: null, endDate: null };
   }
 
-  // Sort by date
   allDIndices.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-  // Get earliest and latest dates
   const earliestDate = allDIndices[0]!.date;
   const now = new Date();
   const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-
-  // For each month, find the latest d-index for each dataset and sum them
   const currentDate = new Date(earliestDate);
-  currentDate.setDate(1); // Start of month
+  currentDate.setDate(1);
 
   const dates: string[] = [];
   const scores: number[] = [];
 
   while (currentDate <= endDate) {
     dates.push(currentDate.toISOString().split("T")[0]!);
-
-    // For each dataset, find the most recent d-index (by date) up to this month
     const datasetLatestDIndex = new Map<
       number,
       { score: number; date: Date }
@@ -210,15 +164,11 @@ const sindexOverTime = computed(() => {
       }
     });
 
-    // Sum all latest d-indices to get S-index
     let sindexValue = 0;
     datasetLatestDIndex.forEach((entry) => {
       sindexValue += entry.score;
     });
-
     scores.push(sindexValue);
-
-    // Move to next month
     currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
@@ -227,7 +177,7 @@ const sindexOverTime = computed(() => {
 
 // Cumulative citations (raw and weighted) across all datasets
 const cumulativeCitations = computed(() => {
-  if (!userData.value) {
+  if (!orgData.value) {
     return {
       dates: [],
       rawValues: [],
@@ -237,9 +187,7 @@ const cumulativeCitations = computed(() => {
     };
   }
 
-  const datasets = userData.value as UserDatasetItem[];
-
-  // Collect all citations from all datasets
+  const datasets = orgData.value as OrgDatasetItem[];
   const allCitations: Array<{ date: Date; weight: number }> = [];
 
   datasets.forEach((item) => {
@@ -270,16 +218,12 @@ const cumulativeCitations = computed(() => {
     };
   }
 
-  // Sort by date
   allCitations.sort((a, b) => a.date.getTime() - b.date.getTime());
-
   const firstCitationDate = allCitations[0]!.date;
   const now = new Date();
   const lastCitationDate = allCitations[allCitations.length - 1]!.date;
   const endDate = lastCitationDate > now ? lastCitationDate : now;
   const startDate = firstCitationDate;
-
-  // Group citations by month
   const citationsByMonth = new Map<string, { raw: number; weighted: number }>();
 
   allCitations.forEach((citation) => {
@@ -291,30 +235,24 @@ const cumulativeCitations = computed(() => {
     });
   });
 
-  // Generate monthly data points
   const dates: string[] = [];
   const rawValues: number[] = [];
   const weightedValues: number[] = [];
-
   let cumulativeRaw = 0;
   let cumulativeWeighted = 0;
-
   const currentDate = new Date(startDate);
   currentDate.setDate(1);
 
   while (currentDate <= endDate) {
     const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
     dates.push(currentDate.toISOString().split("T")[0]!);
-
     const monthCitations = citationsByMonth.get(monthKey);
     if (monthCitations) {
       cumulativeRaw += monthCitations.raw;
       cumulativeWeighted += monthCitations.weighted;
     }
-
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
-
     currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
@@ -323,7 +261,7 @@ const cumulativeCitations = computed(() => {
 
 // Cumulative mentions (raw and weighted) across all datasets
 const cumulativeMentions = computed(() => {
-  if (!userData.value) {
+  if (!orgData.value) {
     return {
       dates: [],
       rawValues: [],
@@ -333,9 +271,7 @@ const cumulativeMentions = computed(() => {
     };
   }
 
-  const datasets = userData.value as UserDatasetItem[];
-
-  // Collect all mentions from all datasets
+  const datasets = orgData.value as OrgDatasetItem[];
   const allMentions: Array<{ date: Date; weight: number }> = [];
 
   datasets.forEach((item) => {
@@ -366,16 +302,12 @@ const cumulativeMentions = computed(() => {
     };
   }
 
-  // Sort by date
   allMentions.sort((a, b) => a.date.getTime() - b.date.getTime());
-
   const firstMentionDate = allMentions[0]!.date;
   const now = new Date();
   const lastMentionDate = allMentions[allMentions.length - 1]!.date;
   const endDate = lastMentionDate > now ? lastMentionDate : now;
   const startDate = firstMentionDate;
-
-  // Group mentions by month
   const mentionsByMonth = new Map<string, { raw: number; weighted: number }>();
 
   allMentions.forEach((mention) => {
@@ -387,104 +319,64 @@ const cumulativeMentions = computed(() => {
     });
   });
 
-  // Generate monthly data points
   const dates: string[] = [];
   const rawValues: number[] = [];
   const weightedValues: number[] = [];
-
   let cumulativeRaw = 0;
   let cumulativeWeighted = 0;
-
   const currentDate = new Date(startDate);
   currentDate.setDate(1);
 
   while (currentDate <= endDate) {
     const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
     dates.push(currentDate.toISOString().split("T")[0]!);
-
     const monthMentions = mentionsByMonth.get(monthKey);
     if (monthMentions) {
       cumulativeRaw += monthMentions.raw;
       cumulativeWeighted += monthMentions.weighted;
     }
-
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
-
     currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
   return { dates, rawValues, weightedValues, earliestDate: startDate, endDate };
 });
-
-// Modal state for dataset search
-const showAddDatasetModal = ref(false);
-
-// Handle datasets added event
-const handleDatasetsAdded = () => {
-  // Refresh the page data
-  window.location.reload();
-};
 </script>
 
 <template>
   <UContainer>
     <UPage>
       <UPageHeader
+        v-if="org"
         :ui="{
-          container: 'flex min-w-full flex-1',
-          wrapper: 'w-full ',
-          title: 'w-full',
+          container: 'flex w-full flex-1',
         }"
       >
         <template #title>
-          <div class="flex min-w-full gap-4">
-            <UAvatar :src="avatarUrl" :alt="fullName" size="3xl" />
+          <div class="flex flex-col gap-2">
+            <UTooltip
+              text="This profile was automatically generated by the Scholar Data platform"
+            >
+              <UBadge
+                class="w-max cursor-help"
+                color="warning"
+                variant="subtle"
+                label="Automated Organization Profile"
+                icon="ic:round-auto-awesome"
+              />
+            </UTooltip>
 
-            <div class="flex w-full min-w-0 flex-1 flex-col gap-1">
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {{ fullName ? fullName : userProfile?.username }}
-              </h1>
-
-              <div
-                class="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-gray-500 dark:text-gray-400"
-              >
-                <span
-                  v-if="userProfile?.affiliation"
-                  class="flex items-center gap-1.5"
-                >
-                  <UIcon
-                    name="i-heroicons-building-office-2"
-                    class="size-4 shrink-0 text-gray-400 dark:text-gray-500"
-                  />
-                  {{ userProfile.affiliation }}
-                </span>
-
-                <NuxtLink
-                  v-if="userProfile?.homePage"
-                  :to="userProfile.homePage"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 flex items-center gap-1.5 hover:underline"
-                >
-                  <UIcon name="i-heroicons-globe-alt" class="size-4 shrink-0" />
-
-                  <span>Homepage</span>
-
-                  <UIcon
-                    name="i-heroicons-arrow-top-right-on-square"
-                    class="size-3.5 shrink-0"
-                  />
-                </NuxtLink>
-              </div>
-            </div>
+            <h1 class="text-2xl font-bold">
+              {{ displayName }}
+            </h1>
           </div>
         </template>
 
         <template #links />
       </UPageHeader>
 
-      <UPageBody>
+      <UPageBody v-if="org">
         <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <UCard>
             <template #header>
@@ -504,7 +396,7 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
-              {{ Math.round(sindex / datasetCount) }}
+              {{ datasetCount ? Math.round(sindex / datasetCount) : 0 }}
             </div>
 
             <p class="mt-2 text-sm">Average D-Index score per dataset</p>
@@ -524,14 +416,14 @@ const handleDatasetsAdded = () => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Total Claimed Datasets</h3>
+              <h3 class="text-lg font-semibold">Total Datasets</h3>
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
               {{ datasetCount }}
             </div>
 
-            <p class="mt-2 text-sm">Total datasets claimed by the user</p>
+            <p class="mt-2 text-sm">Total datasets in this organization</p>
           </UCard>
 
           <UCard>
@@ -543,7 +435,9 @@ const handleDatasetsAdded = () => {
               {{ totalCitations }}
             </div>
 
-            <p class="mt-2 text-sm">Total citations to the user's datasets</p>
+            <p class="mt-2 text-sm">
+              Total citations to the organization's datasets
+            </p>
           </UCard>
 
           <UCard>
@@ -555,7 +449,9 @@ const handleDatasetsAdded = () => {
               {{ totalMentions }}
             </div>
 
-            <p class="mt-2 text-sm">Total mentions of the user's datasets</p>
+            <p class="mt-2 text-sm">
+              Total mentions of the organization's datasets
+            </p>
           </UCard>
         </div>
 
@@ -569,37 +465,21 @@ const handleDatasetsAdded = () => {
           :cumulative-mentions="cumulativeMentions"
         />
 
-        <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-bold">Datasets</h2>
+        <h2 class="text-2xl font-bold">Datasets</h2>
 
-          <UModal
-            v-model="showAddDatasetModal"
-            fullscreen
-            title="Add a dataset"
-          >
-            <UButton
-              v-if="isCurrentUser"
-              icon="i-heroicons-plus-20-solid"
-              label="Add a dataset"
-            />
+        <UserDatasetList :items="orgData" />
+      </UPageBody>
 
-            <template #body>
-              <DatasetSearchModal
-                :userid="userid"
-                :user-name="fullName"
-                :is-open="showAddDatasetModal"
-                @close="showAddDatasetModal = false"
-                @datasets-added="handleDatasetsAdded"
-              />
-            </template>
-          </UModal>
+      <UPageBody v-else-if="orgError">
+        <div class="py-12 text-center">
+          <p class="text-base text-gray-500 dark:text-gray-400">
+            Organization not found or failed to load.
+          </p>
+
+          <UButton to="/search/ao" color="primary" variant="soft" class="mt-4">
+            Search organizations
+          </UButton>
         </div>
-
-        <UserDatasetList
-          :items="userData"
-          :show-remove="isCurrentUser"
-          @remove="removeDataset"
-        />
       </UPageBody>
     </UPage>
   </UContainer>

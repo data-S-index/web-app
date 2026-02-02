@@ -280,7 +280,7 @@ const fieldPieChartOption = computed(() => ({
 <template>
   <div class="mx-auto flex w-full max-w-screen-xl flex-col gap-6 px-6">
     <UPageCTA
-      title="S-Index Metrics and Analytics"
+      title="Platform Metrics and Analytics"
       description="Analytics and insights for data sharing impact, FAIRness scores, and research dataset metrics"
       variant="naked"
     />
@@ -317,8 +317,10 @@ const fieldPieChartOption = computed(() => ({
           {{
             datasets.length > 0
               ? Math.round(
-                  datasets.reduce((sum, count) => sum + count, 0) /
-                    datasets.length,
+                  datasets.reduce(
+                    (sum: number, count: number) => sum + count,
+                    0,
+                  ) / datasets.length,
                 ).toLocaleString()
               : 0
           }}

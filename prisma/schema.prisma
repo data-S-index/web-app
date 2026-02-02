@@ -51,6 +51,55 @@ model UserDataset {
     @@index([datasetId])
 }
 
+model AutomatedUser {
+    id String @id @default(ulid())
+
+    nameType        String?
+    name            String   @default("")
+    nameIdentifiers String[] @default([])
+    affiliations    String[] @default([])
+
+    automatedUserDatasets AutomatedUserDataset[]
+}
+
+model AutomatedUserDataset {
+    automatedUser   AutomatedUser @relation(fields: [automatedUserId], references: [id], onDelete: Cascade)
+    automatedUserId String
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@id([automatedUserId, datasetId])
+    @@index([automatedUserId])
+    @@index([datasetId])
+}
+
+model AutomatedOrganization {
+    id String @id @default(ulid())
+
+    name String @default("")
+
+    automatedOrganizationDatasets AutomatedOrganizationDataset[]
+}
+
+model AutomatedOrganizationDataset {
+    automatedOrganization   AutomatedOrganization @relation(fields: [automatedOrganizationId], references: [id], onDelete: Cascade)
+    automatedOrganizationId String
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@id([automatedOrganizationId, datasetId])
+    @@index([automatedOrganizationId])
+    @@index([datasetId])
+}
+
 model Dataset {
     id Int @id @default(autoincrement())
 
@@ -68,7 +117,6 @@ model Dataset {
     publisher   String?
     publishedAt DateTime
 
-    domain   String?
     subjects String[]
 
     created DateTime @default(now())
@@ -77,12 +125,15 @@ model Dataset {
     datasetIdentifiers DatasetIdentifier[]
     datasetAuthors     DatasetAuthor[]
 
-    citations Citation[]
-    mentions  Mention[]
-    fujiScore FujiScore?
+    citations     Citation[]
+    mentions      Mention[]
+    fujiScore     FujiScore?
+    datasetTopicc DatasetTopic?
 
-    datasetClaims UserDataset[]
-    dindices      DIndex[]
+    datasetClaims                 UserDataset[]
+    dindices                      DIndex[]
+    automatedUserDatasets         AutomatedUserDataset[]
+    automatedOrganizationDatasets AutomatedOrganizationDataset[]
 
     @@unique([identifierType, identifier])
     @@index([identifier])
@@ -96,8 +147,7 @@ model DatasetAuthor {
     datasetId Int
 
     nameType String?
-    name     String  @db.Text // keep the big string here
-    nameHash String  @db.Char(32) // md5 hex (32 chars)
+    name     String  @default("")
 
     nameIdentifiers String[] @default([])
     affiliations    String[] @default([])
@@ -107,7 +157,6 @@ model DatasetAuthor {
     sindices SIndex[]
 
     @@index([datasetId])
-    @@index([nameHash])
 }
 
 model DatasetIdentifier {
@@ -124,6 +173,29 @@ model DatasetIdentifier {
 
     @@unique([datasetId, identifierType, identifier])
     @@index([identifierType, identifier])
+}
+
+model DatasetTopic {
+    datasetId Int     @id
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+    topicId   String?
+    topicName String?
+
+    subfieldId   String?
+    subfieldName String?
+
+    fieldId   String?
+    fieldName String?
+
+    domainId   String?
+    domainName String?
+
+    score  Float?
+    source String?
+
+    created DateTime @default(now())
+    updated DateTime @default(now()) @updatedAt
 }
 
 model Citation {

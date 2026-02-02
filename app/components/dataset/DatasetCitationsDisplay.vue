@@ -106,7 +106,7 @@ const paginatedCitations = computed(() => {
       <UPagination
         v-model:page="citationsPage"
         :total="citationsCount"
-        :page-size="citationsPerPage"
+        :items-per-page="citationsPerPage"
       />
     </div>
   </CardCollapsibleContent>

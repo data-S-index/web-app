@@ -14,9 +14,23 @@ export default defineEventHandler(async (event) => {
   const { user } = session;
   const userId = user.id;
 
-  return await prisma.user.findUnique({
+  const userData = await prisma.user.findUnique({
     where: {
       id: userId,
     },
+    select: {
+      id: true,
+      username: true,
+      givenName: true,
+      familyName: true,
+      additionalNames: true,
+      affiliation: true,
+      homePage: true,
+      areasOfInterest: true,
+      created: true,
+      updated: true,
+    },
   });
+
+  return userData;
 });
