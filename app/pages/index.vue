@@ -111,6 +111,14 @@ const sectionLinks = ref([
       :links="sectionLinks"
       :features="features"
     >
+      <UPageGrid>
+        <UPageCard
+          v-for="(feature, index) in features"
+          :key="index"
+          v-bind="feature"
+        />
+      </UPageGrid>
+
       <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
         <div
           v-for="(feature, index) in features"
@@ -158,7 +166,13 @@ const sectionLinks = ref([
       title="On-demand dataset metrics, computed in real time"
       description="Paste a DOI or dataset URL to get fresh, on-demand metrics. The D-Index is calculated at request time - not pulled from a static index - so you always see the latest citations, mentions, FAIR score, and normalized results in one place."
       icon="i-heroicons-arrow-path"
-      orientation="horizontal"
+      :links="[
+        {
+          label: 'Resolve a DOI or URL',
+          to: '/resolve',
+          icon: 'i-heroicons-arrow-right',
+        },
+      ]"
     />
 
     <UPageSection
