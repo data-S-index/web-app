@@ -48,12 +48,6 @@ if (error.value) {
   });
 }
 
-const avatarUrl = computed(() => {
-  const seed = author.value?.id || author.value?.name || "user";
-
-  return `https://api.dicebear.com/9.x/avataaars/svg?seed=${encodeURIComponent(seed)}`;
-});
-
 const displayName = computed(
   () => author.value?.name || author.value?.id || "Author",
 );

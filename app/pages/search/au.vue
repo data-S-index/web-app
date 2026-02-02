@@ -13,7 +13,7 @@ type SearchResult = {
 };
 
 const toast = useToast();
-const searchTerm = ref("bhavesh patel");
+const searchTerm = ref("");
 const searchLoading = ref(false);
 const searchResults = ref<SearchResult[]>([]);
 const searchPage = ref(1);
