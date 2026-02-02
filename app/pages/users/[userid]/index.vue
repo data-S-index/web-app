@@ -492,8 +492,6 @@ const handleDatasetsAdded = () => {
             </div>
           </div>
         </template>
-
-        <template #links />
       </UPageHeader>
 
       <UPageBody>

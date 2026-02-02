@@ -103,7 +103,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <UContainer class="py-8">
+    <UContainer>
       <UPage>
         <UPageHeader
           :ui="{
@@ -111,34 +111,36 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           }"
         >
           <template #title>
-            <div class="flex w-full items-center gap-4">
+            <div class="flex min-w-full gap-4">
               <UAvatar
                 :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${userData?.id}`"
+                alt="User avatar"
                 size="3xl"
-                class="bg-primary-500"
               />
 
-              <div class="flex flex-col">
-                <p class="text-gray-600 dark:text-gray-400">
+              <div class="flex w-full min-w-0 flex-1 flex-col gap-1">
+                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                   {{
                     userData?.givenName || userData?.familyName
                       ? `${userData?.givenName} ${userData?.familyName}`
                       : userData?.username
                   }}
-                </p>
+                </h1>
 
-                <NuxtLink
-                  v-if="userData?.id"
-                  :to="`/users/${userData.id}`"
-                  class="text-primary-500 mt-1 inline-block text-sm hover:underline"
+                <div
+                  class="flex flex-wrap items-center gap-x-5 text-sm text-gray-500 dark:text-gray-400"
                 >
-                  View public profile →
-                </NuxtLink>
+                  <NuxtLink
+                    v-if="userData?.id"
+                    :to="`/users/${userData.id}`"
+                    class="text-primary-500 inline-block text-sm hover:underline"
+                  >
+                    View public profile →
+                  </NuxtLink>
+                </div>
               </div>
             </div>
           </template>
-
-          <template #links />
         </UPageHeader>
 
         <UPageBody>
