@@ -31,29 +31,15 @@ const paginatedMentions = computed(() => {
         <div
           class="mb-2 flex-1 space-y-1 rounded-lg border border-gray-200 p-3 shadow-sm dark:border-gray-700"
         >
-          <NuxtLink
-            :href="mention.mentionLink"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="font-mono text-blue-600 hover:underline dark:text-blue-400"
-          >
-            {{ mention.mentionLink }}
-          </NuxtLink>
-
-          <div class="flex items-center justify-between gap-2">
-            <div class="flex flex-col gap-1">
-              <p v-if="mention.mentionedDate" class="text-sm">
-                Mentioned on
-                {{ $dayjs(mention.mentionedDate).format("DD MMMM YYYY") }}
-              </p>
-
-              <p
-                v-if="mention.mentionWeight"
-                class="text-xs text-gray-500 dark:text-gray-400"
-              >
-                Weight: {{ mention.mentionWeight.toFixed(2) }}
-              </p>
-            </div>
+          <div class="flex items-start justify-between gap-10">
+            <NuxtLink
+              :href="mention.mentionLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="font-mono text-blue-600 hover:underline dark:text-blue-400"
+            >
+              {{ mention.mentionLink }}
+            </NuxtLink>
 
             <div class="flex flex-wrap gap-2">
               <UBadge
@@ -66,6 +52,20 @@ const paginatedMentions = computed(() => {
                 {{ source }}
               </UBadge>
             </div>
+          </div>
+
+          <div class="flex items-center justify-between gap-2">
+            <p v-if="mention.mentionedDate" class="text-sm">
+              Mentioned on
+              {{ $dayjs(mention.mentionedDate).format("DD MMMM YYYY") }}
+            </p>
+
+            <p
+              v-if="mention.mentionWeight"
+              class="text-xs text-gray-500 dark:text-gray-400"
+            >
+              Weight: {{ mention.mentionWeight.toFixed(2) }}
+            </p>
           </div>
         </div>
       </li>
