@@ -247,6 +247,12 @@ const getAuthorTooltipText = (author: Author): string => {
               </div>
             </UCard>
 
+            <!-- Extracted Domain -->
+            <DatasetDomainInfo
+              v-if="(dataset as any).domain"
+              :domain="(dataset as any).domain"
+            />
+
             <!-- Subjects -->
             <UCard v-if="dataset.subjects && dataset.subjects.length > 0">
               <template #header>

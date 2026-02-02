@@ -125,10 +125,10 @@ model Dataset {
     datasetIdentifiers DatasetIdentifier[]
     datasetAuthors     DatasetAuthor[]
 
-    citations     Citation[]
-    mentions      Mention[]
-    fujiScore     FujiScore?
-    datasetTopicc DatasetTopic?
+    citations    Citation[]
+    mentions     Mention[]
+    fujiScore    FujiScore?
+    datasetTopic DatasetTopic?
 
     datasetClaims                 UserDataset[]
     dindices                      DIndex[]

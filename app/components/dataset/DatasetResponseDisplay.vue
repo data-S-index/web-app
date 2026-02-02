@@ -264,6 +264,9 @@ const reloadPage = () => {
           </div>
         </UCard>
 
+        <!-- Domain Information -->
+        <DatasetDomainInfo v-if="dataset.domain" :domain="dataset.domain" />
+
         <!-- Subjects -->
         <UCard v-if="dataset.subjects && dataset.subjects.length > 0">
           <template #header>
@@ -281,9 +284,6 @@ const reloadPage = () => {
             </UBadge>
           </div>
         </UCard>
-
-        <!-- Domain Information -->
-        <DatasetDomainInfo v-if="dataset.domain" :domain="dataset.domain" />
 
         <!-- Normalization Factors Card -->
         <DatasetNormalizationFactors

@@ -52,6 +52,7 @@ export default defineEventHandler(async (event) => {
           mentionedDate: true,
         },
       },
+      datasetTopic: true,
     },
   });
 
@@ -62,5 +63,22 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  return dataset;
+  const topic = dataset.datasetTopic;
+  const domain =
+    topic &&
+    (topic.topicName ||
+      topic.subfieldName ||
+      topic.fieldName ||
+      topic.domainName)
+      ? {
+          topic_name: topic.topicName ?? undefined,
+          subfield_name: topic.subfieldName ?? undefined,
+          field_name: topic.fieldName ?? undefined,
+          domain_name: topic.domainName ?? undefined,
+        }
+      : null;
+
+  const { datasetTopic: _t, ...rest } = dataset;
+
+  return { ...rest, domain };
 });

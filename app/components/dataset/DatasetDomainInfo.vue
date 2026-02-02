@@ -8,7 +8,7 @@ defineProps<{
 <template>
   <UCard v-if="domain">
     <template #header>
-      <h3 class="text-lg font-semibold">Extracted Domain</h3>
+      <h3 class="text-lg font-semibold">Domain</h3>
     </template>
 
     <div class="space-y-3">
