@@ -25,6 +25,11 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith("/metrics"),
   },
   {
+    label: "Evaluate Dataset",
+    to: "/evaluate",
+    active: route.path.startsWith("/evaluate"),
+  },
+  {
     label: "Search",
     active: route.path.startsWith("/search"),
     children: [
@@ -50,11 +55,6 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
         active: route.path.startsWith("/search/ao"),
       },
     ],
-  },
-  {
-    label: "Resolver",
-    to: "/resolve",
-    active: route.path.startsWith("/resolve"),
   },
 ]);
 

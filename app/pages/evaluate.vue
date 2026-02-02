@@ -118,7 +118,7 @@ const fetchDatasetData = async (doi: string) => {
   error.value = null;
 
   try {
-    const apiUrl = `/api/resolve/doi?doi=${encodeURIComponent(doi)}`;
+    const apiUrl = `/api/evaluate/doi?doi=${encodeURIComponent(doi)}`;
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
@@ -193,7 +193,7 @@ const fetchDatasetDataFromUrl = async (
       params.append("topic_id", topicId);
     }
 
-    const apiUrl = `/api/resolve/url?${params.toString()}`;
+    const apiUrl = `/api/evaluate/url?${params.toString()}`;
     const response = await fetch(apiUrl);
 
     if (!response.ok) {
@@ -534,7 +534,7 @@ const handleSubmit = async () => {
                 :disabled="isLoading"
                 @click="handleSubmit"
               >
-                {{ hasDoi ? "Resolve DOI" : "Resolve Dataset URL" }}
+                {{ hasDoi ? "Evaluate DOI" : "Evaluate Dataset URL" }}
               </UButton>
             </div>
           </UCard>
