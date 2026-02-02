@@ -20,7 +20,7 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
   },
 
   {
-    label: "S-Index Metrics",
+    label: "Platform Metrics",
     to: "/metrics",
     active: route.path.startsWith("/metrics"),
   },
@@ -56,16 +56,20 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     to: "/resolve",
     active: route.path.startsWith("/resolve"),
   },
+]);
+
+const footerMiddleItems: NavigationMenuItem[] = [
+  {
+    label: "Made with ♥ by the S-Index Team",
+  },
+];
+
+const footerRightItems: NavigationMenuItem[] = [
   {
     label: "GitHub",
     to: "https://github.com/data-S-index/web-app",
     target: "_blank",
-  },
-]);
-
-const footerItems: NavigationMenuItem[] = [
-  {
-    label: "Made with ♥ by the S-Index Team",
+    icon: "i-simple-icons-github",
   },
 ];
 </script>
@@ -128,18 +132,19 @@ const footerItems: NavigationMenuItem[] = [
         </p>
       </template>
 
-      <UNavigationMenu :items="footerItems" variant="link" color="primary" />
+      <UNavigationMenu
+        :items="footerMiddleItems"
+        variant="link"
+        color="primary"
+      />
 
       <template #right>
         <UColorModeButton />
 
-        <UButton
-          icon="i-simple-icons-github"
-          color="neutral"
-          variant="ghost"
-          to="https://github.com/data-S-index/web-app"
-          target="_blank"
-          aria-label="GitHub"
+        <UNavigationMenu
+          :items="footerRightItems"
+          variant="link"
+          color="primary"
         />
       </template>
     </UFooter>

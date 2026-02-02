@@ -432,23 +432,51 @@ const handleDatasetsAdded = () => {
     <UPage>
       <UPageHeader
         :ui="{
-          container: 'flex w-full flex-1',
+          container: 'flex min-w-full flex-1',
+          wrapper: 'w-full ',
+          title: 'w-full',
         }"
       >
         <template #title>
-          <div class="flex w-full items-center gap-2">
+          <div class="flex min-w-full gap-4">
             <UAvatar :src="avatarUrl" :alt="fullName" size="3xl" />
 
-            <div class="flex flex-col">
+            <div class="flex w-full min-w-0 flex-1 flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {{ userProfile?.username || "Unknown User" }}
+                {{ fullName ? fullName : userProfile?.username }}
               </h1>
 
-              <p
-                class="flex items-center text-sm font-medium text-gray-500 dark:text-gray-400"
+              <div
+                class="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-gray-500 dark:text-gray-400"
               >
-                {{ "Unknown Affiliation" }}
-              </p>
+                <span
+                  v-if="userProfile?.affiliation"
+                  class="flex items-center gap-1.5"
+                >
+                  <UIcon
+                    name="i-heroicons-building-office-2"
+                    class="size-4 shrink-0 text-gray-400 dark:text-gray-500"
+                  />
+                  {{ userProfile.affiliation }}
+                </span>
+
+                <NuxtLink
+                  v-if="userProfile?.homePage"
+                  :to="userProfile.homePage"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300 flex items-center gap-1.5 hover:underline"
+                >
+                  <UIcon name="i-heroicons-globe-alt" class="size-4 shrink-0" />
+
+                  <span>Homepage</span>
+
+                  <UIcon
+                    name="i-heroicons-arrow-top-right-on-square"
+                    class="size-3.5 shrink-0"
+                  />
+                </NuxtLink>
+              </div>
             </div>
           </div>
         </template>

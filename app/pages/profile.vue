@@ -99,195 +99,208 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <UContainer class="py-8">
-      <div class="space-y-6">
-        <!-- Profile Card -->
-        <div class="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-          <div class="flex flex-col items-center space-y-4">
-            <UAvatar
-              :text="
-                userData?.givenName?.charAt(0)?.toUpperCase() ||
-                userData?.familyName?.charAt(0)?.toUpperCase() ||
-                '?'
-              "
-              size="3xl"
-              class="bg-primary-500"
-            />
+      <UPage>
+        <UPageHeader
+          :ui="{
+            container: 'flex w-full flex-1',
+          }"
+        >
+          <template #title>
+            <div class="flex w-full items-center gap-4">
+              <UAvatar
+                :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${userData?.id}`"
+                size="3xl"
+                class="bg-primary-500"
+              />
 
-            <div class="text-center">
-              <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                {{ userData?.givenName }} {{ userData?.familyName }}
-              </h1>
+              <div class="flex flex-col">
+                <p class="text-gray-600 dark:text-gray-400">
+                  {{
+                    userData?.givenName || userData?.familyName
+                      ? `${userData?.givenName} ${userData?.familyName}`
+                      : userData?.username
+                  }}
+                </p>
 
-              <p class="text-gray-600 dark:text-gray-400">
-                {{ userData?.username }}
-              </p>
-
-              <NuxtLink
-                v-if="userData?.id"
-                :to="`/users/${userData.id}`"
-                class="text-primary-500 mt-2 inline-block text-sm hover:underline"
-              >
-                View public profile →
-              </NuxtLink>
+                <NuxtLink
+                  v-if="userData?.id"
+                  :to="`/users/${userData.id}`"
+                  class="text-primary-500 mt-1 inline-block text-sm hover:underline"
+                >
+                  View public profile →
+                </NuxtLink>
+              </div>
             </div>
-          </div>
-        </div>
+          </template>
 
-        <!-- Edit Profile Form -->
-        <div class="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-          <h2 class="mb-6 text-xl font-semibold text-gray-900 dark:text-white">
-            Edit profile
-          </h2>
+          <template #links />
+        </UPageHeader>
 
-          <UForm
-            :schema="schema"
-            :state="state"
-            class="space-y-6"
-            @submit="onSubmit"
-          >
-            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
-              <UFormField label="First name" name="givenName">
-                <UInput
-                  v-model="state.givenName"
-                  type="text"
-                  placeholder="e.g. Jane"
+        <UPageBody>
+          <div class="space-y-6">
+            <!-- Edit Profile Form -->
+            <UCard>
+              <h2
+                class="mb-6 text-xl font-semibold text-gray-900 dark:text-white"
+              >
+                Edit profile
+              </h2>
+
+              <UForm
+                :schema="schema"
+                :state="state"
+                class="space-y-6"
+                @submit="onSubmit"
+              >
+                <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+                  <UFormField label="First name" name="givenName">
+                    <UInput
+                      v-model="state.givenName"
+                      type="text"
+                      placeholder="e.g. Jane"
+                    />
+                  </UFormField>
+
+                  <UFormField label="Last name" name="familyName">
+                    <UInput
+                      v-model="state.familyName"
+                      type="text"
+                      placeholder="e.g. Smith"
+                    />
+                  </UFormField>
+                </div>
+
+                <UFormField
+                  label="Additional names"
+                  name="additionalNamesStr"
+                  description="Comma-separated (e.g. middle name, nickname)"
+                >
+                  <UInput
+                    v-model="state.additionalNamesStr"
+                    type="text"
+                    placeholder="e.g. Marie, MJ"
+                  />
+                </UFormField>
+
+                <UFormField
+                  label="Affiliation"
+                  name="affiliation"
+                  description="Institution or organization"
+                >
+                  <UInput
+                    v-model="state.affiliation"
+                    type="text"
+                    placeholder="e.g. University of Example"
+                  />
+                </UFormField>
+
+                <UFormField
+                  label="Home page"
+                  name="homePage"
+                  description="Personal or lab website URL"
+                >
+                  <UInput
+                    v-model="state.homePage"
+                    type="url"
+                    placeholder="https://"
+                  />
+                </UFormField>
+
+                <UFormField
+                  label="Areas of interest"
+                  name="areasOfInterestStr"
+                  description="Comma-separated (e.g. machine learning, open science)"
+                >
+                  <UInput
+                    v-model="state.areasOfInterestStr"
+                    type="text"
+                    placeholder="e.g. machine learning, open science"
+                  />
+                </UFormField>
+
+                <div class="flex items-center gap-4">
+                  <UButton type="submit" :loading="loading" color="primary">
+                    Save changes
+                  </UButton>
+
+                  <p class="text-sm text-gray-500 dark:text-gray-400">
+                    Last updated:
+                    {{
+                      userData?.updated
+                        ? new Date(userData.updated).toLocaleString()
+                        : "—"
+                    }}
+                  </p>
+                </div>
+              </UForm>
+            </UCard>
+
+            <!-- Account info (read-only) -->
+            <UCard>
+              <h2
+                class="mb-4 text-lg font-semibold text-gray-900 dark:text-white"
+              >
+                Account
+              </h2>
+
+              <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Username
+                  </label>
+
+                  <p class="mt-1 text-gray-900 dark:text-white">
+                    {{ userData?.username }}
+                  </p>
+                </div>
+
+                <div>
+                  <label
+                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Account created
+                  </label>
+
+                  <p class="mt-1 text-gray-900 dark:text-white">
+                    {{
+                      userData?.created
+                        ? new Date(userData.created).toLocaleDateString()
+                        : "—"
+                    }}
+                  </p>
+                </div>
+              </div>
+            </UCard>
+
+            <!-- Actions -->
+            <UCard>
+              <h2
+                class="mb-4 text-lg font-semibold text-gray-900 dark:text-white"
+              >
+                Account actions
+              </h2>
+
+              <div class="flex flex-wrap gap-4">
+                <UButton
+                  color="primary"
+                  variant="solid"
+                  label="Change password"
+                  icon="i-heroicons-key"
                 />
-              </UFormField>
 
-              <UFormField label="Last name" name="familyName">
-                <UInput
-                  v-model="state.familyName"
-                  type="text"
-                  placeholder="e.g. Smith"
+                <UButton
+                  color="error"
+                  variant="soft"
+                  label="Delete account"
+                  icon="i-heroicons-trash"
                 />
-              </UFormField>
-            </div>
-
-            <UFormField
-              label="Additional names"
-              name="additionalNamesStr"
-              description="Comma-separated (e.g. middle name, nickname)"
-            >
-              <UInput
-                v-model="state.additionalNamesStr"
-                type="text"
-                placeholder="e.g. Marie, MJ"
-              />
-            </UFormField>
-
-            <UFormField
-              label="Affiliation"
-              name="affiliation"
-              description="Institution or organization"
-            >
-              <UInput
-                v-model="state.affiliation"
-                type="text"
-                placeholder="e.g. University of Example"
-              />
-            </UFormField>
-
-            <UFormField
-              label="Home page"
-              name="homePage"
-              description="Personal or lab website URL"
-            >
-              <UInput
-                v-model="state.homePage"
-                type="url"
-                placeholder="https://"
-              />
-            </UFormField>
-
-            <UFormField
-              label="Areas of interest"
-              name="areasOfInterestStr"
-              description="Comma-separated (e.g. machine learning, open science)"
-            >
-              <UInput
-                v-model="state.areasOfInterestStr"
-                type="text"
-                placeholder="e.g. machine learning, open science"
-              />
-            </UFormField>
-
-            <div class="flex items-center gap-4">
-              <UButton type="submit" :loading="loading" color="primary">
-                Save changes
-              </UButton>
-
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                Last updated:
-                {{
-                  userData?.updated
-                    ? new Date(userData.updated).toLocaleString()
-                    : "—"
-                }}
-              </p>
-            </div>
-          </UForm>
-        </div>
-
-        <!-- Account info (read-only) -->
-        <div class="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-          <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-            Account
-          </h2>
-
-          <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Username
-              </label>
-
-              <p class="mt-1 text-gray-900 dark:text-white">
-                {{ userData?.username }}
-              </p>
-            </div>
-
-            <div>
-              <label
-                class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Account created
-              </label>
-
-              <p class="mt-1 text-gray-900 dark:text-white">
-                {{
-                  userData?.created
-                    ? new Date(userData.created).toLocaleDateString()
-                    : "—"
-                }}
-              </p>
-            </div>
+              </div>
+            </UCard>
           </div>
-        </div>
-
-        <!-- Actions -->
-        <div class="rounded-lg bg-white p-6 shadow-lg dark:bg-gray-800">
-          <h2 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
-            Account actions
-          </h2>
-
-          <div class="flex flex-wrap gap-4">
-            <UButton
-              color="primary"
-              variant="solid"
-              label="Change password"
-              icon="i-heroicons-key"
-            />
-
-            <UButton
-              color="error"
-              variant="soft"
-              label="Delete account"
-              icon="i-heroicons-trash"
-            />
-          </div>
-        </div>
-      </div>
+        </UPageBody>
+      </UPage>
     </UContainer>
   </div>
 </template>

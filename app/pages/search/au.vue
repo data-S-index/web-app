@@ -145,11 +145,15 @@ const getUserAvatarUrl = (user: SearchResult) => {
                     :to="`/au/${result.id}`"
                     class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800"
                   >
-                    <UAvatar
-                      :src="getUserAvatarUrl(result)"
-                      :alt="result.name"
-                      size="xl"
-                    />
+                    <div
+                      class="flex h-full flex-col items-start gap-2 self-start"
+                    >
+                      <UAvatar
+                        :src="getUserAvatarUrl(result)"
+                        :alt="result.name"
+                        size="xl"
+                      />
+                    </div>
 
                     <div class="min-w-0 flex-1">
                       <h3

@@ -11,6 +11,9 @@ export default defineEventHandler(async (event) => {
       givenName: true,
       familyName: true,
       username: true,
+      affiliation: true,
+      homePage: true,
+      areasOfInterest: true,
     },
   });
 
