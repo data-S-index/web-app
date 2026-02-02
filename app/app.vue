@@ -18,7 +18,8 @@ useHead({
 });
 
 useSeoMeta({
-  titleTemplate: "%s - S-Index",
+  titleTemplate: "%s - Scholar Data",
+  description: "Get credit for the data you share",
   twitterCard: "summary_large_image",
 });
 </script>

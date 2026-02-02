@@ -40,6 +40,6 @@ export default defineNuxtConfig({
   },
   site: {
     url: process.env.NUXT_SITE_URL,
-    name: "S-Index",
+    name: "Scholar Data",
   },
 });

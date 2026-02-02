@@ -125,10 +125,11 @@ model Dataset {
     datasetIdentifiers DatasetIdentifier[]
     datasetAuthors     DatasetAuthor[]
 
-    citations    Citation[]
-    mentions     Mention[]
-    fujiScore    FujiScore?
-    datasetTopic DatasetTopic?
+    citations           Citation[]
+    mentions            Mention[]
+    fujiScore           FujiScore?
+    datasetTopic        DatasetTopic?
+    normalizationFactor NormalizationFactor?
 
     datasetClaims                 UserDataset[]
     dindices                      DIndex[]
@@ -260,6 +261,24 @@ model Mention {
     @@unique([datasetId, mentionLink, source])
     @@index([datasetId])
     @@index([mentionedDate])
+}
+
+model NormalizationFactor {
+    datasetId Int     @id
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+
+    ft  Float?
+    ctw Float?
+    mtw Float?
+
+    topicIdUsed      String?
+    yearUsed         Int?
+    topicIdRequested String?
+    yearRequested    Int?
+    usedYearClamp    Boolean?
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
 }
 
 model DIndex {

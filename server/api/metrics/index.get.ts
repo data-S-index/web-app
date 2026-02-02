@@ -51,21 +51,16 @@ monthly AS (
 ),
 
 institutions AS (
-  WITH aff AS (
-    SELECT btrim(affiliation) AS affiliation
-    FROM "DatasetAuthor" da
-    CROSS JOIN LATERAL unnest(da."affiliations") AS affiliation
-  ),
-  counts AS (
-    SELECT affiliation, count(*)::int AS cnt
-    FROM aff
-    WHERE affiliation IS NOT NULL AND affiliation <> ''
-    GROUP BY 1
+  WITH org_counts AS (
+    SELECT ao.name, count(*)::int AS cnt
+    FROM "AutomatedOrganizationDataset" aod
+    JOIN "AutomatedOrganization" ao ON ao.id = aod."automatedOrganizationId"
+    GROUP BY ao.id, ao.name
   ),
   ranked AS (
-    SELECT affiliation, cnt,
+    SELECT name, cnt,
            row_number() OVER (ORDER BY cnt DESC) AS rn
-    FROM counts
+    FROM org_counts
   )
   SELECT jsonb_agg(
     jsonb_build_object('name', name, 'value', value)
@@ -73,7 +68,7 @@ institutions AS (
   ) AS items
   FROM (
     SELECT
-      CASE WHEN rn <= 9 THEN affiliation ELSE 'Other Institutions' END AS name,
+      CASE WHEN rn <= 9 THEN name ELSE 'Other Institutions' END AS name,
       sum(cnt)::int AS value,
       CASE WHEN rn <= 9 THEN 1 ELSE 2 END AS sort_key
     FROM ranked
@@ -82,21 +77,16 @@ institutions AS (
 ),
 
 fields AS (
-  WITH subj AS (
-    SELECT btrim(subject) AS subject
-    FROM "Dataset" d
-    CROSS JOIN LATERAL unnest(d."subjects") AS subject
-  ),
-  counts AS (
-    SELECT subject, count(*)::int AS cnt
-    FROM subj
-    WHERE subject IS NOT NULL AND subject <> ''
+  WITH field_counts AS (
+    SELECT COALESCE(NULLIF(btrim(dt."fieldName"), ''), 'Unknown') AS field_name,
+           count(*)::int AS cnt
+    FROM "DatasetTopic" dt
     GROUP BY 1
   ),
   ranked AS (
-    SELECT subject, cnt,
+    SELECT field_name, cnt,
            row_number() OVER (ORDER BY cnt DESC) AS rn
-    FROM counts
+    FROM field_counts
   )
   SELECT jsonb_agg(
     jsonb_build_object('name', name, 'value', value)
@@ -104,7 +94,7 @@ fields AS (
   ) AS items
   FROM (
     SELECT
-      CASE WHEN rn <= 9 THEN subject ELSE 'Other Fields' END AS name,
+      CASE WHEN rn <= 9 THEN field_name ELSE 'Other Fields' END AS name,
       sum(cnt)::int AS value,
       CASE WHEN rn <= 9 THEN 1 ELSE 2 END AS sort_key
     FROM ranked
@@ -112,47 +102,52 @@ fields AS (
   ) x
 ),
 
+-- Fair score and citation counts from FujiScore + Citation (simple aggregates)
+fair_and_citations AS (
+  SELECT
+    count(DISTINCT d.id)::int AS total_datasets,
+    count(DISTINCT d.id) FILTER (WHERE fs."score" > 70)::int AS high_fair_datasets,
+    count(DISTINCT d.id) FILTER (WHERE c.cnt > 0)::int AS cited_datasets,
+    round(COALESCE(avg(fs."score") FILTER (WHERE fs."score" IS NOT NULL) / 100.0, 0)::numeric, 2) AS average_fair_score_0_1,
+    round(COALESCE(avg(c.cnt) FILTER (WHERE c.cnt > 0), 0)::numeric, 1) AS average_citation_count
+  FROM "Dataset" d
+  LEFT JOIN "FujiScore" fs ON fs."datasetId" = d."id"
+  LEFT JOIN (SELECT "datasetId", count(*)::int AS cnt FROM "Citation" GROUP BY 1) c ON c."datasetId" = d."id"
+),
+
+-- Pre-computed s-index from SIndex table (per author)
+sindex_agg AS (
+  SELECT
+    round(COALESCE(avg("score"), 0)::numeric, 1) AS average_s_index,
+    count(*)::int AS authors_with_s_index
+  FROM "SIndex"
+),
+
+-- Pre-computed d-index from DIndex table (per dataset)
+dindex_agg AS (
+  SELECT
+    round(COALESCE(avg("score"), 0)::numeric, 1) AS average_d_index,
+    count(*)::int AS datasets_with_d_index
+  FROM "DIndex"
+),
+
 sindex AS (
-  WITH per_dataset AS (
-    SELECT
-      d."id",
-      fs."score" AS fuji_score_0_100,
-      COALESCE(c.citation_count, 0)::int AS citation_count
-    FROM "Dataset" d
-    LEFT JOIN "FujiScore" fs ON fs."datasetId" = d."id"
-    LEFT JOIN (
-      SELECT "datasetId", count(*)::int AS citation_count
-      FROM "Citation"
-      GROUP BY 1
-    ) c ON c."datasetId" = d."id"
-  ),
-  s AS (
-    SELECT
-      "id",
-      fuji_score_0_100,
-      citation_count,
-      (COALESCE(fuji_score_0_100, 0) / 100.0) AS fair_score_0_1,
-      (
-        (COALESCE(fuji_score_0_100, 0) / 100.0) * 5.0
-        + (LEAST(citation_count, 20) * 0.25)
-      ) AS s_index
-    FROM per_dataset
-  )
   SELECT jsonb_build_object(
-    'averageFairScore',
-      round(COALESCE(avg(fair_score_0_1) FILTER (WHERE fuji_score_0_100 IS NOT NULL), 0)::numeric, 2),
-    'averageCitationCount',
-      round(COALESCE(avg(citation_count) FILTER (WHERE citation_count > 0), 0)::numeric, 1),
-    'averageSIndex',
-      round(COALESCE(avg(s_index), 0)::numeric, 1),
-    'totalDatasets',
-      count(*)::int,
-    'highFairDatasets',
-      count(*) FILTER (WHERE fuji_score_0_100 > 70)::int,
-    'citedDatasets',
-      count(*) FILTER (WHERE citation_count > 0)::int
+    'averageFairScore', (SELECT average_fair_score_0_1 FROM fair_and_citations),
+    'averageCitationCount', (SELECT average_citation_count FROM fair_and_citations),
+    'averageSIndex', (SELECT average_s_index FROM sindex_agg),
+    'totalDatasets', (SELECT total_datasets FROM fair_and_citations),
+    'highFairDatasets', (SELECT high_fair_datasets FROM fair_and_citations),
+    'citedDatasets', (SELECT cited_datasets FROM fair_and_citations),
+    'authorsWithSIndex', (SELECT authors_with_s_index FROM sindex_agg)
   ) AS obj
-  FROM s
+),
+
+dindex AS (
+  SELECT jsonb_build_object(
+    'averageDIndex', (SELECT average_d_index FROM dindex_agg),
+    'datasetsWithDIndex', (SELECT datasets_with_d_index FROM dindex_agg)
+  ) AS obj
 )
 
 SELECT jsonb_build_object(
@@ -162,7 +157,8 @@ SELECT jsonb_build_object(
   ),
   'institutions', COALESCE((SELECT items FROM institutions), '[]'::jsonb),
   'fields', COALESCE((SELECT items FROM fields), '[]'::jsonb),
-  'sIndexMetrics', (SELECT obj FROM sindex)
+  'sIndexMetrics', (SELECT obj FROM sindex),
+  'dIndexMetrics', (SELECT obj FROM dindex)
 ) AS response;
 `;
 
@@ -177,6 +173,11 @@ SELECT jsonb_build_object(
       totalDatasets: 0,
       highFairDatasets: 0,
       citedDatasets: 0,
+      authorsWithSIndex: 0,
+    },
+    dIndexMetrics: {
+      averageDIndex: 0,
+      datasetsWithDIndex: 0,
     },
   };
 
