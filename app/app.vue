@@ -21,6 +21,9 @@ useSeoMeta({
   titleTemplate: "%s - Scholar Data",
   description: "Get credit for the data you share",
   twitterCard: "summary_large_image",
+  ogUrl: "https://beta.scholardata.io",
+  twitterTitle: "Scholar Data",
+  twitterDescription: "Get credit for the data you share",
 });
 </script>
 
