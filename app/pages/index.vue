@@ -237,5 +237,18 @@ const sectionLinks = ref([
         </div>
       </div>
     </UPageSection>
+
+    <div class="flex flex-col items-center justify-center gap-2">
+      <p>Sample embed: D-Index card (DOI, metrics, view details)</p>
+
+      <iframe
+        src="/embed/d-index?doi=10.13026/kpb9-mt58"
+        width="280"
+        height="220"
+        style="border: 0"
+        loading="lazy"
+        title="Dataset Index embed sample"
+      />
+    </div>
   </section>
 </template>
