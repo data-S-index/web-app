@@ -1,3 +1,5 @@
+import normalizeDoi from "~~/server/utils/doi";
+
 const CACHE_EXPIRATION_SECONDS = 5 * 60; // 5 minutes
 const CACHE_KEY_PREFIX = "v1:datasets:by-doi";
 
