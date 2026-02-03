@@ -13,28 +13,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Normalize DOI (handles encoded values like %2F, full URLs, and case)
-  const rawDoi = decodeURIComponent(doiParam).trim();
-
-  // Strip common DOI URL prefixes if present
-  const lowerRaw = rawDoi.toLowerCase();
-  const DOI_PREFIXES = [
-    "https://doi.org/",
-    "http://doi.org/",
-    "https://dx.doi.org/",
-    "http://dx.doi.org/",
-    "doi.org/",
-    "doi:",
-  ];
-
-  let normalizedDoi = lowerRaw;
-  for (const prefix of DOI_PREFIXES) {
-    if (normalizedDoi.startsWith(prefix)) {
-      normalizedDoi = normalizedDoi.slice(prefix.length);
-      break;
-    }
-  }
-
-  normalizedDoi = normalizedDoi.trim();
+  const normalizedDoi = normalizeDoi(doiParam);
 
   const cacheKey = `${CACHE_KEY_PREFIX}:${normalizedDoi}`;
   const redis = getRedisClient();
