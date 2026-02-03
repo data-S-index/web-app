@@ -17,6 +17,10 @@ function scoreToMessageAndColor(score: number | null | undefined): {
   };
 }
 
+/**
+ * GET /api/v1/shields/data/d-index/{doi}
+ * Returns JSON for Shields.io-style badge (doi, datasetId, dIndexScore, label, message, color, labelColor).
+ */
 export default defineEventHandler(async (event) => {
   const params = event.context.params as
     | { doi?: string | string[] }
