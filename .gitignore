@@ -31,3 +31,6 @@ database.sqlite
 
 # Prisma generated files
 shared/generated/*
+
+# local markdown files
+integrations.md
