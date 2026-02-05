@@ -18,12 +18,6 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
         : "/login",
     active: route.path.startsWith(`/users/${user.value?.id}`),
   },
-
-  {
-    label: "Platform Metrics",
-    to: "/metrics",
-    active: route.path.startsWith("/metrics"),
-  },
   {
     label: "Evaluate Dataset",
     to: "/evaluate",
@@ -55,6 +49,11 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
         active: route.path.startsWith("/search/ao"),
       },
     ],
+  },
+  {
+    label: "Platform Metrics",
+    to: "/metrics",
+    active: route.path.startsWith("/metrics"),
   },
 ]);
 

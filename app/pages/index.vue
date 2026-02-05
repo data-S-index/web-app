@@ -109,56 +109,50 @@ const sectionLinks = ref([
       description="Scholar Data turns reuse into recognition. From FAIRness to citations and attention, everything rolls into one story you can share: your S-Index."
       icon="i-heroicons-sparkles"
       :links="sectionLinks"
-      :features="features"
+      :ui="{ features: 'grid !grid-cols-1' }"
     >
-      <UPageGrid>
-        <UPageCard
-          v-for="(feature, index) in features"
-          :key="index"
-          v-bind="feature"
-        />
-      </UPageGrid>
-
-      <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
-        <div
-          v-for="(feature, index) in features"
-          :key="index"
-          class="flex h-[500px] w-full flex-col gap-4 lg:h-[250px] lg:flex-row"
-        >
-          <CardSpotlight
-            :gradient-color="isDark ? '#4ade80' : '#86efac'"
-            slot-class="flex size-full flex-col justify-between p-6"
+      <template #features>
+        <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+          <div
+            v-for="(feature, index) in features"
+            :key="index"
+            class="flex h-[500px] w-full flex-col gap-4 lg:h-[250px] lg:flex-row"
           >
-            <div class="flex flex-col gap-3">
-              <UIcon
-                :name="feature.icon"
-                class="size-8 shrink-0 text-emerald-400 dark:text-emerald-300"
-              />
-
-              <h3
-                class="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-              >
-                {{ feature.title }}
-              </h3>
-
-              <p
-                class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
-              >
-                {{ feature.description }}
-              </p>
-            </div>
-
-            <NuxtLink
-              v-if="feature.to"
-              :to="feature.to"
-              class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200"
+            <CardSpotlight
+              :gradient-color="isDark ? '#4ade80' : '#86efac'"
+              slot-class="flex size-full flex-col justify-between p-6"
             >
-              Learn more
-              <UIcon name="i-heroicons-arrow-right" class="size-4" />
-            </NuxtLink>
-          </CardSpotlight>
+              <div class="flex flex-col gap-3">
+                <UIcon
+                  :name="feature.icon"
+                  class="size-8 shrink-0 text-emerald-400 dark:text-emerald-300"
+                />
+
+                <h3
+                  class="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100"
+                >
+                  {{ feature.title }}
+                </h3>
+
+                <p
+                  class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
+                >
+                  {{ feature.description }}
+                </p>
+              </div>
+
+              <NuxtLink
+                v-if="feature.to"
+                :to="feature.to"
+                class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200"
+              >
+                Learn more
+                <UIcon name="i-heroicons-arrow-right" class="size-4" />
+              </NuxtLink>
+            </CardSpotlight>
+          </div>
         </div>
-      </div>
+      </template>
     </UPageSection>
 
     <UPageSection
@@ -238,14 +232,13 @@ const sectionLinks = ref([
       </div>
     </UPageSection>
 
-    <div class="flex flex-col items-center justify-center gap-2">
+    <div class="flex flex-col items-center justify-center">
       <p>Sample embed: D-Index card (DOI, metrics, view details)</p>
 
       <iframe
         src="/embed/d-index?doi=10.13026/kpb9-mt58"
-        width="280"
-        height="220"
-        style="border: 0"
+        width="245"
+        height="200"
         loading="lazy"
         title="Dataset Index embed sample"
       />
