@@ -502,7 +502,7 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{ Math.round(sindex) }}
+              {{ sindex.toFixed(1) }}
             </div>
 
             <p class="mt-2 text-sm">Sum of D-Index scores for all datasets</p>
@@ -514,7 +514,7 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
-              {{ Math.round(sindex / datasetCount) }}
+              {{ datasetCount ? (sindex / datasetCount).toFixed(1) : "0.0" }}
             </div>
 
             <p class="mt-2 text-sm">Average D-Index score per dataset</p>

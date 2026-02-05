@@ -35,7 +35,7 @@ const sindexChartOption = computed<ECOption>(() => ({
           }
 
           return typeof p.value === "number"
-            ? p.value.toFixed(0)
+            ? p.value.toFixed(1)
             : String(p.value);
         },
       },
@@ -57,7 +57,7 @@ const sindexChartOption = computed<ECOption>(() => ({
         ? data[0]?.value[1]
         : data[0]?.value;
 
-      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} S-Index: <strong>${value?.toFixed(0)}</strong>`;
+      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} S-Index: <strong>${value?.toFixed(1)}</strong>`;
     },
   },
   grid: {

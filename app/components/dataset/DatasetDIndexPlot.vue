@@ -84,7 +84,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
             return `${month}/${year}`;
           }
 
-          return params.value.toFixed(2);
+          return params.value.toFixed(1);
         },
       },
     },
@@ -109,7 +109,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
         ? data[0]?.value[1]
         : data[0]?.value;
 
-      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} D-Index: <strong>${value?.toFixed(2)}</strong>`;
+      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} D-Index: <strong>${value?.toFixed(1)}</strong>`;
     },
   },
   grid: {

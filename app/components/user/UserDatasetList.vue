@@ -247,7 +247,7 @@ const onRemove = (datasetId: number) => {
               variant="subtle"
               :label="
                 item.dataset.dindices?.[0]?.score
-                  ? `${(item.dataset.dindices?.[0]?.score || 0).toFixed(2)} D-Index Score`
+                  ? `${(item.dataset.dindices?.[0]?.score || 0).toFixed(1)} D-Index Score`
                   : 'D-Index Score processing...'
               "
               :icon="

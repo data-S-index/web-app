@@ -194,10 +194,10 @@ const getAuthorTooltipText = (author: Author): string => {
                         class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
                       >
                         {{
-                          Math.round(
+                          (
                             dataset.dindices[dataset.dindices.length - 1]
-                              ?.score || 0,
-                          )
+                              ?.score || 0
+                          ).toFixed(1)
                         }}
                       </div>
                     </div>
