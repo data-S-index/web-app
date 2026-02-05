@@ -3,8 +3,12 @@ definePageMeta({
   layout: false,
 });
 
+// Force light mode for embed (e.g. iframes)
+const colorMode = useColorMode();
+colorMode.preference = "light";
+
 useHead({
-  htmlAttrs: { class: "embed-iframe" },
+  htmlAttrs: { class: "embed-iframe light" },
   bodyAttrs: { class: "embed-iframe" },
   style: [
     {
@@ -13,6 +17,9 @@ useHead({
           margin: 0;
           padding: 0;
           overflow: hidden;
+        }
+        html.embed-iframe {
+          color-scheme: light;
         }
       `,
     },
