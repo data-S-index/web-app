@@ -116,6 +116,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${userData?.id}`"
                 alt="User avatar"
                 size="3xl"
+                class="squircle rounded-none"
               />
 
               <div class="flex w-full min-w-0 flex-1 flex-col gap-1">

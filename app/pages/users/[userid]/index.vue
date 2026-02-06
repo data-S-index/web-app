@@ -451,7 +451,12 @@ const handleDatasetsAdded = () => {
       >
         <template #title>
           <div class="flex min-w-full gap-4">
-            <UAvatar :src="avatarUrl" :alt="fullName" size="3xl" />
+            <UAvatar
+              :src="avatarUrl"
+              :alt="fullName"
+              size="3xl"
+              class="squircle mt-1 rounded-none"
+            />
 
             <div class="flex w-full min-w-0 flex-1 flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">

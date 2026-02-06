@@ -31,9 +31,7 @@ const uiClasses = computed(() => ({
         class="flex items-center justify-between p-4"
         @click="toggleCollapse"
       >
-        <h3
-          class="text-primary-600 dark:text-primary-400 text-lg font-semibold"
-        >
+        <h3 class="font-semibold">
           {{ title }}
         </h3>
 

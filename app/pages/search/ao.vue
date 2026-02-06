@@ -155,6 +155,7 @@ const getOrgAvatarUrl = (org: SearchResult) => {
                       :src="getOrgAvatarUrl(result)"
                       :alt="result.name"
                       size="xl"
+                      class="squircle rounded-none"
                     />
 
                     <div class="min-w-0 flex-1">

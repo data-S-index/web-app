@@ -96,7 +96,7 @@ const footerRightItems: NavigationMenuItem[] = [
                 <UAvatar
                   :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.id}`"
                   :alt="user?.username"
-                  class="cursor-pointer"
+                  class="squircle cursor-pointer rounded-none"
                 />
               </UTooltip>
             </NuxtLink>

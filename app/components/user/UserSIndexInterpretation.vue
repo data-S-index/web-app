@@ -6,11 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <UCard class="mb-6">
-    <template #header>
-      <h3 class="text-lg font-semibold">S-Index Interpretation</h3>
-    </template>
-
+  <CardCollapsibleContent title="S-Index Interpretation" class="mb-6">
     <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
       <p>
         The <strong>S-Index</strong> (Sharing Index) is a comprehensive metric
@@ -46,5 +42,5 @@ defineProps<{
         D-Index scores)
       </p>
     </div>
-  </UCard>
+  </CardCollapsibleContent>
 </template>

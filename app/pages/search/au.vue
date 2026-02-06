@@ -156,6 +156,7 @@ const getUserAvatarUrl = (user: SearchResult) => {
                         :src="getUserAvatarUrl(result)"
                         :alt="result.name"
                         size="xl"
+                        class="squircle rounded-none"
                       />
                     </div>
 
