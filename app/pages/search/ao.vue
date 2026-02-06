@@ -14,6 +14,8 @@ type SearchResult = {
   datasetCount: number;
 };
 
+const formatter = Intl.NumberFormat("en", { notation: "compact" });
+
 const toast = useToast();
 const searchTerm = ref("");
 const searchLoading = ref(false);
@@ -26,22 +28,17 @@ const hasSearched = ref(false);
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: "01KGDHY8FBQFCS7J79722F677P",
+    id: "01KGS1CE185QK2BGHPFXXSS2XK",
     name: "National Institute for Fusion Science",
     datasetCount: 16350783,
   },
   {
-    id: "01KGDHY8WF8W3JFC1HTJDMSMBR",
-    name: "National Institute for Fusion Science (NIFS)",
-    datasetCount: 7038170,
-  },
-  {
-    id: "01KGDHY8D3KCFF6WP9SPDR37J7",
+    id: "01KGS1CDZ8TGFXKE7YEPNBSS6G",
     name: "Leibniz Institute DSMZ - German Collection of Microorganisms and Cell Cultures",
     datasetCount: 460822,
   },
   {
-    id: "01KGDHY7JQKC2TCTGP8P4JQX8A",
+    id: "01KGS1CD8PSJQ8TYAEX0HF1QX6",
     name: "Pacific Northwest National Laboratory",
     datasetCount: 444723,
   },
@@ -51,7 +48,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 406437,
   },
   {
-    id: "01KGDHY7HWZ1EG4XHRF3R3RF3J",
+    id: "01KGS1CD7VNEA3WMJGBT6M526P",
     name: "California Institute of Technology",
     datasetCount: 47303,
   },
@@ -222,7 +219,7 @@ const getOrgAvatarUrl = (org: SearchResult) => {
                     <p
                       class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400"
                     >
-                      {{ result.datasetCount }} dataset{{
+                      {{ formatter.format(result.datasetCount) }} dataset{{
                         result.datasetCount === 1 ? "" : "s"
                       }}
                     </p>
@@ -296,7 +293,7 @@ const getOrgAvatarUrl = (org: SearchResult) => {
                       <p
                         class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400"
                       >
-                        {{ result.datasetCount }} dataset{{
+                        {{ formatter.format(result.datasetCount) }} dataset{{
                           result.datasetCount === 1 ? "" : "s"
                         }}
                       </p>
