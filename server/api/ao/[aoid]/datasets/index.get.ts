@@ -10,10 +10,13 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const orgDatasets = await prisma.automatedOrganizationDataset.findMany({
-    where: {
-      automatedOrganizationId: aoid,
-    },
+  const TAKE = 500;
+
+  // 1) Only fetch the first 500 datasets (the part you actually return)
+  const datasets = await prisma.automatedOrganizationDataset.findMany({
+    where: { automatedOrganizationId: aoid },
+    take: TAKE,
+    orderBy: { created: "desc" },
     include: {
       dataset: {
         include: {
@@ -44,13 +47,9 @@ export default defineEventHandler(async (event) => {
             },
           },
           dindices: {
-            select: {
-              score: true,
-              created: true,
-            },
-            orderBy: {
-              created: "desc",
-            },
+            select: { score: true, created: true },
+            orderBy: { created: "desc" },
+            take: 1, // IMPORTANT: only latest
           },
           datasetAuthors: {
             select: {
@@ -65,5 +64,46 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  return orgDatasets;
+  // 2) Aggregates in DB (one query)
+  // - totalDatasets
+  // - avgFairScore (avg fuji score across all org datasets)
+  // - totalCitations (count citations across all org datasets)
+  // - currentSIndex (sum of latest dindex per dataset across all org datasets)
+  //
+  // This is easiest with raw SQL because of "latest dindex per dataset".
+  const [agg] = await prisma.$queryRaw<
+    Array<{
+      totalDatasets: bigint;
+      averageFairScore: number | null;
+      totalCitations: bigint;
+      currentSIndex: number | null;
+    }>
+  >`
+    WITH org_ds AS (
+      SELECT aod."datasetId"
+      FROM "AutomatedOrganizationDataset" aod
+      WHERE aod."automatedOrganizationId" = ${aoid}
+    ),
+    latest_d AS (
+      SELECT DISTINCT ON (d."datasetId")
+        d."datasetId",
+        d."score"
+      FROM "DIndex" d
+      JOIN org_ds o ON o."datasetId" = d."datasetId"
+      ORDER BY d."datasetId", d."created" DESC
+    )
+    SELECT
+      (SELECT COUNT(*) FROM org_ds) AS "totalDatasets",
+      (SELECT AVG(fs."score") FROM "FujiScore" fs JOIN org_ds o ON o."datasetId" = fs."datasetId") AS "averageFairScore",
+      (SELECT COUNT(*) FROM "Citation" c JOIN org_ds o ON o."datasetId" = c."datasetId") AS "totalCitations",
+      (SELECT COALESCE(SUM(ld."score"), 0) FROM latest_d ld) AS "currentSIndex"
+  `;
+
+  return {
+    datasets,
+    totalDatasets: Number(agg?.totalDatasets ?? 0n),
+    currentSIndex: Number(agg?.currentSIndex ?? 0),
+    averageFairScore: agg?.averageFairScore ?? 0,
+    totalCitations: Number(agg?.totalCitations ?? 0n),
+  };
 });

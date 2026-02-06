@@ -17,6 +17,14 @@ interface OrgDatasetItem {
   };
 }
 
+interface OrgDatasetsResponse {
+  datasets: OrgDatasetItem[];
+  totalDatasets: number;
+  currentSIndex: number;
+  averageFairScore: number;
+  totalCitations: number;
+}
+
 const route = useRoute();
 const toast = useToast();
 
@@ -62,76 +70,50 @@ useSeoMeta({
   description: "View this organization's profile and datasets on Scholar Data.",
 });
 
-// Computed metrics for the 6 cards
-const sindex = computed(() => {
-  if (!orgData.value) return 0;
+const response = computed(
+  () => (orgData.value as OrgDatasetsResponse | null) ?? null,
+);
+const datasets = computed(() => response.value?.datasets ?? []);
 
-  return (orgData.value as OrgDatasetItem[]).reduce(
-    (sum: number, item: OrgDatasetItem) =>
-      sum + (item.dataset.dindices?.[0]?.score || 0),
-    0,
-  );
-});
+// Computed metrics for the 6 cards (use server values where provided)
+const sindex = computed(() => response.value?.currentSIndex ?? 0);
 
-const datasetCount = computed(() => {
-  return orgData.value?.length || 0;
-});
+const datasetCount = computed(() => response.value?.totalDatasets ?? 0);
 
-const totalCitations = computed(() => {
-  if (!orgData.value) return 0;
-
-  return (orgData.value as OrgDatasetItem[]).reduce(
-    (sum: number, item: OrgDatasetItem) => sum + item.dataset.citations.length,
-    0,
-  );
-});
+const totalCitations = computed(() => response.value?.totalCitations ?? 0);
 
 const totalMentions = computed(() => {
-  if (!orgData.value) return 0;
+  const list = datasets.value;
+  if (!list.length) return 0;
 
-  return (orgData.value as OrgDatasetItem[]).reduce(
+  return list.reduce(
     (sum: number, item: OrgDatasetItem) => sum + item.dataset.mentions.length,
     0,
   );
 });
 
-const averageFairScore = computed(() => {
-  if (!orgData.value) return 0;
-
-  const datasetsWithFairScore = (orgData.value as OrgDatasetItem[]).filter(
-    (item: OrgDatasetItem) =>
-      item.dataset.fujiScore?.score !== null &&
-      item.dataset.fujiScore?.score !== undefined,
-  );
-  if (datasetsWithFairScore.length === 0) return 0;
-
-  const sum = datasetsWithFairScore.reduce(
-    (sum: number, item: OrgDatasetItem) =>
-      sum + (item.dataset.fujiScore?.score || 0),
-    0,
-  );
-
-  return sum / datasetsWithFairScore.length;
-});
+const averageFairScore = computed(() => response.value?.averageFairScore ?? 0);
 
 // S-index over time (aggregated across all datasets)
 const sindexOverTime = computed(() => {
-  if (!orgData.value)
+  const list = datasets.value;
+  if (!list.length)
     return { dates: [], scores: [], earliestDate: null, endDate: null };
 
-  const datasets = orgData.value as OrgDatasetItem[];
   const allDIndices: Array<{ date: Date; score: number; datasetId: number }> =
     [];
 
-  datasets.forEach((item) => {
+  list.forEach((item: OrgDatasetItem) => {
     if (item.dataset.dindices && item.dataset.dindices.length > 0) {
-      item.dataset.dindices.forEach((dindex) => {
-        allDIndices.push({
-          date: new Date(dindex.created),
-          score: dindex.score,
-          datasetId: item.datasetId,
-        });
-      });
+      item.dataset.dindices.forEach(
+        (dindex: { created: string; score: number }) => {
+          allDIndices.push({
+            date: new Date(dindex.created),
+            score: dindex.score,
+            datasetId: item.datasetId,
+          });
+        },
+      );
     }
   });
 
@@ -181,7 +163,8 @@ const sindexOverTime = computed(() => {
 
 // Cumulative citations (raw and weighted) across all datasets
 const cumulativeCitations = computed(() => {
-  if (!orgData.value) {
+  const list = datasets.value;
+  if (!list.length) {
     return {
       dates: [],
       rawValues: [],
@@ -190,11 +173,9 @@ const cumulativeCitations = computed(() => {
       endDate: null,
     };
   }
-
-  const datasets = orgData.value as OrgDatasetItem[];
   const allCitations: Array<{ date: Date; weight: number }> = [];
 
-  datasets.forEach((item) => {
+  list.forEach((item) => {
     if (item.dataset.citations && Array.isArray(item.dataset.citations)) {
       (
         item.dataset.citations as Array<{
@@ -265,7 +246,8 @@ const cumulativeCitations = computed(() => {
 
 // Cumulative mentions (raw and weighted) across all datasets
 const cumulativeMentions = computed(() => {
-  if (!orgData.value) {
+  const list = datasets.value;
+  if (!list.length) {
     return {
       dates: [],
       rawValues: [],
@@ -275,10 +257,9 @@ const cumulativeMentions = computed(() => {
     };
   }
 
-  const datasets = orgData.value as OrgDatasetItem[];
   const allMentions: Array<{ date: Date; weight: number }> = [];
 
-  datasets.forEach((item) => {
+  list.forEach((item) => {
     if (item.dataset.mentions && Array.isArray(item.dataset.mentions)) {
       (
         item.dataset.mentions as Array<{
@@ -408,18 +389,6 @@ const cumulativeMentions = computed(() => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Average FAIR Score</h3>
-            </template>
-
-            <div class="text-3xl font-bold text-pink-500">
-              {{ averageFairScore.toFixed(1) }}%
-            </div>
-
-            <p class="mt-2 text-sm">Average FAIR Score per dataset</p>
-          </UCard>
-
-          <UCard>
-            <template #header>
               <h3 class="text-lg font-semibold">Total Datasets</h3>
             </template>
 
@@ -428,6 +397,18 @@ const cumulativeMentions = computed(() => {
             </div>
 
             <p class="mt-2 text-sm">Total datasets in this organization</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Average FAIR Score</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-500">
+              {{ averageFairScore.toFixed(1) }}%
+            </div>
+
+            <p class="mt-2 text-sm">Average FAIR Score per dataset</p>
           </UCard>
 
           <UCard>
@@ -471,7 +452,16 @@ const cumulativeMentions = computed(() => {
 
         <h2 class="text-2xl font-bold">Datasets</h2>
 
-        <UserDatasetList :items="orgData" />
+        <UAlert
+          v-if="datasets.length < datasetCount"
+          color="warning"
+          variant="solid"
+          icon="material-symbols:warning"
+          title="Limited datasets"
+          description="Only the first 500 datasets are displayed."
+        />
+
+        <UserDatasetList :items="datasets" />
       </UPageBody>
 
       <UPageBody v-else-if="orgError">

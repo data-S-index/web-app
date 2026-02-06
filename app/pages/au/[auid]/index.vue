@@ -17,6 +17,14 @@ interface AuthorDatasetItem {
   };
 }
 
+interface AuthorDatasetsResponse {
+  datasets: AuthorDatasetItem[];
+  totalDatasets: number;
+  currentSIndex: number;
+  averageFairScore: number;
+  totalCitations: number;
+}
+
 const route = useRoute();
 const toast = useToast();
 
@@ -62,72 +70,42 @@ useSeoMeta({
   description: "View this researcher's profile and datasets on Scholar Data.",
 });
 
-// Computed metrics for the 6 cards
-const sindex = computed(() => {
-  if (!authorData.value) return 0;
+const response = computed(
+  () => (authorData.value as AuthorDatasetsResponse | null) ?? null,
+);
+const datasets = computed(() => response.value?.datasets ?? []);
 
-  return (authorData.value as AuthorDatasetItem[]).reduce(
-    (sum: number, item: AuthorDatasetItem) =>
-      sum + (item.dataset.dindices?.[0]?.score || 0),
-    0,
-  );
-});
+// Computed metrics for the 6 cards (use server values where provided)
+const sindex = computed(() => response.value?.currentSIndex ?? 0);
 
-const datasetCount = computed(() => {
-  return authorData.value?.length || 0;
-});
+const datasetCount = computed(() => response.value?.totalDatasets ?? 0);
 
-const totalCitations = computed(() => {
-  if (!authorData.value) return 0;
-
-  return (authorData.value as AuthorDatasetItem[]).reduce(
-    (sum: number, item: AuthorDatasetItem) =>
-      sum + item.dataset.citations.length,
-    0,
-  );
-});
+const totalCitations = computed(() => response.value?.totalCitations ?? 0);
 
 const totalMentions = computed(() => {
-  if (!authorData.value) return 0;
+  const list = datasets.value;
+  if (!list.length) return 0;
 
-  return (authorData.value as AuthorDatasetItem[]).reduce(
+  return list.reduce(
     (sum: number, item: AuthorDatasetItem) =>
       sum + item.dataset.mentions.length,
     0,
   );
 });
 
-const averageFairScore = computed(() => {
-  if (!authorData.value) return 0;
-
-  const datasetsWithFairScore = (
-    authorData.value as AuthorDatasetItem[]
-  ).filter(
-    (item: AuthorDatasetItem) =>
-      item.dataset.fujiScore?.score !== null &&
-      item.dataset.fujiScore?.score !== undefined,
-  );
-  if (datasetsWithFairScore.length === 0) return 0;
-
-  const sum = datasetsWithFairScore.reduce(
-    (sum: number, item: AuthorDatasetItem) =>
-      sum + (item.dataset.fujiScore?.score || 0),
-    0,
-  );
-
-  return sum / datasetsWithFairScore.length;
-});
+const averageFairScore = computed(() => response.value?.averageFairScore ?? 0);
 
 // S-index over time (aggregated across all datasets)
 const sindexOverTime = computed(() => {
-  if (!authorData.value)
+  const list = datasets.value;
+  if (!list.length)
     return { dates: [], scores: [], earliestDate: null, endDate: null };
 
-  const datasets = authorData.value as AuthorDatasetItem[];
+  const listDatasets = list;
   const allDIndices: Array<{ date: Date; score: number; datasetId: number }> =
     [];
 
-  datasets.forEach((item) => {
+  listDatasets.forEach((item) => {
     if (item.dataset.dindices && item.dataset.dindices.length > 0) {
       item.dataset.dindices.forEach((dindex) => {
         allDIndices.push({
@@ -160,13 +138,13 @@ const sindexOverTime = computed(() => {
       { score: number; date: Date }
     >();
 
-    allDIndices.forEach((dindex) => {
-      if (dindex.date <= currentDate) {
-        const existing = datasetLatestDIndex.get(dindex.datasetId);
-        if (!existing || dindex.date > existing.date) {
-          datasetLatestDIndex.set(dindex.datasetId, {
-            score: dindex.score,
-            date: dindex.date,
+    allDIndices.forEach((d) => {
+      if (d.date <= currentDate) {
+        const existing = datasetLatestDIndex.get(d.datasetId);
+        if (!existing || d.date > existing.date) {
+          datasetLatestDIndex.set(d.datasetId, {
+            score: d.score,
+            date: d.date,
           });
         }
       }
@@ -185,7 +163,8 @@ const sindexOverTime = computed(() => {
 
 // Cumulative citations (raw and weighted) across all datasets
 const cumulativeCitations = computed(() => {
-  if (!authorData.value) {
+  const list = datasets.value;
+  if (!list.length) {
     return {
       dates: [],
       rawValues: [],
@@ -194,11 +173,9 @@ const cumulativeCitations = computed(() => {
       endDate: null,
     };
   }
-
-  const datasets = authorData.value as AuthorDatasetItem[];
   const allCitations: Array<{ date: Date; weight: number }> = [];
 
-  datasets.forEach((item) => {
+  list.forEach((item) => {
     if (item.dataset.citations && Array.isArray(item.dataset.citations)) {
       (
         item.dataset.citations as Array<{
@@ -269,7 +246,8 @@ const cumulativeCitations = computed(() => {
 
 // Cumulative mentions (raw and weighted) across all datasets
 const cumulativeMentions = computed(() => {
-  if (!authorData.value) {
+  const list = datasets.value;
+  if (!list.length) {
     return {
       dates: [],
       rawValues: [],
@@ -279,10 +257,9 @@ const cumulativeMentions = computed(() => {
     };
   }
 
-  const datasets = authorData.value as AuthorDatasetItem[];
   const allMentions: Array<{ date: Date; weight: number }> = [];
 
-  datasets.forEach((item) => {
+  list.forEach((item) => {
     if (item.dataset.mentions && Array.isArray(item.dataset.mentions)) {
       (
         item.dataset.mentions as Array<{
@@ -504,7 +481,16 @@ const cumulativeMentions = computed(() => {
 
         <h2 class="text-2xl font-bold">Datasets</h2>
 
-        <UserDatasetList :items="authorData" />
+        <UAlert
+          v-if="datasets.length < datasetCount"
+          color="warning"
+          variant="solid"
+          icon="material-symbols:warning"
+          title="Limited datasets"
+          description="Only the first 500 datasets are displayed."
+        />
+
+        <UserDatasetList :items="datasets" />
       </UPageBody>
 
       <UPageBody v-else-if="authorError">
