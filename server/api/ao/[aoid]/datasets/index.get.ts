@@ -1,4 +1,8 @@
 import prisma from "../../../../utils/prisma";
+import { getRedisClient } from "../../../../utils/redis";
+
+const CACHE_TTL_SECONDS = 86400; // 1 day
+const CACHE_KEY_PREFIX = "ao:datasets";
 
 export default defineEventHandler(async (event) => {
   const { aoid } = event.context.params as { aoid: string };
@@ -8,6 +12,15 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: "Organization ID is required",
     });
+  }
+
+  const cacheKey = `${CACHE_KEY_PREFIX}:${aoid}`;
+  const redis = getRedisClient();
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    setHeader(event, "X-Cache", "HIT");
+
+    return JSON.parse(cached);
   }
 
   const TAKE = 500;
@@ -99,11 +112,15 @@ export default defineEventHandler(async (event) => {
       (SELECT COALESCE(SUM(ld."score"), 0) FROM latest_d ld) AS "currentSIndex"
   `;
 
-  return {
+  const payload = {
     datasets,
     totalDatasets: Number(agg?.totalDatasets ?? 0n),
     currentSIndex: Number(agg?.currentSIndex ?? 0),
     averageFairScore: agg?.averageFairScore ?? 0,
     totalCitations: Number(agg?.totalCitations ?? 0n),
   };
+  await redis.setex(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(payload));
+  setHeader(event, "X-Cache", "MISS");
+
+  return payload;
 });
