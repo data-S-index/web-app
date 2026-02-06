@@ -9,6 +9,8 @@ defineOgImageComponent("Pergel", {
   headline: "Integrations",
 });
 
+const spinner = ref(false);
+
 const config = useRuntimeConfig().public;
 const baseUrl = computed(
   () =>
@@ -26,6 +28,10 @@ function normalizeDoiInput(value: string): string {
 
 function generate() {
   appliedDoi.value = normalizeDoiInput(doiInput.value);
+  spinner.value = true;
+  setTimeout(() => {
+    spinner.value = false;
+  }, 1000);
 }
 
 const embedUrl = computed(
@@ -122,10 +128,10 @@ const embedSnippet = computed(
             />
 
             <UButton
-              color="primary"
+              :loading="spinner"
               size="lg"
               class="shrink-0"
-              trailing-icon="i-heroicons-arrow-path"
+              icon="oui:generate"
               :disabled="!doiInput"
               @click="generate"
             >

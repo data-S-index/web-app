@@ -445,18 +445,6 @@ const cumulativeMentions = computed(() => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Average FAIR Score</h3>
-            </template>
-
-            <div class="text-3xl font-bold text-pink-500">
-              {{ averageFairScore.toFixed(1) }}%
-            </div>
-
-            <p class="mt-2 text-sm">Average FAIR Score per dataset</p>
-          </UCard>
-
-          <UCard>
-            <template #header>
               <h3 class="text-lg font-semibold">Total Datasets</h3>
             </template>
 
@@ -465,6 +453,18 @@ const cumulativeMentions = computed(() => {
             </div>
 
             <p class="mt-2 text-sm">Total datasets for this author</p>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h3 class="text-lg font-semibold">Average FAIR Score</h3>
+            </template>
+
+            <div class="text-3xl font-bold text-pink-500">
+              {{ averageFairScore.toFixed(1) }}%
+            </div>
+
+            <p class="mt-2 text-sm">Average FAIR Score per dataset</p>
           </UCard>
 
           <UCard>

@@ -156,9 +156,7 @@ const mentionsChartOption = computed<ECOption>(() => ({
 
     <ClientOnly>
       <div
-        v-if="
-          cumulativeMentions.dates && cumulativeMentions.dates.length > 0
-        "
+        v-if="cumulativeMentions.dates && cumulativeMentions.dates.length > 0"
         style="height: 300px"
         class="relative"
       >
@@ -172,7 +170,7 @@ const mentionsChartOption = computed<ECOption>(() => ({
       >
         <UAlert
           title="No mention data available"
-          description="Mention data will appear as your datasets are mentioned in various sources."
+          description="Mentions will appear here as datasets are mentioned in various sources within our search engine."
           color="warning"
           variant="subtle"
         />

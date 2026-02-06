@@ -151,17 +151,12 @@ const citationsChartOption = computed<ECOption>(() => ({
 <template>
   <UCard class="mb-6">
     <template #header>
-      <h3 class="text-lg font-semibold">
-        Cumulative Citations Over Time
-      </h3>
+      <h3 class="text-lg font-semibold">Cumulative Citations Over Time</h3>
     </template>
 
     <ClientOnly>
       <div
-        v-if="
-          cumulativeCitations.dates &&
-          cumulativeCitations.dates.length > 0
-        "
+        v-if="cumulativeCitations.dates && cumulativeCitations.dates.length > 0"
         style="height: 300px"
         class="relative"
       >
@@ -175,7 +170,7 @@ const citationsChartOption = computed<ECOption>(() => ({
       >
         <UAlert
           title="No citation data available"
-          description="Citation data will appear as your datasets receive citations."
+          description="Citations will appear here as datasets receive citations and are picked up by our search engine."
           color="warning"
           variant="subtle"
         />
