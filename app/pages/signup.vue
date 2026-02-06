@@ -3,7 +3,6 @@ import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 import { generateUsername } from "unique-username-generator";
 
-const config = useRuntimeConfig();
 const { loggedIn, user } = useUserSession();
 
 if (loggedIn.value) {
@@ -65,7 +64,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         icon: "material-symbols:mail-outline",
       });
 
-      navigateTo("/login");
+      navigateTo({ path: "/login", query: { username: event.data.username } });
     })
     .catch((error) => {
       console.error(error.data);

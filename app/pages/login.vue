@@ -42,7 +42,7 @@ const schema = z.object({
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
-  username: "lonesomevermouth",
+  username: (routeQueryParams.username as string) ?? "lonesomevermouth",
   password: "12345678",
 });
 

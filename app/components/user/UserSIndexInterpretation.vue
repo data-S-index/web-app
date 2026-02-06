@@ -13,7 +13,7 @@ defineProps<{
 
     <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
       <p>
-        The <strong>S-Index</strong> (Scholar Index) is a comprehensive metric
+        The <strong>S-Index</strong> (Sharing Index) is a comprehensive metric
         that represents the cumulative impact of all your datasets. It is
         calculated as the sum of D-Index scores across all your claimed
         datasets.
@@ -31,7 +31,7 @@ defineProps<{
 
         <li>
           The S-Index grows as you add more datasets or as existing datasets
-          gain more citations and improve their FAIR scores
+          gain more citations and mentions
         </li>
 
         <li>
