@@ -211,8 +211,8 @@ model Citation {
     mdc      Boolean @default(false)
     openAlex Boolean @default(false)
 
-    citedDate      DateTime?
-    citationWeight Float     @default(1.0) // The weight of the citation (1.0 = 100% of the citation impact)
+    citedDate      DateTime
+    citationWeight Float    @default(1.0) // The weight of the citation (1.0 = 100% of the citation impact)
 
     created DateTime @default(now())
     updated DateTime @updatedAt
@@ -252,8 +252,8 @@ model Mention {
     mentionLink String
     source      String[] // github, linkedin, twitter, software heritage, etc.
 
-    mentionedDate DateTime?
-    mentionWeight Float     @default(1.0) // The weight of the mention (1.0 = 100% of the mention impact)
+    mentionedDate DateTime
+    mentionWeight Float    @default(1.0) // The weight of the mention (1.0 = 100% of the mention impact)
 
     created DateTime @default(now())
     updated DateTime @updatedAt
