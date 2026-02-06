@@ -89,7 +89,7 @@ onMounted(() => {
 
 <template>
   <UCard class="w-full max-w-sm bg-white/75 backdrop-blur dark:bg-white/5">
-    <div class="w-full max-w-sm px-4 py-5 sm:p-6">
+    <div class="w-full max-w-sm p-1">
       <div class="flex flex-col items-center justify-center">
         <h2 class="my-1 text-2xl font-bold">Create an account</h2>
 
@@ -107,10 +107,18 @@ onMounted(() => {
         class="mt-6 space-y-4"
         @submit="onSubmit"
       >
+        <UAlert
+          color="warning"
+          variant="subtle"
+          icon="i-heroicons-exclamation-triangle-20-solid"
+          title="Accounts generated on this platform are temporary and may be deleted
+          at any time. All interactions are anonymous."
+        />
+
         <UFormField
           label="Username"
           name="username"
-          description="Your username is automatically generated."
+          description="Your username was automatically generated."
         >
           <UInput v-model="state.username" type="text" />
         </UFormField>
@@ -142,18 +150,13 @@ onMounted(() => {
       </UForm>
     </div>
 
-    <template #footer>
+    <!-- <template #footer>
       <p class="text-center text-sm">
-        Accounts generated on this platform are temporary and may be deleted at
-        any time.
-      </p>
-
-      <p class="hidden text-center text-sm">
         By signing up, you agree to our
         <NuxtLink to="/terms" class="text-primary-500 text-sm font-medium">
           Terms of Service</NuxtLink
         >.
       </p>
-    </template>
+    </template> -->
   </UCard>
 </template>

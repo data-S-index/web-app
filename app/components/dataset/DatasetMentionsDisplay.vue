@@ -1,7 +1,12 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 const props = defineProps<{
-  mentions: any[];
+  mentions: Array<{
+    mentionLink: string;
+    source: string[];
+    mentionedDate: string;
+    mentionWeight: number;
+  }>;
 }>();
 
 const mentionsCount = computed(() => props.mentions?.length || 0);

@@ -1,6 +1,6 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-const props = defineProps<{
+defineProps<{
   normalizationFactors: any;
 }>();
 </script>

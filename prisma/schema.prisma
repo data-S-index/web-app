@@ -250,7 +250,7 @@ model Mention {
     datasetId Int
 
     mentionLink String
-    source      String // github, linkedin, twitter, software heritage, etc.
+    source      String[] // github, linkedin, twitter, software heritage, etc.
 
     mentionedDate DateTime?
     mentionWeight Float     @default(1.0) // The weight of the mention (1.0 = 100% of the mention impact)

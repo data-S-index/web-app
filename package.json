@@ -15,7 +15,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:migrate:dev": "prisma migrate dev --preview-feature",
     "prisma:studio": "prisma studio",
-    "prisma:db:push": "prisma db push",
+    "prisma:db:push": "prisma db push && prisma generate",
     "prisma:db:pull": "prisma db pull",
     "postinstall": "nuxt prepare && prisma generate",
     "scripts:fill:db": "tsx scripts/fill_db_dataset.ts",

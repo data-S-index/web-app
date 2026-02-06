@@ -1,7 +1,14 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 const props = defineProps<{
-  citations: any[];
+  citations: Array<{
+    citationLink: string;
+    datacite: boolean;
+    mdc: boolean;
+    openAlex: boolean;
+    citedDate: string;
+    citationWeight: number;
+  }>;
 }>();
 
 const citationsCount = computed(() => props.citations?.length || 0);
