@@ -23,6 +23,50 @@ const searchTotal = ref(-1);
 const searchDuration = ref<string>("0ms");
 const hasSearched = ref(false);
 
+// Populate via query; placeholder data for layout only
+const defaultSearchResults = ref<SearchResult[]>([
+  {
+    id: "01KGDHY8FBQFCS7J79722F677P",
+    name: "National Institute for Fusion Science",
+    datasetCount: 16350783,
+  },
+  {
+    id: "01KGDHY8WF8W3JFC1HTJDMSMBR",
+    name: "National Institute for Fusion Science (NIFS)",
+    datasetCount: 7038170,
+  },
+  {
+    id: "01KGDHY8D3KCFF6WP9SPDR37J7",
+    name: "Leibniz Institute DSMZ - German Collection of Microorganisms and Cell Cultures",
+    datasetCount: 460822,
+  },
+  {
+    id: "01KGDHY7JQKC2TCTGP8P4JQX8A",
+    name: "Pacific Northwest National Laboratory",
+    datasetCount: 444723,
+  },
+  {
+    id: "01KGDHY7VBS6SQGS2HFVGQ3SEV",
+    name: "Environmental Molecular Sciences Laboratory",
+    datasetCount: 406437,
+  },
+  {
+    id: "01KGDHY7HWZ1EG4XHRF3R3RF3J",
+    name: "California Institute of Technology",
+    datasetCount: 47303,
+  },
+  {
+    id: "01KGDHY7GQ47JMV73PT9PK7CHR",
+    name: "Harvard University",
+    datasetCount: 36640,
+  },
+  {
+    id: "01KGDHY7S6G5G22MTE9P45ZMV7",
+    name: "Friedrich-Schiller-University Jena",
+    datasetCount: 33660,
+  },
+]);
+
 const updateSearchPage = (page: number) => {
   searchForOrganizations(page, false);
 };
@@ -110,6 +154,90 @@ const getOrgAvatarUrl = (org: SearchResult) => {
               class="shrink-0"
               @click="searchForOrganizations(searchPage, true)"
             />
+          </div>
+
+          <div v-if="!hasSearched" class="space-y-6">
+            <div
+              class="border-primary-200 from-primary-50/80 to-primary-100/40 dark:border-primary-800/50 dark:from-primary-950/40 dark:to-primary-900/30 rounded-2xl border bg-gradient-to-br p-6"
+            >
+              <div
+                class="flex flex-col gap-3 sm:flex-row sm:items-start sm:gap-4"
+              >
+                <div
+                  class="bg-primary-100 text-primary-600 dark:bg-primary-800/60 dark:text-primary-400 flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
+                >
+                  <Icon
+                    name="i-lucide-sparkles"
+                    class="h-6 w-6"
+                    aria-hidden="true"
+                  />
+                </div>
+
+                <div class="min-w-0 flex-1 space-y-1">
+                  <h2
+                    class="text-lg font-semibold tracking-tight text-gray-900 dark:text-white"
+                  >
+                    New here? Start exploring
+                  </h2>
+
+                  <p
+                    class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
+                  >
+                    Not sure what to search for? Below are popular organizations
+                    you can browse. Click any card to open it, or use the search
+                    above when you have something in mind.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p
+                class="mb-3 text-sm font-medium tracking-wider text-gray-500 uppercase dark:text-gray-400"
+              >
+                Popular organizations to explore
+              </p>
+
+              <div class="space-y-3">
+                <NuxtLink
+                  v-for="result in defaultSearchResults"
+                  :key="result.id"
+                  :to="`/ao/${result.id}`"
+                  class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-800"
+                >
+                  <UAvatar
+                    :src="getOrgAvatarUrl(result)"
+                    :alt="result.name"
+                    size="xl"
+                    class="squircle rounded-none"
+                  />
+
+                  <div class="min-w-0 flex-1">
+                    <h3
+                      class="line-clamp-1 text-base font-semibold text-gray-900 dark:text-gray-100"
+                    >
+                      {{ result.name || result.id }}
+                    </h3>
+
+                    <p
+                      class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400"
+                    >
+                      {{ result.datasetCount }} dataset{{
+                        result.datasetCount === 1 ? "" : "s"
+                      }}
+                    </p>
+                  </div>
+
+                  <UButton
+                    icon="i-heroicons-arrow-right-20-solid"
+                    color="primary"
+                    variant="soft"
+                    size="sm"
+                    aria-label="View organization"
+                  />
+                </NuxtLink>
+              </div>
+            </div>
           </div>
 
           <div v-if="searchResults.length > 0" class="mt-6">

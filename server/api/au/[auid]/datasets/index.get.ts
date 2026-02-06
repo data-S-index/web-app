@@ -63,6 +63,7 @@ export default defineEventHandler(async (event) => {
         },
       },
     },
+    take: 1000,
   });
 
   return userDatasets;
