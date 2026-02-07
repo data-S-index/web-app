@@ -22,70 +22,95 @@ const links = ref([
     size: "xl" as const,
     trailingIcon: "ic:outline-saved-search",
   },
+  {
+    label: "Evaluate a Dataset",
+    to: "/evaluate",
+    size: "xl" as const,
+    variant: "subtle" as const,
+    trailingIcon: "i-heroicons-arrow-path",
+  },
 ]);
 
 const features = ref([
-  {
-    title: "S-Index & D-Index",
-    description:
-      "A dataset-first impact metric. Each dataset earns a D-Index (FAIRness, citations, and mentions), and your S-Index rolls them up into one clear score you can actually explain.",
-    icon: "i-heroicons-chart-bar-square",
-    to: "/metrics",
-  },
   {
     title: "FAIR Assessment",
     description:
       "See how Findable, Accessible, Interoperable, and Reusable your datasets really are - with transparent scores you can improve over time.",
     icon: "i-heroicons-check-badge",
+    buttonTitles: [
+      {
+        label: "Evaluate a Dataset",
+        to: "/evaluate",
+      },
+    ],
+  },
+  {
+    title: "S-Index & D-Index",
+    description:
+      "A dataset-first impact metric. Each dataset earns a D-Index (FAIRness, citations, and mentions), and your S-Index rolls them up into one clear score you can actually explain.",
+    icon: "i-heroicons-chart-bar-square",
+    buttonTitles: [
+      {
+        label: "View Platform Metrics",
+        to: "/metrics",
+      },
+    ],
   },
   {
     title: "Dataset Discovery",
     description:
       "Find datasets by topic, DOI, or keyword. Track citations and attention over time - and spot real-world reuse across the community.",
     icon: "i-heroicons-magnifying-glass-circle",
-    to: "/search/datasets",
+    buttonTitles: [
+      {
+        label: "Search Datasets",
+        to: "/search/datasets",
+      },
+    ],
   },
   {
     title: "Authors & Organizations",
     description:
       "Look up researchers and institutions in seconds. See S-Index scores, claimed datasets, and data-sharing footprint in one place.",
     icon: "i-heroicons-user-group",
-    to: "/search/au",
+    buttonTitles: [
+      {
+        label: "Search Authors",
+        to: "/search/au",
+      },
+      {
+        label: "Search Organizations",
+        to: "/search/ao",
+      },
+    ],
   },
   {
     title: "Claim Your Datasets",
     description:
       "Connect DOIs and URLs to your profile and start building measurable credit for the data you publish - not just the papers.",
     icon: "i-heroicons-link",
-    to: "/login",
+    buttonTitles: [
+      {
+        label: "Claim Your Datasets",
+        to: "/login",
+      },
+    ],
   },
   {
     title: "Resolve & Enrich",
     description:
       "Turn a DOI or URL into rich dataset metadata: citations, mentions, normalization, and domain context - so you know what's landing and why.",
     icon: "i-heroicons-arrow-path",
-    to: "/resolve",
+    buttonTitles: [
+      {
+        label: "Resolve a DOI or URL",
+        to: "/resolve",
+      },
+    ],
   },
 ]);
 
 const isDark = computed(() => useColorMode().value === "dark");
-
-const sectionLinks = ref([
-  {
-    label: "Explore the metrics",
-    to: "/metrics",
-    color: "neutral" as const,
-    variant: "subtle" as const,
-    trailingIcon: "i-heroicons-arrow-right",
-  },
-  {
-    label: "Browse datasets",
-    to: "/search/datasets",
-    color: "neutral" as const,
-    variant: "subtle" as const,
-    trailingIcon: "i-heroicons-arrow-right",
-  },
-]);
 </script>
 
 <template>
@@ -94,24 +119,11 @@ const sectionLinks = ref([
       title="Give your datasets the credit they deserve."
       description="Scholar Data helps you measure, improve, and showcase the impact of what you share - beyond publications."
       headline="Launching soon 🚀"
-      orientation="horizontal"
-      :links="links"
-    >
-      <img
-        src="https://picsum.photos/1000/1000"
-        alt="Scholar Data preview"
-        class="ring-default rounded-lg shadow-2xl ring"
-      />
-    </UPageHero>
+      :ui="{ container: '!pb-10' }"
+    />
 
-    <UPageSection
-      title="Measure and showcase your data-sharing impact"
-      description="Scholar Data turns reuse into recognition. From FAIRness to citations and attention, everything rolls into one story you can share: your S-Index."
-      icon="i-heroicons-sparkles"
-      :links="sectionLinks"
-      :ui="{ features: 'grid !grid-cols-1' }"
-    >
-      <template #features>
+    <UPageSection :ui="{ container: '!pt-10' }">
+      <template #body>
         <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
           <div
             v-for="(feature, index) in features"
@@ -120,7 +132,7 @@ const sectionLinks = ref([
           >
             <CardSpotlight
               :gradient-color="isDark ? '#4ade80' : '#86efac'"
-              slot-class="flex size-full flex-col justify-between p-6"
+              slot-class="flex size-full flex-col justify-between p-5"
             >
               <div class="flex flex-col gap-3">
                 <UIcon
@@ -141,14 +153,22 @@ const sectionLinks = ref([
                 </p>
               </div>
 
-              <NuxtLink
-                v-if="feature.to"
-                :to="feature.to"
-                class="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-500 dark:text-emerald-300 dark:hover:text-emerald-200"
-              >
-                Learn more
-                <UIcon name="i-heroicons-arrow-right" class="size-4" />
-              </NuxtLink>
+              <div class="flex gap-2">
+                <NuxtLink
+                  v-for="button in feature.buttonTitles"
+                  :key="button.label"
+                  :to="button.to as string"
+                >
+                  <UButton
+                    color="primary"
+                    variant="solid"
+                    size="sm"
+                    trailing-icon="i-heroicons-arrow-right"
+                  >
+                    {{ button?.label }}
+                  </UButton>
+                </NuxtLink>
+              </div>
             </CardSpotlight>
           </div>
         </div>
@@ -231,17 +251,5 @@ const sectionLinks = ref([
         </div>
       </div>
     </UPageSection>
-
-    <div class="flex flex-col items-center justify-center">
-      <p>Sample embed: D-Index card (DOI, metrics, view details)</p>
-
-      <iframe
-        src="/embed/d-index?doi=10.13026/kpb9-mt58"
-        width="245"
-        height="200"
-        loading="lazy"
-        title="Dataset Index embed sample"
-      />
-    </div>
   </section>
 </template>
