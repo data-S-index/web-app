@@ -182,7 +182,7 @@ const isDark = computed(() => useColorMode().value === "dark");
       icon="i-heroicons-arrow-path"
       :links="[
         {
-          label: 'Resolve a DOI or URL',
+          label: 'Evaluate a Dataset',
           to: '/evaluate',
           icon: 'i-heroicons-arrow-right',
         },
