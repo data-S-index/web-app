@@ -176,14 +176,14 @@ const isDark = computed(() => useColorMode().value === "dark");
     </UPageSection>
 
     <UPageSection
-      headline="Resolver"
+      headline="Evaluate a Dataset"
       title="On-demand dataset metrics, computed in real time"
       description="Paste a DOI or dataset URL to get fresh, on-demand metrics. The D-Index is calculated at request time - not pulled from a static index - so you always see the latest citations, mentions, FAIR score, and normalized results in one place."
       icon="i-heroicons-arrow-path"
       :links="[
         {
           label: 'Resolve a DOI or URL',
-          to: '/resolve',
+          to: '/evaluate',
           icon: 'i-heroicons-arrow-right',
         },
       ]"
