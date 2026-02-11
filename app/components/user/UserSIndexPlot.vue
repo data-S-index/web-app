@@ -75,36 +75,10 @@ const sindexChartOption = computed<ECOption>(() => ({
   series: [
     {
       name: "S-Index",
-      type: "line",
+      type: "bar",
       data: props.sindexOverTime.scores,
-      step: "end",
-      lineStyle: {
-        color: "#ec4899",
-        width: 2,
-      },
       itemStyle: {
         color: "#ec4899",
-      },
-      symbol: "circle",
-      symbolSize: 6,
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(236, 72, 153, 0.3)",
-            },
-            {
-              offset: 1,
-              color: "rgba(236, 72, 153, 0.05)",
-            },
-          ],
-        },
       },
     },
   ],
