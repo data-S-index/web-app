@@ -288,6 +288,7 @@ model DIndex {
     datasetId Int
 
     score Float
+    year  Int // 4 digit year
 
     created DateTime @default(now())
 }

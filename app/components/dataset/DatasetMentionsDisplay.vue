@@ -54,7 +54,15 @@ const paginatedMentions = computed(() => {
                 variant="subtle"
                 size="sm"
               >
-                {{ source }}
+                {{
+                  source === "hf"
+                    ? "Hugging Face"
+                    : source === "swh"
+                      ? "Software Heritage"
+                      : source === "github"
+                        ? "GitHub"
+                        : source
+                }}
               </UBadge>
             </div>
           </div>
