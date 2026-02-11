@@ -19,26 +19,17 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     active: route.path.startsWith(`/users/${user.value?.id}`),
   },
   {
-    label: "Evaluate Dataset",
-    to: "/evaluate",
-    active: route.path.startsWith("/evaluate"),
-  },
-  {
-    label: "Search",
-    active: route.path.startsWith("/search"),
+    label: "Browse Profiles",
+    active:
+      route.path.startsWith("/search/au") ||
+      route.path.startsWith("/search/ao"),
+    to: "/search/au",
     children: [
-      {
-        label: "Datasets",
-        to: "/search/datasets",
-        icon: "hugeicons:file-search",
-        description: "Find datasets by title, identifier, or author",
-        active: route.path.startsWith("/search/datasets"),
-      },
       {
         label: "Users",
         to: "/search/au",
         icon: "mingcute:user-search-fill",
-        description: "Find users by name, identifiers, or affiliations",
+        description: "Find users by name or identifiers",
         active: route.path.startsWith("/search/au"),
       },
       {
@@ -51,14 +42,24 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     ],
   },
   {
+    label: "Browse Datasets",
+    active: route.path.startsWith("/search/datasets"),
+    to: "/search/datasets",
+  },
+  {
+    label: "Evaluate Datasets",
+    to: "/evaluate",
+    active: route.path.startsWith("/evaluate"),
+  },
+  {
+    label: "Integrate",
+    to: "/integrations",
+    active: route.path.startsWith("/integrations"),
+  },
+  {
     label: "Platform Metrics",
     to: "/metrics",
     active: route.path.startsWith("/metrics"),
-  },
-  {
-    label: "Integrations",
-    to: "/integrations",
-    active: route.path.startsWith("/integrations"),
   },
 ]);
 

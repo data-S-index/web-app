@@ -126,7 +126,7 @@ const getOrgAvatarUrl = (org: SearchResult) => {
     <UPage>
       <UPageHeader
         title="Browse Organizations"
-        description="We have created 1M+ organization impact pages from our large scale analysis. Search an organization below to view its impact."
+        description="We have automatically created 220K+ organization profiles from a large scale analysis of 49M+ dataset. They are available for demo purpose. Search an organization below to view its profile and S-index."
       />
 
       <UPageBody>
