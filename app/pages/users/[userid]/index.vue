@@ -200,7 +200,12 @@ const sindexOverTime = computed(() => {
     publishedYears.length > 0
       ? Math.min(...publishedYears)
       : allDIndices[0]!.year;
-  const currentYear = new Date().getFullYear();
+  let currentYear = new Date().getFullYear();
+
+  // If the latest mention or citation is not in the current year, set the current year to the previous year
+  if (!allDIndices.some((dindex) => dindex.year === currentYear)) {
+    currentYear--;
+  }
 
   const years: number[] = [];
   const scores: number[] = [];
