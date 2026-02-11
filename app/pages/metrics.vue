@@ -196,7 +196,7 @@ const institutionPieChartOption = computed(() => ({
     formatter: "{a} <br/>{b}: {c} ({d}%)",
   },
   legend: {
-    top: "15%",
+    top: "10%",
     left: "center",
     orient: "horizontal",
     textStyle: {
@@ -249,7 +249,7 @@ const fieldPieChartOption = computed(() => ({
     formatter: "{a} <br/>{b}: {c} ({d}%)",
   },
   legend: {
-    top: "15%",
+    top: "10%",
     left: "center",
     orient: "horizontal",
     textStyle: {
