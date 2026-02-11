@@ -6,15 +6,26 @@ const CACHE_EXPIRATION_SECONDS = 7 * 24 * 60 * 60; // 7 days in seconds
 const CACHE_KEY = "metrics:cache";
 
 export default defineEventHandler(async (event) => {
-  // Check cache first
+  const query = getQuery(event) as { nocache?: string | string[] };
+  const nocacheParam = Array.isArray(query.nocache)
+    ? query.nocache[0]
+    : query.nocache;
+
+  const bypassCache =
+    nocacheParam === "1" || nocacheParam === "true" || nocacheParam === "yes";
+
+  // Check cache first (unless bypassed)
   const redis = getRedisClient();
-  const cachedData = await redis.get(CACHE_KEY);
 
-  if (cachedData) {
-    const data = JSON.parse(cachedData);
-    setHeader(event, "X-Cache", "HIT");
+  if (!bypassCache) {
+    const cachedData = await redis.get(CACHE_KEY);
 
-    return { ...data, _cached: true };
+    if (cachedData) {
+      const data = JSON.parse(cachedData);
+      setHeader(event, "X-Cache", "HIT");
+
+      return { ...data, _cached: true };
+    }
   }
 
   // Fixed date for metrics calculation: 2025-09-30
@@ -102,10 +113,33 @@ fields AS (
   ) x
 ),
 
+-- Aggregate counts for citations, mentions, and field assignments
+citation_totals AS (
+  SELECT
+    count(*)::int AS total_citations,
+    round(COALESCE(sum("citationWeight"), 0)::numeric, 1) AS total_weighted_citations
+  FROM "Citation"
+),
+
+mention_totals AS (
+  SELECT
+    count(*)::int AS total_mentions,
+    round(COALESCE(sum("mentionWeight"), 0)::numeric, 1) AS total_weighted_mentions
+  FROM "Mention"
+),
+
+field_assignment_totals AS (
+  SELECT
+    count(*)::int AS total_field_assignments
+  FROM "DatasetTopic"
+),
+
 -- Fair score and citation counts from FujiScore + Citation (simple aggregates)
 fair_and_citations AS (
   SELECT
     count(DISTINCT d.id)::int AS total_datasets,
+    count(DISTINCT d.id) FILTER (WHERE fs."score" IS NOT NULL)::int
+      AS fair_scored_datasets,
     count(DISTINCT d.id) FILTER (WHERE fs."score" > 70)::int AS high_fair_datasets,
     count(DISTINCT d.id) FILTER (WHERE c.cnt > 0)::int AS cited_datasets,
     round(COALESCE(avg(fs."score") FILTER (WHERE fs."score" IS NOT NULL) / 100.0, 0)::numeric, 2) AS average_fair_score_0_1,
@@ -137,9 +171,13 @@ sindex AS (
     'averageCitationCount', (SELECT average_citation_count FROM fair_and_citations),
     'averageSIndex', (SELECT average_s_index FROM sindex_agg),
     'totalDatasets', (SELECT total_datasets FROM fair_and_citations),
+    'fairScoredDatasets', (SELECT fair_scored_datasets FROM fair_and_citations),
     'highFairDatasets', (SELECT high_fair_datasets FROM fair_and_citations),
     'citedDatasets', (SELECT cited_datasets FROM fair_and_citations),
-    'authorsWithSIndex', (SELECT authors_with_s_index FROM sindex_agg)
+    'authorsWithSIndex', (SELECT authors_with_s_index FROM sindex_agg),
+    'totalCitations', (SELECT total_citations FROM citation_totals),
+    'totalMentions', (SELECT total_mentions FROM mention_totals),
+    'totalFieldAssignments', (SELECT total_field_assignments FROM field_assignment_totals)
   ) AS obj
 ),
 
@@ -173,7 +211,11 @@ SELECT jsonb_build_object(
       totalDatasets: 0,
       highFairDatasets: 0,
       citedDatasets: 0,
+      fairScoredDatasets: 0,
       authorsWithSIndex: 0,
+      totalCitations: 0,
+      totalMentions: 0,
+      totalFieldAssignments: 0,
     },
     dIndexMetrics: {
       averageDIndex: 0,
@@ -181,12 +223,16 @@ SELECT jsonb_build_object(
     },
   };
 
-  await redis.setex(
-    CACHE_KEY,
-    CACHE_EXPIRATION_SECONDS,
-    JSON.stringify(responseData),
-  );
-  setHeader(event, "X-Cache", "MISS");
+  if (!bypassCache) {
+    await redis.setex(
+      CACHE_KEY,
+      CACHE_EXPIRATION_SECONDS,
+      JSON.stringify(responseData),
+    );
+    setHeader(event, "X-Cache", "MISS");
+  } else {
+    setHeader(event, "X-Cache", "BYPASS");
+  }
 
   return { ...responseData, _cached: false };
 });

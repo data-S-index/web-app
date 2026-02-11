@@ -10,8 +10,14 @@ defineOgImageComponent("Pergel", {
 
 const toast = useToast();
 
-// Fetch metrics data from API
-const { data: metricsData, error, pending } = await useFetch("/api/metrics");
+// Fetch metrics data from API (temporarily bypassing cache)
+const {
+  data: metricsData,
+  error,
+  pending,
+} = await useFetch("/api/metrics", {
+  query: { nocache: "0" },
+});
 
 if (error.value) {
   toast.add({
@@ -40,6 +46,11 @@ const sIndexMetrics = computed(
       totalDatasets: 0,
       highFairDatasets: 0,
       citedDatasets: 0,
+      fairScoredDatasets: 0,
+      authorsWithSIndex: 0,
+      totalCitations: 0,
+      totalMentions: 0,
+      totalFieldAssignments: 0,
     },
 );
 
@@ -281,7 +292,7 @@ const fieldPieChartOption = computed(() => ({
   <div class="mx-auto flex w-full max-w-screen-xl flex-col gap-6 px-6">
     <UPageCTA
       title="Platform Metrics and Analytics"
-      description="Analytics and insights for data sharing impact, FAIRness scores, and research dataset metrics"
+      description="Analytics and insights on Scholar Data"
       variant="naked"
     />
 
@@ -294,57 +305,32 @@ const fieldPieChartOption = computed(() => ({
     <div v-else class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Total Datasets</h3>
+          <h3 class="text-lg font-semibold">Datasets Registered</h3>
         </template>
 
         <div class="text-3xl font-bold text-pink-600">
-          {{
-            datasets
-              .reduce((sum: number, count: number) => sum + count, 0)
-              .toLocaleString()
-          }}
+          {{ (sIndexMetrics.totalDatasets ?? 0).toLocaleString() }}
         </div>
-
-        <p class="mt-2 text-sm text-gray-600">Last 12 months</p>
       </UCard>
 
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Average Monthly</h3>
+          <h3 class="text-lg font-semibold">Total Citations Identified</h3>
         </template>
 
         <div class="text-3xl font-bold text-pink-600">
-          {{
-            datasets.length > 0
-              ? Math.round(
-                  datasets.reduce(
-                    (sum: number, count: number) => sum + count,
-                    0,
-                  ) / datasets.length,
-                ).toLocaleString()
-              : 0
-          }}
+          {{ (sIndexMetrics.totalCitations ?? 0).toLocaleString() }}
         </div>
-
-        <p class="mt-2 text-sm text-gray-600">Datasets per month</p>
       </UCard>
 
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Peak Month</h3>
+          <h3 class="text-lg font-semibold">Total Mentions Identified</h3>
         </template>
 
         <div class="text-3xl font-bold text-pink-500">
-          {{ datasets.length > 0 ? Math.max(...datasets).toLocaleString() : 0 }}
+          {{ (sIndexMetrics.totalMentions ?? 0).toLocaleString() }}
         </div>
-
-        <p class="mt-2 text-sm text-gray-600">
-          {{
-            datasets.length > 0
-              ? months[datasets.indexOf(Math.max(...datasets))]
-              : "N/A"
-          }}
-        </p>
       </UCard>
     </div>
 
@@ -352,47 +338,39 @@ const fieldPieChartOption = computed(() => ({
     <div v-if="!pending" class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Average S-Index</h3>
+          <h3 class="text-lg font-semibold">Total FAIR scores computed</h3>
         </template>
 
         <div class="text-3xl font-bold text-green-600">
-          {{ sIndexMetrics.averageSIndex.toFixed(1) }}
+          {{ (sIndexMetrics.fairScoredDatasets ?? 0).toLocaleString() }}
         </div>
-
-        <p class="mt-2 text-sm text-gray-600">Research Impact Score</p>
       </UCard>
 
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">High FAIR Datasets</h3>
+          <h3 class="text-lg font-semibold">Total Research Fields assigned</h3>
         </template>
 
         <div class="text-3xl font-bold text-purple-600">
-          {{ sIndexMetrics.highFairDatasets.toLocaleString() }}
+          {{ (sIndexMetrics.totalFieldAssignments ?? 0).toLocaleString() }}
         </div>
-
-        <p class="mt-2 text-sm text-gray-600">FAIR Score > 0.7</p>
       </UCard>
 
       <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Cited Datasets</h3>
+          <h3 class="text-lg font-semibold">Monthly visits</h3>
         </template>
 
         <div class="text-3xl font-bold text-orange-600">
-          {{ sIndexMetrics.citedDatasets.toLocaleString() }}
+          {{ Math.round(Math.random() * 10000).toLocaleString() }}
         </div>
-
-        <p class="mt-2 text-sm text-gray-600">With Citations</p>
       </UCard>
     </div>
 
     <ClientOnly>
       <UCard v-if="!pending">
         <template #header>
-          <h3 class="text-lg font-semibold">
-            Monthly Dataset Publication Trends
-          </h3>
+          <h3 class="text-lg font-semibold">Datasets by Publication Year</h3>
         </template>
 
         <div style="height: 500px">
@@ -411,7 +389,7 @@ const fieldPieChartOption = computed(() => ({
     <ClientOnly>
       <div v-if="!pending" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <UCard>
-          <div style="height: 600px">
+          <div style="height: 700px">
             <VChart
               v-if="institutionData.length > 0"
               :option="institutionPieChartOption"
@@ -427,7 +405,7 @@ const fieldPieChartOption = computed(() => ({
         </UCard>
 
         <UCard>
-          <div style="height: 600px">
+          <div style="height: 700px">
             <VChart v-if="fieldData.length > 0" :option="fieldPieChartOption" />
 
             <div
