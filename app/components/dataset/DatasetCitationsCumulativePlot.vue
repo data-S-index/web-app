@@ -48,7 +48,7 @@ const citationsChartData = computed(() => {
   const startYear = publicationDate
     ? new Date(publicationDate).getFullYear()
     : firstCitationDate.getFullYear();
-  const endYear = Math.max(currentYear, lastCitationDate.getFullYear());
+  const endYear = Math.max(currentYear - 1, lastCitationDate.getFullYear());
 
   const citationsByYear = new Map<number, { raw: number; weighted: number }>();
   citationsWithDates.forEach((citation) => {

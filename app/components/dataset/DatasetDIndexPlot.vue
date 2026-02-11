@@ -20,10 +20,8 @@ const dIndexChartData = computed(() => {
   }
 
   const currentYear = new Date().getFullYear();
-  const startYear = props.publishedAt
-    ? new Date(props.publishedAt).getFullYear()
-    : sorted[0]!.year;
-  const endYear = Math.max(currentYear, ...sorted.map((d) => d.year));
+  const startYear = sorted[0]!.year;
+  const endYear = Math.max(currentYear - 1, ...sorted.map((d) => d.year));
 
   const years: number[] = [];
   const scores: number[] = [];

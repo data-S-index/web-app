@@ -41,6 +41,15 @@ const tabItems = [
           :published-at="dataset.publishedAt"
         />
       </UCard>
+
+      <div v-else class="flex h-full items-center justify-center">
+        <UAlert
+          title="No citation data available for this dataset"
+          description="Citations will appear as we identify them in our search pipelines."
+          color="warning"
+          variant="subtle"
+        />
+      </div>
     </template>
 
     <template #mentions>
@@ -51,6 +60,15 @@ const tabItems = [
           :published-at="dataset.publishedAt"
         />
       </UCard>
+
+      <div v-else class="flex h-full items-center justify-center">
+        <UAlert
+          title="No mention data available for this dataset"
+          description="Mentions will appear as we identify them in our search pipelines."
+          color="warning"
+          variant="subtle"
+        />
+      </div>
     </template>
   </UTabs>
 </template>

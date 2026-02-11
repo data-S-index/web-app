@@ -47,7 +47,7 @@ const mentionsChartData = computed(() => {
   const startYear = publicationDate
     ? new Date(publicationDate).getFullYear()
     : firstMentionDate.getFullYear();
-  const endYear = Math.max(currentYear, lastMentionDate.getFullYear());
+  const endYear = Math.max(currentYear - 1, lastMentionDate.getFullYear());
 
   const mentionsByYear = new Map<number, { raw: number; weighted: number }>();
   mentionsWithDates.forEach((mention) => {
