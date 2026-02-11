@@ -97,7 +97,10 @@ const onRemove = (datasetId: number) => {
           <h3
             class="group-hover:text-primary-600 dark:group-hover:text-primary-400 text-lg font-semibold transition-colors"
           >
-            {{ item.dataset.title || "No title available" }}
+            {{ item.dataset.title || "No title available"
+            }}{{
+              item.dataset.version ? ` (Version: ${item.dataset.version})` : ""
+            }}
           </h3>
 
           <div class="flex items-center gap-2">
