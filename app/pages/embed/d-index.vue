@@ -147,7 +147,7 @@ const detailsUrl = computed(() => {
                 'text-gray-500': !totalCitations,
               }"
             >
-              {{ totalCitations }}
+              {{ (totalCitations ?? 0).toLocaleString() }}
             </span>
           </div>
 
@@ -165,7 +165,7 @@ const detailsUrl = computed(() => {
                 'text-gray-500': !totalMentions,
               }"
             >
-              {{ totalMentions }}
+              {{ (totalMentions ?? 0).toLocaleString() }}
             </span>
           </div>
         </div>

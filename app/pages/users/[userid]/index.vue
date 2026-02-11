@@ -209,9 +209,10 @@ const sindexOverTime = computed(() => {
     years.push(y);
 
     // For each dataset, take latest d-index with year <= y
-    const datasetLatestDIndex = new Map<number, { score: number; year: number }>(
-      [],
-    );
+    const datasetLatestDIndex = new Map<
+      number,
+      { score: number; year: number }
+    >([]);
 
     allDIndices.forEach((dindex) => {
       if (dindex.year <= y) {
@@ -503,7 +504,12 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{ sindex.toFixed(1) }}
+              {{
+                sindex.toLocaleString(undefined, {
+                  minimumFractionDigits: 1,
+                  maximumFractionDigits: 1,
+                })
+              }}
             </div>
 
             <p class="mt-2 text-sm">Sum of D-Index scores for all datasets</p>
@@ -515,7 +521,14 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
-              {{ datasetCount ? (sindex / datasetCount).toFixed(1) : "0.0" }}
+              {{
+                datasetCount
+                  ? (sindex / datasetCount).toLocaleString(undefined, {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 1,
+                    })
+                  : "0.0"
+              }}
             </div>
 
             <p class="mt-2 text-sm">Average D-Index score per dataset</p>
@@ -527,7 +540,7 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{ datasetCount }}
+              {{ datasetCount.toLocaleString() }}
             </div>
 
             <p class="mt-2 text-sm">Total datasets claimed by the user</p>
@@ -551,7 +564,7 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
-              {{ totalCitations }}
+              {{ totalCitations.toLocaleString() }}
             </div>
 
             <p class="mt-2 text-sm">Total citations to the user's datasets</p>
@@ -563,7 +576,7 @@ const handleDatasetsAdded = () => {
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
-              {{ totalMentions }}
+              {{ totalMentions.toLocaleString() }}
             </div>
 
             <p class="mt-2 text-sm">Total mentions of the user's datasets</p>

@@ -38,7 +38,9 @@ defineProps<{
 
       <p>
         <strong>Current S-Index:</strong> {{ sindex.toFixed(1) }} (sum of
-        {{ datasetCount }} dataset{{ datasetCount !== 1 ? "s" : "" }}
+        {{ datasetCount.toLocaleString() }} dataset{{
+          datasetCount !== 1 ? "s" : ""
+        }}
         D-Index scores)
       </p>
 

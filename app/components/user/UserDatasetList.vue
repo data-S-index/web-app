@@ -262,17 +262,6 @@ const onRemove = (datasetId: number) => {
           </div>
 
           <div class="flex flex-wrap gap-2">
-            <UTooltip :text="`Version ${item.dataset.version}`">
-              <UBadge
-                v-if="item.dataset.version"
-                color="neutral"
-                variant="subtle"
-                :label="item.dataset.version"
-                icon="i-heroicons-tag-20-solid"
-                class="cursor-help"
-              />
-            </UTooltip>
-
             <UTooltip text="Click to copy identifier">
               <UBadge
                 color="neutral"

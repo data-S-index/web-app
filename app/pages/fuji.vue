@@ -320,7 +320,10 @@ const formattedEta = computed(() => {
           </span>
 
           <span class="font-medium"
-            >{{ stat.totalResults }} ({{ stat.totalRequests }} requests)</span
+            >{{ stat.totalResults.toLocaleString() }} ({{
+              stat.totalRequests.toLocaleString()
+            }}
+            requests)</span
           >
         </div>
       </div>

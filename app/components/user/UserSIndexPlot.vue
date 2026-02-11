@@ -27,6 +27,7 @@ const sindexChartOption = computed<ECOption>(() => ({
           if (p.axisDimension === "x") {
             return String(p.value);
           }
+
           return typeof p.value === "number"
             ? p.value.toFixed(1)
             : String(p.value);
