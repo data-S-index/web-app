@@ -255,7 +255,7 @@ const onRemove = (datasetId: number) => {
               "
               :icon="
                 item.dataset.dindices?.[0]?.score
-                  ? 'i-heroicons-star-20-solid'
+                  ? 'i-heroicons-chart-bar-20-solid'
                   : 'svg-spinners:90-ring'
               "
             />
