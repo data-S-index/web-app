@@ -106,7 +106,7 @@ const embedSnippet = computed(
   >
     <UPageCTA
       title="Integrations"
-      description="Use the embedded widget or API to show dataset index and metrics on your own platform—repositories, lab sites, or dashboards."
+      description="Use the embedded widget or API to show dataset index and metrics on your own platform-repositories, lab sites, or dashboards."
       variant="naked"
       :ui="{
         container: '!py-5',
