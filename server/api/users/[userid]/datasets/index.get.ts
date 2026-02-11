@@ -13,6 +13,7 @@ export default defineEventHandler(async (event) => {
           citations: {
             select: {
               citationLink: true,
+              citationWeight: true,
               datacite: true,
               mdc: true,
               openAlex: true,
@@ -22,6 +23,7 @@ export default defineEventHandler(async (event) => {
           mentions: {
             select: {
               mentionLink: true,
+              mentionWeight: true,
               source: true,
               mentionedDate: true,
             },
