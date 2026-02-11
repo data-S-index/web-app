@@ -186,8 +186,8 @@ const getUserAvatarUrl = (user: SearchResult) => {
   <UContainer>
     <UPage>
       <UPageHeader
-        title="Search Users"
-        description="Find automated users by name."
+        title="Browse Profiles"
+        description="We have automatically created 1M+ researcher profiles from a large scale analysis of 49M+ dataset. They are available for demo purpose. Search a researcher below to view their profile and S-index."
       />
 
       <UPageBody>
@@ -241,9 +241,8 @@ const getUserAvatarUrl = (user: SearchResult) => {
                   <p
                     class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
                   >
-                    Not sure what to search for? Below are popular users you can
-                    browse. Click any card to open it, or use the search above
-                    when you have something in mind.
+                    Below are high-impact profiles (high S-index and high reuse
+                    of datasets relative to their field of research)
                   </p>
                 </div>
               </div>

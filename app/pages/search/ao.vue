@@ -125,8 +125,8 @@ const getOrgAvatarUrl = (org: SearchResult) => {
   <UContainer>
     <UPage>
       <UPageHeader
-        title="Search Organizations"
-        description="Find automated organizations by name."
+        title="Browse Organizations"
+        description="We have created 1M+ organization impact pages from our large scale analysis. Search an organization below to view its impact."
       />
 
       <UPageBody>
