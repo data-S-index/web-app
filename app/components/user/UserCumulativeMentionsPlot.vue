@@ -75,6 +75,7 @@ const mentionsChartOption = computed<ECOption>(() => ({
     nameGap: 28,
     axisLabel: {
       fontSize: 10,
+      interval: 0, // one label per year (one category per year)
     },
   },
   yAxis: {
@@ -91,6 +92,7 @@ const mentionsChartOption = computed<ECOption>(() => ({
       name: "Raw Mentions",
       type: "bar",
       data: props.cumulativeMentions.rawValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#10b981",
       },
@@ -99,6 +101,7 @@ const mentionsChartOption = computed<ECOption>(() => ({
       name: "Weighted Mentions",
       type: "bar",
       data: props.cumulativeMentions.weightedValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#f59e0b",
       },

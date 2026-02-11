@@ -75,6 +75,7 @@ const citationsChartOption = computed<ECOption>(() => ({
     nameGap: 28,
     axisLabel: {
       fontSize: 10,
+      interval: 0, // one label per year (one category per year)
     },
   },
   yAxis: {
@@ -91,6 +92,7 @@ const citationsChartOption = computed<ECOption>(() => ({
       name: "Raw Citations",
       type: "bar",
       data: props.cumulativeCitations.rawValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#3b82f6",
       },
@@ -99,6 +101,7 @@ const citationsChartOption = computed<ECOption>(() => ({
       name: "Weighted Citations",
       type: "bar",
       data: props.cumulativeCitations.weightedValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#ec4899",
       },
