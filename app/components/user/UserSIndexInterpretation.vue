@@ -6,7 +6,7 @@ defineProps<{
 </script>
 
 <template>
-  <CardCollapsibleContent title="S-Index Interpretation" class="mb-6">
+  <CardCollapsibleContent title="S-Index Interpretation" class="mb-6" collapse>
     <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
       <p>
         The <strong>S-Index</strong> (Sharing Index) is a comprehensive metric
@@ -21,8 +21,8 @@ defineProps<{
 
       <ul class="ml-6 list-disc space-y-1">
         <li>
-          A higher S-Index indicates greater overall impact across your dataset
-          portfolio
+          A higher S-index indicates greater overall impact of your datasets
+          relative to typical datasets in their fields of research
         </li>
 
         <li>
@@ -40,6 +40,15 @@ defineProps<{
         <strong>Current S-Index:</strong> {{ sindex.toFixed(1) }} (sum of
         {{ datasetCount }} dataset{{ datasetCount !== 1 ? "s" : "" }}
         D-Index scores)
+      </p>
+
+      <p>
+        More information
+        <NuxtLink
+          to="https://github.com/data-S-index/resources"
+          class="text-primary hover:text-primary-600 transition-all"
+          >here</NuxtLink
+        >.
       </p>
     </div>
   </CardCollapsibleContent>
