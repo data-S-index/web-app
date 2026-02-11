@@ -27,14 +27,7 @@ const citationsChartOption = computed<ECOption>(() => ({
             axisDimension?: string;
             value?: number | string;
           };
-          if (p.axisDimension === "x") {
-            const date = new Date(p.value as number);
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const year = date.getFullYear();
-
-            return `${month}/${year}`;
-          }
-
+          if (p.axisDimension === "x") return String(p.value);
           return typeof p.value === "number"
             ? p.value.toFixed(1)
             : String(p.value);
@@ -44,18 +37,13 @@ const citationsChartOption = computed<ECOption>(() => ({
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: [string, number];
+        value: number | [string, number];
         seriesName: string;
         marker: string;
       }>;
       if (!data || data.length === 0) return "";
-      const dateStr = data[0]?.value?.[0] || data[0]?.name;
-      if (!dateStr) return "";
-      const date = new Date(dateStr);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const formattedDate = `${month}/${year}`;
-      let tooltip = `<strong>${formattedDate}</strong><br/>`;
+      const yearStr = data[0]?.name ?? "";
+      let tooltip = `<strong>${yearStr}</strong><br/>`;
       data.forEach((item) => {
         const value = Array.isArray(item.value) ? item.value[1] : item.value;
         if (item.seriesName === "Raw Citations") {
@@ -80,22 +68,13 @@ const citationsChartOption = computed<ECOption>(() => ({
     containLabel: true,
   },
   xAxis: {
-    type: "time",
-    min: props.cumulativeCitations.earliestDate
-      ? props.cumulativeCitations.earliestDate.toISOString().split("T")[0]
-      : undefined,
-    max: props.cumulativeCitations.endDate
-      ? props.cumulativeCitations.endDate.toISOString().split("T")[0]
-      : undefined,
+    type: "category",
+    data: props.cumulativeCitations.dates,
+    name: "Year",
+    nameLocation: "middle",
+    nameGap: 28,
     axisLabel: {
-      fontSize: 8,
-      formatter: (value: number | string) => {
-        const date = new Date(typeof value === "number" ? value : value);
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = String(date.getFullYear()).slice(-2);
-
-        return `${month}/${year}`;
-      },
+      fontSize: 10,
     },
   },
   yAxis: {
@@ -110,39 +89,19 @@ const citationsChartOption = computed<ECOption>(() => ({
   series: [
     {
       name: "Raw Citations",
-      type: "line",
-      data: props.cumulativeCitations.dates.map((date, index) => [
-        date,
-        props.cumulativeCitations.rawValues[index],
-      ]),
-      step: "end",
-      lineStyle: {
-        color: "#3b82f6",
-        width: 2,
-      },
+      type: "bar",
+      data: props.cumulativeCitations.rawValues,
       itemStyle: {
         color: "#3b82f6",
       },
-      symbol: "circle",
-      symbolSize: 4,
     },
     {
       name: "Weighted Citations",
-      type: "line",
-      data: props.cumulativeCitations.dates.map((date, index) => [
-        date,
-        props.cumulativeCitations.weightedValues[index],
-      ]),
-      step: "end",
-      lineStyle: {
-        color: "#ec4899",
-        width: 2,
-      },
+      type: "bar",
+      data: props.cumulativeCitations.weightedValues,
       itemStyle: {
         color: "#ec4899",
       },
-      symbol: "circle",
-      symbolSize: 4,
     },
   ],
 }));

@@ -210,13 +210,14 @@ const cumulativeCitations = computed(() => {
   const now = new Date();
   const lastCitationDate = allCitations[allCitations.length - 1]!.date;
   const endDate = lastCitationDate > now ? lastCitationDate : now;
-  const startDate = firstCitationDate;
-  const citationsByMonth = new Map<string, { raw: number; weighted: number }>();
+  const startYear = firstCitationDate.getFullYear();
+  const endYear = endDate.getFullYear();
+  const citationsByYear = new Map<number, { raw: number; weighted: number }>();
 
   allCitations.forEach((citation) => {
-    const monthKey = `${citation.date.getFullYear()}-${String(citation.date.getMonth() + 1).padStart(2, "0")}`;
-    const existing = citationsByMonth.get(monthKey) || { raw: 0, weighted: 0 };
-    citationsByMonth.set(monthKey, {
+    const year = citation.date.getFullYear();
+    const existing = citationsByYear.get(year) || { raw: 0, weighted: 0 };
+    citationsByYear.set(year, {
       raw: existing.raw + 1,
       weighted: existing.weighted + citation.weight,
     });
@@ -227,23 +228,25 @@ const cumulativeCitations = computed(() => {
   const weightedValues: number[] = [];
   let cumulativeRaw = 0;
   let cumulativeWeighted = 0;
-  const currentDate = new Date(startDate);
-  currentDate.setDate(1);
 
-  while (currentDate <= endDate) {
-    const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
-    dates.push(currentDate.toISOString().split("T")[0]!);
-    const monthCitations = citationsByMonth.get(monthKey);
-    if (monthCitations) {
-      cumulativeRaw += monthCitations.raw;
-      cumulativeWeighted += monthCitations.weighted;
+  for (let year = startYear; year <= endYear; year++) {
+    dates.push(String(year));
+    const yearCitations = citationsByYear.get(year);
+    if (yearCitations) {
+      cumulativeRaw += yearCitations.raw;
+      cumulativeWeighted += yearCitations.weighted;
     }
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
-    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
-  return { dates, rawValues, weightedValues, earliestDate: startDate, endDate };
+  return {
+    dates,
+    rawValues,
+    weightedValues,
+    earliestDate: new Date(startYear, 0, 1),
+    endDate: new Date(endYear, 11, 31),
+  };
 });
 
 // Cumulative mentions (raw and weighted) across all datasets
@@ -294,13 +297,14 @@ const cumulativeMentions = computed(() => {
   const now = new Date();
   const lastMentionDate = allMentions[allMentions.length - 1]!.date;
   const endDate = lastMentionDate > now ? lastMentionDate : now;
-  const startDate = firstMentionDate;
-  const mentionsByMonth = new Map<string, { raw: number; weighted: number }>();
+  const startYear = firstMentionDate.getFullYear();
+  const endYear = endDate.getFullYear();
+  const mentionsByYear = new Map<number, { raw: number; weighted: number }>();
 
   allMentions.forEach((mention) => {
-    const monthKey = `${mention.date.getFullYear()}-${String(mention.date.getMonth() + 1).padStart(2, "0")}`;
-    const existing = mentionsByMonth.get(monthKey) || { raw: 0, weighted: 0 };
-    mentionsByMonth.set(monthKey, {
+    const year = mention.date.getFullYear();
+    const existing = mentionsByYear.get(year) || { raw: 0, weighted: 0 };
+    mentionsByYear.set(year, {
       raw: existing.raw + 1,
       weighted: existing.weighted + mention.weight,
     });
@@ -311,23 +315,25 @@ const cumulativeMentions = computed(() => {
   const weightedValues: number[] = [];
   let cumulativeRaw = 0;
   let cumulativeWeighted = 0;
-  const currentDate = new Date(startDate);
-  currentDate.setDate(1);
 
-  while (currentDate <= endDate) {
-    const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
-    dates.push(currentDate.toISOString().split("T")[0]!);
-    const monthMentions = mentionsByMonth.get(monthKey);
-    if (monthMentions) {
-      cumulativeRaw += monthMentions.raw;
-      cumulativeWeighted += monthMentions.weighted;
+  for (let year = startYear; year <= endYear; year++) {
+    dates.push(String(year));
+    const yearMentions = mentionsByYear.get(year);
+    if (yearMentions) {
+      cumulativeRaw += yearMentions.raw;
+      cumulativeWeighted += yearMentions.weighted;
     }
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
-    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
-  return { dates, rawValues, weightedValues, earliestDate: startDate, endDate };
+  return {
+    dates,
+    rawValues,
+    weightedValues,
+    earliestDate: new Date(startYear, 0, 1),
+    endDate: new Date(endYear, 11, 31),
+  };
 });
 </script>
 
