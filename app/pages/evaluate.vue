@@ -179,7 +179,7 @@ const fetchDatasetData = async (doi: string) => {
 // Fetch data from external API using URL
 const fetchDatasetDataFromUrl = async (
   url: string,
-  pubdate?: string,
+  pubyear?: string,
   topicId?: string,
 ) => {
   isLoading.value = true;
@@ -189,8 +189,8 @@ const fetchDatasetDataFromUrl = async (
     const params = new URLSearchParams();
     params.append("url", url);
 
-    if (pubdate) {
-      params.append("pubdate", pubdate);
+    if (pubyear) {
+      params.append("pubyear", pubyear);
     }
 
     if (topicId) {
@@ -291,9 +291,9 @@ if (queryUrl) {
       fetchDatasetData(doi);
     }
   } else {
-    const queryPubdate = query.pubdate as string | undefined;
+    const queryPubyear = query.pubyear as string | undefined;
     const queryTopicId = query.topic_id as string | undefined;
-    fetchDatasetDataFromUrl(queryUrl, queryPubdate, queryTopicId);
+    fetchDatasetDataFromUrl(queryUrl, queryPubyear, queryTopicId);
   }
 }
 
@@ -389,8 +389,8 @@ const handleSubmit = async () => {
     <UPage>
       <UPageHeader
         v-if="!isLoading && !dataset"
-        title="Get Dataset Index"
-        description="Enter a DOI or dataset URL to view the corresponding dataset details"
+        title="Evaluate Datasets"
+        description="Provide the DOI or URL of a dataset to get it's impact page generated."
       />
 
       <UPageBody v-if="!dataset">
@@ -496,13 +496,16 @@ const handleSubmit = async () => {
                     for="publication-date-input"
                     class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
-                    Publication Date (optional)
+                    Publication Year (optional)
                   </label>
 
                   <UInput
                     id="publication-date-input"
                     v-model="publicationDate"
-                    type="date"
+                    type="number"
+                    min="1900"
+                    :max="new Date().getFullYear() + 1"
+                    placeholder="e.g. 2024"
                     size="xl"
                     :disabled="isLoading"
                   />

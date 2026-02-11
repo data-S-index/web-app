@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
   // Get parameters from query
   const query = getQuery(event);
   const url = query.url as string | undefined;
-  const pubdate = query.pubdate as string | undefined;
+  const pubyear = query.pubyear as string | undefined;
   const topicId = query.topic_id as string | undefined;
 
   if (!url) {
@@ -45,8 +45,8 @@ export default defineEventHandler(async (event) => {
   // Create cache key from normalized parameters
   const normalizedUrl = decodeURIComponent(url).trim().toLowerCase();
   const cacheKeyParts = [normalizedUrl];
-  if (pubdate) {
-    cacheKeyParts.push(decodeURIComponent(pubdate).trim());
+  if (pubyear) {
+    cacheKeyParts.push(decodeURIComponent(pubyear).trim());
   }
   if (topicId) {
     cacheKeyParts.push(decodeURIComponent(topicId).trim());
@@ -86,8 +86,8 @@ export default defineEventHandler(async (event) => {
     const params = new URLSearchParams();
     params.append("url", url);
 
-    if (pubdate) {
-      params.append("pubdate", pubdate);
+    if (pubyear) {
+      params.append("pubyear", pubyear);
     }
 
     if (topicId) {
