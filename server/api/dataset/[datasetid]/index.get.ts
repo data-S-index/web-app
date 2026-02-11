@@ -52,6 +52,7 @@ export default defineEventHandler(async (event) => {
           mentionedDate: true,
         },
       },
+      normalizationFactor: true,
       datasetTopic: true,
     },
   });

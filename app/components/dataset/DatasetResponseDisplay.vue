@@ -178,16 +178,10 @@ const reloadPage = () => {
               >
                 <p class="mb-2 text-sm font-medium">FAIR Score</p>
 
-                <div class="flex items-center gap-2">
-                  <div
-                    class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
-                  >
-                    {{ Math.round(dataset.fujiScore.score) }}
-                  </div>
-
-                  <div class="text-sm text-gray-500 dark:text-gray-400">
-                    / 100
-                  </div>
+                <div
+                  class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                >
+                  {{ Math.round(dataset.fujiScore.score) }}%
                 </div>
               </div>
 

@@ -1,8 +1,25 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
+  /** Either { FT, CTw, MTw, n_year_gap, method } or { ft, ctw, mtw, topicIdUsed, yearUsed, ... } */
   normalizationFactors: any;
 }>();
+
+function num(key: string, altKey?: string) {
+  const v =
+    props.normalizationFactors?.[key] ??
+    (altKey && props.normalizationFactors?.[altKey]);
+
+  return typeof v === "number" ? v.toFixed(2) : "N/A";
+}
+
+function str(key: string, altKey?: string) {
+  const v =
+    props.normalizationFactors?.[key] ??
+    (altKey && props.normalizationFactors?.[altKey]);
+
+  return v != null ? String(v) : "N/A";
+}
 </script>
 
 <template>
@@ -30,7 +47,7 @@ defineProps<{
           <div
             class="text-primary-600 dark:text-primary-400 text-2xl font-bold"
           >
-            {{ normalizationFactors.FT?.toFixed(2) || "N/A" }}
+            {{ num("FT", "ft") }}
           </div>
         </div>
 
@@ -40,7 +57,7 @@ defineProps<{
           <div
             class="text-primary-600 dark:text-primary-400 text-2xl font-bold"
           >
-            {{ normalizationFactors.CTw?.toFixed(2) || "N/A" }}
+            {{ num("CTw", "ctw") }}
           </div>
         </div>
 
@@ -50,17 +67,39 @@ defineProps<{
           <div
             class="text-primary-600 dark:text-primary-400 text-2xl font-bold"
           >
-            {{ normalizationFactors.MTw?.toFixed(2) || "N/A" }}
+            {{ num("MTw", "mtw") }}
           </div>
         </div>
       </div>
 
       <div class="space-y-2 border-t border-gray-200 pt-3 dark:border-gray-700">
+        <div
+          v-if="normalizationFactors.method != null"
+          class="flex items-center justify-between text-sm"
+        >
+          <span class="text-gray-500 dark:text-gray-400">Method</span>
+
+          <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+            {{ normalizationFactors.method }}
+          </span>
+        </div>
+
+        <div
+          v-if="normalizationFactors.n_year_gap !== undefined"
+          class="flex items-center justify-between text-sm"
+        >
+          <span class="text-gray-500 dark:text-gray-400">Year gap</span>
+
+          <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
+            {{ normalizationFactors.n_year_gap }}
+          </span>
+        </div>
+
         <div class="flex items-center justify-between text-sm">
           <span class="text-gray-500 dark:text-gray-400">Topic Used</span>
 
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {{ normalizationFactors.topic_id_used || "N/A" }}
+            {{ str("topicIdUsed", "topic_id_used") }}
           </span>
         </div>
 
@@ -68,35 +107,47 @@ defineProps<{
           <span class="text-gray-500 dark:text-gray-400">Year Used</span>
 
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {{ normalizationFactors.year_used || "N/A" }}
+            {{ str("yearUsed", "year_used") }}
           </span>
         </div>
 
         <div
-          v-if="normalizationFactors.year_requested"
+          v-if="
+            normalizationFactors.yearRequested != null ||
+            normalizationFactors.year_requested != null
+          "
           class="flex items-center justify-between text-sm"
         >
-          <span class="text-gray-500 dark:text-gray-400"> Year Requested </span>
+          <span class="text-gray-500 dark:text-gray-400">Year Requested</span>
 
           <span class="text-sm font-medium text-gray-900 dark:text-gray-100">
-            {{ normalizationFactors.year_requested }}
+            {{ str("yearRequested", "year_requested") }}
           </span>
         </div>
 
         <div
-          v-if="normalizationFactors.used_year_clamp !== undefined"
+          v-if="
+            normalizationFactors.usedYearClamp !== undefined ||
+            normalizationFactors.used_year_clamp !== undefined
+          "
           class="flex items-center justify-between text-sm"
         >
-          <span class="text-gray-500 dark:text-gray-400"> Year Clamp </span>
+          <span class="text-gray-500 dark:text-gray-400">Year Clamp</span>
 
           <UBadge
             :color="
-              normalizationFactors.used_year_clamp ? 'warning' : 'success'
+              (normalizationFactors.usedYearClamp ??
+              normalizationFactors.used_year_clamp)
+                ? 'warning'
+                : 'success'
             "
             variant="subtle"
           >
             {{
-              normalizationFactors.used_year_clamp ? "Applied" : "Not Applied"
+              (normalizationFactors.usedYearClamp ??
+              normalizationFactors.used_year_clamp)
+                ? "Applied"
+                : "Not Applied"
             }}
           </UBadge>
         </div>
