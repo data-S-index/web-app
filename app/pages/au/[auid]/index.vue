@@ -206,12 +206,15 @@ const cumulativeCitations = computed(() => {
   }
 
   allCitations.sort((a, b) => a.date.getTime() - b.date.getTime());
-  const firstCitationDate = allCitations[0]!.date;
-  const now = new Date();
-  const lastCitationDate = allCitations[allCitations.length - 1]!.date;
-  const endDate = lastCitationDate > now ? lastCitationDate : now;
-  const startYear = firstCitationDate.getFullYear();
-  const endYear = endDate.getFullYear();
+  const publishedYears = list
+    .map((item) => item.dataset.publishedAt)
+    .filter(Boolean)
+    .map((d) => new Date(d!).getFullYear());
+  const startYear =
+    publishedYears.length > 0
+      ? Math.min(...publishedYears)
+      : allCitations[0]!.date.getFullYear();
+  const endYear = new Date().getFullYear() - 1; // current year - 1
   const citationsByYear = new Map<number, { raw: number; weighted: number }>();
 
   allCitations.forEach((citation) => {
@@ -293,12 +296,15 @@ const cumulativeMentions = computed(() => {
   }
 
   allMentions.sort((a, b) => a.date.getTime() - b.date.getTime());
-  const firstMentionDate = allMentions[0]!.date;
-  const now = new Date();
-  const lastMentionDate = allMentions[allMentions.length - 1]!.date;
-  const endDate = lastMentionDate > now ? lastMentionDate : now;
-  const startYear = firstMentionDate.getFullYear();
-  const endYear = endDate.getFullYear();
+  const publishedYearsM = list
+    .map((item) => item.dataset.publishedAt)
+    .filter(Boolean)
+    .map((d) => new Date(d!).getFullYear());
+  const startYear =
+    publishedYearsM.length > 0
+      ? Math.min(...publishedYearsM)
+      : allMentions[0]!.date.getFullYear();
+  const endYear = new Date().getFullYear() - 1; // current year - 1
   const mentionsByYear = new Map<number, { raw: number; weighted: number }>();
 
   allMentions.forEach((mention) => {
