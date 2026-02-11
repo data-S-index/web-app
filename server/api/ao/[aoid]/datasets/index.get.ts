@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   const datasets = await prisma.automatedOrganizationDataset.findMany({
     where: { automatedOrganizationId: aoid },
     take: TAKE,
-    orderBy: { created: "desc" },
+    orderBy: { dataset: { publishedAt: "desc" } },
     include: {
       dataset: {
         include: {

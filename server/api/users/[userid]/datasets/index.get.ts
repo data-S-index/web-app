@@ -6,6 +6,7 @@ export default defineEventHandler(async (event) => {
     where: {
       userId,
     },
+    orderBy: { dataset: { publishedAt: "desc" } },
     include: {
       dataset: {
         include: {
