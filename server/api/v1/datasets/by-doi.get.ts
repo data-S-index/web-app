@@ -86,11 +86,11 @@ export default defineEventHandler(async (event) => {
             datasetId: dataset.id,
           },
           orderBy: {
-            created: "desc",
+            year: "desc",
           },
           select: {
             score: true,
-            created: true,
+            year: true,
           },
         });
 

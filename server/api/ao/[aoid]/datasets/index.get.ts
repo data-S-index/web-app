@@ -60,8 +60,8 @@ export default defineEventHandler(async (event) => {
             },
           },
           dindices: {
-            select: { score: true, created: true },
-            orderBy: { created: "desc" },
+            select: { score: true, year: true },
+            orderBy: { year: "desc" },
             take: 1, // IMPORTANT: only latest
           },
           datasetAuthors: {
@@ -103,7 +103,7 @@ export default defineEventHandler(async (event) => {
         d."score"
       FROM "DIndex" d
       JOIN org_ds o ON o."datasetId" = d."datasetId"
-      ORDER BY d."datasetId", d."created" DESC
+      ORDER BY d."datasetId", d."year" DESC
     )
     SELECT
       (SELECT COUNT(*) FROM org_ds) AS "totalDatasets",

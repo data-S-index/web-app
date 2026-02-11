@@ -36,22 +36,12 @@ export default defineEventHandler(async (event) => {
           dindices: {
             select: {
               score: true,
-              created: true,
+              year: true,
             },
             orderBy: {
-              created: "desc",
+              year: "desc",
             },
           },
-          // dindices: {
-          //   select: {
-          //     score: true,
-          //     created: true,
-          //   },
-          //   orderBy: {
-          //     created: "desc",
-          //   },
-          //   take: 1,
-          // },
           datasetAuthors: {
             select: {
               name: true,

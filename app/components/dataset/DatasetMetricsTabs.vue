@@ -27,7 +27,10 @@ const tabItems = [
   <UTabs :items="tabItems" color="primary">
     <template #d-index>
       <UCard v-if="dataset.dindices && dataset.dindices.length > 0">
-        <DatasetDIndexPlot :dindices="dataset.dindices" />
+        <DatasetDIndexPlot
+          :dindices="dataset.dindices"
+          :published-at="dataset.publishedAt"
+        />
       </UCard>
     </template>
 

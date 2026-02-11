@@ -1,61 +1,45 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 const props = defineProps<{
-  dindices: Array<{ created: string; score: number }> | null | undefined;
+  dindices: Array<{ year: number; score: number }> | null | undefined;
+  publishedAt?: string | Date | null;
 }>();
 
-// Process d-index data for chart (by date)
+// Process d-index data for chart (by year only); start from dataset publishedAt year
 const dIndexChartData = computed(() => {
   if (!props.dindices || props.dindices.length === 0) {
-    return { dates: [], scores: [], earliestDate: null, endDate: null };
+    return { years: [], scores: [] };
   }
 
-  // Sort by date ascending (earliest first)
-  const sorted = [...props.dindices].sort(
-    (a, b) => new Date(a.created).getTime() - new Date(b.created).getTime(),
-  );
+  // Sort by year ascending
+  const sorted = [...props.dindices].sort((a, b) => a.year - b.year);
 
   // Don't plot if there's only one data point (no trend to show)
   if (sorted.length === 1) {
-    return { dates: [], scores: [], earliestDate: null, endDate: null };
+    return { years: [], scores: [] };
   }
 
-  // Get earliest date and current date
-  const earliestDate = new Date(sorted[0]!.created);
-  const now = new Date();
-  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const currentYear = new Date().getFullYear();
+  const startYear = props.publishedAt
+    ? new Date(props.publishedAt).getFullYear()
+    : sorted[0]!.year;
+  const endYear = Math.max(
+    currentYear,
+    ...sorted.map((d) => d.year),
+  );
 
-  // Generate monthly data points from earliest to now
-  const dates: string[] = [];
+  const years: number[] = [];
   const scores: number[] = [];
-  let currentDate = new Date(earliestDate);
-  let lastKnownScore = sorted[0]!.score;
+  let lastKnownScore = 0;
 
-  // Generate data points monthly
-  while (currentDate <= endDate) {
-    const dateStr = currentDate.toISOString().split("T")[0]!;
-    dates.push(dateStr);
-
-    // Find the most recent d-index value up to this date
-    const relevantDIndex = sorted
-      .filter((d) => new Date(d.created) <= currentDate)
-      .pop();
-
-    if (relevantDIndex) {
-      lastKnownScore = relevantDIndex.score;
-    }
-
+  for (let y = startYear; y <= endYear; y++) {
+    years.push(y);
+    const point = sorted.filter((d) => d.year <= y).pop();
+    if (point) lastKnownScore = point.score;
     scores.push(lastKnownScore);
-
-    // Move to next month
-    currentDate = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      1,
-    );
   }
 
-  return { dates, scores, earliestDate, endDate };
+  return { years, scores };
 });
 
 // Check if there's only one data point (not enough for a trend)
@@ -63,7 +47,7 @@ const hasOnlyOneDataPoint = computed(() => {
   return props.dindices && props.dindices.length === 1;
 });
 
-// Chart option for d-index over time
+// Chart option for d-index by year (year on x-axis only)
 const dIndexChartOption = computed<ECOption>(() => ({
   tooltip: {
     trigger: "axis",
@@ -75,41 +59,28 @@ const dIndexChartOption = computed<ECOption>(() => ({
       label: {
         show: true,
         backgroundColor: "#6b7280",
-        formatter: (params: { axisDimension: string; value: number }) => {
-          if (params.axisDimension === "x") {
-            const date = new Date(params.value);
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const year = date.getFullYear();
-
-            return `${month}/${year}`;
+        formatter: (params: unknown) => {
+          const p = params as { axisDimension?: string; value?: number | string };
+          if (p.axisDimension === "x") {
+            return String(p.value ?? "");
           }
-
-          return params.value.toFixed(1);
+          return typeof p.value === "number" ? p.value.toFixed(1) : String(p.value ?? "");
         },
       },
     },
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: [string, number];
+        value: number;
         marker: string;
       }>;
 
       if (!data || data.length === 0) return "";
 
-      const dateStr = data[0]?.value?.[0] || data[0]?.name;
-      if (!dateStr) return "";
+      const year = data[0]?.name ?? "";
+      const value = data[0]?.value;
 
-      const date = new Date(dateStr);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const formattedDate = `${month}/${year}`;
-
-      const value = Array.isArray(data[0]?.value)
-        ? data[0]?.value[1]
-        : data[0]?.value;
-
-      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} D-Index: <strong>${value?.toFixed(1)}</strong>`;
+      return `<strong>${year}</strong><br/>${data[0]?.marker} D-Index: <strong>${value?.toFixed(1)}</strong>`;
     },
   },
   grid: {
@@ -120,22 +91,13 @@ const dIndexChartOption = computed<ECOption>(() => ({
     containLabel: true,
   },
   xAxis: {
-    type: "time",
-    min: dIndexChartData.value.earliestDate
-      ? dIndexChartData.value.earliestDate.toISOString().split("T")[0]
-      : undefined,
-    max: dIndexChartData.value.endDate
-      ? dIndexChartData.value.endDate.toISOString().split("T")[0]
-      : undefined,
+    type: "category",
+    data: dIndexChartData.value.years,
+    name: "Year",
+    nameLocation: "middle",
+    nameGap: 28,
     axisLabel: {
-      fontSize: 8,
-      formatter: (value: number | string) => {
-        const date = new Date(typeof value === "number" ? value : value);
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = String(date.getFullYear()).slice(-2);
-
-        return `${month}/${year}`;
-      },
+      fontSize: 10,
     },
   },
   yAxis: {
@@ -151,10 +113,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
     {
       name: "D-Index",
       type: "line",
-      data: dIndexChartData.value.dates.map((date, index) => [
-        date,
-        dIndexChartData.value.scores[index],
-      ]),
+      data: dIndexChartData.value.scores,
       step: "end",
       lineStyle: {
         color: "#3b82f6",
@@ -164,7 +123,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
         color: "#3b82f6",
       },
       symbol: "circle",
-      symbolSize: 2,
+      symbolSize: 6,
       areaStyle: {
         color: {
           type: "linear",
@@ -210,7 +169,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
           v-if="
             !dindices ||
             dindices.length === 0 ||
-            dIndexChartData.dates.length === 0
+            dIndexChartData.years.length === 0
           "
           class="flex h-full items-center justify-center"
         >

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import UserDatasetList from "~/components/user/UserDatasetList.vue";
+import type { DatasetListItem } from "~/components/user/UserDatasetList.vue";
 
 interface OrgDatasetItem {
   datasetId: number;
   dataset: {
-    dindices?: Array<{ score: number; created: string }>;
+    dindices?: Array<{ score: number; year: number }>;
     citations: Array<unknown>;
     mentions: Array<unknown>;
     fujiScore?: { score: number | null };
@@ -13,7 +14,7 @@ interface OrgDatasetItem {
     description?: string | null;
     identifier?: string;
     version?: string | null;
-    publishedAt?: Date | string;
+    publishedAt?: Date | string | null;
   };
 }
 
@@ -94,21 +95,20 @@ const totalMentions = computed(() => {
 
 const averageFairScore = computed(() => response.value?.averageFairScore ?? 0);
 
-// S-index over time (aggregated across all datasets)
+// S-index over time by year (aggregated across all datasets)
 const sindexOverTime = computed(() => {
   const list = datasets.value;
-  if (!list.length)
-    return { dates: [], scores: [], earliestDate: null, endDate: null };
+  if (!list.length) return { years: [], scores: [] };
 
-  const allDIndices: Array<{ date: Date; score: number; datasetId: number }> =
+  const allDIndices: Array<{ year: number; score: number; datasetId: number }> =
     [];
 
   list.forEach((item: OrgDatasetItem) => {
     if (item.dataset.dindices && item.dataset.dindices.length > 0) {
       item.dataset.dindices.forEach(
-        (dindex: { created: string; score: number }) => {
+        (dindex: { year: number; score: number }) => {
           allDIndices.push({
-            date: new Date(dindex.created),
+            year: dindex.year,
             score: dindex.score,
             datasetId: item.datasetId,
           });
@@ -117,34 +117,38 @@ const sindexOverTime = computed(() => {
     }
   });
 
-  if (allDIndices.length === 0) {
-    return { dates: [], scores: [], earliestDate: null, endDate: null };
-  }
+  if (allDIndices.length === 0) return { years: [], scores: [] };
 
-  allDIndices.sort((a, b) => a.date.getTime() - b.date.getTime());
-  const earliestDate = allDIndices[0]!.date;
-  const now = new Date();
-  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  const currentDate = new Date(earliestDate);
-  currentDate.setDate(1);
+  allDIndices.sort((a, b) => a.year - b.year);
 
-  const dates: string[] = [];
+  // Start from earliest dataset publishedAt year
+  const publishedYears = list
+    .map((item: OrgDatasetItem) => item.dataset.publishedAt)
+    .filter(Boolean)
+    .map((d) => new Date(d!).getFullYear());
+  const minYear =
+    publishedYears.length > 0
+      ? Math.min(...publishedYears)
+      : allDIndices[0]!.year;
+  const currentYear = new Date().getFullYear();
+
+  const years: number[] = [];
   const scores: number[] = [];
 
-  while (currentDate <= endDate) {
-    dates.push(currentDate.toISOString().split("T")[0]!);
+  for (let y = minYear; y <= currentYear; y++) {
+    years.push(y);
     const datasetLatestDIndex = new Map<
       number,
-      { score: number; date: Date }
+      { score: number; year: number }
     >();
 
     allDIndices.forEach((dindex) => {
-      if (dindex.date <= currentDate) {
+      if (dindex.year <= y) {
         const existing = datasetLatestDIndex.get(dindex.datasetId);
-        if (!existing || dindex.date > existing.date) {
+        if (!existing || dindex.year > existing.year) {
           datasetLatestDIndex.set(dindex.datasetId, {
             score: dindex.score,
-            date: dindex.date,
+            year: dindex.year,
           });
         }
       }
@@ -155,10 +159,9 @@ const sindexOverTime = computed(() => {
       sindexValue += entry.score;
     });
     scores.push(sindexValue);
-    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
-  return { dates, scores, earliestDate, endDate };
+  return { years, scores };
 });
 
 // Cumulative citations (raw and weighted) across all datasets
@@ -461,7 +464,7 @@ const cumulativeMentions = computed(() => {
           description="Only the first 500 datasets are displayed."
         />
 
-        <UserDatasetList :items="datasets" />
+        <UserDatasetList :items="(datasets as DatasetListItem[])" />
       </UPageBody>
 
       <UPageBody v-else-if="orgError">

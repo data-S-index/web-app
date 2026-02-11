@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
       id: true,
       dindices: {
         orderBy: {
-          created: "desc",
+          year: "desc",
         },
         take: 1,
         select: {

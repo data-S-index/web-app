@@ -4,7 +4,7 @@ import type { Author } from "#shared/types/dataset";
 export interface DatasetListItem {
   datasetId: number;
   dataset: {
-    dindices?: Array<{ score: number; created: string }>;
+    dindices?: Array<{ score: number; year: number }>;
     citations: Array<unknown>;
     mentions: Array<unknown>;
     fujiScore?: { score: number | null } | null;

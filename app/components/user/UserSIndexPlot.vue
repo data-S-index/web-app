@@ -2,14 +2,12 @@
 <script setup lang="ts">
 const props = defineProps<{
   sindexOverTime: {
-    dates: string[];
+    years: number[];
     scores: number[];
-    earliestDate: Date | null;
-    endDate: Date | null;
   };
 }>();
 
-// Chart options for S-index over time
+// Chart options for S-index over time (year on x-axis only)
 const sindexChartOption = computed<ECOption>(() => ({
   tooltip: {
     trigger: "axis",
@@ -27,13 +25,8 @@ const sindexChartOption = computed<ECOption>(() => ({
             value?: number | string;
           };
           if (p.axisDimension === "x") {
-            const date = new Date(p.value as number);
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const year = date.getFullYear();
-
-            return `${month}/${year}`;
+            return String(p.value);
           }
-
           return typeof p.value === "number"
             ? p.value.toFixed(1)
             : String(p.value);
@@ -43,21 +36,14 @@ const sindexChartOption = computed<ECOption>(() => ({
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: [string, number];
+        value: number;
         marker: string;
       }>;
       if (!data || data.length === 0) return "";
-      const dateStr = data[0]?.value?.[0] || data[0]?.name;
-      if (!dateStr) return "";
-      const date = new Date(dateStr);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const formattedDate = `${month}/${year}`;
-      const value = Array.isArray(data[0]?.value)
-        ? data[0]?.value[1]
-        : data[0]?.value;
+      const year = data[0]?.name ?? "";
+      const value = data[0]?.value;
 
-      return `<strong>${formattedDate}</strong><br/>${data[0]?.marker} S-Index: <strong>${value?.toFixed(1)}</strong>`;
+      return `<strong>${year}</strong><br/>${data[0]?.marker} S-Index: <strong>${value?.toFixed(1)}</strong>`;
     },
   },
   grid: {
@@ -68,22 +54,13 @@ const sindexChartOption = computed<ECOption>(() => ({
     containLabel: true,
   },
   xAxis: {
-    type: "time",
-    min: props.sindexOverTime.earliestDate
-      ? props.sindexOverTime.earliestDate.toISOString().split("T")[0]
-      : undefined,
-    max: props.sindexOverTime.endDate
-      ? props.sindexOverTime.endDate.toISOString().split("T")[0]
-      : undefined,
+    type: "category",
+    data: props.sindexOverTime.years,
+    name: "Year",
+    nameLocation: "middle",
+    nameGap: 28,
     axisLabel: {
-      fontSize: 8,
-      formatter: (value: number | string) => {
-        const date = new Date(typeof value === "number" ? value : value);
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = String(date.getFullYear()).slice(-2);
-
-        return `${month}/${year}`;
-      },
+      fontSize: 10,
     },
   },
   yAxis: {
@@ -99,10 +76,7 @@ const sindexChartOption = computed<ECOption>(() => ({
     {
       name: "S-Index",
       type: "line",
-      data: props.sindexOverTime.dates.map((date, index) => [
-        date,
-        props.sindexOverTime.scores[index],
-      ]),
+      data: props.sindexOverTime.scores,
       step: "end",
       lineStyle: {
         color: "#ec4899",
@@ -112,7 +86,7 @@ const sindexChartOption = computed<ECOption>(() => ({
         color: "#ec4899",
       },
       symbol: "circle",
-      symbolSize: 2,
+      symbolSize: 6,
       areaStyle: {
         color: {
           type: "linear",
@@ -145,7 +119,7 @@ const sindexChartOption = computed<ECOption>(() => ({
 
     <ClientOnly>
       <div
-        v-if="sindexOverTime.dates && sindexOverTime.dates.length > 0"
+        v-if="sindexOverTime.years && sindexOverTime.years.length > 0"
         style="height: 300px"
         class="relative"
       >

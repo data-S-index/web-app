@@ -38,10 +38,10 @@ export default defineEventHandler(async (event) => {
       dindices: {
         select: {
           score: true,
-          created: true,
+          year: true,
         },
         orderBy: {
-          created: "desc",
+          year: "asc",
         },
       },
       mentions: {

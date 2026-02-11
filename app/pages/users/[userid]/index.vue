@@ -1,11 +1,14 @@
 <script setup lang="ts">
+import type { DatasetListItem } from "~/components/user/UserDatasetList.vue";
+
 interface UserDatasetItem {
   datasetId: number;
   dataset: {
-    dindices?: Array<{ score: number; created: string }>;
+    dindices?: Array<{ score: number; year: number }>;
     citations: Array<unknown>;
     mentions: Array<unknown>;
     fujiScore?: { score: number | null };
+    publishedAt?: string | Date | null;
   };
 }
 
@@ -159,22 +162,21 @@ const averageFairScore = computed(() => {
   return sum / datasetsWithFairScore.length;
 });
 
-// S-index over time (aggregated across all datasets)
+// S-index over time by year (aggregated across all datasets)
 const sindexOverTime = computed(() => {
-  if (!userData.value)
-    return { dates: [], scores: [], earliestDate: null, endDate: null };
+  if (!userData.value) return { years: [], scores: [] };
 
   const datasets = userData.value as UserDatasetItem[];
 
-  // Collect all d-index entries from all datasets
-  const allDIndices: Array<{ date: Date; score: number; datasetId: number }> =
+  // Collect all d-index entries from all datasets (year-based)
+  const allDIndices: Array<{ year: number; score: number; datasetId: number }> =
     [];
 
   datasets.forEach((item) => {
     if (item.dataset.dindices && item.dataset.dindices.length > 0) {
       item.dataset.dindices.forEach((dindex) => {
         allDIndices.push({
-          date: new Date(dindex.created),
+          year: dindex.year,
           score: dindex.score,
           datasetId: item.datasetId,
         });
@@ -183,58 +185,54 @@ const sindexOverTime = computed(() => {
   });
 
   if (allDIndices.length === 0) {
-    return { dates: [], scores: [], earliestDate: null, endDate: null };
+    return { years: [], scores: [] };
   }
 
-  // Sort by date
-  allDIndices.sort((a, b) => a.date.getTime() - b.date.getTime());
+  // Sort by year
+  allDIndices.sort((a, b) => a.year - b.year);
 
-  // Get earliest and latest dates
-  const earliestDate = allDIndices[0]!.date;
-  const now = new Date();
-  const endDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  // Start from earliest dataset publishedAt year
+  const publishedYears = datasets
+    .map((item) => item.dataset.publishedAt)
+    .filter(Boolean)
+    .map((d) => new Date(d!).getFullYear());
+  const minYear =
+    publishedYears.length > 0
+      ? Math.min(...publishedYears)
+      : allDIndices[0]!.year;
+  const currentYear = new Date().getFullYear();
 
-  // For each month, find the latest d-index for each dataset and sum them
-  const currentDate = new Date(earliestDate);
-  currentDate.setDate(1); // Start of month
-
-  const dates: string[] = [];
+  const years: number[] = [];
   const scores: number[] = [];
 
-  while (currentDate <= endDate) {
-    dates.push(currentDate.toISOString().split("T")[0]!);
+  for (let y = minYear; y <= currentYear; y++) {
+    years.push(y);
 
-    // For each dataset, find the most recent d-index (by date) up to this month
-    const datasetLatestDIndex = new Map<
-      number,
-      { score: number; date: Date }
-    >();
+    // For each dataset, take latest d-index with year <= y
+    const datasetLatestDIndex = new Map<number, { score: number; year: number }>(
+      [],
+    );
 
     allDIndices.forEach((dindex) => {
-      if (dindex.date <= currentDate) {
+      if (dindex.year <= y) {
         const existing = datasetLatestDIndex.get(dindex.datasetId);
-        if (!existing || dindex.date > existing.date) {
+        if (!existing || dindex.year > existing.year) {
           datasetLatestDIndex.set(dindex.datasetId, {
             score: dindex.score,
-            date: dindex.date,
+            year: dindex.year,
           });
         }
       }
     });
 
-    // Sum all latest d-indices to get S-index
     let sindexValue = 0;
     datasetLatestDIndex.forEach((entry) => {
       sindexValue += entry.score;
     });
-
     scores.push(sindexValue);
-
-    // Move to next month
-    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
-  return { dates, scores, earliestDate, endDate };
+  return { years, scores };
 });
 
 // Cumulative citations (raw and weighted) across all datasets
@@ -611,7 +609,7 @@ const handleDatasetsAdded = () => {
         </div>
 
         <UserDatasetList
-          :items="userData"
+          :items="(userData as DatasetListItem[] | undefined) ?? undefined"
           :show-remove="isCurrentUser"
           @remove="removeDataset"
         />

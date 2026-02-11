@@ -3,10 +3,8 @@ defineProps<{
   sindex: number;
   datasetCount: number;
   sindexOverTime: {
-    dates: string[];
+    years: number[];
     scores: number[];
-    earliestDate: Date | null;
-    endDate: Date | null;
   };
   cumulativeCitations: {
     dates: string[];
