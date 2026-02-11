@@ -392,12 +392,14 @@ const cumulativeMentions = computed(() => {
               }}
             </div>
 
-            <p class="mt-2 text-sm">Sum of D-Index scores for all datasets</p>
+            <p class="mt-2 text-sm">Sum of Dataset Indices for all datasets</p>
           </UCard>
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Average D-Index per Dataset</h3>
+              <h3 class="text-lg font-semibold">
+                Average Dataset Index per Dataset
+              </h3>
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
@@ -411,7 +413,7 @@ const cumulativeMentions = computed(() => {
               }}
             </div>
 
-            <p class="mt-2 text-sm">Average D-Index score per dataset</p>
+            <p class="mt-2 text-sm">Average Dataset Index per dataset</p>
           </UCard>
 
           <UCard>

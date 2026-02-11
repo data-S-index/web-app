@@ -199,7 +199,7 @@ const reloadPage = () => {
                 "
                 class="flex flex-col items-center text-center"
               >
-                <p class="mb-2 text-sm font-medium">D-Index Score</p>
+                <p class="mb-2 text-sm font-medium">Dataset Index</p>
 
                 <div class="flex items-center gap-2">
                   <div

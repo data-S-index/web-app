@@ -5,7 +5,7 @@ const props = defineProps<{
   publishedAt?: string | Date | null;
 }>();
 
-// Process d-index data for chart (by year only); start from dataset publishedAt year
+// Process Dataset Index data for chart (by year only); start from dataset publishedAt year
 const dIndexChartData = computed(() => {
   if (!props.dindices || props.dindices.length === 0) {
     return { years: [], scores: [] };
@@ -23,10 +23,7 @@ const dIndexChartData = computed(() => {
   const startYear = props.publishedAt
     ? new Date(props.publishedAt).getFullYear()
     : sorted[0]!.year;
-  const endYear = Math.max(
-    currentYear,
-    ...sorted.map((d) => d.year),
-  );
+  const endYear = Math.max(currentYear, ...sorted.map((d) => d.year));
 
   const years: number[] = [];
   const scores: number[] = [];
@@ -47,7 +44,7 @@ const hasOnlyOneDataPoint = computed(() => {
   return props.dindices && props.dindices.length === 1;
 });
 
-// Chart option for d-index by year (year on x-axis only)
+// Chart option for Dataset Index by year (year on x-axis only)
 const dIndexChartOption = computed<ECOption>(() => ({
   tooltip: {
     trigger: "axis",
@@ -60,11 +57,17 @@ const dIndexChartOption = computed<ECOption>(() => ({
         show: true,
         backgroundColor: "#6b7280",
         formatter: (params: unknown) => {
-          const p = params as { axisDimension?: string; value?: number | string };
+          const p = params as {
+            axisDimension?: string;
+            value?: number | string;
+          };
           if (p.axisDimension === "x") {
             return String(p.value ?? "");
           }
-          return typeof p.value === "number" ? p.value.toFixed(1) : String(p.value ?? "");
+
+          return typeof p.value === "number"
+            ? p.value.toFixed(1)
+            : String(p.value ?? "");
         },
       },
     },
@@ -80,7 +83,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
       const year = data[0]?.name ?? "";
       const value = data[0]?.value;
 
-      return `<strong>${year}</strong><br/>${data[0]?.marker} D-Index: <strong>${value?.toFixed(1)}</strong>`;
+      return `<strong>${year}</strong><br/>${data[0]?.marker} Dataset Index: <strong>${value?.toFixed(1)}</strong>`;
     },
   },
   grid: {
@@ -102,7 +105,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
   },
   yAxis: {
     type: "value",
-    name: "D-Index",
+    name: "Dataset Index",
     nameLocation: "middle",
     nameGap: 32,
     axisLabel: {
@@ -111,7 +114,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
   },
   series: [
     {
-      name: "D-Index",
+      name: "Dataset Index",
       type: "line",
       data: dIndexChartData.value.scores,
       step: "end",
@@ -151,7 +154,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
 <template>
   <ClientOnly>
     <div>
-      <p class="mb-2 text-sm font-medium">D-Index Over Time</p>
+      <p class="mb-2 text-sm font-medium">Dataset Index Over Time</p>
 
       <div
         v-if="hasOnlyOneDataPoint"

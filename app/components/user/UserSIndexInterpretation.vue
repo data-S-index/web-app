@@ -11,7 +11,7 @@ defineProps<{
       <p>
         The <strong>S-Index</strong> (Sharing Index) is a comprehensive metric
         that represents the cumulative impact of all your datasets. It is
-        calculated as the sum of D-Index scores across all your claimed
+        calculated as the sum of Dataset Index scores across all your claimed
         datasets.
       </p>
 
@@ -41,7 +41,7 @@ defineProps<{
         {{ datasetCount.toLocaleString() }} dataset{{
           datasetCount !== 1 ? "s" : ""
         }}
-        D-Index scores)
+        Dataset Index scores)
       </p>
 
       <p>

@@ -2,7 +2,7 @@
 useSeoMeta({
   title: "Integrations",
   description:
-    "Embed dataset index widgets or use our API to show D-Index and metrics on your platform.",
+    "Embed Dataset Index widgets or use our API to show Dataset Index and metrics on your platform.",
 });
 
 defineOgImageComponent("Pergel", {
@@ -106,7 +106,7 @@ const embedSnippet = computed(
   >
     <UPageCTA
       title="Integrations"
-      description="Use the embedded widget or API to show dataset index and metrics on your own platform-repositories, lab sites, or dashboards."
+      description="Use the embedded widget or API to show Dataset Index and metrics on your own platform-repositories, lab sites, or dashboards."
       variant="naked"
       :ui="{
         container: '!py-5',
@@ -178,7 +178,7 @@ const embedSnippet = computed(
 
         <div class="space-y-5">
           <p class="text-sm">
-            Embed a small card showing D-Index, FAIR score, citations, and
+            Embed a small card showing Dataset Index, FAIR score, citations, and
             mentions for any dataset by DOI. Use an iframe and pass the
             <code
               class="rounded bg-gray-200 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
@@ -277,7 +277,7 @@ const embedSnippet = computed(
 
           <p class="text-muted text-sm">
             Returns dataset id, total citations, total mentions, latest FAIR
-            score, and latest D-Index.
+            score, and latest Dataset Index.
           </p>
 
           <div class="space-y-1.5">

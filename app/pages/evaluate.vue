@@ -6,12 +6,12 @@ const route = useRoute();
 const toast = useToast();
 
 useSeoMeta({
-  title: "Evaluate Dataset D-index",
-  description: "Enter a DOI or dataset URL to get your D-Index score.",
+  title: "Evaluate a dataset",
+  description: "Enter a DOI or dataset URL to get its Dataset Index.",
 });
 
 defineOgImageComponent("Pergel", {
-  headline: "Get your D-Index score",
+  headline: "Get your Dataset Index",
 });
 
 const hasDoi = ref<boolean | null>(null);
@@ -32,7 +32,7 @@ const loadingTasks = [
   "Collecting citations",
   "Gathering mentions",
   "Evaluating FAIR score",
-  "Calculating D-index",
+  "Calculating Dataset Index",
 ];
 
 // Check for query parameters and fetch data if present
@@ -389,7 +389,7 @@ const handleSubmit = async () => {
     <UPage>
       <UPageHeader
         v-if="!isLoading && !dataset"
-        title="Get Dataset D-index score"
+        title="Get Dataset Index"
         description="Enter a DOI or dataset URL to view the corresponding dataset details"
       />
 

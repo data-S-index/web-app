@@ -168,7 +168,7 @@ const sindexOverTime = computed(() => {
 
   const datasets = userData.value as UserDatasetItem[];
 
-  // Collect all d-index entries from all datasets (year-based)
+  // Collect all Dataset Index entries from all datasets (year-based)
   const allDIndices: Array<{ year: number; score: number; datasetId: number }> =
     [];
 
@@ -208,7 +208,7 @@ const sindexOverTime = computed(() => {
   for (let y = minYear; y <= currentYear; y++) {
     years.push(y);
 
-    // For each dataset, take latest d-index with year <= y
+    // For each dataset, take latest Dataset Index with year <= y
     const datasetLatestDIndex = new Map<
       number,
       { score: number; year: number }
@@ -512,12 +512,14 @@ const handleDatasetsAdded = () => {
               }}
             </div>
 
-            <p class="mt-2 text-sm">Sum of D-Index scores for all datasets</p>
+            <p class="mt-2 text-sm">Sum of Dataset Indices for all datasets</p>
           </UCard>
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Average D-Index per Dataset</h3>
+              <h3 class="text-lg font-semibold">
+                Average Dataset Index per Dataset
+              </h3>
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
@@ -531,7 +533,7 @@ const handleDatasetsAdded = () => {
               }}
             </div>
 
-            <p class="mt-2 text-sm">Average D-Index score per dataset</p>
+            <p class="mt-2 text-sm">Average Dataset Index per dataset</p>
           </UCard>
 
           <UCard>

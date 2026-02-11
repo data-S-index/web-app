@@ -108,7 +108,7 @@ const sindexChartOption = computed<ECOption>(() => ({
       >
         <UAlert
           title="No S-Index data available"
-          description="S-Index data will appear as datasets are added and D-Index scores are calculated."
+          description="S-Index data will appear as datasets are added and Dataset Indices are calculated."
           color="warning"
           variant="subtle"
         />

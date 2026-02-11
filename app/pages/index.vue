@@ -292,8 +292,8 @@ const isDark = computed(() => useColorMode().value === "dark");
             </p>
 
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Every dataset earns a D-Index; your S-Index reflects your full
-              sharing footprint.
+              Every dataset earns a Dataset Index; your S-Index reflects your
+              full sharing footprint.
             </p>
           </div>
         </div>

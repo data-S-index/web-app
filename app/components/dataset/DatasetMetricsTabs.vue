@@ -6,7 +6,7 @@ defineProps<{
 
 const tabItems = [
   {
-    label: "D-Index",
+    label: "Dataset Index",
     icon: "tabler:circle-dotted-letter-d",
     slot: "d-index",
   },

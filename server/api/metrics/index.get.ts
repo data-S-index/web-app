@@ -123,7 +123,7 @@ sindex_agg AS (
   FROM "SIndex"
 ),
 
--- Pre-computed d-index from DIndex table (per dataset)
+-- Pre-computed Dataset Index from DIndex table (per dataset)
 dindex_agg AS (
   SELECT
     round(COALESCE(avg("score"), 0)::numeric, 1) AS average_d_index,

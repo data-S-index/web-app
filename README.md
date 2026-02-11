@@ -6,7 +6,7 @@ Scholar Data helps you measure, improve, and showcase the impact of what you sha
 
 ## What Scholar Data offers
 
-- **S-Index & D-Index** - A dataset-first impact metric. Each dataset earns a D-Index (FAIRness, citations, and mentions), and your S-Index rolls them up into one clear score you can actually explain.
+- **S-Index & Dataset Index** - A dataset-first impact metric. Each dataset earns a Dataset Index (FAIRness, citations, and mentions), and your S-Index rolls them up into one clear score you can actually explain.
 - **FAIR Assessment** - See how Findable, Accessible, Interoperable, and Reusable your datasets really are, with transparent scores you can improve over time.
 - **Dataset Discovery** - Find datasets by topic, DOI, or keyword. Track citations and attention over time and spot real-world reuse across the community.
 - **Authors & Organizations** - Look up researchers and institutions in seconds. See S-Index scores, claimed datasets, and data-sharing footprint in one place.
@@ -15,13 +15,13 @@ Scholar Data helps you measure, improve, and showcase the impact of what you sha
 
 ### Resolver
 
-Paste a DOI or dataset URL to get **on-demand dataset metrics**, computed in real time. The D-Index is calculated at request time so you always see the latest citations, mentions, FAIR score, and normalized results in one place.
+Paste a DOI or dataset URL to get **on-demand dataset metrics**, computed in real time. The Dataset Index is calculated at request time so you always see the latest citations, mentions, FAIR score, and normalized results in one place.
 
 ### Why it matters
 
 Publications aren’t the whole story-datasets drive discovery. Traditional metrics reward papers. The S-Index rewards shared datasets: how findable they are, how often they’re cited or mentioned, and how they’re reused. It’s simple to interpret, field-sensitive, and built on tools researchers already use.
 
-- **Dataset-first** - Every dataset earns a D-Index; your S-Index reflects your full sharing footprint.
+- **Dataset-first** - Every dataset earns a Dataset Index; your S-Index reflects your full sharing footprint.
 - **Fair across fields** - Context and normalization help comparisons stay meaningful across disciplines.
 - **Built on reuse + FAIR** - FAIRness, citations, and attention combined into one transparent, improvable score.
 
