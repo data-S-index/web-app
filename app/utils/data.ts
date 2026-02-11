@@ -1,6 +1,8 @@
 import openAlexTopicsJson from "@/assets/data/openalexTopics.json";
 
-export const openAlexTopics = openAlexTopicsJson.map((topic) => ({
-  label: topic.topic_name,
-  value: topic.topic_id,
-}));
+export const openAlexTopics = openAlexTopicsJson
+  .map((topic) => ({
+    label: topic.subfield_name,
+    value: topic.subfield_id,
+  }))
+  .sort((a, b) => a.label.localeCompare(b.label));

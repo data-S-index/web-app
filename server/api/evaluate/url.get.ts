@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const url = query.url as string | undefined;
   const pubyear = query.pubyear as string | undefined;
-  const topicId = query.topic_id as string | undefined;
+  const subfieldId = query.subfield_id as string | undefined;
 
   if (!url) {
     throw createError({
@@ -48,8 +48,8 @@ export default defineEventHandler(async (event) => {
   if (pubyear) {
     cacheKeyParts.push(decodeURIComponent(pubyear).trim());
   }
-  if (topicId) {
-    cacheKeyParts.push(decodeURIComponent(topicId).trim());
+  if (subfieldId) {
+    cacheKeyParts.push(decodeURIComponent(subfieldId).trim());
   }
   const cacheKey = `${CACHE_KEY_PREFIX}:${cacheKeyParts.join(":")}`;
 
@@ -90,8 +90,8 @@ export default defineEventHandler(async (event) => {
       params.append("pubyear", pubyear);
     }
 
-    if (topicId) {
-      params.append("topic_id", topicId);
+    if (subfieldId) {
+      params.append("subfield_id", subfieldId);
     }
 
     // Proxy request to external API

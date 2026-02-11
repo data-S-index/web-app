@@ -369,15 +369,16 @@ const handleSubmit = async () => {
     }
 
     // Handle URL-based resolution - fetch data and display on same page
-    const topicId = datasetDomain.value
-      ? openAlexTopics.find((topic) => topic.label === datasetDomain.value)
-          ?.value
+    const subfieldId = datasetDomain.value
+      ? openAlexTopics.find(
+          (subfield) => subfield.label === datasetDomain.value,
+        )?.value
       : undefined;
 
     await fetchDatasetDataFromUrl(
       datasetUrl.value,
       publicationDate.value || undefined,
-      topicId,
+      subfieldId,
     );
   }
 };
@@ -389,7 +390,7 @@ const handleSubmit = async () => {
     <UPage>
       <UPageHeader
         v-if="!isLoading && !dataset"
-        title="Evaluate Datasets"
+        title="Evaluate Dataset"
         description="Provide the DOI or URL of a dataset to get it's impact page generated."
       />
 
