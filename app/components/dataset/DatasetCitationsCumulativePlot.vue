@@ -8,19 +8,18 @@ const props = defineProps<{
   publishedAt?: string | null;
 }>();
 
-// Process citations data for cumulative chart
+// Process citations data for cumulative chart (per year, bar chart)
 const citationsChartData = computed(() => {
   if (!props.citations || props.citations.length === 0) {
     return {
-      dates: [],
-      rawValues: [],
-      weightedValues: [],
-      earliestDate: null,
-      endDate: null,
+      years: [] as string[],
+      rawValues: [] as number[],
+      weightedValues: [] as number[],
+      earliestDate: null as Date | null,
+      endDate: null as Date | null,
     };
   }
 
-  // Filter citations with dates
   const citationsWithDates = props.citations
     .filter((c) => c.citedDate)
     .map((c) => ({
@@ -31,7 +30,7 @@ const citationsChartData = computed(() => {
 
   if (citationsWithDates.length === 0) {
     return {
-      dates: [],
+      years: [],
       rawValues: [],
       weightedValues: [],
       earliestDate: null,
@@ -39,65 +38,52 @@ const citationsChartData = computed(() => {
     };
   }
 
-  // Determine start date (publication date or first citation date)
+  const currentYear = new Date().getFullYear();
   const publicationDate = props.publishedAt
     ? new Date(props.publishedAt)
     : null;
   const firstCitationDate = citationsWithDates[0]!.date;
-  const startDate =
-    publicationDate && publicationDate < firstCitationDate
-      ? publicationDate
-      : firstCitationDate;
-
-  // Determine end date (now or last citation date)
-  const now = new Date();
   const lastCitationDate =
     citationsWithDates[citationsWithDates.length - 1]!.date;
-  const endDate = lastCitationDate > now ? lastCitationDate : now;
+  const startYear = publicationDate
+    ? new Date(publicationDate).getFullYear()
+    : firstCitationDate.getFullYear();
+  const endYear = Math.max(currentYear, lastCitationDate.getFullYear());
 
-  // Generate monthly data points
-  const dates: string[] = [];
-  const rawValues: number[] = [];
-  const weightedValues: number[] = [];
-
-  let cumulativeRaw = 0;
-  let cumulativeWeighted = 0;
-
-  // Group citations by month
-  const citationsByMonth = new Map<string, { raw: number; weighted: number }>();
-
+  const citationsByYear = new Map<number, { raw: number; weighted: number }>();
   citationsWithDates.forEach((citation) => {
-    const monthKey = `${citation.date.getFullYear()}-${String(citation.date.getMonth() + 1).padStart(2, "0")}`;
-    const existing = citationsByMonth.get(monthKey) || { raw: 0, weighted: 0 };
-    citationsByMonth.set(monthKey, {
+    const year = citation.date.getFullYear();
+    const existing = citationsByYear.get(year) || { raw: 0, weighted: 0 };
+    citationsByYear.set(year, {
       raw: existing.raw + 1,
       weighted: existing.weighted + citation.weight,
     });
   });
 
-  // Generate data points for each month
-  const currentDate = new Date(startDate);
-  currentDate.setDate(1); // Start of month
+  const years: string[] = [];
+  const rawValues: number[] = [];
+  const weightedValues: number[] = [];
+  let cumulativeRaw = 0;
+  let cumulativeWeighted = 0;
 
-  while (currentDate <= endDate) {
-    const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
-    dates.push(currentDate.toISOString().split("T")[0]!);
-
-    // Add citations for this month
-    const monthCitations = citationsByMonth.get(monthKey);
-    if (monthCitations) {
-      cumulativeRaw += monthCitations.raw;
-      cumulativeWeighted += monthCitations.weighted;
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(String(year));
+    const yearCitations = citationsByYear.get(year);
+    if (yearCitations) {
+      cumulativeRaw += yearCitations.raw;
+      cumulativeWeighted += yearCitations.weighted;
     }
-
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
-
-    // Move to next month
-    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
-  return { dates, rawValues, weightedValues, earliestDate: startDate, endDate };
+  return {
+    years,
+    rawValues,
+    weightedValues,
+    earliestDate: new Date(startYear, 0, 1),
+    endDate: new Date(endYear, 11, 31),
+  };
 });
 
 // Check if there's enough data to plot
@@ -105,7 +91,7 @@ const hasEnoughData = computed(() => {
   return (
     props.citations &&
     props.citations.length > 0 &&
-    citationsChartData.value.dates.length > 0
+    citationsChartData.value.years.length > 0
   );
 });
 
@@ -121,38 +107,31 @@ const citationsChartOption = computed<ECOption>(() => ({
       label: {
         show: true,
         backgroundColor: "#6b7280",
-        formatter: (params: { axisDimension: string; value: number }) => {
-          if (params.axisDimension === "x") {
-            const date = new Date(params.value);
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const year = date.getFullYear();
+        formatter: (params: unknown) => {
+          const p = params as {
+            axisDimension?: string;
+            value?: number | string;
+          };
+          if (p.axisDimension === "x") return String(p.value ?? "");
 
-            return `${month}/${year}`;
-          }
-
-          return params.value.toFixed(1);
+          return typeof p.value === "number"
+            ? p.value.toFixed(1)
+            : String(p.value ?? "");
         },
       },
     },
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: [string, number];
+        value: number | [string, number];
         seriesName: string;
         marker: string;
       }>;
 
       if (!data || data.length === 0) return "";
 
-      const dateStr = data[0]?.value?.[0] || data[0]?.name;
-      if (!dateStr) return "";
-
-      const date = new Date(dateStr);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const formattedDate = `${month}/${year}`;
-
-      let tooltip = `<strong>${formattedDate}</strong><br/>`;
+      const yearStr = data[0]?.name ?? "";
+      let tooltip = `<strong>${yearStr}</strong><br/>`;
       data.forEach((item) => {
         const value = Array.isArray(item.value) ? item.value[1] : item.value;
         if (item.seriesName === "Raw Citations") {
@@ -177,29 +156,19 @@ const citationsChartOption = computed<ECOption>(() => ({
     containLabel: true,
   },
   xAxis: {
-    type: "time",
-    min: citationsChartData.value.earliestDate
-      ? citationsChartData.value.earliestDate.toISOString().split("T")[0]
-      : undefined,
-    max: citationsChartData.value.endDate
-      ? citationsChartData.value.endDate.toISOString().split("T")[0]
-      : undefined,
+    type: "category",
+    data: citationsChartData.value.years,
+    name: "Year",
+    nameLocation: "middle",
+    nameGap: 28,
     axisLabel: {
-      fontSize: 8,
-      formatter: (value: number | string) => {
-        const date = new Date(typeof value === "number" ? value : value);
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = String(date.getFullYear()).slice(-2);
-
-        return `${month}/${year}`;
-      },
+      fontSize: 10,
+      interval: 0,
+      rotate: citationsChartData.value.years.length > 5 ? 60 : 0,
     },
   },
   yAxis: {
     type: "value",
-    name: "Cumulative Citations",
-    nameLocation: "middle",
-    nameGap: 40,
     axisLabel: {
       formatter: "{value}",
     },
@@ -207,39 +176,21 @@ const citationsChartOption = computed<ECOption>(() => ({
   series: [
     {
       name: "Raw Citations",
-      type: "line",
-      data: citationsChartData.value.dates.map((date, index) => [
-        date,
-        citationsChartData.value.rawValues[index],
-      ]),
-      step: "end",
-      lineStyle: {
-        color: "#3b82f6",
-        width: 2,
-      },
+      type: "bar",
+      data: citationsChartData.value.rawValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#3b82f6",
       },
-      symbol: "circle",
-      symbolSize: 4,
     },
     {
       name: "Weighted Citations",
-      type: "line",
-      data: citationsChartData.value.dates.map((date, index) => [
-        date,
-        citationsChartData.value.weightedValues[index],
-      ]),
-      step: "end",
-      lineStyle: {
-        color: "#ec4899",
-        width: 2,
-      },
+      type: "bar",
+      data: citationsChartData.value.weightedValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#ec4899",
       },
-      symbol: "circle",
-      symbolSize: 4,
     },
   ],
 }));

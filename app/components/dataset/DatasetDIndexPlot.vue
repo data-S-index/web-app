@@ -101,13 +101,11 @@ const dIndexChartOption = computed<ECOption>(() => ({
     nameGap: 28,
     axisLabel: {
       fontSize: 10,
+      rotate: dIndexChartData.value.years.length > 5 ? 60 : 0,
     },
   },
   yAxis: {
     type: "value",
-    name: "Dataset Index",
-    nameLocation: "middle",
-    nameGap: 32,
     axisLabel: {
       formatter: "{value}",
     },
@@ -115,36 +113,11 @@ const dIndexChartOption = computed<ECOption>(() => ({
   series: [
     {
       name: "Dataset Index",
-      type: "line",
+      type: "bar",
       data: dIndexChartData.value.scores,
-      step: "end",
-      lineStyle: {
-        color: "#3b82f6",
-        width: 2,
-      },
+      barMaxWidth: 24,
       itemStyle: {
         color: "#3b82f6",
-      },
-      symbol: "circle",
-      symbolSize: 6,
-      areaStyle: {
-        color: {
-          type: "linear",
-          x: 0,
-          y: 0,
-          x2: 0,
-          y2: 1,
-          colorStops: [
-            {
-              offset: 0,
-              color: "rgba(59, 130, 246, 0.3)",
-            },
-            {
-              offset: 1,
-              color: "rgba(59, 130, 246, 0.05)",
-            },
-          ],
-        },
       },
     },
   ],

@@ -7,17 +7,17 @@ defineProps<{
 const tabItems = [
   {
     label: "Dataset Index",
-    icon: "tabler:circle-dotted-letter-d",
+
     slot: "d-index",
   },
   {
     label: "Citations ",
-    icon: "flowbite:quote-solid",
+
     slot: "citations",
   },
   {
     label: "Mentions",
-    icon: "ci:mention",
+
     slot: "mentions",
   },
 ];

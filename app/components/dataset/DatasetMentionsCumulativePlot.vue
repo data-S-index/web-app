@@ -8,19 +8,18 @@ const props = defineProps<{
   publishedAt?: string | null;
 }>();
 
-// Process mentions data for cumulative chart
+// Process mentions data for cumulative chart (per year, bar chart)
 const mentionsChartData = computed(() => {
   if (!props.mentions || props.mentions.length === 0) {
     return {
-      dates: [],
-      rawValues: [],
-      weightedValues: [],
-      earliestDate: null,
-      endDate: null,
+      years: [] as string[],
+      rawValues: [] as number[],
+      weightedValues: [] as number[],
+      earliestDate: null as Date | null,
+      endDate: null as Date | null,
     };
   }
 
-  // Filter mentions with dates
   const mentionsWithDates = props.mentions
     .filter((m) => m.mentionedDate)
     .map((m) => ({
@@ -31,7 +30,7 @@ const mentionsChartData = computed(() => {
 
   if (mentionsWithDates.length === 0) {
     return {
-      dates: [],
+      years: [],
       rawValues: [],
       weightedValues: [],
       earliestDate: null,
@@ -39,64 +38,51 @@ const mentionsChartData = computed(() => {
     };
   }
 
-  // Determine start date (publication date or first mention date)
+  const currentYear = new Date().getFullYear();
   const publicationDate = props.publishedAt
     ? new Date(props.publishedAt)
     : null;
   const firstMentionDate = mentionsWithDates[0]!.date;
-  const startDate =
-    publicationDate && publicationDate < firstMentionDate
-      ? publicationDate
-      : firstMentionDate;
-
-  // Determine end date (now or last mention date)
-  const now = new Date();
   const lastMentionDate = mentionsWithDates[mentionsWithDates.length - 1]!.date;
-  const endDate = lastMentionDate > now ? lastMentionDate : now;
+  const startYear = publicationDate
+    ? new Date(publicationDate).getFullYear()
+    : firstMentionDate.getFullYear();
+  const endYear = Math.max(currentYear, lastMentionDate.getFullYear());
 
-  // Generate monthly data points
-  const dates: string[] = [];
-  const rawValues: number[] = [];
-  const weightedValues: number[] = [];
-
-  let cumulativeRaw = 0;
-  let cumulativeWeighted = 0;
-
-  // Group mentions by month
-  const mentionsByMonth = new Map<string, { raw: number; weighted: number }>();
-
+  const mentionsByYear = new Map<number, { raw: number; weighted: number }>();
   mentionsWithDates.forEach((mention) => {
-    const monthKey = `${mention.date.getFullYear()}-${String(mention.date.getMonth() + 1).padStart(2, "0")}`;
-    const existing = mentionsByMonth.get(monthKey) || { raw: 0, weighted: 0 };
-    mentionsByMonth.set(monthKey, {
+    const year = mention.date.getFullYear();
+    const existing = mentionsByYear.get(year) || { raw: 0, weighted: 0 };
+    mentionsByYear.set(year, {
       raw: existing.raw + 1,
       weighted: existing.weighted + mention.weight,
     });
   });
 
-  // Generate data points for each month
-  const currentDate = new Date(startDate);
-  currentDate.setDate(1); // Start of month
+  const years: string[] = [];
+  const rawValues: number[] = [];
+  const weightedValues: number[] = [];
+  let cumulativeRaw = 0;
+  let cumulativeWeighted = 0;
 
-  while (currentDate <= endDate) {
-    const monthKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}`;
-    dates.push(currentDate.toISOString().split("T")[0]!);
-
-    // Add mentions for this month
-    const monthMentions = mentionsByMonth.get(monthKey);
-    if (monthMentions) {
-      cumulativeRaw += monthMentions.raw;
-      cumulativeWeighted += monthMentions.weighted;
+  for (let year = startYear; year <= endYear; year++) {
+    years.push(String(year));
+    const yearMentions = mentionsByYear.get(year);
+    if (yearMentions) {
+      cumulativeRaw += yearMentions.raw;
+      cumulativeWeighted += yearMentions.weighted;
     }
-
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
-
-    // Move to next month
-    currentDate.setMonth(currentDate.getMonth() + 1);
   }
 
-  return { dates, rawValues, weightedValues, earliestDate: startDate, endDate };
+  return {
+    years,
+    rawValues,
+    weightedValues,
+    earliestDate: new Date(startYear, 0, 1),
+    endDate: new Date(endYear, 11, 31),
+  };
 });
 
 // Check if there's enough data to plot
@@ -104,7 +90,7 @@ const hasEnoughData = computed(() => {
   return (
     props.mentions &&
     props.mentions.length > 0 &&
-    mentionsChartData.value.dates.length > 0
+    mentionsChartData.value.years.length > 0
   );
 });
 
@@ -120,38 +106,31 @@ const mentionsChartOption = computed<ECOption>(() => ({
       label: {
         show: true,
         backgroundColor: "#6b7280",
-        formatter: (params: { axisDimension: string; value: number }) => {
-          if (params.axisDimension === "x") {
-            const date = new Date(params.value);
-            const month = String(date.getMonth() + 1).padStart(2, "0");
-            const year = date.getFullYear();
+        formatter: (params: unknown) => {
+          const p = params as {
+            axisDimension?: string;
+            value?: number | string;
+          };
+          if (p.axisDimension === "x") return String(p.value ?? "");
 
-            return `${month}/${year}`;
-          }
-
-          return params.value.toFixed(1);
+          return typeof p.value === "number"
+            ? p.value.toFixed(1)
+            : String(p.value ?? "");
         },
       },
     },
     formatter: (params: unknown) => {
       const data = params as Array<{
         name: string;
-        value: [string, number];
+        value: number | [string, number];
         seriesName: string;
         marker: string;
       }>;
 
       if (!data || data.length === 0) return "";
 
-      const dateStr = data[0]?.value?.[0] || data[0]?.name;
-      if (!dateStr) return "";
-
-      const date = new Date(dateStr);
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const year = date.getFullYear();
-      const formattedDate = `${month}/${year}`;
-
-      let tooltip = `<strong>${formattedDate}</strong><br/>`;
+      const yearStr = data[0]?.name ?? "";
+      let tooltip = `<strong>${yearStr}</strong><br/>`;
       data.forEach((item) => {
         const value = Array.isArray(item.value) ? item.value[1] : item.value;
         if (item.seriesName === "Raw Mentions") {
@@ -176,29 +155,19 @@ const mentionsChartOption = computed<ECOption>(() => ({
     containLabel: true,
   },
   xAxis: {
-    type: "time",
-    min: mentionsChartData.value.earliestDate
-      ? mentionsChartData.value.earliestDate.toISOString().split("T")[0]
-      : undefined,
-    max: mentionsChartData.value.endDate
-      ? mentionsChartData.value.endDate.toISOString().split("T")[0]
-      : undefined,
+    type: "category",
+    data: mentionsChartData.value.years,
+    name: "Year",
+    nameLocation: "middle",
+    nameGap: 28,
     axisLabel: {
-      fontSize: 8,
-      formatter: (value: number | string) => {
-        const date = new Date(typeof value === "number" ? value : value);
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const year = String(date.getFullYear()).slice(-2);
-
-        return `${month}/${year}`;
-      },
+      fontSize: 10,
+      interval: 0,
+      rotate: mentionsChartData.value.years.length > 5 ? 60 : 0,
     },
   },
   yAxis: {
     type: "value",
-    name: "Cumulative Mentions",
-    nameLocation: "middle",
-    nameGap: 40,
     axisLabel: {
       formatter: "{value}",
     },
@@ -206,39 +175,21 @@ const mentionsChartOption = computed<ECOption>(() => ({
   series: [
     {
       name: "Raw Mentions",
-      type: "line",
-      data: mentionsChartData.value.dates.map((date, index) => [
-        date,
-        mentionsChartData.value.rawValues[index],
-      ]),
-      step: "end",
-      lineStyle: {
-        color: "#10b981",
-        width: 2,
-      },
+      type: "bar",
+      data: mentionsChartData.value.rawValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#10b981",
       },
-      symbol: "circle",
-      symbolSize: 4,
     },
     {
       name: "Weighted Mentions",
-      type: "line",
-      data: mentionsChartData.value.dates.map((date, index) => [
-        date,
-        mentionsChartData.value.weightedValues[index],
-      ]),
-      step: "end",
-      lineStyle: {
-        color: "#f59e0b",
-        width: 2,
-      },
+      type: "bar",
+      data: mentionsChartData.value.weightedValues,
+      barMaxWidth: 24,
       itemStyle: {
         color: "#f59e0b",
       },
-      symbol: "circle",
-      symbolSize: 4,
     },
   ],
 }));
