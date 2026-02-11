@@ -169,8 +169,8 @@ const mentionsChartOption = computed<ECOption>(() => ({
         style="height: 300px"
       >
         <UAlert
-          title="No mention data available"
-          description="Mentions will appear here as datasets are mentioned in various sources within our search engine."
+          title="No mention data available for this user"
+          description="Mentions will appear as we identify them in our search pipelines."
           color="warning"
           variant="subtle"
         />

@@ -169,8 +169,8 @@ const citationsChartOption = computed<ECOption>(() => ({
         style="height: 300px"
       >
         <UAlert
-          title="No citation data available"
-          description="Citations will appear here as datasets receive citations and are picked up by our search engine."
+          title="No citation data available for this user"
+          description="Citations will appear as we identify them in our search pipelines."
           color="warning"
           variant="subtle"
         />
