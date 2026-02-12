@@ -16,7 +16,7 @@ defineProps<{
 <template>
   <UCard v-if="domain">
     <template #header>
-      <h3 class="text-lg font-semibold">Domain</h3>
+      <h3 class="text-lg font-semibold">Assigned Domain</h3>
     </template>
 
     <div class="space-y-3">

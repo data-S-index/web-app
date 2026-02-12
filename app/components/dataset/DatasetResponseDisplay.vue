@@ -264,7 +264,7 @@ const reloadPage = () => {
         <!-- Subjects -->
         <UCard v-if="dataset.subjects && dataset.subjects.length > 0">
           <template #header>
-            <h3 class="text-lg font-semibold">Subjects</h3>
+            <h3 class="text-lg font-semibold">Keywords</h3>
           </template>
 
           <div class="flex flex-wrap gap-2">

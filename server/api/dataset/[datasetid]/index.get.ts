@@ -52,7 +52,13 @@ export default defineEventHandler(async (event) => {
           mentionedDate: true,
         },
       },
-      normalizationFactor: true,
+      normalizationFactor: {
+        select: {
+          ft: true,
+          ctw: true,
+          mtw: true,
+        },
+      },
       datasetTopic: true,
     },
   });
