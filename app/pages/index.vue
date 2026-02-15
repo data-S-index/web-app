@@ -113,7 +113,7 @@ const isDark = computed(() => useColorMode().value === "dark");
   <section>
     <UPageHero
       description="Scholar Data helps you measure, improve, and showcase the impact of your datasets."
-      headline="In beta - Launching soon 🚀"
+      headline="Platform in Beta - Launching Soon! 🚀"
       :ui="{ container: '!pb-10' }"
     >
       <template #title>
@@ -129,8 +129,10 @@ const isDark = computed(() => useColorMode().value === "dark");
     <UPageSection :ui="{ container: '!pt-10' }">
       <template #body>
         <div
-          class="border-primary-200 bg-primary-50/50 dark:border-primary-800 dark:bg-primary-950/30 mt-6 mb-15 flex flex-col gap-2 rounded-xl border p-6 text-center text-lg"
+          class="border-primary-200 bg-primary-50/50 dark:border-primary-800 dark:bg-primary-950/30 mt-6 mb-15 flex flex-col gap-1 rounded-xl border p-6 text-center text-lg"
         >
+          <h2 class="mb-3 text-center text-3xl font-semibold">About</h2>
+
           <p>
             As part of an NIH-organized Challenge, we are developing a novel
             metric called S-index (or Sharing Index) that measures the data
@@ -143,10 +145,10 @@ const isDark = computed(() => useColorMode().value === "dark");
             for researchers and organizations to track their S-index.
           </p>
 
-          <p>
+          <p class="break-keep">
             This site is currently in beta, released for testing and
             demonstrating the potential impact and value of our S-index as part
-            of the NIH S-index Challenge.
+            of the NIH S&#8209;index Challenge.
           </p>
         </div>
 
