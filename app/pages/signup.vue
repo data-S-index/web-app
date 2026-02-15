@@ -3,6 +3,9 @@ import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 import { generateUsername } from "unique-username-generator";
 
+const config = useRuntimeConfig();
+const { environment } = config.public;
+
 const { loggedIn, user } = useUserSession();
 
 if (loggedIn.value) {
@@ -82,7 +85,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 onMounted(() => {
   state.username = generateUsername();
-  state.password = "12345678";
+  state.password = environment === "development" ? "12345678" : "";
 });
 </script>
 

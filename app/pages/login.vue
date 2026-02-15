@@ -2,6 +2,10 @@
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 
+const config = useRuntimeConfig();
+
+const { environment } = config.public;
+
 const { loggedIn, user } = useUserSession();
 const route = useRoute();
 
@@ -42,8 +46,11 @@ const schema = z.object({
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
-  username: (routeQueryParams.username as string) ?? "lonesomevermouth",
-  password: "12345678",
+  username:
+    environment === "development"
+      ? ((routeQueryParams.username as string) ?? "lonesomevermouth")
+      : "",
+  password: environment === "development" ? "12345678" : "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
