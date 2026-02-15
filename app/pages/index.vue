@@ -112,7 +112,7 @@ const isDark = computed(() => useColorMode().value === "dark");
 <template>
   <section>
     <UPageHero
-      description="Scholar Data helps you measure, improve, and showcase the impact of what you share - beyond publications and showcase the impact of your datasets."
+      description="Scholar Data helps you measure, improve, and showcase the impact of your datasets."
       headline="In beta - Launching soon 🚀"
       :ui="{ container: '!pb-10' }"
     >
@@ -128,7 +128,9 @@ const isDark = computed(() => useColorMode().value === "dark");
 
     <UPageSection :ui="{ container: '!pt-10' }">
       <template #body>
-        <div class="mt-6 mb-15 space-y-5 text-center text-lg sm:text-xl/8">
+        <div
+          class="border-primary-200 bg-primary-50/50 dark:border-primary-800 dark:bg-primary-950/30 mt-6 mb-15 flex flex-col gap-2 rounded-xl border p-6 text-center text-lg"
+        >
           <p>
             As part of an NIH-organized Challenge, we are developing a novel
             metric called S-index (or Sharing Index) that measures the data
@@ -144,57 +146,62 @@ const isDark = computed(() => useColorMode().value === "dark");
           <p>
             This site is currently in beta, released for testing and
             demonstrating the potential impact and value of our S-index as part
-            of the NIH S-index Challenge. There are several features you can
-            already try out:
+            of the NIH S-index Challenge.
           </p>
         </div>
 
-        <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
-          <div
-            v-for="(feature, index) in features"
-            :key="index"
-            class="flex w-full flex-col gap-4 lg:flex-row"
-          >
-            <CardSpotlight
-              :gradient-color="isDark ? '#4ade80' : '#86efac'"
-              slot-class="flex size-full flex-col justify-between p-5 gap-3"
+        <div>
+          <h2 class="mb-6 text-center text-2xl font-semibold">
+            There are several features you can already try out:
+          </h2>
+
+          <div class="grid w-full grid-cols-1 gap-4 md:grid-cols-3">
+            <div
+              v-for="(feature, index) in features"
+              :key="index"
+              class="flex w-full flex-col gap-4 lg:flex-row"
             >
-              <div class="flex flex-col gap-3">
-                <UIcon
-                  :name="feature.icon"
-                  class="size-8 shrink-0 text-emerald-400 dark:text-emerald-300"
-                />
+              <CardSpotlight
+                :gradient-color="isDark ? '#4ade80' : '#86efac'"
+                slot-class="flex size-full flex-col justify-between p-5 gap-3"
+              >
+                <div class="flex flex-col gap-3">
+                  <UIcon
+                    :name="feature.icon"
+                    class="size-8 shrink-0 text-emerald-400 dark:text-emerald-300"
+                  />
 
-                <h3
-                  class="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100"
-                >
-                  {{ feature.title }}
-                </h3>
-
-                <p
-                  class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
-                >
-                  {{ feature.description }}
-                </p>
-              </div>
-
-              <div class="flex gap-2">
-                <NuxtLink
-                  v-for="button in feature.buttonTitles"
-                  :key="button.label"
-                  :to="button.to as string"
-                >
-                  <UButton
-                    color="primary"
-                    variant="solid"
-                    size="sm"
-                    trailing-icon="i-heroicons-arrow-right"
+                  <h3
+                    class="text-lg font-semibold tracking-tight text-gray-900 dark:text-gray-100"
                   >
-                    {{ button?.label }}
-                  </UButton>
-                </NuxtLink>
-              </div>
-            </CardSpotlight>
+                    {{ feature.title }}
+                  </h3>
+
+                  <p
+                    class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
+                  >
+                    {{ feature.description }}
+                  </p>
+                </div>
+
+                <div class="flex gap-2">
+                  <NuxtLink
+                    v-for="button in feature.buttonTitles"
+                    :key="button.label"
+                    :to="button.to as string"
+                  >
+                    <UButton
+                      color="primary"
+                      variant="solid"
+                      size="sm"
+                      trailing-icon="i-heroicons-arrow-right"
+                    >
+                      {{ button?.label }}
+                    </UButton>
+                  </NuxtLink>
+                </div>
+              </CardSpotlight>
+            </div>
           </div>
         </div>
 
