@@ -52,7 +52,7 @@ model UserDataset {
 }
 
 model AutomatedUser {
-    id String @id @default(ulid())
+    id Int @id @default(autoincrement())
 
     nameType        String?
     name            String   @default("")
@@ -60,11 +60,12 @@ model AutomatedUser {
     affiliations    String[] @default([])
 
     automatedUserDatasets AutomatedUserDataset[]
+    automatedUserSIndexes AutomatedUserSIndex[]
 }
 
 model AutomatedUserDataset {
     automatedUser   AutomatedUser @relation(fields: [automatedUserId], references: [id], onDelete: Cascade)
-    automatedUserId String
+    automatedUserId Int
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
@@ -78,16 +79,17 @@ model AutomatedUserDataset {
 }
 
 model AutomatedOrganization {
-    id String @id @default(ulid())
+    id Int @id @default(autoincrement())
 
     name String @default("")
 
     automatedOrganizationDatasets AutomatedOrganizationDataset[]
+    automatedOrganizationSIndexes AutomatedOrganizationSIndex[]
 }
 
 model AutomatedOrganizationDataset {
     automatedOrganization   AutomatedOrganization @relation(fields: [automatedOrganizationId], references: [id], onDelete: Cascade)
-    automatedOrganizationId String
+    automatedOrganizationId Int
 
     dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
     datasetId Int
@@ -153,9 +155,8 @@ model DatasetAuthor {
     nameIdentifiers String[] @default([])
     affiliations    String[] @default([])
 
-    created  DateTime @default(now())
-    updated  DateTime @updatedAt
-    sindices SIndex[]
+    created DateTime @default(now())
+    updated DateTime @updatedAt
 
     @@index([datasetId])
 }
@@ -293,13 +294,30 @@ model DIndex {
     created DateTime @default(now())
 }
 
-model SIndex {
+model AutomatedUserSIndex {
     id BigInt @id @default(autoincrement())
 
-    author   DatasetAuthor @relation(fields: [authorId], references: [id], onDelete: Cascade)
-    authorId BigInt
+    automatedUser   AutomatedUser @relation(fields: [automatedUserId], references: [id], onDelete: Cascade)
+    automatedUserId Int
 
     score Float
+    year  Int // 4 digit year
 
     created DateTime @default(now())
+
+    @@index([automatedUserId])
+}
+
+model AutomatedOrganizationSIndex {
+    id BigInt @id @default(autoincrement())
+
+    automatedOrganization   AutomatedOrganization @relation(fields: [automatedOrganizationId], references: [id], onDelete: Cascade)
+    automatedOrganizationId Int
+
+    score Float
+    year  Int // 4 digit year
+
+    created DateTime @default(now())
+
+    @@index([automatedOrganizationId])
 }
