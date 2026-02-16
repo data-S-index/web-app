@@ -74,8 +74,6 @@ model AutomatedUserDataset {
     updated DateTime @updatedAt
 
     @@id([automatedUserId, datasetId])
-    @@index([automatedUserId])
-    @@index([datasetId])
 }
 
 model AutomatedOrganization {
@@ -98,8 +96,6 @@ model AutomatedOrganizationDataset {
     updated DateTime @updatedAt
 
     @@id([automatedOrganizationId, datasetId])
-    @@index([automatedOrganizationId])
-    @@index([datasetId])
 }
 
 model Dataset {

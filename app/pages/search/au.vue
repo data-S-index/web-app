@@ -9,7 +9,7 @@ defineOgImageComponent("Pergel", {
 });
 
 type SearchResult = {
-  id: string;
+  id: number;
   name: string;
   nameIdentifiers: string[];
   affiliations: string[];
@@ -52,14 +52,14 @@ onMounted(() => {
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: "01KGEVZX9W665ASX0NQN3FZS52",
+    id: 1,
     name: "Larsson, Karl-Henrik",
     nameIdentifiers: [],
     affiliations: [],
     datasetCount: 3200946,
   },
   {
-    id: "01KGEW2FVG5ZDZCQ8252WN7S0T",
+    id: 2,
     name: "TOKUZAWA, Tokihiko",
     nameIdentifiers: [
       "https://orcid.org/0000-0001-5473-2109",
@@ -73,7 +73,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 2649646,
   },
   {
-    id: "01KGEW2FXXVVBMCJ362Z817F6G",
+    id: 3,
     name: "TANAKA, Kenji",
     nameIdentifiers: [
       "https://nrid.nii.ac.jp/nrid/1000050260047/",
@@ -86,7 +86,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 2217518,
   },
   {
-    id: "01KGEW2GHQGNCZKY9NWJPZ0JWK",
+    id: 4,
     name: "OSAKABE, Masaki",
     nameIdentifiers: [
       "https://orcid.org/0000-0001-5220-947X",
@@ -100,7 +100,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 2187103,
   },
   {
-    id: "01KGEW2FS296N712FZAZTN3M0N",
+    id: 5,
     name: "TOKUZAWA, Tokihiko",
     nameIdentifiers: [
       "https://orcid.org/0000-0001-5473-2109",
@@ -112,7 +112,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 2045816,
   },
   {
-    id: "01KGEW2ZBPME8J1A2JZGRBZ8YN",
+    id: 6,
     name: "GOTO, Motoshi",
     nameIdentifiers: [
       "https://orcid.org/0000-0002-9160-682X",
@@ -125,7 +125,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 1994879,
   },
   {
-    id: "01KGEW2G1XBTAS0S6TP4DD41SG",
+    id: 7,
     name: "MASUZAKI, Suguru",
     nameIdentifiers: [
       "https://orcid.org/0000-0003-0161-0938",
@@ -138,7 +138,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     datasetCount: 1952824,
   },
   {
-    id: "01KGEW2GM3J7363SV50XP5QMKM",
+    id: 8,
     name: "NAGAOKA, Kenichi",
     nameIdentifiers: [
       "https://orcid.org/0000-0002-5892-6047",

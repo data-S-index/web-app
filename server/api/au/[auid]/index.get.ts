@@ -4,13 +4,20 @@ import { getRedisClient } from "../../../utils/redis";
 const CACHE_TTL_SECONDS = 86400; // 1 day
 const CACHE_KEY_PREFIX = "au:index";
 
-export default defineEventHandler(async (event) => {
-  const { auid } = event.context.params as { auid: string };
+function parseAuId(value: string | undefined): number | null {
+  if (value == null || value.trim() === "") return null;
+  const n = parseInt(value, 10);
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
 
-  if (!auid?.trim()) {
+export default defineEventHandler(async (event) => {
+  const { auid: auidParam } = event.context.params as { auid: string };
+  const auid = parseAuId(auidParam);
+
+  if (auid == null) {
     throw createError({
       statusCode: 400,
-      statusMessage: "User ID is required",
+      statusMessage: "User ID is required and must be a positive integer",
     });
   }
 

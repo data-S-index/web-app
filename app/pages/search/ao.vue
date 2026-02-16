@@ -9,7 +9,7 @@ defineOgImageComponent("Pergel", {
 });
 
 type SearchResult = {
-  id: string;
+  id: number;
   name: string;
   datasetCount: number;
 };
@@ -52,37 +52,37 @@ onMounted(() => {
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: "01KGS1CE185QK2BGHPFXXSS2XK",
+    id: 1,
     name: "National Institute for Fusion Science",
     datasetCount: 16350783,
   },
   {
-    id: "01KGS1CDZ8TGFXKE7YEPNBSS6G",
+    id: 2,
     name: "Leibniz Institute DSMZ - German Collection of Microorganisms and Cell Cultures",
     datasetCount: 460822,
   },
   {
-    id: "01KGS1CD8PSJQ8TYAEX0HF1QX6",
+    id: 3,
     name: "Pacific Northwest National Laboratory",
     datasetCount: 444723,
   },
   {
-    id: "01KGDHY7VBS6SQGS2HFVGQ3SEV",
+    id: 4,
     name: "Environmental Molecular Sciences Laboratory",
     datasetCount: 406437,
   },
   {
-    id: "01KGS1CD7VNEA3WMJGBT6M526P",
+    id: 5,
     name: "California Institute of Technology",
     datasetCount: 47303,
   },
   {
-    id: "01KGDHY7GQ47JMV73PT9PK7CHR",
+    id: 6,
     name: "Harvard University",
     datasetCount: 36640,
   },
   {
-    id: "01KGDHY7S6G5G22MTE9P45ZMV7",
+    id: 7,
     name: "Friedrich-Schiller-University Jena",
     datasetCount: 33660,
   },

@@ -36,13 +36,19 @@ export default defineEventHandler(async (event) => {
     });
 
     type Hit = {
-      id: string;
+      id: string | number;
       name?: string;
       nameIdentifiers?: string[];
       affiliations?: string[];
     };
+    const parseId = (id: string | number): number | null => {
+      const n = typeof id === "number" ? id : parseInt(String(id), 10);
+      return Number.isFinite(n) && n > 0 ? n : null;
+    };
     const hits = (searchResults.hits as Hit[]) || [];
-    const auIds = hits.map((h) => h.id).filter(Boolean);
+    const auIds = hits
+      .map((h) => parseId(h.id))
+      .filter((id): id is number => id != null);
 
     if (auIds.length === 0) {
       const queryEndTime = performance.now();
@@ -74,13 +80,19 @@ export default defineEventHandler(async (event) => {
       countRows.map((r) => [r.automatedUserId, r._count.automatedUserId]),
     );
 
-    const users = hits.map((hit) => ({
-      id: hit.id,
-      name: hit.name ?? "",
-      nameIdentifiers: hit.nameIdentifiers ?? [],
-      affiliations: hit.affiliations ?? [],
-      datasetCount: countByUserId.get(hit.id) ?? 0,
-    }));
+    const users = hits
+      .map((hit) => {
+        const id = parseId(hit.id);
+        if (id == null) return null;
+        return {
+          id,
+          name: hit.name ?? "",
+          nameIdentifiers: hit.nameIdentifiers ?? [],
+          affiliations: hit.affiliations ?? [],
+          datasetCount: countByUserId.get(id) ?? 0,
+        };
+      })
+      .filter((u): u is NonNullable<typeof u> => u != null);
 
     const rawTotalCount = searchResults.estimatedTotalHits || 0;
     const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);

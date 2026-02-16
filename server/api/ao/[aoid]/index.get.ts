@@ -4,13 +4,22 @@ import { getRedisClient } from "../../../utils/redis";
 const CACHE_TTL_SECONDS = 86400; // 1 day
 const CACHE_KEY_PREFIX = "ao:index";
 
-export default defineEventHandler(async (event) => {
-  const { aoid } = event.context.params as { aoid: string };
+function parseAoId(value: string | undefined): number | null {
+  if (value == null || value.trim() === "") return null;
+  const n = parseInt(value, 10);
 
-  if (!aoid?.trim()) {
+  return Number.isFinite(n) && n > 0 ? n : null;
+}
+
+export default defineEventHandler(async (event) => {
+  const { aoid: aoidParam } = event.context.params as { aoid: string };
+  const aoid = parseAoId(aoidParam);
+
+  if (aoid == null) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Organization ID is required",
+      statusMessage:
+        "Organization ID is required and must be a positive integer",
     });
   }
 

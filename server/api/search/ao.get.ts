@@ -35,9 +35,15 @@ export default defineEventHandler(async (event) => {
       offset: validatedOffset,
     });
 
-    type Hit = { id: string; name?: string };
+    type Hit = { id: string | number; name?: string };
+    const parseId = (id: string | number): number | null => {
+      const n = typeof id === "number" ? id : parseInt(String(id), 10);
+      return Number.isFinite(n) && n > 0 ? n : null;
+    };
     const hits = (searchResults.hits as Hit[]) || [];
-    const aoIds = hits.map((h) => h.id).filter(Boolean);
+    const aoIds = hits
+      .map((h) => parseId(h.id))
+      .filter((id): id is number => id != null);
 
     if (aoIds.length === 0) {
       const queryEndTime = performance.now();
@@ -72,11 +78,17 @@ export default defineEventHandler(async (event) => {
       ]),
     );
 
-    const organizations = hits.map((hit) => ({
-      id: hit.id,
-      name: hit.name ?? "",
-      datasetCount: countByOrgId.get(hit.id) ?? 0,
-    }));
+    const organizations = hits
+      .map((hit) => {
+        const id = parseId(hit.id);
+        if (id == null) return null;
+        return {
+          id,
+          name: hit.name ?? "",
+          datasetCount: countByOrgId.get(id) ?? 0,
+        };
+      })
+      .filter((o): o is NonNullable<typeof o> => o != null);
 
     const rawTotalCount = searchResults.estimatedTotalHits || 0;
     const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
