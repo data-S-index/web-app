@@ -173,6 +173,30 @@ const reloadPage = () => {
           <div class="space-y-4">
             <div class="grid grid-cols-2 gap-6">
               <div
+                v-if="dataset.dindices && dataset.dindices.length > 0"
+                class="flex flex-col items-center text-center"
+              >
+                <p class="mb-2 text-sm font-medium">Dataset Index</p>
+
+                <div class="flex items-center gap-2">
+                  <div
+                    class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                  >
+                    {{
+                      dataset.dindices.length > 0
+                        ? dataset.dindices[
+                            dataset.dindices.length - 1
+                          ]?.score.toLocaleString(undefined, {
+                            minimumFractionDigits: 1,
+                            maximumFractionDigits: 1,
+                          })
+                        : "0.0"
+                    }}
+                  </div>
+                </div>
+              </div>
+
+              <div
                 v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
                 class="flex flex-col items-center text-center"
               >
@@ -186,25 +210,28 @@ const reloadPage = () => {
               </div>
 
               <div
-                v-if="
-                  dataset.dindices &&
-                  dataset.dindices.length > 0 &&
-                  dataset.dindices[0]
-                "
+                v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
                 class="flex flex-col items-center text-center"
               >
-                <p class="mb-2 text-sm font-medium">Dataset Index</p>
+                <p class="mb-2 text-sm font-medium">Citations</p>
 
-                <div class="flex items-center gap-2">
-                  <div
-                    class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
-                  >
-                    {{
-                      dataset.dindices[
-                        dataset.dindices.length - 1
-                      ].score.toFixed(1)
-                    }}
-                  </div>
+                <div
+                  class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                >
+                  {{ dataset.citations.length.toLocaleString() }}
+                </div>
+              </div>
+
+              <div
+                v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
+                class="flex flex-col items-center text-center"
+              >
+                <p class="mb-2 text-sm font-medium">Mentions</p>
+
+                <div
+                  class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                >
+                  {{ dataset.mentions.length.toLocaleString() }}
                 </div>
               </div>
             </div>

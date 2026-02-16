@@ -11,18 +11,32 @@ const props = defineProps<{
 
 const mentionsCount = computed(() => props.mentions?.length || 0);
 
+// Sort mentions newest first (by mentionedDate)
+const sortedMentions = computed(() => {
+  if (!props.mentions || props.mentions.length === 0) {
+    return [];
+  }
+
+  return [...props.mentions].sort((a, b) => {
+    const dateA = a.mentionedDate ? new Date(a.mentionedDate).getTime() : 0;
+    const dateB = b.mentionedDate ? new Date(b.mentionedDate).getTime() : 0;
+
+    return dateB - dateA;
+  });
+});
+
 // Pagination for mentions
 const mentionsPage = ref(1);
 const mentionsPerPage = 10;
 const paginatedMentions = computed(() => {
-  if (!props.mentions || mentionsCount.value <= mentionsPerPage) {
-    return props.mentions || [];
+  if (!sortedMentions.value.length || mentionsCount.value <= mentionsPerPage) {
+    return sortedMentions.value;
   }
 
   const start = (mentionsPage.value - 1) * mentionsPerPage;
   const end = start + mentionsPerPage;
 
-  return props.mentions.slice(start, end);
+  return sortedMentions.value.slice(start, end);
 });
 </script>
 

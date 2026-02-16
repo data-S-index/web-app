@@ -1,18 +1,33 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 const props = defineProps<{
-  dindices: Array<{ year: number; score: number }> | null | undefined;
+  dindices?: Array<{ year: number; score: number }> | null;
   publishedAt?: string | Date | null;
 }>();
 
+// Normalize to { year, score } for chart (support dindices)
+const normalizedSeries = computed(() => {
+  const raw = props.dindices ?? null;
+
+  if (!raw || raw.length === 0) return [];
+
+  return raw.map((d) => ({
+    year: d.year,
+    score:
+      "dataset_index" in d
+        ? (d as { year: number; dataset_index: number }).dataset_index
+        : (d as { year: number; score: number }).score,
+  }));
+});
+
 // Process Dataset Index data for chart (by year only); start from dataset publishedAt year
 const dIndexChartData = computed(() => {
-  if (!props.dindices || props.dindices.length === 0) {
+  if (normalizedSeries.value.length === 0) {
     return { years: [], scores: [] };
   }
 
   // Sort by year ascending
-  const sorted = [...props.dindices].sort((a, b) => a.year - b.year);
+  const sorted = [...normalizedSeries.value].sort((a, b) => a.year - b.year);
 
   // Don't plot if there's only one data point (no trend to show)
   if (sorted.length === 1) {
@@ -39,7 +54,7 @@ const dIndexChartData = computed(() => {
 
 // Check if there's only one data point (not enough for a trend)
 const hasOnlyOneDataPoint = computed(() => {
-  return props.dindices && props.dindices.length === 1;
+  return normalizedSeries.value.length === 1;
 });
 
 // Chart option for Dataset Index by year (year on x-axis only)
@@ -141,9 +156,7 @@ const dIndexChartOption = computed<ECOption>(() => ({
       <div v-else style="height: 250px" class="relative">
         <div
           v-if="
-            !dindices ||
-            dindices.length === 0 ||
-            dIndexChartData.years.length === 0
+            normalizedSeries.length === 0 || dIndexChartData.years.length === 0
           "
           class="flex h-full items-center justify-center"
         >
@@ -153,7 +166,11 @@ const dIndexChartOption = computed<ECOption>(() => ({
           />
         </div>
 
-        <VChart v-else :option="dIndexChartOption" class="h-full w-full" />
+        <VChart
+          v-else-if="normalizedSeries.length > 0"
+          :option="dIndexChartOption"
+          class="h-full w-full"
+        />
       </div>
     </div>
 

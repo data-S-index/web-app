@@ -79,7 +79,7 @@ const transformApiResponse = (apiData: any) => {
   // Transform dataset_index_series to dindices format
   const dindices = datasetIndexSeries.map((item: any) => ({
     score: item.dataset_index || 0,
-    created: item.date || new Date().toISOString(),
+    year: item.year || 0,
   }));
 
   return {
@@ -108,10 +108,7 @@ const transformApiResponse = (apiData: any) => {
             softwareVersion: fair.fuji_software_version || null,
           }
         : null,
-    dindices: dindices.sort(
-      (a: any, b: any) =>
-        new Date(a.created).getTime() - new Date(b.created).getTime(),
-    ),
+    dindices: dindices.sort((a: any, b: any) => a.year - b.year),
     normalization_factors: apiData.normalization_factors || null,
   };
 };

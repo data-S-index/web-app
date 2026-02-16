@@ -13,18 +13,35 @@ const props = defineProps<{
 
 const citationsCount = computed(() => props.citations?.length || 0);
 
+// Sort citations newest first (by citedDate)
+const sortedCitations = computed(() => {
+  if (!props.citations || props.citations.length === 0) {
+    return [];
+  }
+
+  return [...props.citations].sort((a, b) => {
+    const dateA = a.citedDate ? new Date(a.citedDate).getTime() : 0;
+    const dateB = b.citedDate ? new Date(b.citedDate).getTime() : 0;
+
+    return dateB - dateA;
+  });
+});
+
 // Pagination for citations
 const citationsPage = ref(1);
 const citationsPerPage = 10;
 const paginatedCitations = computed(() => {
-  if (!props.citations || citationsCount.value <= citationsPerPage) {
-    return props.citations || [];
+  if (
+    !sortedCitations.value.length ||
+    citationsCount.value <= citationsPerPage
+  ) {
+    return sortedCitations.value;
   }
 
   const start = (citationsPage.value - 1) * citationsPerPage;
   const end = start + citationsPerPage;
 
-  return props.citations.slice(start, end);
+  return sortedCitations.value.slice(start, end);
 });
 </script>
 
