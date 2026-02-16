@@ -16,14 +16,38 @@ type SearchResult = {
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
+const route = useRoute();
+const router = useRouter();
 const toast = useToast();
-const searchTerm = ref("");
+const searchTerm = ref((route.query.q as string) ?? "");
 const searchLoading = ref(false);
 const searchResults = ref<SearchResult[]>([]);
 const searchPage = ref(1);
 const searchTotal = ref(-1);
 const searchDuration = ref<string>("0ms");
 const hasSearched = ref(false);
+
+// Sync search term from URL when user navigates back/forward and re-run search
+watch(
+  () => route.query.q,
+  (q) => {
+    const value = (q as string) ?? "";
+    if (searchTerm.value !== value) {
+      searchTerm.value = value;
+      if (value.trim()) {
+        searchForOrganizations(1, true);
+      }
+    }
+  },
+);
+
+// On load, if URL has a search term, run the search
+onMounted(() => {
+  const q = (route.query.q as string)?.trim();
+  if (q) {
+    searchForOrganizations(1, true);
+  }
+});
 
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
@@ -77,6 +101,16 @@ const searchForOrganizations = async (
     searchTotal.value = -1;
     searchResults.value = [];
     page = 1;
+    // Persist search term in URL so back/forward restores the search
+    await router.replace({
+      path: route.path,
+      query: {
+        ...route.query,
+        ...(searchTerm.value.trim()
+          ? { q: searchTerm.value.trim() }
+          : { q: undefined }),
+      },
+    });
   } else {
     searchPage.value = page;
   }
