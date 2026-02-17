@@ -43,12 +43,13 @@ const institutions = ref([
   { name: "Pacific Northwest National Laboratory", value: 444883 },
   { name: "Environmental Molecular Sciences Laboratory", value: 406437 },
   { name: "CBS NCCB", value: 130972 },
-  { name: "none", value: 111420 },
   { name: "University of Bergen", value: 107005 },
   { name: "Harvard University", value: 61389 },
   { name: "University of Texas at Austin", value: 56663 },
   { name: "UT Health McGovern Medical School", value: 56151 },
-  { name: "Other", value: 4980052 },
+  { name: "California Institute of Technology", value: 47891 },
+  { name: "University of Stuttgart", value: 45166 },
+  { name: "Other", value: 4998415 },
 ]);
 
 const fields = ref([
@@ -82,24 +83,56 @@ const sIndexMetrics = [
     description: "Total number of mentions identified in the platform",
   },
   {
-    name: "Total citations parsed",
-    value: 460000000,
-    description: "Total number of citations parsed in our search pipeline",
-    suffix: "+",
+    name: "Total FAIR scores computed",
+    value: 49061167,
+    description:
+      "Total number of FAIR scores computed for datasets in the platform",
   },
   {
-    name: "Total mentions parsed",
-    value: 230000000,
-    description: "Total number of mentions parsed in our search pipeline",
-    suffix: "+",
+    name: "Total Research Fields assigned",
+    value: 49061167,
+    description:
+      "Total number of research fields assigned to datasets in the platform",
   },
   {
-    name: "Total number of patents scanned",
-    value: 6445063,
-    description: "Total number of patents scanned in our search pipeline",
-    suffix: "+",
+    name: "Total Dataset Indices computed",
+    value: 50338032,
+    description: "Total number of  dataset index records in our database",
   },
 ];
+
+const sources = ref([
+  {
+    name: "Make Data Count corpus",
+    value: 9.7,
+    suffix: "M+",
+    description: "Parsed citations to find citations to our datasets.",
+  },
+  {
+    name: "OpenAlex",
+    value: 450,
+    suffix: "M+",
+    description: "References from works analyzed for dataset citations.",
+  },
+  {
+    name: "Software Heritage",
+    value: 220,
+    suffix: "M+",
+    description: "READMEs from GitHub repos scanned for dataset mentions.",
+  },
+  {
+    name: "Hugging Face",
+    value: 2.2,
+    suffix: "M+",
+    description: "Model cards scanned for dataset mentions.",
+  },
+  {
+    name: "USPTO",
+    value: 6.4,
+    suffix: "M+",
+    description: "granted patents scanned for dataset mentions.",
+  },
+]);
 
 const years = computed(() => datasetsByYear.value.map((d) => d.year));
 const datasetsByYearValues = computed(() =>
@@ -152,15 +185,11 @@ const barChartOption = computed<ECOption>(() => ({
     type: "category",
     data: years.value,
     axisLabel: {
-      rotate: 45,
       fontSize: 12,
     },
   },
   yAxis: {
     type: "value",
-    name: "Number of Datasets",
-    nameLocation: "middle",
-    nameGap: 50,
     axisLabel: {
       formatter: "{value}",
     },
@@ -299,6 +328,9 @@ const fieldPieChartOption = computed(() => ({
       title="Platform Metrics and Analytics"
       description="Analytics and insights on Scholar Data"
       variant="naked"
+      :ui="{
+        container: '!pb-10',
+      }"
     />
 
     <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
@@ -308,7 +340,7 @@ const fieldPieChartOption = computed(() => ({
         </template>
 
         <div class="text-3xl font-bold text-pink-600">
-          {{ formatNumber(metric.value) }}{{ metric.suffix ?? "" }}
+          {{ formatNumber(metric.value) }}
         </div>
 
         <p class="mt-2 text-sm">{{ metric.description }}</p>
@@ -366,5 +398,32 @@ const fieldPieChartOption = computed(() => ({
         </UCard>
       </div>
     </ClientOnly>
+
+    <div class="flex flex-col gap-10 pb-10">
+      <h3 class="text-center text-2xl font-semibold">Sources of data</h3>
+
+      <Vue3Marquee clone gradient>
+        <div class="m-1 flex flex-nowrap gap-4 p-1">
+          <UCard
+            v-for="source in sources"
+            :key="source.name"
+            class="w-[min(320px,85vw)] shrink-0"
+          >
+            <template #header>
+              <h3 class="text-lg font-semibold">{{ source.name }}</h3>
+            </template>
+
+            <div
+              v-if="source.value != null"
+              class="text-3xl font-bold text-pink-600"
+            >
+              {{ formatNumber(source.value!) }}{{ source.suffix ?? "" }}
+            </div>
+
+            <p class="mt-2 text-sm">{{ source.description }}</p>
+          </UCard>
+        </div>
+      </Vue3Marquee>
+    </div>
   </div>
 </template>
