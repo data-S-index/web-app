@@ -149,6 +149,19 @@ const updateSearchPage = (page: number) => {
   searchForUsers(page, false);
 };
 
+const clearSearch = async () => {
+  searchTerm.value = "";
+  searchResults.value = [];
+  searchPage.value = 1;
+  searchTotal.value = -1;
+  searchDuration.value = "0ms";
+  hasSearched.value = false;
+  await router.replace({
+    path: route.path,
+    query: { ...route.query, q: undefined },
+  });
+};
+
 const searchForUsers = async (page: number = 1, reset: boolean = false) => {
   if (reset) {
     searchPage.value = 1;
@@ -221,6 +234,17 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
               placeholder="Search for users by name..."
               class="min-w-0 flex-1"
               @keyup.enter="searchForUsers(searchPage, true)"
+            />
+
+            <UButton
+              v-if="hasSearched || searchTerm.trim()"
+              icon="i-heroicons-x-circle-20-solid"
+              label="Clear"
+              size="lg"
+              color="neutral"
+              variant="outline"
+              class="shrink-0"
+              @click="clearSearch"
             />
 
             <UButton

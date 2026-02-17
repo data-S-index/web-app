@@ -127,6 +127,19 @@ const updateSearchPage = (page: number) => {
   searchForOrganizations(page, false);
 };
 
+const clearSearch = async () => {
+  searchTerm.value = "";
+  searchResults.value = [];
+  searchPage.value = 1;
+  searchTotal.value = -1;
+  searchDuration.value = "0ms";
+  hasSearched.value = false;
+  await router.replace({
+    path: route.path,
+    query: { ...route.query, q: undefined },
+  });
+};
+
 const searchForOrganizations = async (
   page: number = 1,
   reset: boolean = false,
@@ -202,6 +215,17 @@ const searchForOrganizations = async (
               placeholder="Search for organizations by name..."
               class="min-w-0 flex-1"
               @keyup.enter="searchForOrganizations(searchPage, true)"
+            />
+
+            <UButton
+              v-if="hasSearched || searchTerm.trim()"
+              icon="i-heroicons-x-circle-20-solid"
+              label="Clear"
+              size="lg"
+              color="neutral"
+              variant="outline"
+              class="shrink-0"
+              @click="clearSearch"
             />
 
             <UButton
