@@ -8,84 +8,109 @@ defineOgImageComponent("Pergel", {
   headline: "Platform Metrics",
 });
 
-const toast = useToast();
-
-// Fetch metrics data from API (temporarily bypassing cache)
-const {
-  data: metricsData,
-  error,
-  pending,
-} = await useFetch("/api/metrics", {
-  query: { nocache: "0" },
-});
-
-if (error.value) {
-  toast.add({
-    title: "Error fetching metrics",
-    description: error.value.data?.statusMessage || "Failed to load metrics",
-    icon: "material-symbols:error",
-    color: "error",
-  });
-}
-
-// Extract data from API response
-const months = computed(
-  () => metricsData.value?.monthlyPublications?.months || [],
-);
-const datasets = computed(
-  () => metricsData.value?.monthlyPublications?.datasets || [],
-);
-const institutionData = computed(() => metricsData.value?.institutions || []);
-const fieldData = computed(() => metricsData.value?.fields || []);
-const sIndexMetrics = computed(
-  () =>
-    metricsData.value?.sIndexMetrics || {
-      averageFairScore: 0,
-      averageCitationCount: 0,
-      averageSIndex: 0,
-      totalDatasets: 0,
-      highFairDatasets: 0,
-      citedDatasets: 0,
-      fairScoredDatasets: 0,
-      authorsWithSIndex: 0,
-      totalCitations: 0,
-      totalMentions: 0,
-      totalFieldAssignments: 0,
-    },
-);
-
-// Calculate trend line data using linear regression
-const calculateTrendLine = (data: number[]) => {
-  if (data.length === 0) return [];
-
-  const n = data.length;
-  const x = Array.from({ length: n }, (_, i) => i);
-
-  // Calculate means
-  const xMean = x.reduce((sum, val) => sum + val, 0) / n;
-  const yMean = data.reduce((sum, val) => sum + val, 0) / n;
-
-  // Calculate slope and intercept
-  let numerator = 0;
-  let denominator = 0;
-
-  for (let i = 0; i < n; i++) {
-    numerator += (x[i]! - xMean) * (data[i]! - yMean);
-    denominator += (x[i]! - xMean) * (x[i]! - xMean);
-  }
-
-  const slope = denominator === 0 ? 0 : numerator / denominator;
-  const intercept = yMean - slope * xMean;
-
-  // Generate trend line points
-  return x.map((xVal) => Math.round(slope * xVal + intercept));
+const formatNumber = (number: number) => {
+  return Intl.NumberFormat("en-US", {
+    notation: "compact",
+    maximumFractionDigits: 1,
+  }).format(number);
 };
 
-const trendLineData = computed(() => calculateTrendLine(datasets.value));
+const datasetsByYear = ref([
+  { year: "1950-2010", value: 1097511 },
+  { year: "2011", value: 138461 },
+  { year: "2012", value: 339956 },
+  { year: "2013", value: 218705 },
+  { year: "2014", value: 577335 },
+  { year: "2015", value: 1083725 },
+  { year: "2016", value: 518062 },
+  { year: "2017", value: 907716 },
+  { year: "2018", value: 1156156 },
+  { year: "2019", value: 1118023 },
+  { year: "2020", value: 1652152 },
+  { year: "2021", value: 7524797 },
+  { year: "2022", value: 3175931 },
+  { year: "2023", value: 19863260 },
+  { year: "2024", value: 3776342 },
+  { year: "2025", value: 5659581 },
+]);
+
+const institutions = ref([
+  { name: "National Institute for Fusion Science", value: 23388953 },
+  {
+    name: "Leibniz Institute DSMZ - German Collection of Microorganisms and Cell Cultures",
+    value: 460822,
+  },
+  { name: "Pacific Northwest National Laboratory", value: 444883 },
+  { name: "Environmental Molecular Sciences Laboratory", value: 406437 },
+  { name: "CBS NCCB", value: 130972 },
+  { name: "none", value: 111420 },
+  { name: "University of Bergen", value: 107005 },
+  { name: "Harvard University", value: 61389 },
+  { name: "University of Texas at Austin", value: 56663 },
+  { name: "UT Health McGovern Medical School", value: 56151 },
+  { name: "Other", value: 4980052 },
+]);
+
+const fields = ref([
+  { name: "Physics and Astronomy", value: 16165731 },
+  { name: "Engineering", value: 6539684 },
+  { name: "Biochemistry, Genetics and Molecular Biology", value: 5542101 },
+  { name: "Computer Science", value: 3795048 },
+  { name: "Agricultural and Biological Sciences", value: 3766964 },
+  { name: "Medicine", value: 2923804 },
+  { name: "Social Sciences", value: 1926925 },
+  { name: "Environmental Science", value: 1522229 },
+  { name: "Materials Science", value: 1448007 },
+  { name: "Earth and Planetary Sciences", value: 1204701 },
+  { name: "Other", value: 4225973 },
+]);
+
+const sIndexMetrics = [
+  {
+    name: "Datasets registered",
+    value: 49061167,
+    description: "Total number of datasets registered in the platform",
+  },
+  {
+    name: "Total citations identified",
+    value: 7669225,
+    description: "Total number of citations identified in the platform",
+  },
+  {
+    name: "Total mentions identified",
+    value: 91891,
+    description: "Total number of mentions identified in the platform",
+  },
+  {
+    name: "Total citations parsed",
+    value: 460000000,
+    description: "Total number of citations parsed in our search pipeline",
+    suffix: "+",
+  },
+  {
+    name: "Total mentions parsed",
+    value: 230000000,
+    description: "Total number of mentions parsed in our search pipeline",
+    suffix: "+",
+  },
+  {
+    name: "Total number of patents scanned",
+    value: 6445063,
+    description: "Total number of patents scanned in our search pipeline",
+    suffix: "+",
+  },
+];
+
+const years = computed(() => datasetsByYear.value.map((d) => d.year));
+const datasetsByYearValues = computed(() =>
+  datasetsByYear.value.map((d) => d.value),
+);
+const institutionData = computed(() => institutions.value);
+const fieldData = computed(() => fields.value);
 
 const barChartOption = computed<ECOption>(() => ({
   title: {
-    text: "Dataset Publications (Last 12 Months)",
+    text: "Dataset Publications by Year",
     left: "center",
     textStyle: {
       fontSize: 18,
@@ -105,13 +130,12 @@ const barChartOption = computed<ECOption>(() => ({
       }>;
       if (!data || data.length === 0) return "";
 
-      let tooltip = `${data[0]?.name}<br/>`;
+      const yearLabel = (data[0]?.name as string) ?? "";
+      let tooltip = `${yearLabel}<br/>`;
 
       data.forEach((item) => {
         if (item.seriesName === "Dataset Publications") {
-          tooltip += `Publications: ${item.value}<br/>`;
-        } else if (item.seriesName === "Trend Line") {
-          tooltip += `Trend: ${item.value}<br/>`;
+          tooltip += `Publications: ${formatNumber(item.value)}<br/>`;
         }
       });
 
@@ -126,7 +150,7 @@ const barChartOption = computed<ECOption>(() => ({
   },
   xAxis: {
     type: "category",
-    data: months.value,
+    data: years.value,
     axisLabel: {
       rotate: 45,
       fontSize: 12,
@@ -145,7 +169,7 @@ const barChartOption = computed<ECOption>(() => ({
     {
       name: "Dataset Publications",
       type: "bar",
-      data: datasets.value,
+      data: datasetsByYearValues.value,
       itemStyle: {
         color: "#ec4899",
         borderRadius: [4, 4, 0, 0],
@@ -156,25 +180,6 @@ const barChartOption = computed<ECOption>(() => ({
         },
       },
       animationDelay: (idx: number) => idx * 100,
-    },
-    {
-      name: "Trend Line",
-      type: "line",
-      data: trendLineData.value,
-      smooth: true,
-      lineStyle: {
-        color: "#f9a8d4",
-        width: 3,
-        type: "solid",
-      },
-      itemStyle: {
-        color: "#f9a8d4",
-        borderWidth: 2,
-        borderColor: "#fff",
-      },
-      symbol: "circle",
-      symbolSize: 6,
-      z: 10,
     },
   ],
   animationEasing: "elasticOut",
@@ -296,85 +301,28 @@ const fieldPieChartOption = computed(() => ({
       variant="naked"
     />
 
-    <div v-if="pending" class="flex items-center justify-center py-12">
-      <div class="text-center">
-        <div class="mb-4 text-2xl">Loading metrics...</div>
-      </div>
-    </div>
-
-    <div v-else class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-      <UCard>
+    <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <UCard v-for="metric in sIndexMetrics" :key="metric.name">
         <template #header>
-          <h3 class="text-lg font-semibold">Datasets Registered</h3>
+          <h3 class="text-lg font-semibold">{{ metric.name }}</h3>
         </template>
 
         <div class="text-3xl font-bold text-pink-600">
-          {{ (sIndexMetrics.totalDatasets ?? 0).toLocaleString() }}
+          {{ formatNumber(metric.value) }}{{ metric.suffix ?? "" }}
         </div>
-      </UCard>
 
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Total Citations Identified</h3>
-        </template>
-
-        <div class="text-3xl font-bold text-pink-600">
-          {{ (sIndexMetrics.totalCitations ?? 0).toLocaleString() }}
-        </div>
-      </UCard>
-
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Total Mentions Identified</h3>
-        </template>
-
-        <div class="text-3xl font-bold text-pink-500">
-          {{ (sIndexMetrics.totalMentions ?? 0).toLocaleString() }}
-        </div>
-      </UCard>
-    </div>
-
-    <!-- S-Index Specific Metrics -->
-    <div v-if="!pending" class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Total FAIR scores computed</h3>
-        </template>
-
-        <div class="text-3xl font-bold text-green-600">
-          {{ (sIndexMetrics.fairScoredDatasets ?? 0).toLocaleString() }}
-        </div>
-      </UCard>
-
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Total Research Fields assigned</h3>
-        </template>
-
-        <div class="text-3xl font-bold text-purple-600">
-          {{ (sIndexMetrics.totalFieldAssignments ?? 0).toLocaleString() }}
-        </div>
-      </UCard>
-
-      <UCard>
-        <template #header>
-          <h3 class="text-lg font-semibold">Monthly visits</h3>
-        </template>
-
-        <div class="text-3xl font-bold text-orange-600">
-          {{ Math.round(Math.random() * 10000).toLocaleString() }}
-        </div>
+        <p class="mt-2 text-sm">{{ metric.description }}</p>
       </UCard>
     </div>
 
     <ClientOnly>
-      <UCard v-if="!pending">
+      <UCard>
         <template #header>
-          <h3 class="text-lg font-semibold">Datasets by Publication Year</h3>
+          <h3 class="text-lg font-semibold">Datasets by Year</h3>
         </template>
 
         <div style="height: 500px">
-          <VChart v-if="months.length > 0" :option="barChartOption" />
+          <VChart v-if="years.length > 0" :option="barChartOption" />
 
           <div
             v-else
@@ -387,7 +335,7 @@ const fieldPieChartOption = computed(() => ({
     </ClientOnly>
 
     <ClientOnly>
-      <div v-if="!pending" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
         <UCard>
           <div style="height: 700px">
             <VChart
