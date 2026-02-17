@@ -200,7 +200,6 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
       searchLoading.value = false;
     });
 };
-
 </script>
 
 <template>
@@ -262,8 +261,8 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
                   <p
                     class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
                   >
-                    Below are high-impact profiles (high S-index and high reuse
-                    of datasets relative to their field of research)
+                    Below are some high-impact profiles (high S-index and high
+                    reuse of datasets relative to their field of research)
                   </p>
                 </div>
               </div>
@@ -276,10 +275,7 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
                 Popular users to explore
               </p>
 
-              <SearchResultsList
-                :results="defaultSearchResults"
-                type="user"
-              />
+              <SearchResultsList :results="defaultSearchResults" type="user" />
             </div>
           </div>
 

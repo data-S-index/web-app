@@ -77,8 +77,26 @@ export default defineEventHandler(async (event) => {
         identifier: true,
         identifierType: true,
         publishedAt: true,
+        _count: {
+          select: {
+            citations: true,
+            mentions: true,
+          },
+        },
       },
     });
+
+    const dIndexRows = await prisma.dIndex.findMany({
+      where: { datasetId: { in: datasetIds } },
+      orderBy: { year: "desc" },
+      select: { datasetId: true, score: true },
+    });
+    const dIndexByDatasetId = new Map<number, number>();
+    for (const row of dIndexRows) {
+      if (!dIndexByDatasetId.has(row.datasetId)) {
+        dIndexByDatasetId.set(row.datasetId, row.score);
+      }
+    }
 
     const authors = await prisma.datasetAuthor.findMany({
       where: {
@@ -121,6 +139,9 @@ export default defineEventHandler(async (event) => {
           identifier: dataset.identifier,
           identifierType: dataset.identifierType,
           publishedAt: dataset.publishedAt,
+          dIndex: dIndexByDatasetId.get(dataset.id) ?? 0,
+          citationCount: dataset._count.citations,
+          mentionCount: dataset._count.mentions,
         };
       })
       .filter(
@@ -134,6 +155,9 @@ export default defineEventHandler(async (event) => {
           identifier: string;
           identifierType: string;
           publishedAt: Date;
+          dIndex: number;
+          citationCount: number;
+          mentionCount: number;
         } => item !== null,
       );
 

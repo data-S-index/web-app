@@ -8,6 +8,11 @@ defineOgImageComponent("Pergel", {
   headline: "Search Datasets",
 });
 
+const formatter = new Intl.NumberFormat("en-US", {
+  notation: "compact",
+  compactDisplay: "short",
+});
+
 type SearchResult = {
   id: number;
   title: string;
@@ -16,6 +21,9 @@ type SearchResult = {
   identifier: string;
   identifierType: string;
   publishedAt: string | Date;
+  dIndex: number;
+  citationCount: number;
+  mentionCount: number;
 };
 
 const route = useRoute();
@@ -51,90 +59,144 @@ onMounted(() => {
   }
 });
 
+// 1116680	10.5061/dryad.jp917	doi	Data from: Building the graph of medicine from millions of clinical narratives	Dryad	8/28/2015	1485	2511.360000000029	3	840.22
+// 4360136	10.7910/dvn/dbw86t	doi	The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions	Harvard Dataverse	1/1/2018	827	1333.9500000000094	117	506.63
+// 3003537	10.7937/k9/tcia.2017.klxwjj1q	doi	Segmentation Labels for the Pre-operative Scans of the TCGA-GBM collection	The Cancer Imaging Archive	1/1/2017	530	842.2200000000056	507	538.73
+// 1934257	10.13012/j8pn93h8	doi	New York City Taxi Trip Data (2010-2013)	University of Illinois Urbana-Champaign	1/1/2016	306	508.73999999999876	110	228.32
+// 3749268	10.5281/zenodo.1117372	doi	MUSDB18 - a corpus for music separation	Zenodo	12/17/2017	271	440.4599999999983	74	187.61
+// 2413757	10.6084/m9.figshare.3115156.v2	doi	Common Workflow Language, v1.0	figshare	1/1/2016	257	426.17999999999904	231	258.86
+// 6242085	10.24381/cds.adbb2d47	doi	ERA5 hourly data on single levels from 1940 to present	Copernicus Climate Change Service (C3S) Climate Data Store (CDS)	1/1/2018	173	288.0999999999994	2287	1334.19
+// 1261090	10.7910/dvn/ydeput	doi	ESC: Dataset for Environmental Sound Classification	Harvard Dataverse	1/1/2015	160	270.5099999999995	171	185.26
+// 3777593	10.17632/rscbjbr9sj.2	doi	Labeled Optical Coherence Tomography (OCT) and Chest X-Ray Images for Classification	Mendeley	1/6/2018	156	244.72000000000006	734	459.99
+// 5155149	10.7910/dvn/voqchq	doi	County Presidential Election Returns 2000-2024	Harvard Dataverse	1/1/2018	131	209.67999999999995	287	219.27
+
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: 1252148,
-    identifier: "10.15468/ab3s5x",
-    identifierType: "doi",
-    title: "iNaturalist Research-grade Observations",
-    authors: "iNaturalist contributors",
-    version: null,
-    publishedAt: "2025-01-01 00:00:00",
-  },
-  {
-    id: 2595790,
-    identifier: "10.15468/hnhrg3",
-    identifierType: "doi",
-    title: "NMNH Extant Specimen Records (USNM, US)",
-    authors:
-      "Informatics and Data Science Center-Digital Stewardship, Orrell, Thomas",
-    version: null,
-    publishedAt: "2025-01-01 00:00:00",
-  },
-  {
-    id: 2041781,
-    identifier: "10.15468/ib5ypt",
-    identifierType: "doi",
-    title: "Naturalis Biodiversity Center (NL) - Botany",
-    authors: "Creuwels, Jeroen, Guerrero, Susana Arias, Roxali Bijmoer",
-    version: null,
-    publishedAt: "2025-01-01 00:00:00",
-  },
-  {
-    id: 28911503,
-    identifier: "10.57702/zp44cu3g",
-    identifierType: "doi",
-    title: "Learning Multiple Layers of Features from Tiny Images",
-    authors: "Krizhevsky, Alex",
-    version: null,
-    publishedAt: "2024-01-01 00:00:00",
-  },
-  {
-    id: 1177587,
-    identifier: "10.5519/0002965",
-    identifierType: "doi",
-    title: "Collection specimens",
-    authors: "Natural History Museum",
-    version: null,
-    publishedAt: "2014-01-01 00:00:00",
-  },
-  {
-    id: 1212752,
-    identifier: "10.15468/ypoair",
-    identifierType: "doi",
-    title: "Edinburgh (E) Herbarium Specimens",
-    authors: "Royal Botanic Garden Edinburgh (RBGE)",
-    version: null,
-    publishedAt: "2025-01-01 00:00:00",
-  },
-  {
-    id: 29778699,
-    identifier: "10.57702/kcdhx0zi",
+    id: 1116680,
+    identifier: "10.5061/dryad.jp917",
     identifierType: "doi",
     title:
-      "Distributed representations of words and phrases and their compositionality",
-    authors: "Mikolov, Tomas",
+      "Data from: Building the graph of medicine from millions of clinical narratives",
+    authors: "Finlayson, Samuel G.; LePendu, Paea; Shah, Nigam H.",
     version: null,
-    publishedAt: "2025-01-01 00:00:00",
+    publishedAt: new Date("2015-08-28"),
+    dIndex: 2511.36,
+    citationCount: 840,
+    mentionCount: 3,
   },
   {
-    id: 10887715,
-    identifier: "10.5281/zenodo.5781449",
+    id: 4360136,
+    identifier: "10.7910/dvn/dbw86t",
     identifierType: "doi",
-    title: "Learning Rich Representation of Keyphrases from Text",
+    title:
+      "The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions",
+    authors: "Tschandl, Philipp",
+    version: null,
+    publishedAt: new Date("2018-01-01"),
+    dIndex: 1333.95,
+    citationCount: 827,
+    mentionCount: 117,
+  },
+  {
+    id: 3003537,
+    identifier: "10.7937/k9/tcia.2017.klxwjj1q",
+    identifierType: "doi",
+    title:
+      "Segmentation Labels for the Pre-operative Scans of the TCGA-GBM collection",
     authors:
-      "Arora, Ravneet, Bhowmik, Rajarshi, Kulkarni, Mayank, Mahata, Debanjan",
+      "Bakas, Spyridon; Akbari, Hamed; Sotiras, Aristeidis; Bilello, Michel; Rozycki, Martin; Kirby, Justin; Freymann, John; Farahani, Keyvan; Davatzikos, Christos",
     version: null,
-    publishedAt: "2021-12-14 00:00:00",
+    publishedAt: new Date("2017-01-01"),
+    dIndex: 842.22,
+    citationCount: 530,
+    mentionCount: 507,
   },
   {
-    id: 1275551,
-    identifier: "10.15468/hja69f",
+    id: 1934257,
+    identifier: "10.13012/j8pn93h8",
     identifierType: "doi",
-    title: "Tropicos MO Specimen Data",
-    authors: "Teisher, Jordan",
+    title: "New York City Taxi Trip Data (2010-2013)",
+    authors: "Donovan, Brian; Work, Dan",
     version: null,
-    publishedAt: "2025-01-01 00:00:00",
+    publishedAt: new Date("2016-01-01"),
+    dIndex: 508.74,
+    citationCount: 306,
+    mentionCount: 110,
+  },
+  {
+    id: 3749268,
+    identifier: "10.5281/zenodo.1117372",
+    identifierType: "doi",
+    title: "MUSDB18 - a corpus for music separation",
+    authors:
+      "Rafii, Zafar; Liutkus, Antoine; Stöter, Fabian-Robert; Mimilakis, Stylianos Ioannis; Bittner, Rachel",
+    version: null,
+    publishedAt: new Date("2017-12-17"),
+    dIndex: 440.46,
+    citationCount: 271,
+    mentionCount: 74,
+  },
+  {
+    id: 2413757,
+    identifier: "10.6084/m9.figshare.3115156.v2",
+    identifierType: "doi",
+    title: "Common Workflow Language, v1.0",
+    authors:
+      "Amstutz, Peter; Crusoe, Michael R.; Nebojša Tijanić; Chapman, Brad; Chilton, John; Heuer, Michael; Kartashov, Andrey; Leehr, Dan; Ménager, Hervé; Nedeljkovich, Maya; Scales, Matt; Soiland-Reyes, Stian; Stojanovic, Luka",
+    version: "v2",
+    publishedAt: new Date("2016-01-01"),
+    dIndex: 426.18,
+    citationCount: 257,
+    mentionCount: 231,
+  },
+  {
+    id: 6242085,
+    identifier: "10.24381/cds.adbb2d47",
+    identifierType: "doi",
+    title: "ERA5 hourly data on single levels from 1940 to present",
+    authors: "C3S",
+    version: null,
+    publishedAt: new Date("2018-01-01"),
+    dIndex: 288.1,
+    citationCount: 173,
+    mentionCount: 2287,
+  },
+  {
+    id: 1261090,
+    identifier: "10.7910/dvn/ydeput",
+    identifierType: "doi",
+    title: "ESC: Dataset for Environmental Sound Classification",
+    authors: "J. Piczak, Karol",
+    version: null,
+    publishedAt: new Date("2015-01-01"),
+    dIndex: 270.51,
+    citationCount: 160,
+    mentionCount: 171,
+  },
+  {
+    id: 3777593,
+    identifier: "10.17632/rscbjbr9sj.2",
+    identifierType: "doi",
+    title:
+      "Labeled Optical Coherence Tomography (OCT) and Chest X-Ray Images for Classification",
+    authors: "Kermany, Daniel",
+    version: null,
+    publishedAt: new Date("2018-01-06"),
+    dIndex: 244.72,
+    citationCount: 156,
+    mentionCount: 734,
+  },
+  {
+    id: 5155149,
+    identifier: "10.7910/dvn/voqchq",
+    identifierType: "doi",
+    title: "County Presidential Election Returns 2000-2024",
+    authors: "MIT Election Data and Science Lab",
+    version: null,
+    publishedAt: new Date("2018-01-01"),
+    dIndex: 209.68,
+    citationCount: 131,
+    mentionCount: 287,
   },
 ]);
 
@@ -267,8 +329,7 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                     class="text-sm leading-relaxed text-gray-600 dark:text-gray-400"
                   >
                     Not sure what to search for? Below are popular datasets you
-                    can browse right away. Click any card to open it, or use the
-                    search above when you have something in mind.
+                    can browse right away.
                   </p>
                 </div>
               </div>
@@ -282,10 +343,11 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
               </p>
 
               <div class="space-y-3">
-                <div
+                <NuxtLink
                   v-for="result in defaultSearchResults"
                   :key="result.id"
-                  class="relative flex rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600"
+                  :to="`/datasets/${result.id}`"
+                  class="hover:border-primary-500 relative flex rounded-lg border-2 border-gray-200 bg-white p-4 transition-all dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600"
                 >
                   <div class="flex min-w-0 flex-1 flex-col gap-2">
                     <div class="flex items-start justify-between gap-3">
@@ -295,37 +357,32 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                         {{ result.title }}
                       </h3>
 
-                      <div class="flex shrink-0 flex-wrap items-center gap-1.5">
+                      <div class="mt-1 flex items-center gap-2">
                         <UBadge
-                          v-if="result.version"
-                          color="secondary"
+                          color="info"
                           variant="soft"
                           size="sm"
-                          :label="`v${result.version}`"
-                          icon="i-heroicons-tag-20-solid"
+                          :label="`D-Index: ${formatter.format(result.dIndex)}`"
                         />
 
-                        <UTooltip text="Click to copy identifier">
-                          <UBadge
-                            v-if="result.identifier"
-                            color="primary"
-                            variant="soft"
-                            size="sm"
-                            :label="result.identifier"
-                            :icon="
-                              result.identifierType === 'doi'
-                                ? 'simple-icons:doi'
-                                : 'mdi:identifier'
-                            "
-                            class="max-w-[12rem] cursor-pointer truncate font-mono text-xs"
-                            @click="copyToClipboard(result.identifier)"
-                          />
-                        </UTooltip>
+                        <UBadge
+                          color="info"
+                          variant="soft"
+                          size="sm"
+                          :label="`Citations: ${formatter.format(result.citationCount)}`"
+                        />
+
+                        <UBadge
+                          color="info"
+                          variant="soft"
+                          size="sm"
+                          :label="`Mentions: ${formatter.format(result.mentionCount)}`"
+                        />
                       </div>
                     </div>
 
                     <div
-                      class="mt-1 flex min-w-0 flex-1 items-start justify-between gap-2"
+                      class="flex min-w-0 flex-1 items-end justify-between gap-10"
                     >
                       <div
                         v-if="result.authors"
@@ -337,25 +394,31 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                         />
 
                         <p
-                          class="flex-1 truncate text-sm text-gray-600 dark:text-gray-400"
+                          class="flex-1 text-sm text-gray-600 dark:text-gray-400"
                         >
                           {{ result.authors }}
                         </p>
                       </div>
 
-                      <UButton
-                        :to="`/datasets/${result.id}`"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        icon="i-heroicons-arrow-top-right-on-square-20-solid"
-                        color="neutral"
-                        label="View Dataset"
-                        size="sm"
-                        aria-label="Open dataset in new tab"
-                      />
+                      <UTooltip text="Click to copy identifier">
+                        <UBadge
+                          v-if="result.identifier"
+                          color="primary"
+                          variant="soft"
+                          size="sm"
+                          :label="result.identifier"
+                          :icon="
+                            result.identifierType === 'doi'
+                              ? 'simple-icons:doi'
+                              : 'mdi:identifier'
+                          "
+                          class="max-w cursor-pointer truncate font-mono text-xs"
+                          @click="copyToClipboard(result.identifier)"
+                        />
+                      </UTooltip>
                     </div>
                   </div>
-                </div>
+                </NuxtLink>
               </div>
             </div>
           </div>
@@ -393,10 +456,11 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                 <USeparator class="my-4" />
 
                 <div class="space-y-3">
-                  <div
+                  <NuxtLink
                     v-for="result in searchResults"
                     :key="result.id"
-                    class="relative flex rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600"
+                    :to="`/datasets/${result.id}`"
+                    class="hover:border-primary-500 relative flex rounded-lg border-2 border-gray-200 bg-white p-4 transition-all dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-600"
                   >
                     <div class="flex min-w-0 flex-1 flex-col gap-2">
                       <div class="flex items-start justify-between gap-3">
@@ -406,38 +470,33 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                           {{ result.title }}
                         </h3>
 
-                        <div
-                          class="flex shrink-0 flex-wrap items-center gap-1.5"
-                        >
+                        <div class="mt-1 flex items-center gap-2">
                           <UBadge
-                            v-if="result.version"
-                            color="secondary"
+                            color="info"
                             variant="soft"
                             size="sm"
-                            :label="`v${result.version}`"
-                            icon="i-heroicons-tag-20-solid"
+                            :label="`D-Index: ${formatter.format(result.dIndex)}`"
                           />
 
-                          <UTooltip text="Click to copy identifier">
-                            <UBadge
-                              v-if="result.identifier"
-                              color="primary"
-                              variant="soft"
-                              size="sm"
-                              :label="result.identifier"
-                              :icon="
-                                result.identifierType === 'doi'
-                                  ? 'simple-icons:doi'
-                                  : 'mdi:identifier'
-                              "
-                              class="max-w-[12rem] cursor-pointer truncate font-mono text-xs"
-                              @click="copyToClipboard(result.identifier)"
-                            />
-                          </UTooltip>
+                          <UBadge
+                            color="info"
+                            variant="soft"
+                            size="sm"
+                            :label="`Citations: ${formatter.format(result.citationCount)}`"
+                          />
+
+                          <UBadge
+                            color="info"
+                            variant="soft"
+                            size="sm"
+                            :label="`Mentions: ${formatter.format(result.mentionCount)}`"
+                          />
                         </div>
                       </div>
 
-                      <div class="flex min-w-0 flex-col gap-1.5">
+                      <div
+                        class="flex min-w-0 flex-1 items-end justify-between gap-10"
+                      >
                         <div
                           v-if="result.authors"
                           class="flex min-w-0 items-center gap-2"
@@ -448,45 +507,31 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                           />
 
                           <p
-                            class="flex-1 truncate text-sm text-gray-600 dark:text-gray-400"
+                            class="flex-1 text-sm text-gray-600 dark:text-gray-400"
                           >
                             {{ result.authors }}
                           </p>
                         </div>
 
-                        <div
-                          v-if="result.publishedAt"
-                          class="flex min-w-0 flex-1 items-center justify-between gap-2"
-                        >
-                          <div class="flex min-w-0 items-center gap-2">
-                            <Icon
-                              name="i-heroicons-calendar-20-solid"
-                              class="h-4 w-4 shrink-0 text-gray-400"
-                            />
-
-                            <p class="text-sm text-gray-500">
-                              {{
-                                $dayjs(result.publishedAt).format(
-                                  "dddd, MMMM D, YYYY",
-                                )
-                              }}
-                            </p>
-                          </div>
-
-                          <UButton
-                            :to="`/datasets/${result.id}`"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            icon="i-heroicons-arrow-top-right-on-square-20-solid"
-                            color="neutral"
-                            label="View Dataset"
+                        <UTooltip text="Click to copy identifier">
+                          <UBadge
+                            v-if="result.identifier"
+                            color="primary"
+                            variant="soft"
                             size="sm"
-                            aria-label="Open dataset in new tab"
+                            :label="result.identifier"
+                            :icon="
+                              result.identifierType === 'doi'
+                                ? 'simple-icons:doi'
+                                : 'mdi:identifier'
+                            "
+                            class="max-w cursor-pointer truncate font-mono text-xs"
+                            @click="copyToClipboard(result.identifier)"
                           />
-                        </div>
+                        </UTooltip>
                       </div>
                     </div>
-                  </div>
+                  </NuxtLink>
                 </div>
               </div>
 
