@@ -399,8 +399,15 @@ const fieldPieChartOption = computed(() => ({
       </div>
     </ClientOnly>
 
-    <div class="flex flex-col gap-10 pb-10">
-      <h3 class="text-center text-2xl font-semibold">Sources of data</h3>
+    <div class="flex flex-col gap-10 py-10">
+      <div class="flex flex-col gap-2">
+        <h3 class="text-center text-3xl font-bold">Sources of data</h3>
+
+        <p class="text-center text-lg text-gray-500">
+          We use the following sources to identify dataset mentions and
+          citations.
+        </p>
+      </div>
 
       <Vue3Marquee clone gradient>
         <div class="m-1 flex flex-nowrap gap-4 p-1">
