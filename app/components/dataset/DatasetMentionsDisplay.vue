@@ -55,18 +55,19 @@ const paginatedMentions = computed(() => {
               :href="mention.mentionLink"
               target="_blank"
               rel="noopener noreferrer"
-              class="font-mono text-blue-600 hover:underline dark:text-blue-400"
+              class="font-mono break-all text-blue-600 hover:underline dark:text-blue-400"
             >
               {{ mention.mentionLink }}
             </NuxtLink>
 
-            <div class="flex flex-wrap gap-2">
+            <div class="flex w-max flex-wrap gap-2">
               <UBadge
                 v-for="(source, sourceIndex) in mention.source"
                 :key="sourceIndex"
                 color="info"
                 variant="subtle"
                 size="sm"
+                class="w-max"
               >
                 {{
                   source === "hf"

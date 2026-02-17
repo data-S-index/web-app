@@ -85,6 +85,17 @@ const mentionsChartData = computed(() => {
   };
 });
 
+// Show at most ~8 x-axis labels; when more years, use interval to skip
+const xAxisLabelInterval = computed(() => {
+  const n = mentionsChartData.value.years?.length ?? 0;
+
+  if (n <= 8) return 0; // show all
+
+  const step = Math.ceil(n / 8);
+
+  return Math.max(0, step - 1); // ECharts interval: 0=every, 1=every 2nd, 2=every 3rd...
+});
+
 // Check if there's enough data to plot
 const hasEnoughData = computed(() => {
   return (
@@ -162,7 +173,7 @@ const mentionsChartOption = computed<ECOption>(() => ({
     nameGap: 28,
     axisLabel: {
       fontSize: 10,
-      interval: 0,
+      interval: xAxisLabelInterval.value, // skip years when many to avoid crowding
       rotate: mentionsChartData.value.years.length > 5 ? 60 : 0,
     },
   },

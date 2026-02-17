@@ -22,6 +22,7 @@ interface OrgDatasetsResponse {
   datasets: OrgDatasetItem[];
   totalDatasets: number;
   currentSIndex: number;
+  sindexOverTime?: { years: number[]; scores: number[] };
   averageFairScore: number;
   totalCitations: number;
 }
@@ -95,79 +96,10 @@ const totalMentions = computed(() => {
 
 const averageFairScore = computed(() => response.value?.averageFairScore ?? 0);
 
-// S-index over time by year (aggregated across all datasets)
-const sindexOverTime = computed(() => {
-  const list = datasets.value;
-  if (!list.length) return { years: [], scores: [] };
-
-  const allDIndices: Array<{ year: number; score: number; datasetId: number }> =
-    [];
-
-  list.forEach((item: OrgDatasetItem) => {
-    if (item.dataset.dindices && item.dataset.dindices.length > 0) {
-      item.dataset.dindices.forEach(
-        (dindex: { year: number; score: number }) => {
-          allDIndices.push({
-            year: dindex.year,
-            score: dindex.score,
-            datasetId: item.datasetId,
-          });
-        },
-      );
-    }
-  });
-
-  if (allDIndices.length === 0) return { years: [], scores: [] };
-
-  allDIndices.sort((a, b) => a.year - b.year);
-
-  // Start from earliest dataset publishedAt year
-  const publishedYears = list
-    .map((item: OrgDatasetItem) => item.dataset.publishedAt)
-    .filter(Boolean)
-    .map((d) => new Date(d!).getFullYear());
-  const minYear =
-    publishedYears.length > 0
-      ? Math.min(...publishedYears)
-      : allDIndices[0]!.year;
-  let currentYear = new Date().getFullYear();
-
-  // If the latest mention or citation is not in the current year, set the current year to the previous year
-  if (!allDIndices.some((dindex) => dindex.year === currentYear)) {
-    currentYear--;
-  }
-
-  const years: number[] = [];
-  const scores: number[] = [];
-
-  for (let y = minYear; y <= currentYear; y++) {
-    years.push(y);
-    const datasetLatestDIndex = new Map<
-      number,
-      { score: number; year: number }
-    >();
-
-    allDIndices.forEach((dindex) => {
-      if (dindex.year <= y) {
-        const existing = datasetLatestDIndex.get(dindex.datasetId);
-        if (!existing || dindex.year > existing.year) {
-          datasetLatestDIndex.set(dindex.datasetId, {
-            score: dindex.score,
-            year: dindex.year,
-          });
-        }
-      }
-    });
-
-    let sindexValue = 0;
-    datasetLatestDIndex.forEach((entry) => {
-      sindexValue += entry.score;
-    });
-    scores.push(sindexValue);
-  }
-
-  return { years, scores };
-});
+// S-index over time from AutomatedOrganizationSIndex table only (no client-side fallback)
+const sindexOverTime = computed(
+  () => response.value?.sindexOverTime ?? { years: [], scores: [] },
+);
 
 // Cumulative citations (raw and weighted) across all datasets
 const cumulativeCitations = computed(() => {
@@ -377,8 +309,6 @@ const cumulativeMentions = computed(() => {
             </h1>
           </div>
         </template>
-
-        <template #links />
       </UPageHeader>
 
       <UPageBody v-if="org">

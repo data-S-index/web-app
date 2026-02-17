@@ -7,6 +7,17 @@ const props = defineProps<{
   };
 }>();
 
+// Show at most ~12 x-axis labels; when more years, use interval to skip
+const xAxisLabelInterval = computed(() => {
+  const n = props.sindexOverTime.years?.length ?? 0;
+
+  if (n <= 8) return 0; // show all
+
+  const step = Math.ceil(n / 8);
+
+  return Math.max(0, step - 1); // ECharts interval: 0=every, 1=every 2nd, 2=every 3rd...
+});
+
 // Chart options for S-index over time (year on x-axis only)
 const sindexChartOption = computed<ECOption>(() => ({
   tooltip: {
@@ -62,12 +73,11 @@ const sindexChartOption = computed<ECOption>(() => ({
     nameGap: 28,
     axisLabel: {
       fontSize: 10,
+      interval: xAxisLabelInterval.value, // skip years when many to avoid crowding
     },
   },
   yAxis: {
     type: "value",
-    name: "S-Index",
-    nameLocation: "middle",
     nameGap: 32,
     axisLabel: {
       formatter: "{value}",

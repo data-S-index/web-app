@@ -90,41 +90,62 @@ export default defineEventHandler(async (event) => {
   // - totalDatasets
   // - avgFairScore (avg fuji score across all org datasets)
   // - totalCitations (count citations across all org datasets)
-  // - currentSIndex (sum of latest dindex per dataset across all org datasets)
-  //
-  // This is easiest with raw SQL because of "latest dindex per dataset".
   const [agg] = await prisma.$queryRaw<
     Array<{
       totalDatasets: bigint;
       averageFairScore: number | null;
       totalCitations: bigint;
-      currentSIndex: number | null;
     }>
   >`
     WITH org_ds AS (
       SELECT aod."datasetId"
       FROM "AutomatedOrganizationDataset" aod
       WHERE aod."automatedOrganizationId" = ${aoid}
-    ),
-    latest_d AS (
-      SELECT DISTINCT ON (d."datasetId")
-        d."datasetId",
-        d."score"
-      FROM "DIndex" d
-      JOIN org_ds o ON o."datasetId" = d."datasetId"
-      ORDER BY d."datasetId", d."year" DESC
     )
     SELECT
       (SELECT COUNT(*) FROM org_ds) AS "totalDatasets",
       (SELECT AVG(fs."score") FROM "FujiScore" fs JOIN org_ds o ON o."datasetId" = fs."datasetId") AS "averageFairScore",
-      (SELECT COUNT(*) FROM "Citation" c JOIN org_ds o ON o."datasetId" = c."datasetId") AS "totalCitations",
-      (SELECT COALESCE(SUM(ld."score"), 0) FROM latest_d ld) AS "currentSIndex"
+      (SELECT COUNT(*) FROM "Citation" c JOIN org_ds o ON o."datasetId" = c."datasetId") AS "totalCitations"
   `;
+
+  // S-index from precomputed AutomatedOrganizationSIndex table (score per year)
+  const sindexRows = await prisma.automatedOrganizationSIndex.findMany({
+    where: { automatedOrganizationId: aoid },
+    orderBy: { year: "asc" },
+    select: { year: true, score: true },
+  });
+  const rawYears = sindexRows.map((r) => r.year);
+  const rawScores = sindexRows.map((r) => r.score);
+  const currentYear = new Date().getFullYear();
+  const endYear = currentYear - 1;
+  const filledYears: number[] = [];
+  const filledScores: number[] = [];
+  if (rawYears.length > 0) {
+    const firstYear = rawYears[0]!;
+    const yearToScore = new Map(
+      rawYears.map((y, i) => [y, rawScores[i]!] as const),
+    );
+    let lastScore = 0;
+    for (let y = firstYear; y <= endYear; y++) {
+      filledYears.push(y);
+      if (yearToScore.has(y)) {
+        lastScore = yearToScore.get(y)!;
+      }
+      filledScores.push(lastScore);
+    }
+  }
+  const sindexOverTime = {
+    years: filledYears.length > 0 ? filledYears : rawYears,
+    scores: filledScores.length > 0 ? filledScores : rawScores,
+  };
+  const currentSIndex =
+    sindexRows.length > 0 ? sindexRows[sindexRows.length - 1]!.score : 0;
 
   const payload = {
     datasets,
     totalDatasets: Number(agg?.totalDatasets ?? 0n),
-    currentSIndex: Number(agg?.currentSIndex ?? 0),
+    currentSIndex,
+    sindexOverTime,
     averageFairScore: agg?.averageFairScore ?? 0,
     totalCitations: Number(agg?.totalCitations ?? 0n),
   };

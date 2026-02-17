@@ -10,6 +10,17 @@ const props = defineProps<{
   };
 }>();
 
+// Show at most ~12 x-axis labels; when more years, use interval to skip
+const xAxisLabelInterval = computed(() => {
+  const n = props.cumulativeCitations.dates?.length ?? 0;
+
+  if (n <= 8) return 0; // show all
+
+  const step = Math.ceil(n / 8);
+
+  return Math.max(0, step - 1); // ECharts interval: 0=every, 1=every 2nd, 2=every 3rd...
+});
+
 // Chart options for cumulative citations
 const citationsChartOption = computed<ECOption>(() => ({
   tooltip: {
@@ -76,7 +87,7 @@ const citationsChartOption = computed<ECOption>(() => ({
     nameGap: 28,
     axisLabel: {
       fontSize: 10,
-      interval: 0, // one label per year (one category per year)
+      interval: xAxisLabelInterval.value, // skip years when many to avoid crowding
     },
   },
   yAxis: {
