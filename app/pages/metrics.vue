@@ -130,7 +130,7 @@ const sources = ref([
     name: "USPTO",
     value: 6.4,
     suffix: "M+",
-    description: "granted patents scanned for dataset mentions.",
+    description: "Granted patents scanned for dataset mentions.",
   },
 ]);
 
