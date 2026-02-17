@@ -13,6 +13,7 @@ type SearchResult = {
   name: string;
   nameIdentifiers: string[];
   affiliations: string[];
+  sIndex: number;
   datasetCount: number;
 };
 
@@ -49,107 +50,98 @@ onMounted(() => {
   }
 });
 
+// 14773	Schiebel, Ralf			840	26682.386616270604	2025	31.76	39057
+// 1002	Hemleben, Christoph			762	23119.658062356193	2025	30.34	33881
+// 430013	Motz, Gary	Personal	Yale Peabody Museum	10	9545.833550065021	2025	954.58	28627
+// 3640718	Krizhevsky, Alex	Personal		9	8628.512587474217	2025	958.72	25638
+// 432818	Grant, Sharon	Personal	Field Museum of Natural History	11	7664.501405795111	2025	696.77	22607
+// 1009	Mackensen, Andreas			576	6814.500882927574	2025	11.83	9421
+// 16707	Assmy, Philipp			250	5324.177973344383	2025	21.3	8160
+// 14790	Stangeew, Elena			118	5192.257787662468	2024	44	7618
+// 19724	Armonies, Werner			184	4543.086065965589	2024	24.69	7550
+// 17749	Psarra, Stella			271	4032.2259456781276	2024	14.88	6160
+
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: 1,
-    name: "Larsson, Karl-Henrik",
+    id: 14773,
+    name: "Schiebel, Ralf",
+    nameIdentifiers: ["0000-0002-6252-7647"],
+    affiliations: [],
+    datasetCount: 840,
+    sIndex: 26682.386616270604,
+  },
+  {
+    id: 1002,
+    name: "Hemleben, Christoph",
     nameIdentifiers: [],
     affiliations: [],
-    datasetCount: 3200946,
+    datasetCount: 762,
+    sIndex: 23119.658062356193,
   },
   {
-    id: 2,
-    name: "TOKUZAWA, Tokihiko",
-    nameIdentifiers: [
-      "https://orcid.org/0000-0001-5473-2109",
-      "https://nrid.nii.ac.jp/nrid/1000090311208/",
-      "https://jglobal.jst.go.jp/detail/?JGLOBAL_ID=201901009150229858",
-      "https://www.webofscience.com/wos/author/record/16251071",
-      "https://www.scopus.com/authid/detail.uri?authorId=7006299212",
-      "https://researchmap.jp/tt2020",
-    ],
-    affiliations: ["National Institute for Fusion Science (NIFS)"],
-    datasetCount: 2649646,
+    id: 430013,
+    name: "Motz, Gary",
+    nameIdentifiers: [],
+    affiliations: ["Yale Peabody Museum"],
+    datasetCount: 10,
+    sIndex: 9545.833550065021,
   },
   {
-    id: 3,
-    name: "TANAKA, Kenji",
-    nameIdentifiers: [
-      "https://nrid.nii.ac.jp/nrid/1000050260047/",
-      "https://jglobal.jst.go.jp/detail?JGLOBAL_ID=200901013739373061",
-      "https://www.webofscience.com/wos/author/record/KMW-6413-2024",
-      "https://www.scopus.com/authid/detail.uri?authorId=55628544225",
-      "https://researchmap.jp/read0083357",
-    ],
-    affiliations: ["National Institute for Fusion Science"],
-    datasetCount: 2217518,
+    id: 3640718,
+    name: "Krizhevsky, Alex",
+    nameIdentifiers: [],
+    affiliations: [],
+    datasetCount: 9,
+    sIndex: 8628.512587474217,
   },
   {
-    id: 4,
-    name: "OSAKABE, Masaki",
-    nameIdentifiers: [
-      "https://orcid.org/0000-0001-5220-947X",
-      "https://nrid.nii.ac.jp/nrid/1000090280601/",
-      "https://jglobal.jst.go.jp/detail/?JGLOBAL_ID=200901073314804118",
-      "https://www.webofscience.com/wos/author/record/15879782",
-      "https://www.scopus.com/authid/detail.uri?authorId=7102560835",
-      "https://researchmap.jp/read0053108",
-    ],
-    affiliations: ["National Institute for Fusion Science"],
-    datasetCount: 2187103,
+    id: 432818,
+    name: "Grant, Sharon",
+    nameIdentifiers: [],
+    affiliations: ["Field Museum of Natural History"],
+    datasetCount: 11,
+    sIndex: 7664.501405795111,
   },
   {
-    id: 5,
-    name: "TOKUZAWA, Tokihiko",
-    nameIdentifiers: [
-      "https://orcid.org/0000-0001-5473-2109",
-      "https://nrid.nii.ac.jp/nrid/1000090311208/",
-      "https://jglobal.jst.go.jp/detail/?JGLOBAL_ID=201901009150229858",
-      "https://researchmap.jp/tt2020",
-    ],
-    affiliations: ["National Institute for Fusion Science"],
-    datasetCount: 2045816,
+    id: 1009,
+    name: "Mackensen, Andreas",
+    nameIdentifiers: ["https://orcid.org/0000-0002-5024-4455"],
+    affiliations: [],
+    datasetCount: 576,
+    sIndex: 6814.500882927574,
   },
   {
-    id: 6,
-    name: "GOTO, Motoshi",
-    nameIdentifiers: [
-      "https://orcid.org/0000-0002-9160-682X",
-      "https://nrid.nii.ac.jp/nrid/1000000290916/",
-      "https://jglobal.jst.go.jp/detail?JGLOBAL_ID=202101011367280366",
-      "https://www.webofscience.com/wos/author/record/8048302",
-      "https://www.scopus.com/authid/detail.uri?authorId=7403505493",
-    ],
-    affiliations: ["National Institute for Fusion Science"],
-    datasetCount: 1994879,
+    id: 16707,
+    name: "Assmy, Philipp",
+    nameIdentifiers: [],
+    affiliations: [],
+    datasetCount: 250,
+    sIndex: 5324.177973344383,
   },
   {
-    id: 7,
-    name: "MASUZAKI, Suguru",
-    nameIdentifiers: [
-      "https://orcid.org/0000-0003-0161-0938",
-      "https://nrid.nii.ac.jp/nrid/1000080280593/",
-      "https://jglobal.jst.go.jp/detail/?JGLOBAL_ID=200901098125305308",
-      "https://www.scopus.com/authid/detail.uri?authorId=7006350815",
-      "https://researchmap.jp/MASUZAKI_Suguru",
-    ],
-    affiliations: ["National Institute for Fusion Science"],
-    datasetCount: 1952824,
+    id: 14790,
+    name: "Stangeew, Elena",
+    nameIdentifiers: [],
+    affiliations: [],
+    datasetCount: 118,
+    sIndex: 5192.257787662468,
   },
   {
-    id: 8,
-    name: "NAGAOKA, Kenichi",
-    nameIdentifiers: [
-      "https://orcid.org/0000-0002-5892-6047",
-      "https://nrid.nii.ac.jp/nrid/1000020353443/",
-      "https://jglobal.jst.go.jp/detail?JGLOBAL_ID=200901010090195488",
-      "https://www.webofscience.com/wos/author/record/57712578",
-      "https://www.scopus.com/authid/detail.uri?authorId=8575348100",
-      "https://researchmap.jp/nagaokakenichi",
-    ],
-    affiliations: ["National Institute for Fusion Science"],
-    datasetCount: 1678224,
+    id: 19724,
+    name: "Armonies, Werner",
+    nameIdentifiers: ["https://orcid.org/0000-0001-5546-2462"],
+    affiliations: [],
+    datasetCount: 184,
+    sIndex: 4543.086065965589,
+  },
+  {
+    id: 17749,
+    name: "Psarra, Stella",
+    nameIdentifiers: [],
+    affiliations: [],
+    datasetCount: 271,
+    sIndex: 4032.2259456781276,
   },
 ]);
 
@@ -209,11 +201,6 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
     });
 };
 
-const getUserAvatarUrl = (user: SearchResult) => {
-  const seed = user.id || user.name || "user";
-
-  return `https://api.dicebear.com/9.x/thumbs/svg?seed=${encodeURIComponent(seed)}`;
-};
 </script>
 
 <template>
@@ -289,88 +276,10 @@ const getUserAvatarUrl = (user: SearchResult) => {
                 Popular users to explore
               </p>
 
-              <div class="space-y-3">
-                <NuxtLink
-                  v-for="result in defaultSearchResults"
-                  :key="result.id"
-                  :to="`/au/${result.id}`"
-                  class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800"
-                >
-                  <div
-                    class="flex h-full flex-col items-start gap-2 self-start"
-                  >
-                    <UAvatar
-                      :src="getUserAvatarUrl(result)"
-                      :alt="result.name"
-                      size="xl"
-                      class="squircle rounded-none"
-                    />
-                  </div>
-
-                  <div class="min-w-0 flex-1">
-                    <h3
-                      class="line-clamp-1 text-lg font-semibold text-gray-900 dark:text-gray-100"
-                    >
-                      {{ result.name || result.id }}
-                    </h3>
-
-                    <div class="flex flex-col gap-2">
-                      <div
-                        v-if="result.nameIdentifiers?.length"
-                        class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1"
-                      >
-                        <span
-                          class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                        >
-                          Identifiers:
-                        </span>
-
-                        <UBadge
-                          v-for="id in result.nameIdentifiers"
-                          :key="id"
-                          size="sm"
-                          variant="subtle"
-                          color="neutral"
-                          :icon="
-                            id.includes('orcid')
-                              ? 'simple-icons:orcid'
-                              : 'mdi:identifier'
-                          "
-                          :label="id"
-                        />
-                      </div>
-
-                      <div
-                        v-if="result.affiliations?.length"
-                        class="flex flex-wrap items-center gap-3"
-                      >
-                        <span
-                          class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                        >
-                          Affiliations:
-                        </span>
-
-                        <UBadge
-                          v-for="aff in result.affiliations"
-                          :key="aff"
-                          size="sm"
-                          variant="subtle"
-                          color="primary"
-                          :label="aff"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <UButton
-                    icon="i-heroicons-arrow-right-20-solid"
-                    color="primary"
-                    variant="soft"
-                    size="sm"
-                    aria-label="View user"
-                  />
-                </NuxtLink>
-              </div>
+              <SearchResultsList
+                :results="defaultSearchResults"
+                type="user"
+              />
             </div>
           </div>
 
@@ -406,88 +315,7 @@ const getUserAvatarUrl = (user: SearchResult) => {
 
                 <USeparator class="my-4" />
 
-                <div class="space-y-3">
-                  <NuxtLink
-                    v-for="result in searchResults"
-                    :key="result.id"
-                    :to="`/au/${result.id}`"
-                    class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800"
-                  >
-                    <div
-                      class="flex h-full flex-col items-start gap-2 self-start"
-                    >
-                      <UAvatar
-                        :src="getUserAvatarUrl(result)"
-                        :alt="result.name"
-                        size="xl"
-                        class="squircle rounded-none"
-                      />
-                    </div>
-
-                    <div class="min-w-0 flex-1">
-                      <h3
-                        class="line-clamp-1 text-lg font-semibold text-gray-900 dark:text-gray-100"
-                      >
-                        {{ result.name || result.id }}
-                      </h3>
-
-                      <div class="flex flex-col gap-2">
-                        <div
-                          v-if="result.nameIdentifiers?.length"
-                          class="mt-1 flex flex-wrap items-center gap-3"
-                        >
-                          <span
-                            class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                          >
-                            Identifiers:
-                          </span>
-
-                          <UBadge
-                            v-for="id in result.nameIdentifiers"
-                            :key="id"
-                            size="sm"
-                            variant="subtle"
-                            color="neutral"
-                            :icon="
-                              id.includes('orcid')
-                                ? 'simple-icons:orcid'
-                                : 'mdi:identifier'
-                            "
-                            :label="id"
-                          />
-                        </div>
-
-                        <div
-                          v-if="result.affiliations?.length"
-                          class="flex flex-wrap items-center gap-3"
-                        >
-                          <span
-                            class="text-sm font-medium text-gray-500 dark:text-gray-400"
-                          >
-                            Affiliations:
-                          </span>
-
-                          <UBadge
-                            v-for="aff in result.affiliations"
-                            :key="aff"
-                            size="sm"
-                            variant="subtle"
-                            color="primary"
-                            :label="aff"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <UButton
-                      icon="i-heroicons-arrow-right-20-solid"
-                      color="primary"
-                      variant="soft"
-                      size="sm"
-                      aria-label="View user"
-                    />
-                  </NuxtLink>
-                </div>
+                <SearchResultsList :results="searchResults" type="user" />
               </div>
 
               <div class="flex w-full justify-center">

@@ -12,9 +12,8 @@ type SearchResult = {
   id: number;
   name: string;
   datasetCount: number;
+  sIndex: number;
 };
-
-const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
 const route = useRoute();
 const router = useRouter();
@@ -49,42 +48,78 @@ onMounted(() => {
   }
 });
 
+// 3087	Naturalis Biodiversity Center	460	18665.83233281953	2025	40.58	54087
+// 18492	University of Alaska Fairbanks - School of Fisheries and Oceans	59	1750.130674790651	2024	29.66	4125
+// 9523	Yale Peabody Museum	22	9568.066494731056	2025	434.91	28635
+// 653	California Academy of Sciences	297	9262.133983899585	2025	31.19	26631
+// 2496	University of Colorado	794	2520.968694784173	2025	3.18	3733
+// 45730	Bloomberg	31	7198.113511451558	2025	232.2	16949
+// 10543	University of Kansas, Biodiversity Institute	8	3870.560131932596	2025	483.82	11585
+// 179	University of Exeter	2772	3593.562857698414	2025	1.3	2270
+// 440	Boston University	3013	3632.0423205792004	2025	1.21	2733
+// 9895	Danish Biodiversity Information Facility (DanBIF)	119	2719.152466734635	2025	22.85	4980
+
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: 1,
-    name: "National Institute for Fusion Science",
-    datasetCount: 16350783,
+    id: 3087,
+    name: "Naturalis Biodiversity Center",
+    datasetCount: 460,
+    sIndex: 18665.83233281953,
   },
   {
-    id: 2,
-    name: "Leibniz Institute DSMZ - German Collection of Microorganisms and Cell Cultures",
-    datasetCount: 460822,
+    id: 18492,
+    name: "University of Alaska Fairbanks - School of Fisheries and Oceans",
+    datasetCount: 59,
+    sIndex: 1750.130674790651,
   },
   {
-    id: 3,
-    name: "Pacific Northwest National Laboratory",
-    datasetCount: 444723,
+    id: 9523,
+    name: "Yale Peabody Museum",
+    datasetCount: 22,
+    sIndex: 9568.066494731056,
   },
   {
-    id: 4,
-    name: "Environmental Molecular Sciences Laboratory",
-    datasetCount: 406437,
+    id: 653,
+    name: "California Academy of Sciences",
+    datasetCount: 297,
+    sIndex: 9262.133983899585,
   },
   {
-    id: 5,
-    name: "California Institute of Technology",
-    datasetCount: 47303,
+    id: 2496,
+    name: "University of Colorado",
+    datasetCount: 794,
+    sIndex: 2520.968694784173,
   },
   {
-    id: 6,
-    name: "Harvard University",
-    datasetCount: 36640,
+    id: 45730,
+    name: "Bloomberg",
+    datasetCount: 31,
+    sIndex: 7198.113511451558,
   },
   {
-    id: 7,
-    name: "Friedrich-Schiller-University Jena",
-    datasetCount: 33660,
+    id: 10543,
+    name: "University of Kansas, Biodiversity Institute",
+    datasetCount: 8,
+    sIndex: 3870.560131932596,
+  },
+  {
+    id: 179,
+    name: "University of Exeter",
+    datasetCount: 2772,
+    sIndex: 3593.562857698414,
+  },
+  {
+    id: 440,
+    name: "Boston University",
+    datasetCount: 3013,
+    sIndex: 3632.0423205792004,
+  },
+  {
+    id: 9895,
+    name: "Danish Biodiversity Information Facility (DanBIF)",
+    datasetCount: 119,
+    sIndex: 2719.152466734635,
   },
 ]);
 
@@ -145,13 +180,6 @@ const searchForOrganizations = async (
     .finally(() => {
       searchLoading.value = false;
     });
-};
-
-// Avatar URL or initial for org (user/org style)
-const getOrgAvatarUrl = (org: SearchResult) => {
-  const seed = org.id || org.name || "org";
-
-  return `https://api.dicebear.com/9.x/shapes/svg?seed=${encodeURIComponent(seed)}`;
 };
 </script>
 
@@ -229,45 +257,7 @@ const getOrgAvatarUrl = (org: SearchResult) => {
                 Popular organizations to explore
               </p>
 
-              <div class="space-y-3">
-                <NuxtLink
-                  v-for="result in defaultSearchResults"
-                  :key="result.id"
-                  :to="`/ao/${result.id}`"
-                  class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-gray-800"
-                >
-                  <UAvatar
-                    :src="getOrgAvatarUrl(result)"
-                    :alt="result.name"
-                    size="xl"
-                    class="squircle rounded-none"
-                  />
-
-                  <div class="min-w-0 flex-1">
-                    <h3
-                      class="line-clamp-1 text-base font-semibold text-gray-900 dark:text-gray-100"
-                    >
-                      {{ result.name || result.id }}
-                    </h3>
-
-                    <p
-                      class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400"
-                    >
-                      {{ formatter.format(result.datasetCount) }} dataset{{
-                        result.datasetCount === 1 ? "" : "s"
-                      }}
-                    </p>
-                  </div>
-
-                  <UButton
-                    icon="i-heroicons-arrow-right-20-solid"
-                    color="primary"
-                    variant="soft"
-                    size="sm"
-                    aria-label="View organization"
-                  />
-                </NuxtLink>
-              </div>
+              <SearchResultsList :results="defaultSearchResults" type="org" />
             </div>
           </div>
 
@@ -303,45 +293,7 @@ const getOrgAvatarUrl = (org: SearchResult) => {
 
                 <USeparator class="my-4" />
 
-                <div class="space-y-3">
-                  <NuxtLink
-                    v-for="result in searchResults"
-                    :key="result.id"
-                    :to="`/ao/${result.id}`"
-                    class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800"
-                  >
-                    <UAvatar
-                      :src="getOrgAvatarUrl(result)"
-                      :alt="result.name"
-                      size="xl"
-                      class="squircle rounded-none"
-                    />
-
-                    <div class="min-w-0 flex-1">
-                      <h3
-                        class="line-clamp-1 text-base font-semibold text-gray-900 dark:text-gray-100"
-                      >
-                        {{ result.name || result.id }}
-                      </h3>
-
-                      <p
-                        class="mt-0.5 truncate text-sm text-gray-500 dark:text-gray-400"
-                      >
-                        {{ formatter.format(result.datasetCount) }} dataset{{
-                          result.datasetCount === 1 ? "" : "s"
-                        }}
-                      </p>
-                    </div>
-
-                    <UButton
-                      icon="i-heroicons-arrow-right-20-solid"
-                      color="primary"
-                      variant="soft"
-                      size="sm"
-                      aria-label="View organization"
-                    />
-                  </NuxtLink>
-                </div>
+                <SearchResultsList :results="searchResults" type="org" />
               </div>
 
               <div class="flex w-full justify-center">

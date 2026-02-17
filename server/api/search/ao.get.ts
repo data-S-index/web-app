@@ -38,6 +38,7 @@ export default defineEventHandler(async (event) => {
     type Hit = { id: string | number; name?: string };
     const parseId = (id: string | number): number | null => {
       const n = typeof id === "number" ? id : parseInt(String(id), 10);
+
       return Number.isFinite(n) && n > 0 ? n : null;
     };
     const hits = (searchResults.hits as Hit[]) || [];
@@ -65,11 +66,18 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const countRows = await prisma.automatedOrganizationDataset.groupBy({
-      by: ["automatedOrganizationId"],
-      where: { automatedOrganizationId: { in: aoIds } },
-      _count: { automatedOrganizationId: true },
-    });
+    const [countRows, sindexRows] = await Promise.all([
+      prisma.automatedOrganizationDataset.groupBy({
+        by: ["automatedOrganizationId"],
+        where: { automatedOrganizationId: { in: aoIds } },
+        _count: { automatedOrganizationId: true },
+      }),
+      prisma.automatedOrganizationSIndex.findMany({
+        where: { automatedOrganizationId: { in: aoIds } },
+        orderBy: { year: "desc" },
+        select: { automatedOrganizationId: true, score: true },
+      }),
+    ]);
 
     const countByOrgId = new Map(
       countRows.map((r) => [
@@ -77,15 +85,23 @@ export default defineEventHandler(async (event) => {
         r._count.automatedOrganizationId,
       ]),
     );
+    const sindexByOrgId = new Map<number, number>();
+    for (const row of sindexRows) {
+      if (!sindexByOrgId.has(row.automatedOrganizationId)) {
+        sindexByOrgId.set(row.automatedOrganizationId, row.score);
+      }
+    }
 
     const organizations = hits
       .map((hit) => {
         const id = parseId(hit.id);
         if (id == null) return null;
+
         return {
           id,
           name: hit.name ?? "",
           datasetCount: countByOrgId.get(id) ?? 0,
+          sIndex: sindexByOrgId.get(id) ?? 0,
         };
       })
       .filter((o): o is NonNullable<typeof o> => o != null);

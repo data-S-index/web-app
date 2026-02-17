@@ -43,6 +43,7 @@ export default defineEventHandler(async (event) => {
     };
     const parseId = (id: string | number): number | null => {
       const n = typeof id === "number" ? id : parseInt(String(id), 10);
+
       return Number.isFinite(n) && n > 0 ? n : null;
     };
     const hits = (searchResults.hits as Hit[]) || [];
@@ -70,26 +71,41 @@ export default defineEventHandler(async (event) => {
       };
     }
 
-    const countRows = await prisma.automatedUserDataset.groupBy({
-      by: ["automatedUserId"],
-      where: { automatedUserId: { in: auIds } },
-      _count: { automatedUserId: true },
-    });
+    const [countRows, sindexRows] = await Promise.all([
+      prisma.automatedUserDataset.groupBy({
+        by: ["automatedUserId"],
+        where: { automatedUserId: { in: auIds } },
+        _count: { automatedUserId: true },
+      }),
+      prisma.automatedUserSIndex.findMany({
+        where: { automatedUserId: { in: auIds } },
+        orderBy: { year: "desc" },
+        select: { automatedUserId: true, score: true },
+      }),
+    ]);
 
     const countByUserId = new Map(
       countRows.map((r) => [r.automatedUserId, r._count.automatedUserId]),
     );
+    const sindexByUserId = new Map<number, number>();
+    for (const row of sindexRows) {
+      if (!sindexByUserId.has(row.automatedUserId)) {
+        sindexByUserId.set(row.automatedUserId, row.score);
+      }
+    }
 
     const users = hits
       .map((hit) => {
         const id = parseId(hit.id);
         if (id == null) return null;
+
         return {
           id,
           name: hit.name ?? "",
           nameIdentifiers: hit.nameIdentifiers ?? [],
           affiliations: hit.affiliations ?? [],
           datasetCount: countByUserId.get(id) ?? 0,
+          sIndex: sindexByUserId.get(id) ?? 0,
         };
       })
       .filter((u): u is NonNullable<typeof u> => u != null);
