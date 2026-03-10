@@ -15,22 +15,6 @@ defineOgImageComponent("Pergel", {
   headline: "Launching soon 🚀",
 });
 
-const links = ref([
-  {
-    label: "Find your S-Index",
-    to: "/login",
-    size: "xl" as const,
-    trailingIcon: "ic:outline-saved-search",
-  },
-  {
-    label: "Evaluate a Dataset",
-    to: "/evaluate",
-    size: "xl" as const,
-    variant: "subtle" as const,
-    trailingIcon: "i-heroicons-arrow-path",
-  },
-]);
-
 const features = ref([
   {
     title: "Get your S-index",
@@ -134,10 +118,16 @@ const isDark = computed(() => useColorMode().value === "dark");
           <h2 class="mb-3 text-center text-3xl font-semibold">About</h2>
 
           <p>
-            As part of an NIH-organized Challenge, we are developing a novel
-            metric called S-index (or Sharing Index) that measures the data
-            sharing impact of a researcher-similarly to how the h-index measures
-            publication impact.
+            As part of an
+            <NuxtLink
+              to="https://www.nei.nih.gov/research-and-training/research-news/nih-challenge-aimed-incentivizing-data-sharing-recognizes-phase-1-winners"
+              target="_blank"
+              class="text-primary hover:text-primary-600 transition-all"
+              rel="noopener noreferrer"
+              >NIH-organized Challenge</NuxtLink
+            >, we are developing a novel metric called S-index (or Sharing
+            Index) that measures the data sharing impact of a
+            researcher-similarly to how the h-index measures publication impact.
           </p>
 
           <p>

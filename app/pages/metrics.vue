@@ -16,22 +16,23 @@ const formatNumber = (number: number) => {
 };
 
 const datasetsByYear = ref([
-  { year: "1950-2010", value: 1097511 },
-  { year: "2011", value: 138461 },
-  { year: "2012", value: 339956 },
-  { year: "2013", value: 218705 },
-  { year: "2014", value: 577335 },
-  { year: "2015", value: 1083725 },
-  { year: "2016", value: 518062 },
-  { year: "2017", value: 907716 },
-  { year: "2018", value: 1156156 },
-  { year: "2019", value: 1118023 },
-  { year: "2020", value: 1652152 },
-  { year: "2021", value: 7524797 },
-  { year: "2022", value: 3175931 },
-  { year: "2023", value: 19863260 },
-  { year: "2024", value: 3776342 },
-  { year: "2025", value: 5659581 },
+  { year: "1950-2010", value: 1100000 },
+  { year: "2011", value: 135000 },
+  { year: "2012", value: 345000 },
+  { year: "2013", value: 219000 },
+  { year: "2014", value: 587000 },
+  { year: "2015", value: 1100000 },
+  { year: "2016", value: 574000 },
+  { year: "2017", value: 964000 },
+  { year: "2018", value: 1200000 },
+  { year: "2019", value: 1100000 },
+  { year: "2020", value: 1700000 },
+  { year: "2021", value: 3600000 },
+  { year: "2022", value: 22000000 },
+  { year: "2023", value: 26000000 },
+  { year: "2024", value: 12700000 },
+  { year: "2025", value: 19100000 },
+  { year: "2026", value: 4000 },
 ]);
 
 const institutions = ref([
@@ -227,7 +228,21 @@ const institutionPieChartOption = computed(() => ({
   backgroundColor: "transparent",
   tooltip: {
     trigger: "item",
-    formatter: "{a} <br/>{b}: {c} ({d}%)",
+    formatter: (params: unknown) => {
+      const item = params as {
+        name: string;
+        value: number;
+        percent: number;
+        seriesName: string;
+      };
+      if (!item) return "";
+
+      const name = item.name ?? "";
+      const value = formatNumber(item.value);
+      const percent = item.percent.toFixed(1);
+
+      return `${name}<br/>Datasets: ${value} (${percent}%)`;
+    },
   },
   legend: {
     top: "10%",
@@ -280,7 +295,21 @@ const fieldPieChartOption = computed(() => ({
   backgroundColor: "transparent",
   tooltip: {
     trigger: "item",
-    formatter: "{a} <br/>{b}: {c} ({d}%)",
+    formatter: (params: unknown) => {
+      const item = params as {
+        name: string;
+        value: number;
+        percent: number;
+        seriesName: string;
+      };
+      if (!item) return "";
+
+      const name = item.name ?? "";
+      const value = formatNumber(item.value);
+      const percent = item.percent.toFixed(1);
+
+      return `${name}<br/>Datasets: ${value} (${percent}%)`;
+    },
   },
   legend: {
     top: "10%",
@@ -409,7 +438,8 @@ const fieldPieChartOption = computed(() => ({
         </p>
       </div>
 
-      <Vue3Marquee clone gradient>
+      <Vue3Marquee clone gradient :gradient-color="[250, 250, 250]"
+        >`">
         <div class="m-1 flex flex-nowrap gap-4 p-1">
           <UCard
             v-for="source in sources"
