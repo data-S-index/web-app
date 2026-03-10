@@ -438,8 +438,7 @@ const fieldPieChartOption = computed(() => ({
         </p>
       </div>
 
-      <Vue3Marquee clone gradient :gradient-color="[250, 250, 250]"
-        >`">
+      <Vue3Marquee clone gradient :gradient-color="[250, 250, 250]">
         <div class="m-1 flex flex-nowrap gap-4 p-1">
           <UCard
             v-for="source in sources"
