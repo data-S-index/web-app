@@ -117,7 +117,7 @@ const isDark = computed(() => useColorMode().value === "dark");
         >
           <h2 class="mb-3 text-center text-3xl font-semibold">About</h2>
 
-          <p>
+          <p class="text-balance">
             As part of an
             <NuxtLink
               to="https://www.nei.nih.gov/research-and-training/research-news/nih-challenge-aimed-incentivizing-data-sharing-recognizes-phase-1-winners"
@@ -130,12 +130,12 @@ const isDark = computed(() => useColorMode().value === "dark");
             researcher-similarly to how the h-index measures publication impact.
           </p>
 
-          <p>
+          <p class="text-balance">
             Scholar Data is intended to provide a Google Scholar-like platform
             for researchers and organizations to track their S-index.
           </p>
 
-          <p class="break-keep">
+          <p class="text-balance break-keep">
             This site is currently in beta, released for testing and
             demonstrating the potential impact and value of our S-index as part
             of the NIH S&#8209;index Challenge.
@@ -220,7 +220,7 @@ const isDark = computed(() => useColorMode().value === "dark");
                 rel="noopener noreferrer"
                 class="text-primary-600 decoration-primary-400 hover:text-primary-700 dark:text-primary-400 dark:hover:text-primary-300 font-medium underline underline-offset-2"
               >
-                GitHub repository </a
+                GitHub repository</a
               >.
             </p>
           </div>
