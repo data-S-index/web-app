@@ -17,6 +17,10 @@ Scholar Data helps you measure, improve, and showcase the impact of what you sha
 
 Paste a DOI or dataset URL to get **on-demand dataset metrics**, computed in real time. The Dataset Index is calculated at request time so you always see the latest citations, mentions, FAIR score, and normalized results in one place.
 
+### Integrations
+
+We’re building integrations with repositories and make it easy to display S-Index scores, and connect your data impact across the ecosystem. If you want to integrate with Scholar Data, let us know by opening an issue or reaching out to us.
+
 ### Why it matters
 
 Publications aren’t the whole story-datasets drive discovery. Traditional metrics reward papers. The S-Index rewards shared datasets: how findable they are, how often they’re cited or mentioned, and how they’re reused. It’s simple to interpret, field-sensitive, and built on tools researchers already use.
