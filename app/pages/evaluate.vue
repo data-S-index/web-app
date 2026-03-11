@@ -87,7 +87,8 @@ const transformApiResponse = (apiData: any) => {
     description: metadata?.description || "",
     version: metadata?.version || null,
     publisher: metadata?.publisher || null,
-    publishedAt: metadata?.publication_date || null,
+    publishedAt:
+      metadata?.doi_created_date || metadata?.publication_date || null,
     identifier:
       apiData.norm_doi ||
       apiData.norm_identifier ||
