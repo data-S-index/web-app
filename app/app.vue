@@ -33,6 +33,12 @@ useSeoMeta({
   <UApp>
     <NuxtLoadingIndicator />
 
+    <div class="bg-yellow-500 p-1 text-center text-sm text-black">
+      The site is currently undergoing database migration. This may cause some
+      instability and slow performance. We apologize for the inconvenience and
+      appreciate your patience.
+    </div>
+
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
