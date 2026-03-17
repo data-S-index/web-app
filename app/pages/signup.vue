@@ -178,7 +178,7 @@ const autoGenerateUsername = () => {
               v-model="state.login"
               type="text"
               :placeholder="
-                state.temporary ? 'myusername' : 'hello@scholardata.org'
+                state.temporary ? 'myusername' : 'hello@scholardata.io'
               "
             />
 
