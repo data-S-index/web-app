@@ -2,7 +2,7 @@ import { z } from "zod";
 import { hash } from "bcrypt";
 
 const signupSchema = z.object({
-  username: z.string().min(3, "Must be at least 3 characters"),
+  login: z.string().min(3, "Must be at least 3 characters"),
   password: z.string().min(8),
 });
 
@@ -28,14 +28,14 @@ export default defineEventHandler(async (event) => {
   // Check if the user already exists
   const user = await prisma.user.findUnique({
     where: {
-      username: body.data.username,
+      login: body.data.login,
     },
   });
 
   if (user) {
     throw createError({
       statusCode: 401,
-      statusMessage: "Username already in use",
+      statusMessage: "Login already in use",
     });
   }
 
@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
   const newUser = await prisma.user.create({
     data: {
-      username: body.data.username,
+      login: body.data.login,
       password: hashedPassword,
     },
   });

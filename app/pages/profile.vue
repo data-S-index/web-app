@@ -120,13 +120,30 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               />
 
               <div class="flex w-full min-w-0 flex-1 flex-col gap-1">
-                <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                  {{
-                    userData?.givenName || userData?.familyName
-                      ? `${userData?.givenName} ${userData?.familyName}`
-                      : userData?.username
-                  }}
-                </h1>
+                <div class="flex items-center gap-4">
+                  <h1
+                    class="text-2xl font-bold text-gray-900 dark:text-gray-100"
+                  >
+                    {{
+                      userData?.givenName || userData?.familyName
+                        ? `${userData?.givenName} ${userData?.familyName}`
+                        : userData?.login
+                    }}
+                  </h1>
+
+                  <UTooltip
+                    v-if="userData?.anonymous"
+                    text="This account was generated as part of a temporary anonymous session and may be deleted after some time."
+                  >
+                    <UBadge
+                      color="warning"
+                      variant="soft"
+                      label="Temporary Account"
+                      icon="i-heroicons-eye-slash"
+                      class="cursor-help"
+                    />
+                  </UTooltip>
+                </div>
 
                 <div
                   class="flex flex-wrap items-center gap-x-5 text-sm text-gray-500 dark:text-gray-400"
@@ -260,7 +277,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   </label>
 
                   <p class="mt-1 text-gray-900 dark:text-white">
-                    {{ userData?.username }}
+                    {{ userData?.login }}
                   </p>
                 </div>
 

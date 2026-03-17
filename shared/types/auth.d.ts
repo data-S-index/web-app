@@ -3,9 +3,9 @@ declare module "#auth-utils" {
   interface User {
     id: string;
 
+    login: string;
     givenName: string;
     familyName: string;
-    username: string;
   }
 
   interface UserSession {

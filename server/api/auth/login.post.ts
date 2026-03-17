@@ -2,7 +2,7 @@ import { z } from "zod";
 import { compare } from "bcrypt";
 
 const loginSchema = z.object({
-  username: z.string().min(3, "Must be at least 3 characters"),
+  login: z.string().min(3, "Must be at least 3 characters"),
   password: z.string().min(8),
 });
 
@@ -28,14 +28,14 @@ export default defineEventHandler(async (event) => {
   // Get the user from the database
   const user = await prisma.user.findUnique({
     where: {
-      username: body.data.username,
+      login: body.data.login,
     },
   });
 
   if (!user) {
     throw createError({
       statusCode: 401,
-      statusMessage: "Invalid username or password",
+      statusMessage: "Invalid login/email or password",
     });
   }
 
@@ -43,14 +43,14 @@ export default defineEventHandler(async (event) => {
   if (!(await compare(body.data.password, user.password))) {
     throw createError({
       statusCode: 401,
-      statusMessage: "Invalid username or password",
+      statusMessage: "Invalid username/email or password",
     });
   }
 
   // Create a new session for the user
   const userData = {
     id: user.id,
-    username: user.username,
+    login: user.login,
     familyName: user.familyName,
     givenName: user.givenName,
   };

@@ -39,23 +39,25 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const schema = z.object({
-  username: z.string().min(3, "Must be at least 3 characters"),
+  login: z.string().min(3, "Must be at least 3 characters"),
   password: z.string().min(8, "Must be at least 8 characters"),
 });
 
 type Schema = z.output<typeof schema>;
 
+console.log("routeQueryParams", environment);
+
 const state = reactive({
-  username:
+  login:
     environment === "development"
-      ? ((routeQueryParams.username as string) ?? "lonesomevermouth")
+      ? ((routeQueryParams.login as string) ?? "lonesomevermouth")
       : "",
   password: environment === "development" ? "12345678" : "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const body = {
-    username: event.data.username,
+    login: event.data.login,
     password: event.data.password,
   };
 
@@ -131,8 +133,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           at any time. All interactions are anonymous."
         />
 
-        <UFormField label="Username" name="username">
-          <UInput v-model="state.username" type="text" />
+        <UFormField label="Username" name="login">
+          <UInput v-model="state.login" type="text" />
         </UFormField>
 
         <UFormField label="Password" name="password">

@@ -36,20 +36,20 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const schema = z.object({
-  username: z.string().min(3, "Must be at least 3 characters"),
+  login: z.string().min(3, "Must be at least 3 characters"),
   password: z.string().min(8, "Must be at least 8 characters"),
 });
 
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
-  username: "",
+  login: "",
   password: "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const body = {
-    username: event.data.username,
+    login: event.data.login,
     password: event.data.password,
   };
 
@@ -67,7 +67,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         icon: "material-symbols:mail-outline",
       });
 
-      navigateTo({ path: "/login", query: { username: event.data.username } });
+      navigateTo({ path: "/login", query: { login: event.data.login } });
     })
     .catch((error) => {
       console.error(error.data);
@@ -84,7 +84,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 }
 
 onMounted(() => {
-  state.username = generateUsername();
+  state.login = generateUsername();
   state.password = environment === "development" ? "12345678" : "";
 });
 </script>
@@ -122,7 +122,7 @@ onMounted(() => {
           name="username"
           description="Your username was automatically generated."
         >
-          <UInput v-model="state.username" type="text" />
+          <UInput v-model="state.login" type="text" />
         </UFormField>
 
         <UFormField label="Password" name="password">

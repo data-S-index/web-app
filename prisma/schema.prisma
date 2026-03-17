@@ -19,7 +19,9 @@ datasource db {
 model User {
     id String @id @default(ulid())
 
-    username String @unique
+    anonymous Boolean @default(true)
+
+    login    String @unique // email or username(anonymous accounts)
     password String
 
     givenName       String   @default("") // first name

@@ -20,7 +20,8 @@ export default defineEventHandler(async (event) => {
     },
     select: {
       id: true,
-      username: true,
+      anonymous: true,
+      login: true,
       givenName: true,
       familyName: true,
       additionalNames: true,
@@ -31,6 +32,13 @@ export default defineEventHandler(async (event) => {
       updated: true,
     },
   });
+
+  if (!userData) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "User not found",
+    });
+  }
 
   return userData;
 });
