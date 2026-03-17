@@ -2,8 +2,13 @@ import { z } from "zod";
 import { hash } from "bcrypt";
 
 const signupSchema = z.object({
-  login: z.string().min(3, "Must be at least 3 characters"),
+  temporary: z.boolean(),
+  login: z.string(),
   password: z.string().min(8),
+  givenName: z.string().optional(),
+  familyName: z.string().optional(),
+  affiliation: z.string().optional(),
+  orcid: z.string().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -42,10 +47,16 @@ export default defineEventHandler(async (event) => {
   // Create a new user
   const hashedPassword = await hash(body.data.password, 10);
 
+  const { givenName, familyName, affiliation, orcid } = body.data;
+
   const newUser = await prisma.user.create({
     data: {
       login: body.data.login,
       password: hashedPassword,
+      givenName,
+      familyName,
+      affiliation,
+      orcid,
     },
   });
 

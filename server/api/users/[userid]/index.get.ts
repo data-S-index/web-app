@@ -8,9 +8,11 @@ export default defineEventHandler(async (event) => {
     },
     select: {
       id: true,
+      anonymous: true,
       givenName: true,
       familyName: true,
-      username: true,
+      login: true,
+      orcid: true,
       affiliation: true,
       homePage: true,
       areasOfInterest: true,

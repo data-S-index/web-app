@@ -452,7 +452,7 @@ const handleDatasetsAdded = () => {
         }"
       >
         <template #title>
-          <div class="flex min-w-full gap-4">
+          <div class="flex min-w-full items-center gap-4">
             <UAvatar
               :src="avatarUrl"
               :alt="fullName"
@@ -462,21 +462,18 @@ const handleDatasetsAdded = () => {
 
             <div class="flex w-full min-w-0 flex-1 flex-col gap-1">
               <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {{ fullName ? fullName : userProfile?.username }}
+                {{ fullName ? fullName : "Unnamed User" }}
               </h1>
 
               <div
                 class="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-gray-500 dark:text-gray-400"
               >
-                <span
-                  v-if="userProfile?.affiliation"
-                  class="flex items-center gap-1.5"
-                >
+                <span class="flex items-center gap-1.5">
                   <UIcon
                     name="i-heroicons-building-office-2"
                     class="size-4 shrink-0 text-gray-400 dark:text-gray-500"
                   />
-                  {{ userProfile.affiliation }}
+                  {{ userProfile?.affiliation || "No affiliation provided" }}
                 </span>
 
                 <NuxtLink

@@ -29,6 +29,7 @@ model User {
     additionalNames String[] @default([])
 
     affiliation     String?
+    orcid           String?
     homePage        String?
     areasOfInterest String[] @default([])
 

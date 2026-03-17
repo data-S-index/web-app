@@ -125,15 +125,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         class="mt-6 space-y-4"
         @submit="onSubmit"
       >
-        <UAlert
-          color="warning"
-          variant="subtle"
-          icon="i-heroicons-exclamation-triangle-20-solid"
-          title="Accounts generated on this platform are temporary and may be deleted
-          at any time. All interactions are anonymous."
-        />
-
-        <UFormField label="Username" name="login">
+        <UFormField label="Email or Username" name="login">
           <UInput v-model="state.login" type="text" />
         </UFormField>
 
@@ -176,13 +168,13 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       </UForm>
     </div>
 
-    <!-- <template #footer>
+    <template #footer>
       <p class="text-center text-sm">
         By signing in, you agree to our
         <NuxtLink to="/terms" class="text-primary-500 text-sm font-medium">
           Terms of Service</NuxtLink
         >.
       </p>
-    </template> -->
+    </template>
   </UCard>
 </template>

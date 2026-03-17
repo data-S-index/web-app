@@ -36,21 +36,64 @@ const loading = ref(false);
 const showPassword = ref(false);
 
 const schema = z.object({
-  login: z.string().min(3, "Must be at least 3 characters"),
+  temporary: z.boolean().default(false),
+  login: z.string(),
   password: z.string().min(8, "Must be at least 8 characters"),
+  givenName: z.string().optional(),
+  familyName: z.string().optional(),
+  affiliation: z.string().optional(),
+  orcid: z.string().optional(),
 });
 
 type Schema = z.output<typeof schema>;
 
 const state = reactive({
+  temporary: false,
   login: "",
   password: "",
+  givenName: "",
+  familyName: "",
+  affiliation: "",
+  orcid: "",
 });
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
+  // if not a temporary account, validate email format
+  if (!event.data.temporary) {
+    const l = z.email().safeParse(event.data.login);
+
+    if (!l.success) {
+      toast.add({
+        title: "Invalid email address",
+        color: "error",
+        description: "Please enter a valid email address.",
+        icon: "material-symbols:error",
+      });
+
+      return;
+    }
+  } else {
+    // if temporary account, ensure login is not empty
+    if (event.data.login.trim() === "" || event.data.login.length < 3) {
+      toast.add({
+        title: "Invalid username",
+        color: "error",
+        description: "Username must be at least 3 characters.",
+        icon: "material-symbols:error",
+      });
+
+      return;
+    }
+  }
+
   const body = {
+    temporary: event.data.temporary,
     login: event.data.login,
     password: event.data.password,
+    givenName: event.data.givenName,
+    familyName: event.data.familyName,
+    affiliation: event.data.affiliation,
+    orcid: event.data.orcid,
   };
 
   loading.value = true;
@@ -83,10 +126,12 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     });
 }
 
-onMounted(() => {
-  state.login = generateUsername();
-  state.password = environment === "development" ? "12345678" : "";
-});
+const autoGenerateUsername = () => {
+  if (state.temporary) {
+    state.login = generateUsername();
+    state.password = environment === "development" ? "12345678" : "";
+  }
+};
 </script>
 
 <template>
@@ -110,22 +155,49 @@ onMounted(() => {
         @submit="onSubmit"
       >
         <UAlert
+          v-if="state.temporary"
           color="warning"
           variant="subtle"
           icon="i-heroicons-exclamation-triangle-20-solid"
-          title="Accounts generated on this platform are temporary and may be deleted
+          title="Accounts generated via this feature are temporary and may be deleted
           at any time. All interactions are anonymous."
         />
 
         <UFormField
-          label="Username"
-          name="username"
-          description="Your username was automatically generated."
+          :label="state.temporary ? 'Username' : 'Email'"
+          :name="state.temporary ? 'username' : 'email'"
+          :description="
+            state.temporary
+              ? 'Your username was automatically generated.'
+              : 'Your email address will be used to log in.'
+          "
+          required
         >
-          <UInput v-model="state.login" type="text" />
+          <div class="flex items-center gap-2">
+            <UInput
+              v-model="state.login"
+              type="text"
+              :placeholder="
+                state.temporary ? 'myusername' : 'hello@scholardata.org'
+              "
+            />
+
+            <UTooltip
+              v-if="state.temporary"
+              text="Autogenerate a random username"
+            >
+              <UButton
+                type="button"
+                variant="outline"
+                size="sm"
+                icon="streamline-flex:magic-wand-1-solid"
+                @click="autoGenerateUsername"
+              />
+            </UTooltip>
+          </div>
         </UFormField>
 
-        <UFormField label="Password" name="password">
+        <UFormField label="Password" name="password" required>
           <UInput
             v-model="state.password"
             :type="showPassword ? 'text' : 'password'"
@@ -142,23 +214,67 @@ onMounted(() => {
           </UInput>
         </UFormField>
 
+        <div v-show="!state.temporary" class="flex items-center gap-4">
+          <UFormField label="Given Name" name="givenName">
+            <UInput
+              v-model="state.givenName"
+              type="text"
+              placeholder="Giselle"
+            />
+          </UFormField>
+
+          <UFormField label="Family Name" name="familyName">
+            <UInput
+              v-model="state.familyName"
+              type="text"
+              placeholder="Garcia"
+            />
+          </UFormField>
+        </div>
+
+        <UFormField
+          v-show="!state.temporary"
+          label="Affiliation"
+          name="affiliation"
+        >
+          <UInput
+            v-model="state.affiliation"
+            type="text"
+            placeholder="University of California, Berkeley"
+          />
+        </UFormField>
+
+        <UFormField v-show="!state.temporary" label="ORCID" name="orcid">
+          <UInput
+            v-model="state.orcid"
+            type="text"
+            placeholder="0000-0002-1825-0097"
+          />
+        </UFormField>
+
+        <USwitch
+          v-model="state.temporary"
+          label="Create a temporary account (no email required)"
+        />
+
         <UButton
           type="submit"
           class="flex w-full justify-center"
           :loading="loading"
+          :disabled="loading || !state.login || !state.password"
         >
           Create account
         </UButton>
       </UForm>
     </div>
 
-    <!-- <template #footer>
+    <template #footer>
       <p class="text-center text-sm">
         By signing up, you agree to our
         <NuxtLink to="/terms" class="text-primary-500 text-sm font-medium">
           Terms of Service</NuxtLink
         >.
       </p>
-    </template> -->
+    </template>
   </UCard>
 </template>
