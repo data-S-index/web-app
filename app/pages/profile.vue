@@ -6,6 +6,8 @@ definePageMeta({
   middleware: ["auth"],
 });
 
+const { clear, user, loggedIn: loggedInSession } = useUserSession();
+
 useSeoMeta({
   title: "Profile",
   description: "Manage your Scholar Data profile and preferences.",
@@ -18,6 +20,69 @@ defineOgImageComponent("Pergel", {
 const toast = useToast();
 const loading = ref(false);
 const deleteLoading = ref(false);
+const passwordLoading = ref(false);
+
+const passwordSchema = z
+  .object({
+    currentPassword: z.string().min(8, "Must be at least 8 characters"),
+    newPassword: z.string().min(8, "Must be at least 8 characters"),
+    confirmPassword: z.string().min(8, "Must be at least 8 characters"),
+  })
+  .refine((d) => d.newPassword === d.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+type PasswordSchema = z.output<typeof passwordSchema>;
+
+const passwordState = reactive<PasswordSchema>({
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+});
+
+async function onChangePassword(
+  event: FormSubmitEvent<PasswordSchema>,
+  close: () => void,
+) {
+  passwordLoading.value = true;
+  try {
+    await $fetch("/api/user/password", {
+      method: "PATCH",
+      body: {
+        currentPassword: event.data.currentPassword,
+        newPassword: event.data.newPassword,
+      },
+    });
+    toast.add({
+      title: "Password changed",
+      color: "success",
+      icon: "i-heroicons-check-circle",
+    });
+    passwordState.currentPassword = "";
+    passwordState.newPassword = "";
+    passwordState.confirmPassword = "";
+    close();
+  } catch (err: unknown) {
+    const message =
+      err && typeof err === "object" && "data" in err
+        ? (err as { data?: { statusMessage?: string } }).data?.statusMessage
+        : "Failed to change password";
+    toast.add({
+      title: "Change password failed",
+      description: message,
+      color: "error",
+      icon: "i-heroicons-exclamation-circle",
+    });
+  } finally {
+    passwordLoading.value = false;
+  }
+}
+
+const logout = async () => {
+  clear();
+  await navigateTo("/login");
+};
 
 async function onDeleteAccount() {
   deleteLoading.value = true;
@@ -28,7 +93,9 @@ async function onDeleteAccount() {
       color: "success",
       icon: "i-heroicons-check-circle",
     });
-    await navigateTo("/");
+
+    // logout after account deletion to clear session and redirect to login page
+    await logout();
   } catch (err: unknown) {
     const message =
       err && typeof err === "object" && "data" in err
@@ -343,12 +410,84 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
               <h2 class="mb-4 text-lg font-semibold">Account actions</h2>
 
               <div class="flex items-center justify-between gap-4">
-                <UButton
-                  color="primary"
-                  variant="solid"
-                  label="Change password"
-                  icon="i-heroicons-key"
-                />
+                <UModal
+                  title="Change password"
+                  description="Update your account password"
+                >
+                  <UButton
+                    color="primary"
+                    variant="solid"
+                    label="Change password"
+                    icon="i-heroicons-key"
+                  />
+
+                  <template #body>
+                    <UForm
+                      :schema="passwordSchema"
+                      :state="passwordState"
+                      class="space-y-4"
+                      @submit="(e) => onChangePassword(e, close)"
+                    >
+                      <UFormField
+                        label="Current password"
+                        name="currentPassword"
+                      >
+                        <UInput
+                          v-model="passwordState.currentPassword"
+                          type="password"
+                          placeholder="Enter current password"
+                        />
+                      </UFormField>
+
+                      <UFormField label="New password" name="newPassword">
+                        <UInput
+                          v-model="passwordState.newPassword"
+                          type="password"
+                          placeholder="Enter new password"
+                        />
+                      </UFormField>
+
+                      <UFormField
+                        label="Confirm new password"
+                        name="confirmPassword"
+                      >
+                        <UInput
+                          v-model="passwordState.confirmPassword"
+                          type="password"
+                          placeholder="Confirm new password"
+                        />
+                      </UFormField>
+                    </UForm>
+                  </template>
+
+                  <template #footer="{ close }">
+                    <div class="flex w-full items-center justify-between gap-3">
+                      <UButton
+                        color="neutral"
+                        variant="subtle"
+                        label="Cancel"
+                        @click="close"
+                      />
+
+                      <UButton
+                        color="primary"
+                        variant="solid"
+                        label="Change password"
+                        icon="i-heroicons-key"
+                        :loading="passwordLoading"
+                        @click="
+                          (e: Event) =>
+                            onChangePassword(
+                              {
+                                data: passwordState,
+                              } as FormSubmitEvent<PasswordSchema>,
+                              close,
+                            )
+                        "
+                      />
+                    </div>
+                  </template>
+                </UModal>
 
                 <UModal
                   title="Delete account"
