@@ -17,6 +17,33 @@ defineOgImageComponent("Pergel", {
 
 const toast = useToast();
 const loading = ref(false);
+const deleteLoading = ref(false);
+
+async function onDeleteAccount() {
+  deleteLoading.value = true;
+  try {
+    await $fetch("/api/user", { method: "DELETE" });
+    toast.add({
+      title: "Account deleted",
+      color: "success",
+      icon: "i-heroicons-check-circle",
+    });
+    await navigateTo("/");
+  } catch (err: unknown) {
+    const message =
+      err && typeof err === "object" && "data" in err
+        ? (err as { data?: { statusMessage?: string } }).data?.statusMessage
+        : "Failed to delete account";
+    toast.add({
+      title: "Delete failed",
+      description: message,
+      color: "error",
+      icon: "i-heroicons-exclamation-circle",
+    });
+  } finally {
+    deleteLoading.value = false;
+  }
+}
 
 const { data: userData, refresh: refreshUser } = await useFetch("/api/user");
 
@@ -169,11 +196,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <div class="space-y-6">
             <!-- Edit Profile Form -->
             <UCard>
-              <h2
-                class="mb-6 text-xl font-semibold text-gray-900 dark:text-white"
-              >
-                Edit profile
-              </h2>
+              <h2 class="mb-6 text-xl font-semibold">Edit profile</h2>
 
               <UForm
                 :schema="schema"
@@ -259,7 +282,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   />
                 </UFormField>
 
-                <div class="flex items-center gap-4">
+                <div class="flex items-center justify-between gap-4">
                   <UButton type="submit" :loading="loading" color="primary">
                     Save changes
                   </UButton>
@@ -278,11 +301,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
             <!-- Account info (read-only) -->
             <UCard>
-              <h2
-                class="mb-4 text-lg font-semibold text-gray-900 dark:text-white"
-              >
-                Account
-              </h2>
+              <h2 class="mb-4 text-lg font-semibold">Account</h2>
 
               <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
@@ -321,13 +340,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
             <!-- Actions -->
             <UCard>
-              <h2
-                class="mb-4 text-lg font-semibold text-gray-900 dark:text-white"
-              >
-                Account actions
-              </h2>
+              <h2 class="mb-4 text-lg font-semibold">Account actions</h2>
 
-              <div class="flex flex-wrap gap-4">
+              <div class="flex items-center justify-between gap-4">
                 <UButton
                   color="primary"
                   variant="solid"
@@ -335,12 +350,44 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   icon="i-heroicons-key"
                 />
 
-                <UButton
-                  color="error"
-                  variant="soft"
-                  label="Delete account"
-                  icon="i-heroicons-trash"
-                />
+                <UModal
+                  title="Delete account"
+                  description="Delete profile and all associated data"
+                >
+                  <UButton
+                    color="error"
+                    variant="soft"
+                    label="Delete account"
+                    icon="i-heroicons-trash"
+                  />
+
+                  <template #body>
+                    <p class="font-medium text-red-500">
+                      This action is permanent and cannot be undone. All your
+                      data will be deleted. There is no recovery from this!
+                    </p>
+                  </template>
+
+                  <template #footer="{ close }">
+                    <div class="flex w-full items-center justify-between gap-3">
+                      <UButton
+                        color="neutral"
+                        variant="subtle"
+                        label="Cancel"
+                        @click="close"
+                      />
+
+                      <UButton
+                        color="error"
+                        variant="solid"
+                        label="Delete account"
+                        icon="i-heroicons-trash"
+                        :loading="deleteLoading"
+                        @click="onDeleteAccount"
+                      />
+                    </div>
+                  </template>
+                </UModal>
               </div>
             </UCard>
           </div>

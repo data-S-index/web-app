@@ -35,7 +35,7 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  const data = body.data;
+  const { data } = body;
   const updatePayload: {
     givenName?: string;
     familyName?: string;
@@ -61,7 +61,6 @@ export default defineEventHandler(async (event) => {
     data: updatePayload,
     select: {
       id: true,
-      username: true,
       givenName: true,
       familyName: true,
       additionalNames: true,
@@ -72,6 +71,13 @@ export default defineEventHandler(async (event) => {
       updated: true,
     },
   });
+
+  if (!user) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "User not found",
+    });
+  }
 
   return user;
 });
