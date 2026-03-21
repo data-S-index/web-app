@@ -47,10 +47,11 @@ export default defineEventHandler(async (event) => {
   // Create a new user
   const hashedPassword = await hash(body.data.password, 10);
 
-  const { givenName, familyName, affiliation, orcid } = body.data;
+  const { givenName, familyName, affiliation, orcid, temporary } = body.data;
 
   const newUser = await prisma.user.create({
     data: {
+      anonymous: temporary,
       login: body.data.login,
       password: hashedPassword,
       givenName,

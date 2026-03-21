@@ -492,6 +492,19 @@ const handleDatasetsAdded = () => {
                     class="size-3.5 shrink-0"
                   />
                 </NuxtLink>
+
+                <UBadge
+                  v-if="userProfile?.orcid"
+                  variant="subtle"
+                  size="sm"
+                  leading-icon="i-simple-icons-orcid"
+                >
+                  {{
+                    userProfile?.orcid
+                      ? `ORCID: ${userProfile.orcid}`
+                      : "No ORCID provided"
+                  }}
+                </UBadge>
               </div>
             </div>
           </div>

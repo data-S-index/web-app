@@ -27,6 +27,7 @@ export default defineEventHandler(async (event) => {
       additionalNames: true,
       affiliation: true,
       homePage: true,
+      orcid: true,
       areasOfInterest: true,
       created: true,
       updated: true,

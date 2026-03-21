@@ -27,6 +27,7 @@ const schema = z.object({
   affiliation: z.string(),
   homePage: z.string(),
   areasOfInterestStr: z.string(),
+  orcid: z.string(),
 });
 
 type Schema = z.output<typeof schema>;
@@ -38,6 +39,7 @@ const state = reactive<Schema>({
   affiliation: "",
   homePage: "",
   areasOfInterestStr: "",
+  orcid: "",
 });
 
 watch(
@@ -50,6 +52,7 @@ watch(
       state.affiliation = u.affiliation ?? "";
       state.homePage = u.homePage ?? "";
       state.areasOfInterestStr = (u.areasOfInterest ?? []).join(", ");
+      state.orcid = u.orcid ?? "";
     }
   },
   { immediate: true },
@@ -70,6 +73,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     affiliation: event.data.affiliation || null,
     homePage: event.data.homePage || "",
     areasOfInterest: parseCommaList(event.data.areasOfInterestStr),
+    orcid: event.data.orcid || null,
   };
 
   loading.value = true;
@@ -243,6 +247,18 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   />
                 </UFormField>
 
+                <UFormField
+                  label="ORCID"
+                  name="orcid"
+                  description="Your ORCID identifier (e.g. 0000-0002-1825-0097)"
+                >
+                  <UInput
+                    v-model="state.orcid"
+                    type="text"
+                    placeholder="e.g. 0000-0002-1825-0097"
+                  />
+                </UFormField>
+
                 <div class="flex items-center gap-4">
                   <UButton type="submit" :loading="loading" color="primary">
                     Save changes
@@ -273,7 +289,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   <label
                     class="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
-                    Username
+                    {{
+                      userData?.anonymous
+                        ? "Temporary Username"
+                        : "Email Address"
+                    }}
                   </label>
 
                   <p class="mt-1 text-gray-900 dark:text-white">

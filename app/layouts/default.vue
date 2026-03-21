@@ -71,6 +71,12 @@ const footerMiddleItems: NavigationMenuItem[] = [
 
 const footerRightItems: NavigationMenuItem[] = [
   {
+    label: "Documentation",
+    to: "https://docs.scholardata.io",
+    target: "_blank",
+    icon: "i-heroicons-document-text-solid",
+  },
+  {
     label: "GitHub",
     to: "https://github.com/data-S-index/web-app",
     target: "_blank",
@@ -101,7 +107,7 @@ const footerRightItems: NavigationMenuItem[] = [
               <UTooltip text="View your account settings">
                 <UAvatar
                   :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.id}`"
-                  :alt="user?.username"
+                  :alt="user?.login"
                   class="squircle cursor-pointer rounded-none"
                 />
               </UTooltip>
