@@ -6,7 +6,7 @@ definePageMeta({
   middleware: ["auth"],
 });
 
-const { clear, user, loggedIn: loggedInSession } = useUserSession();
+const { clear } = useUserSession();
 
 useSeoMeta({
   title: "Profile",
@@ -41,10 +41,7 @@ const passwordState = reactive<PasswordSchema>({
   confirmPassword: "",
 });
 
-async function onChangePassword(
-  event: FormSubmitEvent<PasswordSchema>,
-  close: () => void,
-) {
+async function onChangePassword(event: FormSubmitEvent<PasswordSchema>) {
   passwordLoading.value = true;
   try {
     await $fetch("/api/user/password", {
@@ -54,15 +51,21 @@ async function onChangePassword(
         newPassword: event.data.newPassword,
       },
     });
+
     toast.add({
       title: "Password changed",
+      description:
+        "Your password has been updated successfully. Please log in with your new password.",
       color: "success",
       icon: "i-heroicons-check-circle",
     });
+
     passwordState.currentPassword = "";
     passwordState.newPassword = "";
     passwordState.confirmPassword = "";
-    close();
+
+    // logout after password change to clear session and redirect to login page
+    await logout();
   } catch (err: unknown) {
     const message =
       err && typeof err === "object" && "data" in err
@@ -426,7 +429,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                       :schema="passwordSchema"
                       :state="passwordState"
                       class="space-y-4"
-                      @submit="(e) => onChangePassword(e, close)"
+                      @submit="onChangePassword"
                     >
                       <UFormField
                         label="Current password"
@@ -477,12 +480,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                         :loading="passwordLoading"
                         @click="
                           (e: Event) =>
-                            onChangePassword(
-                              {
-                                data: passwordState,
-                              } as FormSubmitEvent<PasswordSchema>,
-                              close,
-                            )
+                            onChangePassword({
+                              data: passwordState,
+                            } as FormSubmitEvent<PasswordSchema>)
                         "
                       />
                     </div>
