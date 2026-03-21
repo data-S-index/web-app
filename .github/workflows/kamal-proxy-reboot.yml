@@ -2,15 +2,6 @@ name: Kamal proxy reboot
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: Target environment
-        required: true
-        default: stg
-        type: choice
-        options:
-          - stg
-          - prd
 
 jobs:
   reboot-proxy:
