@@ -26,10 +26,10 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     to: "/search/au",
     children: [
       {
-        label: "Users",
+        label: "Researchers",
         to: "/search/au",
         icon: "mingcute:user-search-fill",
-        description: "Find users by name or identifiers",
+        description: "Find researchers by name or identifiers",
         active: route.path.startsWith("/search/au"),
       },
       {
