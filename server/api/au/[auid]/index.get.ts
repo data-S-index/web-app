@@ -7,6 +7,7 @@ const CACHE_KEY_PREFIX = "au:index";
 function parseAuId(value: string | undefined): number | null {
   if (value == null || value.trim() === "") return null;
   const n = parseInt(value, 10);
+
   return Number.isFinite(n) && n > 0 ? n : null;
 }
 

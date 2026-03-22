@@ -29,6 +29,7 @@ jobs:
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      NUXT_SITE_URL: ${{ secrets.NUXT_SITE_URL }}
 
     steps:
       # Step 1: Checkout the repository code

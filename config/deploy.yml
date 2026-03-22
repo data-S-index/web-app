@@ -46,3 +46,4 @@ env:
     - REDIS_HOST
     - REDIS_PORT
     - RESEND_API_KEY
+    - NUXT_SITE_URL
