@@ -35,6 +35,7 @@
     "marked": "^15.0.7",
     "motion-v": "^1.7.2",
     "nuxt-og-image": "5.1.13",
+    "resend": "^6.9.4",
     "sanitize-html": "^2.14.0",
     "unique-username-generator": "^1.5.1",
     "vue": "latest",

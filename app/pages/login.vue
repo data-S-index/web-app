@@ -133,7 +133,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <template #hint>
             <NuxtLink
               to="/forgot-password"
-              class="font-medium text-sky-500 hover:underline"
+              class="text-primary-500 font-medium hover:underline"
             >
               Forgot your password?
             </NuxtLink>

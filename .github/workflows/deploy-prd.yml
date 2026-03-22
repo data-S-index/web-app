@@ -28,6 +28,7 @@ jobs:
       MEILISEARCH_API_KEY: ${{ secrets.MEILISEARCH_API_KEY }}
       REDIS_HOST: ${{ secrets.REDIS_HOST }}
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
 
     steps:
       # Step 1: Checkout the repository code

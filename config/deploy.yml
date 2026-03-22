@@ -45,3 +45,4 @@ env:
     - MEILISEARCH_API_KEY
     - REDIS_HOST
     - REDIS_PORT
+    - RESEND_API_KEY
