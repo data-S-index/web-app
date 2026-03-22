@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; color: #333;">
     <h2 style="color: #1a1a1a;">Reset Your Password</h2>
     <p>Hi${user.givenName ? ` ${user.givenName}` : ""},</p>
-    <p>We received a request to reset your password. Click the button below to choose a new one:</p>
+    <p>We received a request to reset your password on Scholar Data. Click the button below to choose a new password:</p>
     <div style="text-align: center; margin: 32px 0;">
       <a href="${resetUrl}"
          style="background-color: #4F46E5; color: #ffffff; padding: 12px 24px; border-radius: 6px; text-decoration: none; font-weight: bold; display: inline-block;">
