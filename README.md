@@ -72,7 +72,7 @@ You will need the following installed on your system:
    pnpm dev
    ```
 
-6. Open the application at [http://localhost:3000](http://localhost:3000)
+6. Open the application at [http://localhost:3000](http://localhost:3000) or appropriate port if you have it configured differently.
 
 ## Development
 
