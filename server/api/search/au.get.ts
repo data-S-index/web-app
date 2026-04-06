@@ -1,4 +1,4 @@
-// Public automated-user search - no auth required. Returns a paginated list of users.
+// Public search - no auth required. Returns a paginated list of users (regular + automated), with regular users first.
 export default defineEventHandler(async (event) => {
   const queryStartTime = performance.now();
 
@@ -29,63 +29,67 @@ export default defineEventHandler(async (event) => {
         ? Math.floor(validatedOffset / limit) + 1
         : page;
 
-    const index = meilisearch.index("automated-user");
-    const searchResults = await index.search(searchTerm, {
-      limit,
-      offset: validatedOffset,
-    });
+    const auIndex = meilisearch.index("automated-user");
+    const userIndex = meilisearch.index("user");
 
-    type Hit = {
+    // Search both indexes in parallel; gracefully handle missing user index
+    const [auSearchResults, userSearchResults] = await Promise.all([
+      auIndex.search(searchTerm, { limit, offset: validatedOffset }),
+      userIndex
+        .search(searchTerm, { limit, offset: validatedOffset })
+        .catch(() => ({ hits: [], estimatedTotalHits: 0 })),
+    ]);
+
+    type AuHit = {
       id: string | number;
       name?: string;
       nameIdentifiers?: string[];
       affiliations?: string[];
     };
-    const parseId = (id: string | number): number | null => {
+
+    type UserHit = {
+      id: string;
+      name?: string;
+      nameIdentifiers?: string[];
+      affiliations?: string[];
+    };
+
+    const parseAuId = (id: string | number): number | null => {
       const n = typeof id === "number" ? id : parseInt(String(id), 10);
 
       return Number.isFinite(n) && n > 0 ? n : null;
     };
-    const hits = (searchResults.hits as Hit[]) || [];
-    const auIds = hits
-      .map((h) => parseId(h.id))
+
+    const auHits = (auSearchResults.hits as AuHit[]) || [];
+    const userHits = (userSearchResults.hits as UserHit[]) || [];
+
+    const auIds = auHits
+      .map((h) => parseAuId(h.id))
       .filter((id): id is number => id != null);
 
-    if (auIds.length === 0) {
-      const queryEndTime = performance.now();
-      const queryDuration = queryEndTime - queryStartTime;
-      const executionTime =
-        queryDuration > 1000
-          ? `${(queryDuration / 1000).toFixed(2)}s`
-          : `${queryDuration.toFixed(2)}ms`;
+    const userIds = userHits
+      .map((h) => String(h.id))
+      .filter((id) => id.length > 0);
 
-      const rawTotalCount = searchResults.estimatedTotalHits || 0;
-      const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
+    // Enrich automated users
+    const [auCountRows, sindexRows] =
+      auIds.length > 0
+        ? await Promise.all([
+            prisma.automatedUserDataset.groupBy({
+              by: ["automatedUserId"],
+              where: { automatedUserId: { in: auIds } },
+              _count: { automatedUserId: true },
+            }),
+            prisma.automatedUserSIndex.findMany({
+              where: { automatedUserId: { in: auIds } },
+              orderBy: { year: "desc" },
+              select: { automatedUserId: true, score: true },
+            }),
+          ])
+        : [[], []];
 
-      return {
-        users: [],
-        total: totalCount,
-        page,
-        limit,
-        queryDuration: executionTime,
-      };
-    }
-
-    const [countRows, sindexRows] = await Promise.all([
-      prisma.automatedUserDataset.groupBy({
-        by: ["automatedUserId"],
-        where: { automatedUserId: { in: auIds } },
-        _count: { automatedUserId: true },
-      }),
-      prisma.automatedUserSIndex.findMany({
-        where: { automatedUserId: { in: auIds } },
-        orderBy: { year: "desc" },
-        select: { automatedUserId: true, score: true },
-      }),
-    ]);
-
-    const countByUserId = new Map(
-      countRows.map((r) => [r.automatedUserId, r._count.automatedUserId]),
+    const auCountByUserId = new Map(
+      auCountRows.map((r) => [r.automatedUserId, r._count.automatedUserId]),
     );
     const sindexByUserId = new Map<number, number>();
     for (const row of sindexRows) {
@@ -94,9 +98,41 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const users = hits
+    // Enrich regular users
+    const userCountRows =
+      userIds.length > 0
+        ? await prisma.userDataset.groupBy({
+            by: ["userId"],
+            where: { userId: { in: userIds } },
+            _count: { userId: true },
+          })
+        : [];
+
+    const userCountById = new Map(
+      userCountRows.map((r) => [r.userId, r._count.userId]),
+    );
+
+    // Build result arrays
+    const regularUsers = userHits
       .map((hit) => {
-        const id = parseId(hit.id);
+        const id = String(hit.id);
+        if (!id) return null;
+
+        return {
+          id,
+          name: hit.name ?? "",
+          nameIdentifiers: hit.nameIdentifiers ?? [],
+          affiliations: hit.affiliations ?? [],
+          datasetCount: userCountById.get(id) ?? 0,
+          sIndex: 0,
+          profileType: "user" as const,
+        };
+      })
+      .filter((u): u is NonNullable<typeof u> => u != null);
+
+    const automatedUsers = auHits
+      .map((hit) => {
+        const id = parseAuId(hit.id);
         if (id == null) return null;
 
         return {
@@ -104,14 +140,23 @@ export default defineEventHandler(async (event) => {
           name: hit.name ?? "",
           nameIdentifiers: hit.nameIdentifiers ?? [],
           affiliations: hit.affiliations ?? [],
-          datasetCount: countByUserId.get(id) ?? 0,
+          datasetCount: auCountByUserId.get(id) ?? 0,
           sIndex: sindexByUserId.get(id) ?? 0,
+          profileType: "au" as const,
         };
       })
       .filter((u): u is NonNullable<typeof u> => u != null);
 
-    const rawTotalCount = searchResults.estimatedTotalHits || 0;
-    const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
+    // Regular users appear first
+    const users = [...regularUsers, ...automatedUsers];
+
+    const rawAuTotal = auSearchResults.estimatedTotalHits || 0;
+    const rawUserTotal = userSearchResults.estimatedTotalHits || 0;
+    const totalCount = Math.min(
+      rawAuTotal + rawUserTotal,
+      MEILISEARCH_MAX_RESULTS,
+    );
+
     const calculatedMaxPage =
       totalCount > 0 ? Math.ceil(totalCount / limit) : 1;
     const actualMaxPage = Math.min(calculatedMaxPage, maxPage);
@@ -127,11 +172,9 @@ export default defineEventHandler(async (event) => {
         ? `${(queryDuration / 1000).toFixed(2)}s`
         : `${queryDuration.toFixed(2)}ms`;
 
-    const finalTotal = Math.min(totalCount, MEILISEARCH_MAX_RESULTS);
-
     return {
       users,
-      total: finalTotal,
+      total: totalCount,
       page: validatedPage,
       limit,
       queryDuration: executionTime,

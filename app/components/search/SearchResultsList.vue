@@ -2,12 +2,13 @@
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
 type UserResult = {
-  id: number;
+  id: number | string;
   name: string;
   nameIdentifiers?: string[];
   affiliations?: string[];
   sIndex: number;
   datasetCount: number;
+  profileType?: "au" | "user";
 };
 
 type OrgResult = {
@@ -29,8 +30,13 @@ const getAvatarUrl = (item: UserResult | OrgResult, type: "user" | "org") => {
   return `https://api.dicebear.com/9.x/${style}/svg?seed=${encodeURIComponent(seed)}`;
 };
 
-const linkTo = (id: number, type: "user" | "org") =>
-  type === "user" ? `/au/${id}` : `/ao/${id}`;
+const linkTo = (item: UserResult | OrgResult, type: "user" | "org") => {
+  if (type === "org") return `/ao/${item.id}`;
+
+  return (item as UserResult).profileType === "user"
+    ? `/users/${item.id}`
+    : `/au/${item.id}`;
+};
 </script>
 
 <template>
@@ -38,7 +44,7 @@ const linkTo = (id: number, type: "user" | "org") =>
     <NuxtLink
       v-for="result in results"
       :key="result.id"
-      :to="linkTo(result.id, type)"
+      :to="linkTo(result, type)"
       class="hover:border-primary-400 dark:hover:border-primary-500 relative flex items-center gap-4 rounded-lg border-2 border-gray-200 bg-white p-4 transition-all hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:bg-gray-800"
     >
       <div
@@ -62,16 +68,18 @@ const linkTo = (id: number, type: "user" | "org") =>
       />
 
       <div class="min-w-0 flex-1">
-        <h3
-          :class="[
-            'line-clamp-1 text-gray-900 dark:text-gray-100',
-            type === 'user'
-              ? 'text-lg font-semibold'
-              : 'text-base font-semibold',
-          ]"
-        >
-          {{ result.name || result.id }}
-        </h3>
+        <div class="flex items-center gap-2">
+          <h3
+            :class="[
+              'line-clamp-1 text-gray-900 dark:text-gray-100',
+              type === 'user'
+                ? 'text-lg font-semibold'
+                : 'text-base font-semibold',
+            ]"
+          >
+            {{ result.name || result.id }}
+          </h3>
+        </div>
 
         <!-- User: identifiers, affiliations, badges -->
         <div v-if="type === 'user'" class="flex flex-col gap-2">

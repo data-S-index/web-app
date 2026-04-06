@@ -9,12 +9,13 @@ defineOgImageComponent("Pergel", {
 });
 
 type SearchResult = {
-  id: number;
+  id: number | string;
   name: string;
   nameIdentifiers: string[];
   affiliations: string[];
   sIndex: number;
   datasetCount: number;
+  profileType: "au" | "user";
 };
 
 const route = useRoute();
@@ -70,6 +71,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 840,
     sIndex: 26682.386616270604,
+    profileType: "au",
   },
   {
     id: 1002,
@@ -78,6 +80,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 762,
     sIndex: 23119.658062356193,
+    profileType: "au",
   },
   {
     id: 430013,
@@ -86,6 +89,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: ["Yale Peabody Museum"],
     datasetCount: 10,
     sIndex: 9545.833550065021,
+    profileType: "au",
   },
   {
     id: 3640718,
@@ -94,6 +98,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 9,
     sIndex: 8628.512587474217,
+    profileType: "au",
   },
   {
     id: 432818,
@@ -102,6 +107,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: ["Field Museum of Natural History"],
     datasetCount: 11,
     sIndex: 7664.501405795111,
+    profileType: "au",
   },
   {
     id: 1009,
@@ -110,6 +116,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 576,
     sIndex: 6814.500882927574,
+    profileType: "au",
   },
   {
     id: 16707,
@@ -118,6 +125,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 250,
     sIndex: 5324.177973344383,
+    profileType: "au",
   },
   {
     id: 14790,
@@ -126,6 +134,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 118,
     sIndex: 5192.257787662468,
+    profileType: "au",
   },
   {
     id: 19724,
@@ -134,6 +143,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 184,
     sIndex: 4543.086065965589,
+    profileType: "au",
   },
   {
     id: 17749,
@@ -142,6 +152,7 @@ const defaultSearchResults = ref<SearchResult[]>([
     affiliations: [],
     datasetCount: 271,
     sIndex: 4032.2259456781276,
+    profileType: "au",
   },
 ]);
 
