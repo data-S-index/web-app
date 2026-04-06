@@ -18,6 +18,8 @@ export default defineNuxtConfig({
     "nuxt-echarts",
     "@nuxtjs/robots",
     "@nuxtjs/sitemap",
+    "nuxt-schema-org",
+    "nuxt-link-checker",
   ],
   runtimeConfig: {
     public: {
@@ -43,5 +45,8 @@ export default defineNuxtConfig({
   site: {
     url: process.env.NUXT_SITE_URL,
     name: "Scholar Data",
+  },
+  linkChecker: {
+    failOnError: true,
   },
 });
