@@ -24,6 +24,14 @@ RUN pnpm install --frozen-lockfile \
 COPY . .
 RUN pnpm run build
 
+# Bundle the user-index script into a single CJS file for use in production
+RUN pnpm exec esbuild scripts/create-user-index.ts \
+  --bundle \
+  --platform=node \
+  --format=cjs \
+  --outfile=scripts/dist/create-user-index.cjs \
+  --external:pg-native
+
 # Production stage
 FROM node:22-alpine
 
@@ -42,6 +50,7 @@ COPY --from=builder /app/.output ./
 # COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 # Copy the Prisma schema & migrations, so `prisma migrate deploy` can see them
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/scripts/dist ./scripts/dist
 
 # Copy our startup script and make it executable
 COPY scripts/start.sh /app/scripts/start.sh
