@@ -35,42 +35,44 @@ Publications aren’t the whole story-datasets drive discovery. Traditional metr
 
 You will need the following installed on your system:
 
-- Node.js
-- Yarn
-- Docker
-- Volta (optional)
+- [mise](https://mise.jdx.dev) — manages Node.js and pnpm versions (see `mise.toml`)
+- [Docker](https://www.docker.com/) — for running PostgreSQL, Meilisearch, and Redis locally
 
 ### Setup
 
 1. Clone the repository
 
    ```bash
-   git clone https://github.com/data-S-index/web-app
+   git clone https://github.com/fairdataihub/posters-science.git
+   cd posters-science
    ```
 
-2. Install the dependencies
+2. Trust and install the required tool versions
 
    ```bash
-   yarn install
+   mise trust
+   mise install
    ```
 
-3. Add your environment variables. An example is provided at `.env.example`
+3. Install dependencies
+
+   ```bash
+   pnpm install
+   ```
+
+4. Add your environment variables
 
    ```bash
    cp .env.example .env
    ```
 
-4. Start the development server
+5. Start the development server
 
    ```bash
-   yarn dev
+   pnpm dev
    ```
 
-5. Open the application in your browser
-
-   ```bash
-   open http://localhost:3000
-   ```
+6. Open the application at [http://localhost:3000](http://localhost:3000)
 
 ## Development
 
