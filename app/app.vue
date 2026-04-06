@@ -22,7 +22,7 @@ useSeoMeta({
   description:
     "Get credit for the data you share - clearly, fairly, and publicly.",
   twitterCard: "summary_large_image",
-  ogUrl: "https://beta.scholardata.io",
+  ogUrl: "https://scholardata.io",
   twitterTitle: "Scholar Data",
   twitterDescription:
     "Get credit for the data you share - clearly, fairly, and publicly.",
