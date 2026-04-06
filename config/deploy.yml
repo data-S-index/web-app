@@ -9,10 +9,6 @@ servers:
   web:
     hosts:
       - <%= ENV["KAMAL_SERVER_IP"] %>
-    labels:
-      ofelia.enabled: "true"
-      ofelia.job-exec.reindex-users.schedule: "0 3 * * *"
-      ofelia.job-exec.reindex-users.command: "node /app/scripts/dist/create-user-index.cjs"
 
 # Note: If using Cloudflare, set encryption mode in SSL/TLS setting to "Full" to enable CF-to-app encryption.
 proxy:
@@ -51,12 +47,3 @@ env:
     - REDIS_PORT
     - RESEND_API_KEY
     - NUXT_SITE_URL
-
-accessories:
-  ofelia:
-    image: mcuadros/ofelia:latest
-    host: <%= ENV["KAMAL_SERVER_IP"] %>
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    options:
-      restart: unless-stopped
