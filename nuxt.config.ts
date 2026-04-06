@@ -16,6 +16,8 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "nuxt-og-image",
     "nuxt-echarts",
+    "@nuxtjs/robots",
+    "@nuxtjs/sitemap",
   ],
   runtimeConfig: {
     public: {

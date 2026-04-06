@@ -28,6 +28,8 @@
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
+    "@nuxtjs/robots": "^6.0.6",
+    "@nuxtjs/sitemap": "^8.0.11",
     "@vueuse/core": "14.2.1",
     "badge-maker": "5.0.2",
     "bcrypt": "6.0.0",
