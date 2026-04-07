@@ -97,7 +97,6 @@ const isDark = computed(() => useColorMode().value === "dark");
   <section>
     <UPageHero
       description="Scholar Data helps you measure, improve, and showcase the impact of your datasets."
-      headline="Platform in Beta - Launching Soon! 🚀"
       :ui="{ container: '!pb-10' }"
     >
       <template #title>
@@ -136,7 +135,7 @@ const isDark = computed(() => useColorMode().value === "dark");
           </p>
 
           <p class="text-balance break-keep">
-            This site is currently in beta, released for testing and
+            This site is currently in Public Preview, released for testing and
             demonstrating the potential impact and value of our S-index as part
             of the NIH S&#8209;index Challenge.
           </p>
