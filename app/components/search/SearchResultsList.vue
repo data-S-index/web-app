@@ -141,7 +141,7 @@ const linkTo = (item: UserResult | OrgResult, type: "user" | "org") => {
               color="info"
               variant="soft"
               size="sm"
-              :label="`Average Dataset Index: ${formatter.format((result as UserResult).sIndex / result.datasetCount)}`"
+              :label="`Average Dataset Index: ${formatter.format(result.datasetCount ? (result as UserResult).sIndex / result.datasetCount : 0)}`"
             />
           </div>
         </div>

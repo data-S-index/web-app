@@ -99,18 +99,53 @@ export default defineEventHandler(async (event) => {
     }
 
     // Enrich regular users
-    const userCountRows =
+    const [userCountRows, userDatasetRows] =
       userIds.length > 0
-        ? await prisma.userDataset.groupBy({
-            by: ["userId"],
-            where: { userId: { in: userIds } },
-            _count: { userId: true },
-          })
-        : [];
+        ? await Promise.all([
+            prisma.userDataset.groupBy({
+              by: ["userId"],
+              where: { userId: { in: userIds } },
+              _count: { userId: true },
+            }),
+            prisma.userDataset.findMany({
+              where: { userId: { in: userIds } },
+              select: { userId: true, datasetId: true },
+            }),
+          ])
+        : [[], []];
 
     const userCountById = new Map(
       userCountRows.map((r) => [r.userId, r._count.userId]),
     );
+
+    const userDatasetIds = [
+      ...new Set(userDatasetRows.map((ud) => ud.datasetId)),
+    ];
+
+    const userDindexRows =
+      userDatasetIds.length > 0
+        ? await prisma.dIndex.findMany({
+            where: { datasetId: { in: userDatasetIds } },
+            orderBy: { year: "desc" },
+            select: { datasetId: true, score: true },
+          })
+        : [];
+
+    const latestScoreByDataset = new Map<number, number>();
+    for (const row of userDindexRows) {
+      if (!latestScoreByDataset.has(row.datasetId)) {
+        latestScoreByDataset.set(row.datasetId, row.score);
+      }
+    }
+
+    const userSIndexById = new Map<string, number>();
+    for (const ud of userDatasetRows) {
+      const score = latestScoreByDataset.get(ud.datasetId) ?? 0;
+      userSIndexById.set(
+        ud.userId,
+        (userSIndexById.get(ud.userId) ?? 0) + score,
+      );
+    }
 
     // Build result arrays
     const regularUsers = userHits
@@ -124,7 +159,7 @@ export default defineEventHandler(async (event) => {
           nameIdentifiers: hit.nameIdentifiers ?? [],
           affiliations: hit.affiliations ?? [],
           datasetCount: userCountById.get(id) ?? 0,
-          sIndex: 0,
+          sIndex: userSIndexById.get(id) ?? 0,
           profileType: "user" as const,
         };
       })
