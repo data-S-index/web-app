@@ -133,12 +133,6 @@ const isDark = computed(() => useColorMode().value === "dark");
             Scholar Data is intended to provide a Google Scholar-like platform
             for researchers and organizations to track their S-index.
           </p>
-
-          <p class="text-balance break-keep">
-            This site is currently in Public Preview, released for testing and
-            demonstrating the potential impact and value of our S-index as part
-            of the NIH S&#8209;index Challenge.
-          </p>
         </div>
 
         <div>
