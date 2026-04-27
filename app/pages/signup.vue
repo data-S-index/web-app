@@ -132,6 +132,18 @@ const autoGenerateUsername = () => {
     state.password = environment === "development" ? "12345678" : "";
   }
 };
+
+watch(
+  () => state.temporary,
+  (newValue) => {
+    if (newValue) {
+      autoGenerateUsername();
+    } else {
+      state.login = "";
+      state.password = "";
+    }
+  },
+);
 </script>
 
 <template>
