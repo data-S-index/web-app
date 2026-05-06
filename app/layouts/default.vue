@@ -63,6 +63,10 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
   },
 ]);
 
+const mobileHeaderItems = computed<NavigationMenuItem[]>(() => [
+  ...headerItems.value,
+]);
+
 const footerMiddleItems: NavigationMenuItem[] = [
   {
     label: "Made with ♥ by the S-Index Team",
@@ -96,7 +100,7 @@ const footerRightItems: NavigationMenuItem[] = [
         </NuxtLink>
       </template>
 
-      <UNavigationMenu :items="headerItems" />
+      <UNavigationMenu :items="headerItems" class="hidden md:flex" />
 
       <template #right>
         <UColorModeButton />
@@ -121,7 +125,7 @@ const footerRightItems: NavigationMenuItem[] = [
           <div v-else class="flex items-center justify-center gap-3">
             <UButton to="/login" variant="outline"> Sign in </UButton>
 
-            <UButton to="/signup">
+            <UButton to="/signup" class="hidden sm:inline-flex">
               <template #trailing>
                 <Icon name="i-heroicons-arrow-right-20-solid" size="20" />
               </template>
@@ -129,6 +133,16 @@ const footerRightItems: NavigationMenuItem[] = [
             </UButton>
           </div>
         </AuthState>
+      </template>
+
+      <template #body>
+        <div class="px-1 pb-2 md:hidden">
+          <UNavigationMenu
+            :items="mobileHeaderItems"
+            orientation="vertical"
+            class="-mx-2.5"
+          />
+        </div>
       </template>
     </UHeader>
 
