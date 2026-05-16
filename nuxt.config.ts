@@ -51,7 +51,17 @@ export default defineNuxtConfig({
   },
   vite: {
     optimizeDeps: {
-      include: ["vue3-lottie", "vue3-marquee"],
+      include: [
+        "vue3-lottie",
+        "vue3-marquee",
+        "@vue/devtools-core",
+        "@vue/devtools-kit",
+        "dayjs",
+        "dayjs/plugin/updateLocale",
+        "dayjs/plugin/relativeTime",
+        "dayjs/plugin/utc",
+        "dayjs/plugin/timezone",
+      ],
     },
   },
 });
