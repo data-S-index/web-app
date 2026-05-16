@@ -3,8 +3,7 @@ import { PrismaClient } from "../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 
-const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY;
-const MEILISEARCH_API_URL = process.env.MEILISEARCH_API_URL;
+const { MEILISEARCH_API_KEY, MEILISEARCH_API_URL } = process.env;
 
 if (!MEILISEARCH_API_KEY || !MEILISEARCH_API_URL) {
   console.error(
@@ -56,11 +55,11 @@ async function main() {
 
   const index = client.index("user");
 
-  console.log('Clearing existing documents from "user" index...');
+  console.log("Clearing existing documents from 'user' index...");
   await index.deleteAllDocuments();
 
   console.log(
-    `Indexing ${documents.length} users into Meilisearch "user" index in batches of ${BATCH_SIZE}...`,
+    `Indexing ${documents.length} users into Meilisearch 'user' index in batches of ${BATCH_SIZE}...`,
   );
 
   for (let i = 0; i < documents.length; i += BATCH_SIZE) {

@@ -15,6 +15,10 @@ const formatNumber = (number: number) => {
   }).format(number);
 };
 
+const { data: platformMetrics } = await useFetch<{
+  userCount: number;
+}>("/api/metrics");
+
 const datasetsByYear = ref([
   { year: "1950-2010", value: 1100000 },
   { year: "2011", value: 135000 },
@@ -67,7 +71,7 @@ const fields = ref([
   { name: "Other", value: 4225973 },
 ]);
 
-const sIndexMetrics = [
+const sIndexMetrics = computed(() => [
   {
     name: "Datasets registered",
     value: 49061167,
@@ -100,7 +104,18 @@ const sIndexMetrics = [
     value: 50338032,
     description: "Total number of  dataset index records in our database",
   },
-];
+  {
+    name: "Researcher Accounts",
+    value: platformMetrics.value?.userCount ?? 0,
+    description: "Profiles created and actively managed by researchers",
+  },
+  {
+    name: "Generated Profiles",
+    value: 4093652,
+    description:
+      "Static baseline: 4,093,652 automatically generated profiles (~4.1M)",
+  },
+]);
 
 const sources = ref([
   {

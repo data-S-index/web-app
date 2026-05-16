@@ -91,6 +91,17 @@ const features = ref([
 ]);
 
 const isDark = computed(() => useColorMode().value === "dark");
+
+const { data: platformMetrics } = await useFetch<{
+  userCount: number;
+}>("/api/metrics");
+
+const AUTOMATED_PROFILE_COUNT = 4093652;
+
+const actualProfilesDisplay = computed(
+  () => platformMetrics.value?.userCount ?? 0,
+);
+const totalProfilesDisplay = computed(() => AUTOMATED_PROFILE_COUNT);
 </script>
 
 <template>
@@ -323,6 +334,79 @@ const isDark = computed(() => useColorMode().value === "dark");
           </div>
         </div>
       </div>
+    </UPageSection>
+
+    <UPageSection :ui="{ container: '!pt-10' }">
+      <template #body>
+        <div class="mt-6">
+          <div class="mx-auto mb-12 max-w-screen-xl px-6 text-center">
+            <h2 class="text-3xl font-bold tracking-tight sm:text-4xl">
+              Trusted by a growing community of researchers
+            </h2>
+
+            <p class="text-muted mt-3 text-lg text-balance">
+              Scholar Data helps researchers create, discover, and manage
+              academic profiles at scale.
+            </p>
+          </div>
+
+          <div
+            class="mx-auto grid max-w-screen-xl grid-cols-1 gap-8 px-6 md:grid-cols-2 md:justify-items-center"
+          >
+            <div class="relative w-full">
+              <div
+                class="bg-primary/10 absolute inset-0 animate-pulse rounded-xl blur-md"
+              />
+
+              <UCard class="relative h-full w-full text-center">
+                <div class="flex flex-col items-center gap-3 py-4">
+                  <UIcon
+                    name="i-heroicons-user-group"
+                    class="h-10 w-10 text-pink-600"
+                  />
+
+                  <div class="text-5xl font-bold text-pink-600">
+                    {{ actualProfilesDisplay.toLocaleString() }}+
+                  </div>
+
+                  <p class="text-lg font-semibold">Researcher Accounts</p>
+
+                  <p class="text-muted text-sm">
+                    Verified profiles created and actively managed by real
+                    researchers.
+                  </p>
+                </div>
+              </UCard>
+            </div>
+
+            <div class="relative w-full">
+              <div
+                class="bg-primary/10 absolute inset-0 animate-pulse rounded-xl blur-md"
+              />
+
+              <UCard class="relative h-full w-full text-center">
+                <div class="flex flex-col items-center gap-3 py-4">
+                  <UIcon
+                    name="i-heroicons-identification"
+                    class="h-10 w-10 text-pink-600"
+                  />
+
+                  <div class="text-5xl font-bold text-pink-600">
+                    {{ totalProfilesDisplay.toLocaleString() }}
+                  </div>
+
+                  <p class="text-lg font-semibold">Profiles Generated</p>
+
+                  <p class="text-muted text-sm">
+                    Researcher profiles automatically generated from our
+                    academic data collection pipeline.
+                  </p>
+                </div>
+              </UCard>
+            </div>
+          </div>
+        </div>
+      </template>
     </UPageSection>
   </section>
 </template>
