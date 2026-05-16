@@ -28,8 +28,8 @@
   },
   "dependencies": {
     "@nuxt/image": "2.0.0",
-    "@nuxtjs/robots": "^6.0.6",
-    "@nuxtjs/sitemap": "^8.0.11",
+    "@nuxtjs/robots": "6.0.6",
+    "@nuxtjs/sitemap": "8.0.11",
     "@vueuse/core": "14.2.1",
     "badge-maker": "5.0.2",
     "bcrypt": "6.0.0",
@@ -37,9 +37,9 @@
     "ioredis": "5.10.1",
     "marked": "17.0.6",
     "motion-v": "2.2.0",
-    "nuxt-link-checker": "^5.0.7",
+    "nuxt-link-checker": "5.0.7",
     "nuxt-og-image": "6.3.2",
-    "nuxt-schema-org": "^6.0.4",
+    "nuxt-schema-org": "6.0.4",
     "resend": "6.10.0",
     "sanitize-html": "2.17.2",
     "tailwindcss": "4.2.2",
@@ -88,17 +88,5 @@
     "typescript": "6.0.2",
     "vue-echarts": "8.0.1",
     "zod": "4.3.6"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@prisma/engines",
-      "bcrypt",
-      "esbuild",
-      "prisma",
-      "sharp",
-      "unrs-resolver",
-      "vue-demi"
-    ]
   }
 }
