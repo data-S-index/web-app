@@ -49,4 +49,9 @@ export default defineNuxtConfig({
   linkChecker: {
     failOnError: true,
   },
+  vite: {
+    optimizeDeps: {
+      include: ["vue3-lottie", "vue3-marquee"],
+    },
+  },
 });

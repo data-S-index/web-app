@@ -30,6 +30,7 @@ jobs:
       REDIS_PORT: ${{ secrets.REDIS_PORT }}
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       NUXT_SITE_URL: ${{ secrets.NUXT_SITE_URL }}
+      NUXT_OG_IMAGE_SECRET: ${{ secrets.NUXT_OG_IMAGE_SECRET }}
 
     steps:
       # Step 1: Checkout the repository code

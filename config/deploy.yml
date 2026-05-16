@@ -47,3 +47,4 @@ env:
     - REDIS_PORT
     - RESEND_API_KEY
     - NUXT_SITE_URL
+    - NUXT_OG_IMAGE_SECRET
