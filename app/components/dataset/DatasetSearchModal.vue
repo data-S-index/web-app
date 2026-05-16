@@ -251,7 +251,7 @@ watch(
 </script>
 
 <template>
-  <div class="w-full space-y-5">
+  <div class="flex h-full w-full flex-col gap-5">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
       <UInput
         v-model="searchTerm"
@@ -274,8 +274,8 @@ watch(
       />
     </div>
 
-    <div v-if="searchResults.length > 0" class="mt-6">
-      <div class="flex flex-col gap-5">
+    <div v-if="searchResults.length > 0" class="flex flex-1 flex-col">
+      <div class="flex flex-1 flex-col gap-5">
         <div v-if="searchLoading">
           <div class="py-6 text-center">
             <Icon
@@ -287,7 +287,7 @@ watch(
           </div>
         </div>
 
-        <div v-else>
+        <div v-else class="flex flex-1 flex-col gap-3">
           <div
             class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between"
           >
@@ -330,7 +330,7 @@ watch(
 
           <USeparator class="my-4" />
 
-          <div class="max-h-[60vh] space-y-3 overflow-y-auto">
+          <div class="min-h-0 flex-1 space-y-3 overflow-y-auto">
             <div
               v-for="result in searchResults"
               :key="result.id"
@@ -438,7 +438,7 @@ watch(
           </div>
         </div>
 
-        <div class="flex w-full justify-center">
+        <div class="flex w-full justify-center pb-8">
           <UPagination
             v-model:page="searchPage"
             :total="Math.min(searchTotal, 1000)"
