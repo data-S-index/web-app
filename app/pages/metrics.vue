@@ -113,7 +113,7 @@ const sIndexMetrics = computed(() => [
     name: "Generated Profiles",
     value: 4093652,
     description:
-      "Static baseline: 4,093,652 automatically generated profiles (~4.1M)",
+      "Researcher profiles automatically generated from our academic data collection pipeline",
   },
 ]);
 

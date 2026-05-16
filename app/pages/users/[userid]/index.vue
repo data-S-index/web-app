@@ -600,47 +600,86 @@ const handleDatasetsAdded = () => {
           </UCard>
         </div>
 
-        <USeparator />
+        <template v-if="isCurrentUser && datasetCount === 0">
+          <USeparator />
 
-        <UserMetricsSection
-          :sindex="sindex"
-          :dataset-count="datasetCount"
-          :sindex-over-time="sindexOverTime"
-          :cumulative-citations="cumulativeCitations"
-          :cumulative-mentions="cumulativeMentions"
-        />
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold">Datasets</h2>
+          </div>
 
-        <div class="flex items-center justify-between">
-          <h2 class="text-2xl font-bold">Datasets</h2>
-
-          <UModal
-            v-model="showAddDatasetModal"
-            fullscreen
-            title="Add a dataset"
+          <UEmpty
+            icon="i-lucide-database"
+            title="No datasets yet"
+            description="Add a dataset to your profile to get started."
+            class="py-16"
           >
+            <template #actions>
+              <UButton
+                icon="i-heroicons-plus-20-solid"
+                label="Add a dataset"
+                color="primary"
+                variant="solid"
+                @click="showAddDatasetModal = true"
+              />
+            </template>
+          </UEmpty>
+        </template>
+
+        <template v-else>
+          <USeparator />
+
+          <UserMetricsSection
+            :sindex="sindex"
+            :dataset-count="datasetCount"
+            :sindex-over-time="sindexOverTime"
+            :cumulative-citations="cumulativeCitations"
+            :cumulative-mentions="cumulativeMentions"
+          />
+
+          <div class="flex items-center justify-between">
+            <h2 class="text-2xl font-bold">Datasets</h2>
+
             <UButton
               v-if="isCurrentUser"
               icon="i-heroicons-plus-20-solid"
               label="Add a dataset"
+              color="primary"
+              variant="solid"
+              @click="showAddDatasetModal = true"
             />
+          </div>
 
-            <template #body>
-              <DatasetSearchModal
-                :userid="userid"
-                :user-name="fullName"
-                :is-open="showAddDatasetModal"
-                @close="showAddDatasetModal = false"
-                @datasets-added="handleDatasetsAdded"
-              />
-            </template>
-          </UModal>
-        </div>
+          <UEmpty
+            v-if="datasetCount === 0"
+            icon="i-lucide-database"
+            title="No datasets yet"
+            description="This researcher hasn't added any datasets yet."
+            class="py-16"
+          />
 
-        <UserDatasetList
-          :items="(userData as DatasetListItem[] | undefined) ?? undefined"
-          :show-remove="isCurrentUser"
-          @remove="removeDataset"
-        />
+          <UserDatasetList
+            v-else
+            :items="(userData as DatasetListItem[] | undefined) ?? undefined"
+            :show-remove="isCurrentUser"
+            @remove="removeDataset"
+          />
+        </template>
+
+        <UModal
+          v-model:open="showAddDatasetModal"
+          fullscreen
+          title="Add a dataset"
+        >
+          <template #body>
+            <DatasetSearchModal
+              :userid="userid"
+              :user-name="fullName"
+              :is-open="showAddDatasetModal"
+              @close="showAddDatasetModal = false"
+              @datasets-added="handleDatasetsAdded"
+            />
+          </template>
+        </UModal>
       </UPageBody>
     </UPage>
   </UContainer>
