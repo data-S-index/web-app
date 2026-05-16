@@ -98,9 +98,11 @@ const { data: platformMetrics } = await useFetch<{
 
 const AUTOMATED_PROFILE_COUNT = 4093652;
 
-const actualProfilesDisplay = computed(
-  () => platformMetrics.value?.userCount ?? 0,
-);
+const actualProfilesDisplay = computed(() => {
+  const count = platformMetrics.value?.userCount ?? 0;
+
+  return count - (count % 5);
+});
 const totalProfilesDisplay = computed(() => AUTOMATED_PROFILE_COUNT);
 </script>
 
