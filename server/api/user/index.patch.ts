@@ -7,6 +7,7 @@ const updateUserSchema = z.object({
   affiliation: z.string().nullable().optional(),
   homePage: z.union([z.string().url(), z.literal("")]).optional(),
   areasOfInterest: z.array(z.string()).optional(),
+  orcid: z.string().nullable().optional(),
 });
 
 export default defineEventHandler(async (event) => {
@@ -33,6 +34,7 @@ export default defineEventHandler(async (event) => {
     affiliation?: string | null;
     homePage?: string | null;
     areasOfInterest?: string[];
+    orcid?: string | null;
   } = {};
 
   if (data.givenName !== undefined) updatePayload.givenName = data.givenName;
@@ -45,6 +47,7 @@ export default defineEventHandler(async (event) => {
     updatePayload.homePage = data.homePage === "" ? null : data.homePage;
   if (data.areasOfInterest !== undefined)
     updatePayload.areasOfInterest = data.areasOfInterest;
+  if (data.orcid !== undefined) updatePayload.orcid = data.orcid;
 
   const user = await prisma.user.update({
     where: { id: userId },
@@ -56,6 +59,7 @@ export default defineEventHandler(async (event) => {
       additionalNames: true,
       affiliation: true,
       homePage: true,
+      orcid: true,
       areasOfInterest: true,
       created: true,
       updated: true,
