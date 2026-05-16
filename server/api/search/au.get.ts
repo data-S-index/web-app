@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event);
   const searchTerm = (query.q as string) || "";
   const page = parseInt(query.page as string) || 1;
+  const profileType = (query.type as string) || "all";
 
   const limit = 20;
   const MEILISEARCH_MAX_RESULTS = 1000;
@@ -32,12 +33,16 @@ export default defineEventHandler(async (event) => {
     const auIndex = meilisearch.index("automated-user");
     const userIndex = meilisearch.index("user");
 
-    // Search both indexes in parallel; gracefully handle missing user index
+    // Search indexes based on filter; gracefully handle missing user index
     const [auSearchResults, userSearchResults] = await Promise.all([
-      auIndex.search(searchTerm, { limit, offset: validatedOffset }),
-      userIndex
-        .search(searchTerm, { limit, offset: validatedOffset })
-        .catch(() => ({ hits: [], estimatedTotalHits: 0 })),
+      profileType !== "user"
+        ? auIndex.search(searchTerm, { limit, offset: validatedOffset })
+        : Promise.resolve({ hits: [], estimatedTotalHits: 0 }),
+      profileType !== "au"
+        ? userIndex
+            .search(searchTerm, { limit, offset: validatedOffset })
+            .catch(() => ({ hits: [], estimatedTotalHits: 0 }))
+        : Promise.resolve({ hits: [], estimatedTotalHits: 0 }),
     ]);
 
     type AuHit = {
