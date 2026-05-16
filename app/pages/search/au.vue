@@ -231,7 +231,7 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
     <UPage>
       <UPageHeader
         title="Browse Profiles"
-        description="We have automatically created 1M+ researcher profiles from a large scale analysis of 49M+ dataset. They are available for demo purpose. Search a researcher below to view their profile and S-index."
+        description="We have automatically created 1M+ researcher profiles from a large scale analysis of 49M+ dataset. They are available for demo purpose. Since Scholar Data is already used by researchers, you can also find here profiles created by actual users. Search a researcher below to view their profile and S-index."
       />
 
       <UPageBody>
