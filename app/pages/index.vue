@@ -65,7 +65,7 @@ const features = ref([
     ],
   },
   {
-    title: "Integrate with ScholarData",
+    title: "Integrate with Scholar Data",
     description:
       "Are you a repository maintainer who wants to display the impact of their datasets? We provide simple ways to showcase the Dataset Index and other impact metrics of a dataset directly in your repository.",
     icon: "i-heroicons-arrow-path",
