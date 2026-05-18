@@ -23,7 +23,7 @@
     "scripts:truncate:tables": "tsx scripts/truncate-tables.ts",
     "scripts:index:users": "tsx scripts/create-user-index.ts",
     "scripts:split:ndjson": "tsx scripts/split_nd_json.ts",
-    "reset": "rimraf node_modules && rimraf .nuxt && rimraf .output && rimraf dist && pnpm install",
+    "reset": " rimraf .nuxt && rimraf .output && rimraf dist && rimraf node_modules && pnpm install",
     "prune-branches": "git removed-branches --prune --force"
   },
   "dependencies": {
@@ -78,7 +78,7 @@
     "eslint-plugin-prettier": "5.5.5",
     "eslint-plugin-unused-imports": "4.4.1",
     "eslint-plugin-vue": "10.8.0",
-    "meilisearch": "0.58.0",
+    "meilisearch": "0.54.0",
     "nuxt": "4.4.5",
     "nuxt-auth-utils": "0.5.29",
     "nuxt-echarts": "1.0.1",

@@ -330,6 +330,28 @@ watch(
 
           <USeparator class="my-4" />
 
+          <UAlert
+            icon="i-lucide-info"
+            color="warning"
+            variant="subtle"
+            title="Dataset coverage is currently limited"
+            description="Our index includes datasets with DOIs registered before September 2025. Datasets published after that date may not appear in search results yet."
+          >
+            <template #description>
+              Our database includes includes datasets with DOIs registered
+              before September 2025. Datasets published after that date may not
+              appear in search results yet. <br />
+
+              <a
+                href="https://docs.scholardata.io/data-collection/datasets.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-warning-700 dark:text-warning-300 ml-1 underline underline-offset-2"
+                >Learn more about our data collection
+              </a>
+            </template>
+          </UAlert>
+
           <div class="min-h-0 flex-1 space-y-3 overflow-y-auto">
             <div
               v-for="result in searchResults"
