@@ -346,7 +346,7 @@ watch(
                 href="https://docs.scholardata.io/data-collection/datasets.html"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="text-warning-700 dark:text-warning-300 ml-1 underline underline-offset-2"
+                class="text-warning-700 dark:text-warning-300 underline underline-offset-2"
                 >Learn more about our data collection
               </a>
             </template>
