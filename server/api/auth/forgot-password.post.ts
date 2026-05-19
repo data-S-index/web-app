@@ -1,12 +1,43 @@
 import { z } from "zod";
 import { randomBytes, createHash } from "crypto";
 import { Resend } from "resend";
+import { checkRateLimit, getRateLimitIdentifier } from "../../utils/rateLimit";
+
+const FORGOT_PASSWORD_IP_RATE_LIMIT = {
+  maxRequests: 10,
+  windowSeconds: 15 * 60,
+  keyPrefix: "auth:forgot-password:ip",
+};
+
+const FORGOT_PASSWORD_EMAIL_RATE_LIMIT = {
+  maxRequests: 3,
+  windowSeconds: 15 * 60,
+  keyPrefix: "auth:forgot-password:email",
+};
 
 const schema = z.object({
   email: z.email("Must be a valid email address"),
 });
 
 export default defineEventHandler(async (event) => {
+  const identifier = await getRateLimitIdentifier(event);
+  const ipRateLimitResult = await checkRateLimit(
+    identifier,
+    FORGOT_PASSWORD_IP_RATE_LIMIT,
+  );
+
+  if (!ipRateLimitResult.allowed) {
+    throw createError({
+      statusCode: 429,
+      statusMessage: "Too Many Requests",
+      data: {
+        message: "Too many password reset requests. Please try again later.",
+        resetAt: ipRateLimitResult.resetAt,
+        remaining: ipRateLimitResult.remaining,
+      },
+    });
+  }
+
   const body = await readValidatedBody(event, (b) => schema.safeParse(b));
 
   if (!body.success) {
@@ -17,6 +48,40 @@ export default defineEventHandler(async (event) => {
   }
 
   const email = body.data.email.trim().toLowerCase();
+
+  const emailRateLimitResult = await checkRateLimit(
+    email,
+    FORGOT_PASSWORD_EMAIL_RATE_LIMIT,
+  );
+
+  if (!emailRateLimitResult.allowed) {
+    throw createError({
+      statusCode: 429,
+      statusMessage: "Too Many Requests",
+      data: {
+        message: "Too many password reset requests. Please try again later.",
+        resetAt: emailRateLimitResult.resetAt,
+        remaining: emailRateLimitResult.remaining,
+      },
+    });
+  }
+
+  const effectiveRateLimit =
+    ipRateLimitResult.remaining <= emailRateLimitResult.remaining
+      ? ipRateLimitResult
+      : emailRateLimitResult;
+
+  setHeader(
+    event,
+    "X-RateLimit-Limit",
+    FORGOT_PASSWORD_IP_RATE_LIMIT.maxRequests.toString(),
+  );
+  setHeader(
+    event,
+    "X-RateLimit-Remaining",
+    effectiveRateLimit.remaining.toString(),
+  );
+  setHeader(event, "X-RateLimit-Reset", effectiveRateLimit.resetAt.toString());
 
   const user = await prisma.user.findUnique({
     where: { login: email },
