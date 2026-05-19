@@ -25,10 +25,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const login = body.data.login.trim().toLowerCase();
+
   // Get the user from the database
   const user = await prisma.user.findUnique({
     where: {
-      login: body.data.login,
+      login,
     },
   });
 

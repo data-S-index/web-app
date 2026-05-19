@@ -30,10 +30,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const login = body.data.login.trim().toLowerCase();
+
   // Check if the user already exists
   const user = await prisma.user.findUnique({
     where: {
-      login: body.data.login,
+      login,
     },
   });
 
@@ -52,7 +54,7 @@ export default defineEventHandler(async (event) => {
   const newUser = await prisma.user.create({
     data: {
       anonymous: temporary,
-      login: body.data.login,
+      login,
       password: hashedPassword,
       givenName,
       familyName,
