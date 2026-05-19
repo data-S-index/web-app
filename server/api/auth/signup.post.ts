@@ -4,7 +4,7 @@ import { hash } from "bcrypt";
 const signupSchema = z.object({
   temporary: z.boolean(),
   login: z.string(),
-  password: z.string().min(8),
+  password: z.string().min(12).max(128),
   givenName: z.string().optional(),
   familyName: z.string().optional(),
   affiliation: z.string().optional(),
@@ -30,10 +30,12 @@ export default defineEventHandler(async (event) => {
     });
   }
 
+  const login = body.data.login.trim().toLowerCase();
+
   // Check if the user already exists
   const user = await prisma.user.findUnique({
     where: {
-      login: body.data.login,
+      login,
     },
   });
 
@@ -52,7 +54,7 @@ export default defineEventHandler(async (event) => {
   const newUser = await prisma.user.create({
     data: {
       anonymous: temporary,
-      login: body.data.login,
+      login,
       password: hashedPassword,
       givenName,
       familyName,

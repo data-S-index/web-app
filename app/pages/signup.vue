@@ -38,7 +38,10 @@ const showPassword = ref(false);
 const schema = z.object({
   temporary: z.boolean().default(false),
   login: z.string(),
-  password: z.string().min(8, "Must be at least 8 characters"),
+  password: z
+    .string()
+    .min(12, "Must be at least 12 characters")
+    .max(128, "Must be at most 128 characters"),
   givenName: z.string().optional(),
   familyName: z.string().optional(),
   affiliation: z.string().optional(),
