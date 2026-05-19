@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { randomBytes } from "crypto";
+import { randomBytes, createHash } from "crypto";
 import { Resend } from "resend";
 
 const schema = z.object({
@@ -33,19 +33,20 @@ export default defineEventHandler(async (event) => {
     where: { userId: user.id },
   });
 
-  const resetToken = randomBytes(32).toString("hex");
+  const rawToken = randomBytes(32).toString("hex");
+  const hashedToken = createHash("sha256").update(rawToken).digest("hex");
   const expiresAt = new Date(Date.now() + 1000 * 60 * 60); // 1 hour
 
   await prisma.userForgotPassword.create({
     data: {
       userId: user.id,
-      resetToken,
+      resetToken: hashedToken,
       expiresAt,
     },
   });
 
   const baseUrl = process.env.NUXT_SITE_URL || "http://localhost:3000";
-  const resetUrl = `${baseUrl}/reset-password?token=${resetToken}`;
+  const resetUrl = `${baseUrl}/reset-password?token=${rawToken}`;
 
   const resend = new Resend(process.env.RESEND_API_KEY);
 
