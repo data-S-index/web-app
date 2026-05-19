@@ -4,7 +4,7 @@ import { hash } from "bcrypt";
 const signupSchema = z.object({
   temporary: z.boolean(),
   login: z.string(),
-  password: z.string().min(8),
+  password: z.string().min(12).max(128),
   givenName: z.string().optional(),
   familyName: z.string().optional(),
   affiliation: z.string().optional(),

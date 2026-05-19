@@ -3,7 +3,7 @@ import { compare, hash } from "bcrypt";
 
 const schema = z.object({
   currentPassword: z.string().min(8),
-  newPassword: z.string().min(8),
+  newPassword: z.string().min(12).max(128),
 });
 
 export default defineEventHandler(async (event) => {
