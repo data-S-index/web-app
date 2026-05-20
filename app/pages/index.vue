@@ -529,7 +529,7 @@ const actualProfilesDisplay = computed(() => {
 
     <UMarquee :overlay="false">
       <NuxtLink
-        v-for="platform in platforms"
+        v-for="platform in [...platforms, ...platforms, ...platforms]"
         :key="platform.name"
         :to="platform.url"
         target="_blank"
