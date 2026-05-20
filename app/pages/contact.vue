@@ -23,9 +23,6 @@ const iframeLoaded = ref(false);
         loading="lazy"
         width="100%"
         height="324"
-        frameborder="0"
-        marginheight="0"
-        marginwidth="0"
         title="Envision Portal Contact Form"
         @load="iframeLoaded = true"
       />

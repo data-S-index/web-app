@@ -26,6 +26,12 @@ useHead({
       key: "theme-color",
     },
   ],
+  script: [
+    {
+      src: "https://tally.so/widgets/embed.js",
+      async: true,
+    },
+  ],
 });
 
 useSeoMeta({
