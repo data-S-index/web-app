@@ -75,6 +75,11 @@ const footerMiddleItems: NavigationMenuItem[] = [
 
 const footerRightItems: NavigationMenuItem[] = [
   {
+    label: "Contact Us",
+    to: "/contact",
+    icon: "i-heroicons-envelope-solid",
+  },
+  {
     label: "Documentation",
     to: "https://docs.scholardata.io",
     target: "_blank",
@@ -123,9 +128,14 @@ const footerRightItems: NavigationMenuItem[] = [
           </div>
 
           <div v-else class="flex items-center justify-center gap-3">
-            <UButton to="/login" variant="outline"> Sign in </UButton>
+            <UButton to="/login" variant="outline">
+              Sign in
+              <template #trailing>
+                <Icon name="i-heroicons-arrow-right-20-solid" size="20" />
+              </template>
+            </UButton>
 
-            <UButton to="/signup" class="hidden sm:inline-flex">
+            <UButton to="/signup" class="hidden">
               <template #trailing>
                 <Icon name="i-heroicons-arrow-right-20-solid" size="20" />
               </template>
@@ -154,14 +164,9 @@ const footerRightItems: NavigationMenuItem[] = [
       <template #left>
         <p class="text-muted text-sm">
           Copyright © {{ new Date().getFullYear() }}
+          | Made with ♥ by the S-Index Team
         </p>
       </template>
-
-      <UNavigationMenu
-        :items="footerMiddleItems"
-        variant="link"
-        color="primary"
-      />
 
       <template #right>
         <UColorModeButton />
