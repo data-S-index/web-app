@@ -85,7 +85,7 @@ const platforms = [
   {
     name: "OpenAlex",
     url: "https://openalex.org",
-    logo: "https://openalex.org/img/tricon.a08e3fec.png",
+    logo: "https://i0.wp.com/blog.openalex.org/wp-content/uploads/2025/09/image-3.png",
   },
   {
     name: "Make Data Count",
@@ -100,17 +100,17 @@ const platforms = [
   {
     name: "Software Heritage",
     url: "https://www.softwareheritage.org",
-    logo: "https://www.softwareheritage.org/wp-content/uploads/2015/08/swh-logo.png",
+    logo: "https://annex.softwareheritage.org/public/logo/software-heritage-logo-title.2048px.png",
   },
   {
     name: "Hugging Face",
     url: "https://huggingface.co",
-    logo: "https://huggingface.co/front/assets/huggingface_logo.svg",
+    logo: "https://huggingface.co/datasets/huggingface/brand-assets/resolve/main/hf-logo-with-title.png",
   },
   {
     name: "GitHub",
     url: "https://github.com/data-S-index/web-app",
-    logo: "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+    logo: "https://brand.github.com/_next/static/media/logo-03.cc5e5332.png",
   },
 ];
 
@@ -534,7 +534,7 @@ const actualProfilesDisplay = computed(() => {
         :to="platform.url"
         target="_blank"
         rel="noopener noreferrer"
-        class="mx-8 flex flex-col items-center gap-2"
+        class="mx-1 flex flex-col items-center gap-2 grayscale"
       >
         <img :src="platform.logo" :alt="platform.name" class="h-10 w-auto" />
 
