@@ -334,8 +334,8 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
           >
             <template #description>
               Our database includes datasets with DOIs registered before
-              September 2025. Datasets published after that date may not appear
-              in search results yet. <br />
+              September 2025. Datasets with DOIs published after that date and
+              datasets without DOIs may not appear in search results yet. <br />
 
               <a
                 href="https://docs.scholardata.io/data-collection/datasets.html"
