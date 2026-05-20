@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useColorMode } from "@vueuse/core";
-import { computed } from "vue";
+import type { ButtonProps } from "@nuxt/ui";
 
 // Force light mode
 useColorMode().value = "light";
@@ -14,6 +14,14 @@ useSeoMeta({
 defineOgImageComponent("Pergel", {
   headline: "Launching soon 🚀",
 });
+
+const links = ref<ButtonProps[]>([
+  {
+    label: "Create your profile",
+    to: "/signup",
+    icon: "i-heroicons-user-plus",
+  },
+]);
 
 const features = ref([
   {
@@ -103,14 +111,16 @@ const actualProfilesDisplay = computed(() => {
 
   return count - (count % 5);
 });
+
 const totalProfilesDisplay = computed(() => AUTOMATED_PROFILE_COUNT);
 </script>
 
 <template>
   <section>
     <UPageHero
-      description="Scholar Data helps you measure, improve, and showcase the impact of your datasets."
+      description="Scholar Data helps you measure, improve, and showcase the impact of your datasets, similarly to how you track publication impact on Google Scholar."
       :ui="{ container: '!pb-10' }"
+      :links="links"
     >
       <template #title>
         <h1
@@ -120,6 +130,73 @@ const totalProfilesDisplay = computed(() => AUTOMATED_PROFILE_COUNT);
           the credit they deserve.
         </h1>
       </template>
+
+      <div class="relative mt-10 w-full">
+        <div
+          class="from-primary/0 via-primary/40 to-primary/0 absolute top-5 left-0 hidden h-px w-full bg-gradient-to-r md:block"
+        />
+
+        <div class="grid grid-cols-1 gap-10 md:grid-cols-3">
+          <div class="flex flex-col items-center text-center">
+            <div
+              class="bg-primary relative z-10 mb-5 flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ring-4 ring-white dark:ring-gray-950"
+            >
+              01
+            </div>
+
+            <UIcon
+              name="i-heroicons-user-circle"
+              class="text-primary mb-3 h-6 w-6"
+            />
+
+            <h3 class="mb-2 text-lg font-semibold">Create your profile</h3>
+
+            <p class="text-muted text-sm leading-relaxed">
+              Sign up and tell us about your research focus and affiliations.
+            </p>
+          </div>
+
+          <div class="flex flex-col items-center text-center">
+            <div
+              class="bg-primary relative z-10 mb-5 flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ring-4 ring-white dark:ring-gray-950"
+            >
+              02
+            </div>
+
+            <UIcon
+              name="i-heroicons-circle-stack"
+              class="text-primary mb-3 h-6 w-6"
+            />
+
+            <h3 class="mb-2 text-lg font-semibold">Claim your datasets</h3>
+
+            <p class="text-muted text-sm leading-relaxed">
+              Find your datasets from our index of 49 million datasets and add
+              them to your profile.
+            </p>
+          </div>
+
+          <div class="flex flex-col items-center text-center">
+            <div
+              class="bg-primary relative z-10 mb-5 flex h-10 w-10 items-center justify-center rounded-full text-sm font-bold text-white ring-4 ring-white dark:ring-gray-950"
+            >
+              03
+            </div>
+
+            <UIcon
+              name="i-heroicons-chart-bar"
+              class="text-primary mb-3 h-6 w-6"
+            />
+
+            <h3 class="mb-2 text-lg font-semibold">Track your S-index</h3>
+
+            <p class="text-muted text-sm leading-relaxed">
+              Showcase this new metric that measures your data sharing impact,
+              the way the h-index measures your publications.
+            </p>
+          </div>
+        </div>
+      </div>
     </UPageHero>
 
     <UPageSection :ui="{ container: '!pt-10' }">
