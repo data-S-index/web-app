@@ -176,9 +176,7 @@ const actualProfilesDisplay = computed(() => {
 
             <h3 class="mb-2 text-lg font-semibold">Create your profile</h3>
 
-            <p class="text-muted text-sm">
-              Sign up and tell us about you.
-            </p>
+            <p class="text-muted text-sm">Sign up and tell us about you.</p>
           </div>
 
           <div class="flex flex-col items-center text-center">
@@ -296,11 +294,11 @@ const actualProfilesDisplay = computed(() => {
                   <p class="text-lg font-semibold">Researcher Accounts</p>
 
                   <p class="text-muted text-sm">
-                    Profiles created and actively managed by real
-                    researchers and teams.
+                    Profiles created and actively managed by real researchers
+                    and teams.
                   </p>
                 </div>
-              </UCard> 
+              </UCard>
             </div>
 
             <div class="relative w-full">
@@ -527,14 +525,14 @@ const actualProfilesDisplay = computed(() => {
       </template>
     </UPageSection>
 
-    <UMarquee :overlay="false">
+    <UMarquee :overlay="false" pause-on-hover>
       <NuxtLink
-        v-for="platform in [...platforms, ...platforms, ...platforms]"
+        v-for="platform in [...platforms]"
         :key="platform.name"
         :to="platform.url"
         target="_blank"
         rel="noopener noreferrer"
-        class="mx-1 flex flex-col items-center gap-2 grayscale"
+        class="mx-1 flex flex-col items-center gap-2 grayscale transition-all hover:grayscale-0"
       >
         <img :src="platform.logo" :alt="platform.name" class="h-10 w-auto" />
 
