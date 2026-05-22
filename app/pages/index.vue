@@ -177,7 +177,7 @@ const actualProfilesDisplay = computed(() => {
             <h3 class="mb-2 text-lg font-semibold">Create your profile</h3>
 
             <p class="text-muted text-sm">
-              Sign up and tell us about your research focus and affiliations.
+              Sign up and tell us about you.
             </p>
           </div>
 
@@ -296,11 +296,11 @@ const actualProfilesDisplay = computed(() => {
                   <p class="text-lg font-semibold">Researcher Accounts</p>
 
                   <p class="text-muted text-sm">
-                    Verified profiles created and actively managed by real
-                    researchers.
+                    Profiles created and actively managed by real
+                    researchers and teams.
                   </p>
                 </div>
-              </UCard>
+              </UCard> 
             </div>
 
             <div class="relative w-full">
@@ -374,8 +374,8 @@ const actualProfilesDisplay = computed(() => {
             Researchers invest years collecting and sharing datasets that
             underpin reproducibility, transparency, and discovery across every
             field. Without shared data, findings can't be verified, built upon,
-            or trusted. And yet, the metrics that define academic careers - such
-            as citations, h-index, and impact factor - only count publications.
+            or trusted. And yet, the metrics that define academic careers, such
+            as citations, h-index, and impact factor, only count publications.
             Data sharing goes unrecognized and unrewarded.
           </div>
 
