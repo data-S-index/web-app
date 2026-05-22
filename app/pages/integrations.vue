@@ -94,7 +94,7 @@ const embedSnippet = computed(
   src="${embedUrl.value}"
   title="Dataset Index"
   width="320"
-  height="260"
+  height="240"
   frameborder="0"
 ></iframe>`,
 );
@@ -219,7 +219,7 @@ const embedSnippet = computed(
               :src="embedUrl"
               title="Dataset Index embed example"
               width="245"
-              height="200"
+              height="240"
             />
           </div>
         </template>
