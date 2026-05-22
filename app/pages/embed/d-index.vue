@@ -170,12 +170,12 @@ const detailsUrl = computed(() => {
           </div>
         </div>
 
-        <p
+        <!-- <p
           class="mt-3 flex items-center justify-center gap-1 text-xs text-yellow-500"
         >
           <UIcon name="i-heroicons-exclamation-triangle" />
           Platform is currently in beta
-        </p>
+        </p> -->
       </div>
 
       <template #footer>
