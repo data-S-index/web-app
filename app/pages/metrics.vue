@@ -112,8 +112,7 @@ const sIndexMetrics = computed(() => [
   {
     name: "Generated Profiles",
     value: 4093652,
-    description:
-      "Researcher profiles automatically generated from our academic data collection pipeline",
+    description: "Researcher profiles automatically generated for demo purpose",
   },
 ]);
 

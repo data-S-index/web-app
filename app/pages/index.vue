@@ -501,7 +501,7 @@ const actualProfilesDisplay = computed(() => {
       <template #body>
         <div class="mx-auto max-w-3xl text-center">
           <p class="text-primary mb-4 text-xs font-semibold uppercase">
-            Built openly on trusted open infrastructure
+            Built openly on trusted infrastructure
           </p>
 
           <h2 class="mb-6 text-3xl font-bold sm:text-4xl">
@@ -550,8 +550,7 @@ const actualProfilesDisplay = computed(() => {
           </h2>
 
           <p class="text-muted mb-10 text-center text-lg text-balance">
-            Everything you need to measure and showcase your data sharing
-            impact.
+            Scholar data allows you to do a lot more.
           </p>
 
           <div

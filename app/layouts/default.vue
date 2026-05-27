@@ -78,6 +78,7 @@ const footerRightItems: NavigationMenuItem[] = [
     label: "Contact Us",
     to: "/contact",
     icon: "i-heroicons-envelope-solid",
+    target: "_blank",
   },
   {
     label: "Documentation",
