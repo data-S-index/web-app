@@ -68,7 +68,7 @@ const linkTo = (item: UserResult | OrgResult, type: "user" | "org") => {
       />
 
       <div class="min-w-0 flex-1">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <h3
             :class="[
               'line-clamp-1 text-gray-900 dark:text-gray-100',
@@ -79,6 +79,17 @@ const linkTo = (item: UserResult | OrgResult, type: "user" | "org") => {
           >
             {{ result.name || result.id }}
           </h3>
+
+          <UBadge
+            v-if="
+              type === 'user' && (result as UserResult).profileType === 'au'
+            "
+            color="warning"
+            variant="subtle"
+            size="xs"
+            icon="i-lucide-bot"
+            label="Automated Author Profile"
+          />
         </div>
 
         <!-- User: identifiers, affiliations, badges -->
