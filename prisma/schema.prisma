@@ -317,6 +317,13 @@ model DIndex {
     created DateTime @default(now())
 }
 
+model DIndexJob {
+    datasetId Int @id
+
+    created DateTime @default(now())
+    updated DateTime @default(now()) @updatedAt
+}
+
 model AutomatedUserSIndex {
     id BigInt @id @default(autoincrement())
 
@@ -331,6 +338,13 @@ model AutomatedUserSIndex {
     @@index([automatedUserId])
 }
 
+model AutomatedUserSIndexJob {
+    automatedUserId Int @id
+
+    created DateTime @default(now())
+    updated DateTime @default(now()) @updatedAt
+}
+
 model AutomatedOrganizationSIndex {
     id BigInt @id @default(autoincrement())
 
@@ -343,4 +357,11 @@ model AutomatedOrganizationSIndex {
     created DateTime @default(now())
 
     @@index([automatedOrganizationId])
+}
+
+model AutomatedOrganizationSIndexJob {
+    automatedOrganizationId Int @id
+
+    created DateTime @default(now())
+    updated DateTime @default(now()) @updatedAt
 }
