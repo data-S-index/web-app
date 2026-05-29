@@ -143,6 +143,12 @@ async function evaluateDataset(datasetId: number): Promise<void> {
     },
   });
 
+  await prisma.dIndexJob.upsert({
+    where: { datasetId },
+    create: { datasetId },
+    update: {},
+  });
+
   console.log(
     `Scored dataset ${datasetId} (${dataset.identifier}): ${score.toFixed(2)}`,
   );
