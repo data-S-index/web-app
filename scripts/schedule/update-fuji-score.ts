@@ -8,6 +8,9 @@ const prisma = new PrismaClient({ adapter });
 const FUJI_BASE_URL = process.env.FUJI_URL ?? "http://localhost:1071";
 const FUJI_EVALUATE_URL = `${FUJI_BASE_URL}/fuji/api/v1/evaluate`;
 const FUJI_HEALTH_URL = `${FUJI_BASE_URL}/fuji/api/v1/`;
+const FUJI_USERNAME = process.env.FUJI_USERNAME ?? "marvel";
+const FUJI_PASSWORD = process.env.FUJI_PASSWORD ?? "wonderwoman";
+const FUJI_AUTH = `Basic ${Buffer.from(`${FUJI_USERNAME}:${FUJI_PASSWORD}`).toString("base64")}`;
 
 const HEALTH_CHECK_INTERVAL_MS = 10_000;
 const HEALTH_CHECK_ATTEMPTS = 10;
@@ -92,7 +95,7 @@ async function evaluateDataset(datasetId: number): Promise<void> {
 
   const response = await fetch(FUJI_EVALUATE_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Authorization: FUJI_AUTH },
     body: JSON.stringify({
       object_identifier: dataset.identifier,
       test_debug: true,
