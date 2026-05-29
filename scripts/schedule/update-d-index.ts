@@ -179,6 +179,10 @@ async function processDataset(datasetId: number): Promise<void> {
     }),
   ]);
 
+  console.log(
+    `Updated d-index for dataset ${datasetId} with ${series.length} entries`,
+  );
+
   if (automatedUserIds.length > 0) {
     prisma.automatedUserSIndexJob.createMany({
       data: automatedUserIds.map((id) => ({ automatedUserId: id })),
@@ -194,6 +198,12 @@ async function processDataset(datasetId: number): Promise<void> {
       skipDuplicates: true,
     });
   }
+
+  console.log(
+    `Queued s-index jobs for ${automatedUserIds.length} automated users and ${automatedOrgIds.length} automated organizations`,
+  );
+
+  console.log(`Finished processing dataset ${datasetId}`);
 }
 
 async function main() {
