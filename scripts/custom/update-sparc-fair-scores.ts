@@ -84,6 +84,12 @@ async function processRecords() {
       },
     });
 
+    await prisma.DIndexJob.create({
+      data: {
+        datasetId: dataset.id,
+      },
+    });
+
     console.log(
       `Updated FujiScore for dataset ${dataset_id} (id: ${dataset.id})`,
     );
