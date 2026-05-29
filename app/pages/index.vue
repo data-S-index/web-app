@@ -11,6 +11,10 @@ useSeoMeta({
     "Get credit for the data you share - clearly, fairly, and publicly.",
 });
 
+useHead({
+  titleTemplate: "",
+});
+
 defineOgImageComponent("Pergel", {
   headline: "Launching soon 🚀",
 });
