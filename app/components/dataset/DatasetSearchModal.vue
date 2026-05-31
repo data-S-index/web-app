@@ -509,7 +509,7 @@ watch(
               name="i-heroicons-check-circle-20-solid"
               class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
             />
-            Use quotes for exact phrases — e.g.
+            Use quotes for exact phrases - e.g.
             <code
               class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
               >"climate change"</code
@@ -521,7 +521,7 @@ watch(
               name="i-heroicons-check-circle-20-solid"
               class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
             />
-            Paste a DOI directly — e.g.
+            Paste a DOI directly - e.g.
             <code
               class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
               >10.5061/dryad.abc123</code

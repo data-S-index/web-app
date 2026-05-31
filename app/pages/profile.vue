@@ -368,7 +368,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                     {{
                       userData?.updated
                         ? new Date(userData.updated).toLocaleString()
-                        : "—"
+                        : "-"
                     }}
                   </p>
                 </div>
@@ -407,7 +407,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                     {{
                       userData?.created
                         ? new Date(userData.created).toLocaleDateString()
-                        : "—"
+                        : "-"
                     }}
                   </p>
                 </div>

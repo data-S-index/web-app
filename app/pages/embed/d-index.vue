@@ -117,7 +117,7 @@ const detailsUrl = computed(() => {
             </span>
 
             <span class="text-base font-semibold text-emerald-700">
-              {{ dIndex != null ? dIndex : "—" }}
+              {{ dIndex != null ? dIndex : "-" }}
             </span>
           </div>
 
@@ -129,7 +129,7 @@ const detailsUrl = computed(() => {
             </span>
 
             <span class="text-base font-semibold text-emerald-700">
-              {{ fairScore != null ? `${Math.round(fairScore)}%` : "—" }}
+              {{ fairScore != null ? `${Math.round(fairScore)}%` : "-" }}
             </span>
           </div>
 

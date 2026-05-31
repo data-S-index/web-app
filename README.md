@@ -35,8 +35,8 @@ Publications aren’t the whole story-datasets drive discovery. Traditional metr
 
 You will need the following installed on your system:
 
-- [mise](https://mise.jdx.dev) — manages Node.js and pnpm versions (see `mise.toml`)
-- [Docker](https://www.docker.com/) — for running PostgreSQL, Meilisearch, and Redis locally
+- [mise](https://mise.jdx.dev) - manages Node.js and pnpm versions (see `mise.toml`)
+- [Docker](https://www.docker.com/) - for running PostgreSQL, Meilisearch, and Redis locally
 
 ### Setup
 

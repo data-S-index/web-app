@@ -112,7 +112,7 @@ const embedSnippet = computed(
 
       <p class="text-muted mt-1 max-w-2xl text-sm">
         Use the embedded widget or API to show Dataset Index and metrics on your
-        own platform—repositories, lab sites, or dashboards.
+        own platform, repositories, lab sites, or dashboards.
       </p>
 
       <UCard class="mt-4">

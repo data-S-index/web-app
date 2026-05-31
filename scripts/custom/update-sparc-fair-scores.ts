@@ -68,7 +68,7 @@ async function processRecords() {
 
     if (!existing) {
       console.error(
-        `No FujiScore record found for dataset ${dataset_id} (id: ${dataset.id}) — skipping`,
+        `No FujiScore record found for dataset ${dataset_id} (id: ${dataset.id}) - skipping`,
       );
       skipped++;
       continue;
