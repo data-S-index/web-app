@@ -1,5 +1,5 @@
 import { MeiliSearch } from "meilisearch";
-import { PrismaClient } from "../shared/generated/client";
+import { PrismaClient } from "../../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 
