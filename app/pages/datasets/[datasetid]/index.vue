@@ -44,6 +44,38 @@ const getAuthorTooltipText = (author: Author): string => {
 
 <template>
   <UContainer>
+    <div
+      v-if="error"
+      class="mx-auto flex min-h-[calc(100vh-64px)] w-full max-w-screen-sm flex-col items-center justify-center gap-8 px-6 pt-4 pb-16 text-center"
+    >
+      <div class="flex h-20 w-20 items-center justify-center rounded-full">
+        <UIcon
+          name="streamline-pixel:coding-apps-websites-404-error"
+          class="text-primary-500 dark:text-primary-400"
+          size="80"
+        />
+      </div>
+
+      <div class="flex flex-col gap-3">
+        <h1 class="text-4xl font-bold tracking-tight">Dataset Not Found</h1>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-3">
+        <UButton
+          color="primary"
+          size="lg"
+          to="/discover"
+          icon="i-lucide-search"
+        >
+          Browse Datasets
+        </UButton>
+
+        <UButton variant="outline" size="lg" to="/" icon="i-lucide-house">
+          Go Home
+        </UButton>
+      </div>
+    </div>
+
     <UPage v-if="dataset">
       <UPageHeader>
         <div class="flex flex-col space-y-2">
