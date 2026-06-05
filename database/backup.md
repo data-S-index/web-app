@@ -7,6 +7,8 @@ Use -Fd -j 4 -Z 6 options to create a directory format backup with parallel jobs
 <!-- pg_dump -h localhost -U admin -p 43997 -Fd -j 4 -Z 6 -f s_index_local_dir s_index_local -->
 
 ```bash
+cd web-app
+
 # Dump in parallel into container's /tmp
 docker exec -t 3e3adc6927ca pg_dump -U admin -Fd -j 4 -Z 6 -f /tmp/backup_dir s_index_local
 
