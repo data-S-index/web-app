@@ -441,17 +441,31 @@ watch(
                       </p>
                     </div>
 
-                    <div class="flex min-w-0 items-center gap-2">
-                      <Icon
-                        name="i-heroicons-book-open-20-solid"
-                        class="h-4 w-4 shrink-0 text-gray-400"
-                      />
+                    <div class="flex w-full items-center justify-between">
+                      <div class="flex min-w-0 items-center gap-2">
+                        <Icon
+                          name="i-heroicons-book-open-20-solid"
+                          class="h-4 w-4 shrink-0 text-gray-400"
+                        />
 
-                      <p class="text-xs text-gray-500 dark:text-gray-500">
-                        {{ result.citationCount }} Citation{{
-                          result.citationCount !== 1 ? "s" : ""
-                        }}
-                      </p>
+                        <p class="text-xs text-gray-500 dark:text-gray-500">
+                          {{ result.citationCount }} Citation{{
+                            result.citationCount !== 1 ? "s" : ""
+                          }}
+                        </p>
+                      </div>
+
+                      <UButton
+                        :to="`/datasets/${result.id}`"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        size="xs"
+                        variant="subtle"
+                        color="primary"
+                        label="View dataset"
+                        trailing-icon="i-heroicons-arrow-top-right-on-square"
+                        @click.stop
+                      />
                     </div>
                   </div>
                 </div>
