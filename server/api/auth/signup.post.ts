@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { hash } from "bcrypt";
+import { MeiliSearch } from "meilisearch";
 
 const signupSchema = z.object({
   temporary: z.boolean(),
@@ -68,6 +69,26 @@ export default defineEventHandler(async (event) => {
       statusCode: 500,
       statusMessage: "Error creating user",
     });
+  }
+
+  if (!temporary) {
+    try {
+      const meili = new MeiliSearch({
+        host: (process.env.MEILISEARCH_API_URL ?? "").replace(/\/$/, ""),
+        apiKey: process.env.MEILISEARCH_API_KEY,
+      });
+
+      await meili.index("user").addDocuments([
+        {
+          id: newUser.id,
+          name: `${newUser.givenName ?? ""} ${newUser.familyName ?? ""}`.trim(),
+          affiliations: newUser.affiliation ? [newUser.affiliation] : [],
+          nameIdentifiers: newUser.orcid ? [newUser.orcid] : [],
+        },
+      ]);
+    } catch (error) {
+      console.error("Error adding user to MeiliSearch index:", error);
+    }
   }
 
   return { message: "User created successfully" };
