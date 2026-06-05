@@ -515,7 +515,22 @@ const handleDatasetsAdded = () => {
         <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Current S-Index</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Current S-Index</h3>
+
+                <NuxtLink
+                  to="https://docs.scholardata.io/concepts"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-gray-400 transition-colors hover:text-pink-500"
+                  title="Learn more about S-Index"
+                >
+                  <UIcon
+                    name="i-heroicons-information-circle-20-solid"
+                    class="size-5"
+                  />
+                </NuxtLink>
+              </div>
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
@@ -532,9 +547,11 @@ const handleDatasetsAdded = () => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">
-                Average Dataset Index per Dataset
-              </h3>
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">
+                  Average Dataset Index per Dataset
+                </h3>
+              </div>
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
@@ -553,7 +570,22 @@ const handleDatasetsAdded = () => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Total Claimed Datasets</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Total Claimed Datasets</h3>
+
+                <NuxtLink
+                  to="https://docs.scholardata.io/data-collection/datasets"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-gray-400 transition-colors hover:text-pink-500"
+                  title="Learn more about datasets"
+                >
+                  <UIcon
+                    name="i-heroicons-information-circle-20-solid"
+                    class="size-5"
+                  />
+                </NuxtLink>
+              </div>
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
@@ -565,7 +597,22 @@ const handleDatasetsAdded = () => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Average FAIR Score</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Average FAIR Score</h3>
+
+                <NuxtLink
+                  to="https://docs.scholardata.io/data-collection/fair-scores"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-gray-400 transition-colors hover:text-pink-500"
+                  title="Learn more about FAIR Scores"
+                >
+                  <UIcon
+                    name="i-heroicons-information-circle-20-solid"
+                    class="size-5"
+                  />
+                </NuxtLink>
+              </div>
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
@@ -577,7 +624,22 @@ const handleDatasetsAdded = () => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Total Citations</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Total Citations</h3>
+
+                <NuxtLink
+                  to="https://docs.scholardata.io/data-collection/citations"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-gray-400 transition-colors hover:text-pink-500"
+                  title="Learn more about citations"
+                >
+                  <UIcon
+                    name="i-heroicons-information-circle-20-solid"
+                    class="size-5"
+                  />
+                </NuxtLink>
+              </div>
             </template>
 
             <div class="text-3xl font-bold text-pink-500">
@@ -589,7 +651,22 @@ const handleDatasetsAdded = () => {
 
           <UCard>
             <template #header>
-              <h3 class="text-lg font-semibold">Total Mentions</h3>
+              <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold">Total Mentions</h3>
+
+                <NuxtLink
+                  to="https://docs.scholardata.io/data-collection/mentions"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-gray-400 transition-colors hover:text-pink-500"
+                  title="Learn more about mentions"
+                >
+                  <UIcon
+                    name="i-heroicons-information-circle-20-solid"
+                    class="size-5"
+                  />
+                </NuxtLink>
+              </div>
             </template>
 
             <div class="text-3xl font-bold text-pink-600">
