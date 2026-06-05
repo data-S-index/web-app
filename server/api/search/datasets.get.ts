@@ -37,7 +37,7 @@ export default defineEventHandler(async (event) => {
 
     const datasetIds = searchResults.hits
       .map((hit) => {
-        const id = (hit as Record<string, unknown>).id;
+        const { id } = hit as Record<string, unknown>;
 
         return typeof id === "string" ? parseInt(id, 10) : id;
       })
@@ -113,7 +113,7 @@ export default defineEventHandler(async (event) => {
         if (!acc[author.datasetId]) {
           acc[author.datasetId] = [];
         }
-        acc[author.datasetId].push({ name: author.name });
+        acc[author.datasetId]?.push({ name: author.name });
 
         return acc;
       },

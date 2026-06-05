@@ -170,8 +170,8 @@ function parseCommaList(s: string): string[] {
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const body = {
-    givenName: event.data.givenName,
-    familyName: event.data.familyName,
+    givenName: event.data.givenName.trim(),
+    familyName: event.data.familyName.trim(),
     additionalNames: parseCommaList(event.data.additionalNamesStr),
     affiliation: event.data.affiliation || null,
     homePage: event.data.homePage || "",

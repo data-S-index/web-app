@@ -15,8 +15,8 @@ const LOGIN_IDENTIFIER_RATE_LIMIT = {
 };
 
 const loginSchema = z.object({
-  login: z.string().min(3, "Must be at least 3 characters"),
-  password: z.string().min(8),
+  login: z.string().trim().min(3, "Must be at least 3 characters"),
+  password: z.string().trim().min(8),
 });
 
 export default defineEventHandler(async (event) => {
