@@ -78,10 +78,11 @@ export default defineEventHandler(async (event) => {
       topic.fieldName ||
       topic.domainName)
       ? {
-          topic_name: topic.topicName ?? undefined,
           subfield_name: topic.subfieldName ?? undefined,
           field_name: topic.fieldName ?? undefined,
           domain_name: topic.domainName ?? undefined,
+          score: topic.score ?? undefined,
+          source: topic.source ?? undefined,
         }
       : null;
 
