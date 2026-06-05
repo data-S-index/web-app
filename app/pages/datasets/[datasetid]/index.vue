@@ -84,6 +84,31 @@ const recomputeFairScore = async () => {
       recomputeFairLoading.value = false;
     });
 };
+
+const copyDoi = async () => {
+  const doi = dataset.value?.identifier;
+
+  if (!doi) {
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(doi);
+    toast.add({
+      title: "DOI copied",
+      description: doi,
+      icon: "i-heroicons-check-circle",
+      color: "success",
+    });
+  } catch {
+    toast.add({
+      title: "Copy failed",
+      description: "Unable to copy DOI to clipboard.",
+      icon: "material-symbols:error",
+      color: "error",
+    });
+  }
+};
 </script>
 
 <template>
@@ -324,31 +349,45 @@ const recomputeFairScore = async () => {
               </template>
 
               <div class="space-y-3">
-                <div v-if="dataset.identifier">
+                <div v-if="dataset.identifier" class="space-y-3">
                   <p class="mb-1 text-sm font-medium">DOI</p>
 
-                  <a
-                    :href="`https://doi.org/${dataset.identifier}`"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="inline-block"
+                  <div
+                    class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
                   >
-                    <UBadge
-                      color="success"
-                      variant="subtle"
-                      :label="dataset.identifier"
-                      icon="i-heroicons-link-20-solid"
-                      class="cursor-pointer"
+                    <a
+                      :href="`https://doi.org/${dataset.identifier}`"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="inline-block"
+                    >
+                      <UBadge
+                        color="success"
+                        variant="subtle"
+                        :label="dataset.identifier"
+                        size="sm"
+                        icon="i-heroicons-link-20-solid"
+                        class="cursor-pointer"
+                      />
+                    </a>
+
+                    <UButton
+                      color="neutral"
+                      variant="ghost"
+                      size="xs"
+                      icon="uil:copy"
+                      aria-label="Copy DOI"
+                      @click="copyDoi"
                     />
-                  </a>
-                </div>
+                  </div>
 
-                <div v-if="dataset.publisher">
-                  <p class="mb-1 text-sm font-medium">Publisher</p>
+                  <div v-if="dataset.publisher">
+                    <p class="mb-1 text-sm font-medium">Publisher</p>
 
-                  <p class="text-sm text-gray-700 dark:text-gray-300">
-                    {{ dataset.publisher }}
-                  </p>
+                    <p class="text-sm text-gray-700 dark:text-gray-300">
+                      {{ dataset.publisher }}
+                    </p>
+                  </div>
                 </div>
               </div>
             </UCard>
