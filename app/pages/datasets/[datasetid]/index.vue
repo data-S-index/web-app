@@ -3,6 +3,13 @@ import type { Author } from "#shared/types/dataset";
 
 const route = useRoute();
 const toast = useToast();
+const { loggedIn, user } = useUserSession();
+
+const isAdmin = computed(() => {
+  return loggedIn.value && user.value?.admin === true;
+});
+
+const recomputeFairLoading = ref(false);
 
 const { datasetid } = route.params as { datasetid: string };
 
@@ -39,6 +46,43 @@ const getAuthorTooltipText = (author: Author): string => {
   }
 
   return parts.length > 0 ? parts.join("\n") : "No additional information";
+};
+
+const recomputeFairScore = async () => {
+  if (!dataset.value?.id) {
+    return;
+  }
+
+  recomputeFairLoading.value = true;
+
+  await $fetch<{
+    datasetId: number;
+    alreadyQueued: boolean;
+    message: string;
+  }>(`/api/dataset/${dataset.value.id}/recompute-fair`, {
+    method: "POST",
+  })
+    .then((response) => {
+      toast.add({
+        title: response.alreadyQueued
+          ? "Already queued"
+          : "FAIR recompute queued",
+        description: response.message,
+        icon: "material-symbols:check-circle",
+        color: "success",
+      });
+    })
+    .catch(() => {
+      toast.add({
+        title: "Failed to queue FAIR recompute",
+        description: "Could not queue this dataset right now.",
+        icon: "material-symbols:error",
+        color: "error",
+      });
+    })
+    .finally(() => {
+      recomputeFairLoading.value = false;
+    });
 };
 </script>
 
@@ -338,6 +382,17 @@ const getAuthorTooltipText = (author: Author): string => {
               v-if="dataset.normalizationFactor"
               :normalization-factors="dataset.normalizationFactor"
             />
+
+            <!-- Admin box -->
+            <div v-if="isAdmin" class="flex flex-col gap-2 p-2">
+              <UButton
+                label="Recompute FAIR score"
+                :loading="recomputeFairLoading"
+                :disabled="recomputeFairLoading"
+                icon="i-heroicons-arrow-path"
+                @click="recomputeFairScore"
+              />
+            </div>
           </div>
         </div>
       </UPageBody>

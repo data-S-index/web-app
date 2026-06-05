@@ -118,6 +118,7 @@ export default defineEventHandler(async (event) => {
     login: user.login,
     familyName: user.familyName,
     givenName: user.givenName,
+    admin: user.admin,
   };
 
   await setUserSession(event, {

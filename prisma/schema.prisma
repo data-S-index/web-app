@@ -36,6 +36,8 @@ model User {
     created DateTime @default(now())
     updated DateTime @updatedAt
 
+    admin Boolean @default(false)
+
     userDatasets           UserDataset[]
     userEmailVerifications UserEmailVerification[]
     userForgotPasswords    UserForgotPassword[]
