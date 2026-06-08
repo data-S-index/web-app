@@ -20,6 +20,10 @@ const props = defineProps({
     default: false,
     type: Boolean,
   },
+  lineCount: {
+    default: 3,
+    type: Number,
+  },
 });
 
 const sanitize = (html: string) => sanitizeHtml(html);
@@ -39,7 +43,11 @@ if (props.content) {
   <!-- eslint-disable vue/no-v-html -->
   <div
     class="prose prose-md prose-li:text-base max-w-none pt-2 text-gray-900 dark:text-gray-100"
-    :class="{ 'line-clamp-3': truncate }"
+    :class="{
+      'line-clamp-3': lineCount === 3 && truncate,
+      'line-clamp-2': lineCount === 2 && truncate,
+      'line-clamp-1': lineCount === 1 && truncate,
+    }"
     v-html="renderedMarkdown"
   />
 </template>

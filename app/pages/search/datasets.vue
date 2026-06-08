@@ -325,29 +325,9 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
             />
           </div>
 
-          <UAlert
-            icon="i-lucide-info"
-            color="warning"
-            variant="subtle"
-            title="Dataset coverage is currently limited"
-            description="Our index includes datasets with DOIs registered before September 2025. Datasets published after that date may not appear in search results yet."
-          >
-            <template #description>
-              Our database includes datasets with DOIs registered before
-              September 2025. Datasets with DOIs published after that date and
-              datasets without DOIs may not appear in search results yet. <br />
-
-              <a
-                href="https://docs.scholardata.io/data-collection/datasets.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-warning-700 dark:text-warning-300 underline underline-offset-2"
-                >Learn more about our data collection
-              </a>
-            </template>
-          </UAlert>
-
           <div v-if="!hasSearched" class="space-y-6">
+            <DatasetSearchTips />
+
             <div
               class="border-primary-200 from-primary-50/80 to-primary-100/40 dark:border-primary-800/50 dark:from-primary-950/40 dark:to-primary-900/30 rounded-2xl border bg-gradient-to-br p-6"
             >
@@ -432,11 +412,11 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                     >
                       <div
                         v-if="result.authors"
-                        class="flex min-w-0 items-center gap-2"
+                        class="flex min-w-0 items-center items-start gap-2"
                       >
                         <Icon
                           name="i-heroicons-user-group-20-solid"
-                          class="h-4 w-4 shrink-0 text-gray-400"
+                          class="mt-0.5 h-4 w-4 shrink-0 text-gray-400"
                         />
 
                         <p

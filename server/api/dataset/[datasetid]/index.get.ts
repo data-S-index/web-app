@@ -1,3 +1,5 @@
+import prisma from "../../../utils/prisma";
+
 export default defineEventHandler(async (event) => {
   const { datasetid } = event.context.params as { datasetid: string };
 
@@ -67,6 +69,15 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 404,
       statusMessage: "Dataset not found",
+    });
+  }
+
+  // Upsert a new fuji job if dataset doesn't have a fuji score
+  if (!dataset.fujiScore) {
+    await prisma.fujiJob.upsert({
+      where: { datasetId: dataset.id },
+      update: {},
+      create: { datasetId: dataset.id },
     });
   }
 

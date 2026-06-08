@@ -330,28 +330,6 @@ watch(
 
           <USeparator class="my-4" />
 
-          <UAlert
-            icon="i-lucide-info"
-            color="warning"
-            variant="subtle"
-            title="Dataset coverage is currently limited"
-            description="Our index includes datasets with DOIs registered before September 2025. Datasets published after that date may not appear in search results yet."
-          >
-            <template #description>
-              Our database includes datasets with DOIs registered before
-              September 2025. Datasets with DOIs published after that date and
-              datasets without DOIs may not appear in search results yet. <br />
-
-              <a
-                href="https://docs.scholardata.io/data-collection/datasets.html"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-warning-700 dark:text-warning-300 underline underline-offset-2"
-                >Learn more about our data collection
-              </a>
-            </template>
-          </UAlert>
-
           <div class="min-h-0 flex-1 space-y-3 overflow-y-auto">
             <div
               v-for="result in searchResults"
@@ -496,73 +474,7 @@ watch(
     </div>
 
     <div v-else-if="!searchLoading && !hasSearched" class="flex flex-col gap-5">
-      <div
-        class="rounded-xl border border-gray-200 bg-gray-50 p-5 dark:border-gray-700 dark:bg-gray-800/40"
-      >
-        <h3
-          class="mb-3 flex items-center gap-2 text-sm font-semibold text-gray-700 dark:text-gray-300"
-        >
-          <Icon
-            name="i-heroicons-magnifying-glass-20-solid"
-            class="h-4 w-4 text-gray-500 dark:text-gray-400"
-          />
-          How search works
-        </h3>
-
-        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-          <li class="flex items-start gap-2">
-            <Icon
-              name="i-heroicons-check-circle-20-solid"
-              class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
-            />
-            Search by dataset title, author name, DOI, or keywords
-          </li>
-
-          <li class="flex items-start gap-2">
-            <Icon
-              name="i-heroicons-check-circle-20-solid"
-              class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
-            />
-            Use quotes for exact phrases - e.g.
-            <code
-              class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
-              >"climate change"</code
-            >
-          </li>
-
-          <li class="flex items-start gap-2">
-            <Icon
-              name="i-heroicons-check-circle-20-solid"
-              class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
-            />
-            Paste a DOI directly - e.g.
-            <code
-              class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
-              >10.5061/dryad.abc123</code
-            >
-          </li>
-        </ul>
-      </div>
-
-      <UAlert
-        icon="i-lucide-info"
-        color="warning"
-        variant="subtle"
-        title="Dataset coverage is currently limited"
-      >
-        <template #description>
-          Our index includes datasets with DOIs registered before September
-          2025. Datasets published after that date and datasets without DOIs may
-          not appear in search results yet.
-          <a
-            href="https://docs.scholardata.io/for-researchers#adding-and-claiming-your-datasets"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-warning-700 dark:text-warning-300 underline underline-offset-2"
-            >Learn more about the search process</a
-          >
-        </template>
-      </UAlert>
+      <DatasetSearchTips title="How search works" />
     </div>
   </div>
 </template>

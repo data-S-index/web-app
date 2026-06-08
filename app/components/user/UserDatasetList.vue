@@ -167,6 +167,7 @@ const onRemove = (datasetId: number) => {
         <MarkdownRenderer
           :content="item.dataset.description || 'No description available'"
           truncate
+          :line-count="2"
         />
 
         <div>

@@ -1,3 +1,5 @@
+import prisma from "../../../../utils/prisma";
+
 export default defineEventHandler(async (event) => {
   const { userid } = event.context.params as { userid: string };
   const userId = userid;
@@ -59,18 +61,22 @@ export default defineEventHandler(async (event) => {
   });
 
   // Find dataset that don't have a fuji score
-  // const datasetIDsWithoutFujiScore = userDatasets
-  //   .filter((dataset) => !dataset.dataset.fujiScore)
-  //   .map((dataset) => dataset.datasetId);
+  const datasetIDsWithoutFujiScore = userDatasets
+    .filter((dataset) => !dataset.dataset.fujiScore)
+    .map((dataset) => dataset.datasetId);
 
-  // Create a new job for each dataset that doesn't have a fuji score
-  // for (const datasetId of datasetIDsWithoutFujiScore) {
-  //   await prisma.fujiJob.create({
-  //     data: {
-  //       datasetId: datasetId,
-  //     },
-  //   });
-  // }
+  // Upsert a new job for each dataset that doesn't have a fuji score
+  if (datasetIDsWithoutFujiScore.length > 0) {
+    await Promise.all(
+      datasetIDsWithoutFujiScore.map((datasetId) =>
+        prisma.fujiJob.upsert({
+          where: { datasetId },
+          update: {},
+          create: { datasetId },
+        }),
+      ),
+    );
+  }
 
   return (
     userDatasets || {
