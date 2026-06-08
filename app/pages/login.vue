@@ -169,10 +169,14 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     </div>
 
     <template #footer>
-      <p class="text-center text-sm">
+      <p class="text-center text-sm text-balance">
         By signing in, you agree to our
         <NuxtLink to="/terms" class="text-primary-500 text-sm font-medium">
           Terms of Service</NuxtLink
+        >
+        and
+        <NuxtLink to="/privacy" class="text-primary-500 text-sm font-medium">
+          Privacy Policy</NuxtLink
         >.
       </p>
     </template>
