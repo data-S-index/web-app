@@ -37,3 +37,4 @@ integrations.md
 
 # ndjson files
 fair_score_sparc.ndjson
+scripts/backup/*.json
