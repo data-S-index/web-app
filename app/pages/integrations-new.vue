@@ -5,8 +5,10 @@ useSeoMeta({
     "Embed Dataset Index or Scholar Index widgets, or use our API to show metrics on your platform.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Integrations",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Integrations",
+  description:
+    "Embed Dataset Index or Scholar Index widgets, or use our API to show metrics on your platform.",
 });
 
 const doiSpinner = ref(false);

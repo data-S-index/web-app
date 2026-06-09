@@ -4,8 +4,9 @@ useSeoMeta({
   description: "Search for datasets by title, DOI, or keywords.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Search Datasets",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Search Datasets",
+  description: "Search for datasets by title, DOI, or keywords.",
 });
 
 const formatter = new Intl.NumberFormat("en-US", {

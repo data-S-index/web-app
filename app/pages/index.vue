@@ -15,8 +15,10 @@ useHead({
   titleTemplate: "",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Launching soon 🚀",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Scholar Data",
+  description:
+    "Get credit for the data you share - clearly, fairly, and publicly.",
 });
 
 const links = ref<ButtonProps[]>([

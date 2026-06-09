@@ -32,15 +32,6 @@ const toast = useToast();
 
 const auid = (route.params.auid as string) ?? "";
 
-useSeoMeta({
-  title: "Researcher Profile",
-  description: "View this researcher's profile and datasets on Scholar Data.",
-});
-
-defineOgImageComponent("Pergel", {
-  headline: "Scholar Data",
-});
-
 const { data: author, error: authorError } = await useFetch(`/api/au/${auid}`);
 
 if (authorError.value) {
@@ -67,9 +58,17 @@ const displayName = computed(
   () => author.value?.name || author.value?.id || "Author",
 );
 
+const authorProfileDescription =
+  "View this researcher's profile and datasets on Scholar Data.";
+
 useSeoMeta({
   title: `${displayName.value}`,
-  description: "View this researcher's profile and datasets on Scholar Data.",
+  description: authorProfileDescription,
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: displayName,
+  description: authorProfileDescription,
 });
 
 const response = computed(

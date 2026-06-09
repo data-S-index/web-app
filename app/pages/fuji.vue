@@ -5,8 +5,10 @@ useSeoMeta({
     "FAIR assessment and machine stats for datasets on Scholar Data.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Fuji Score",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Fuji Score",
+  description:
+    "FAIR assessment and machine stats for datasets on Scholar Data.",
 });
 
 // Fetch fuji score percentage and machine stats (client-side only)

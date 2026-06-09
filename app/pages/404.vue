@@ -4,8 +4,9 @@ useSeoMeta({
   description: "The page you're looking for doesn't exist.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Page Not Found",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Page Not Found",
+  description: "The page you're looking for doesn't exist.",
 });
 </script>
 

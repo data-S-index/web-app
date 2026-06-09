@@ -1,6 +1,12 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: "Privacy Policy | Scholar Data",
+  title: "Privacy Policy",
+  description:
+    "Privacy Policy explaining how Scholar Data collects, uses, and protects your information.",
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: "Privacy Policy",
   description:
     "Privacy Policy explaining how Scholar Data collects, uses, and protects your information.",
 });

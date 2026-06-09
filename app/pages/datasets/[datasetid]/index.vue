@@ -33,8 +33,11 @@ useSeoMeta({
     "View this dataset's details and metrics on Scholar Data.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: dataset.value?.title || "Dataset Details",
+defineOgImage("NuxtSeo.takumi", {
+  title: dataset.value?.title || "Scholar Data",
+  description:
+    dataset.value?.description ||
+    "View this dataset's details and metrics on Scholar Data.",
 });
 
 const getAuthorTooltipText = (author: Author): string => {

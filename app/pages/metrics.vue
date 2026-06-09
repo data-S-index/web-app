@@ -4,8 +4,9 @@ useSeoMeta({
   description: "Platform statistics and metrics for Scholar Data.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Platform Metrics",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Metrics",
+  description: "Platform statistics and metrics for Scholar Data.",
 });
 
 const formatNumber = (number: number) => {

@@ -13,8 +13,9 @@ useSeoMeta({
   description: "Manage your Scholar Data profile and preferences.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Your Profile",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Profile",
+  description: "Manage your Scholar Data profile and preferences.",
 });
 
 const toast = useToast();

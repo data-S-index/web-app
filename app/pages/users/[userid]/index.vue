@@ -12,16 +12,6 @@ interface UserDatasetItem {
   };
 }
 
-useSeoMeta({
-  title: "Researcher Profile",
-  description:
-    "View this researcher's profile, S-Index, and shared datasets on Scholar Data.",
-});
-
-defineOgImageComponent("Pergel", {
-  headline: "Scholar Data",
-});
-
 const { user, loggedIn } = useUserSession();
 
 const route = useRoute();
@@ -75,10 +65,17 @@ const fullName = computed(() => {
   return `${givenName} ${familyName}`.trim() || "User";
 });
 
+const userProfileDescription =
+  "View this researcher's profile, S-Index, and shared datasets on Scholar Data.";
+
 useSeoMeta({
   title: `${fullName.value}`,
-  description:
-    "View this researcher's profile, S-Index, and shared datasets on Scholar Data.",
+  description: userProfileDescription,
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: fullName,
+  description: userProfileDescription,
 });
 
 const removeDataset = async (datasetId: number) => {

@@ -4,8 +4,9 @@ useSeoMeta({
   description: "Search for researchers by name, identifiers, or affiliations.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Search Users",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Search Users",
+  description: "Search for researchers by name, identifiers, or affiliations.",
 });
 
 type SearchResult = {

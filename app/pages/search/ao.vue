@@ -4,8 +4,9 @@ useSeoMeta({
   description: "Search for organizations by name.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Search Organizations",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Search Organizations",
+  description: "Search for organizations by name.",
 });
 
 type SearchResult = {

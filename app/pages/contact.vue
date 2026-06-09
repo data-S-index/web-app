@@ -1,6 +1,14 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "Contact Us",
+  description:
+    "Contact Scholar Data with questions about the platform, your profile, or dataset metrics.",
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: "Contact Us",
+  description:
+    "Contact Scholar Data with questions about the platform, your profile, or dataset metrics.",
 });
 
 const iframeLoaded = ref(false);

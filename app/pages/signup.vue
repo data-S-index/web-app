@@ -26,8 +26,9 @@ useSeoMeta({
   description: "Create your Scholar Data account and get credit for your data.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Join Scholar Data",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Sign Up",
+  description: "Create your Scholar Data account and get credit for your data.",
 });
 
 const toast = useToast();

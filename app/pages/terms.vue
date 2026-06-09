@@ -1,6 +1,12 @@
 <script setup lang="ts">
 useSeoMeta({
-  title: "Terms of Use | Scholar Data",
+  title: "Terms of Use",
+  description:
+    "Terms of Use governing access to and use of the Scholar Data platform.",
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: "Terms of Use",
   description:
     "Terms of Use governing access to and use of the Scholar Data platform.",
 });

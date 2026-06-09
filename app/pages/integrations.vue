@@ -5,8 +5,10 @@ useSeoMeta({
     "Embed Dataset Index widgets or use our API to show Dataset Index and metrics on your platform.",
 });
 
-defineOgImageComponent("Pergel", {
-  headline: "Integrations",
+defineOgImage("NuxtSeo.takumi", {
+  title: "Integrations",
+  description:
+    "Embed Dataset Index widgets or use our API to show Dataset Index and metrics on your platform.",
 });
 
 const spinner = ref(false);

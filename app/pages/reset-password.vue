@@ -11,6 +11,11 @@ useSeoMeta({
   description: "Choose a new password for your Scholar Data account.",
 });
 
+defineOgImage("NuxtSeo.takumi", {
+  title: "Reset Password",
+  description: "Choose a new password for your Scholar Data account.",
+});
+
 const route = useRoute();
 const toast = useToast();
 const loading = ref(false);

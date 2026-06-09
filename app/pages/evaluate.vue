@@ -5,15 +5,6 @@ import { openAlexTopics } from "@/utils/data";
 const route = useRoute();
 const toast = useToast();
 
-useSeoMeta({
-  title: "Evaluate a dataset",
-  description: "Enter a DOI or dataset URL to get its Dataset Index.",
-});
-
-defineOgImageComponent("Pergel", {
-  headline: "Get your Dataset Index",
-});
-
 const hasDoi = ref<boolean | null>(null);
 const doiInput = ref("");
 const datasetUrl = ref("");
@@ -25,6 +16,25 @@ const isLoading = ref(false);
 const dataset = ref<any>(null);
 const error = ref<any>(null);
 const isFromCache = ref(false);
+
+const datasetSeoTitle = computed(
+  () => dataset.value?.title || "Evaluate a dataset",
+);
+const datasetSeoDescription = computed(
+  () =>
+    dataset.value?.description ||
+    "Enter a DOI or dataset URL to get its Dataset Index.",
+);
+
+useSeoMeta({
+  title: datasetSeoTitle,
+  description: datasetSeoDescription,
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: datasetSeoTitle,
+  description: datasetSeoDescription,
+});
 
 // Simple list of tasks happening during loading
 const loadingTasks = [
@@ -155,11 +165,6 @@ const fetchDatasetData = async (doi: string) => {
         color: "primary",
       });
     }
-
-    useSeoMeta({
-      title: dataset.value?.title || "Dataset Details",
-      description: dataset.value?.description || "Dataset information",
-    });
   } catch (err: any) {
     error.value = err;
     toast.add({
@@ -230,11 +235,6 @@ const fetchDatasetDataFromUrl = async (
         color: "primary",
       });
     }
-
-    useSeoMeta({
-      title: dataset.value?.title || "Dataset Details",
-      description: dataset.value?.description || "Dataset information",
-    });
   } catch (err: any) {
     error.value = err;
     toast.add({

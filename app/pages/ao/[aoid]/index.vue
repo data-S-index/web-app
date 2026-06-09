@@ -32,15 +32,6 @@ const toast = useToast();
 
 const aoid = (route.params.aoid as string) ?? "";
 
-useSeoMeta({
-  title: "Organization Profile",
-  description: "View this organization's profile and datasets on Scholar Data.",
-});
-
-defineOgImageComponent("Pergel", {
-  headline: "Scholar Data",
-});
-
 const { data: org, error: orgError } = await useFetch(`/api/ao/${aoid}`);
 
 if (orgError.value) {
@@ -67,9 +58,17 @@ const displayName = computed(
   () => org.value?.name || org.value?.id || "Organization",
 );
 
+const organizationProfileDescription =
+  "View this organization's profile and datasets on Scholar Data.";
+
 useSeoMeta({
   title: `${displayName.value}`,
-  description: "View this organization's profile and datasets on Scholar Data.",
+  description: organizationProfileDescription,
+});
+
+defineOgImage("NuxtSeo.takumi", {
+  title: displayName,
+  description: organizationProfileDescription,
 });
 
 const response = computed(
