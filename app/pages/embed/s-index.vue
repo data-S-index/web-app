@@ -105,7 +105,7 @@ const profileUrl = computed(() => {
       v-else
       :ui="{ root: 'max-w-[280px] w-full' }"
       variant="soft"
-      title="Scholar Index"
+      :title="data.researcherName || 'Researcher Profile'"
     >
       <div>
         <div class="grid grid-cols-2 gap-x-4 gap-y-2.5 text-center">
@@ -113,7 +113,7 @@ const profileUrl = computed(() => {
             <span
               class="text-[10px] font-medium tracking-wide text-gray-500 uppercase"
             >
-              Scholar Index
+              S-Index
             </span>
 
             <span class="text-base font-semibold text-emerald-700">

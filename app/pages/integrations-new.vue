@@ -180,7 +180,7 @@ const sEmbedSnippet = computed(
   () =>
     `<iframe
   src="${sEmbedUrl.value}"
-  title="Scholar Index"
+  title="S-index"
   width="320"
   height="240"
   frameborder="0"
@@ -194,16 +194,25 @@ const sEmbedSnippet = computed(
   >
     <UPageCTA
       title="Integrations"
-      description="Use the embedded widget or API to show Dataset Index and Scholar Index metrics on your own platform - repositories, lab sites, or dashboards."
+      description="Data repositories and researchers can use the embedded widget or API to display Dataset Index and Scholar Index metrics on their own platforms — dataset pages, lab sites, or personal websites"
       variant="naked"
       :ui="{ container: '!py-5' }"
     />
 
     <!-- Tabs -->
-    <UTabs :items="tabs" :ui="{ list: 'mb-8' }">
+    <UTabs :items="tabs" :ui="{ list: 'mb-8', trigger: 'cursor-pointer' }">
       <!-- ── Data Repositories tab ── -->
       <template #datasets>
         <div class="flex flex-col gap-8">
+          <p class="text-muted text-sm">
+            Add a live metrics card to your dataset pages with a single iframe
+            without any backend changes required. It displays Dataset Index,
+            FAIR score, citations, and mentions, giving researchers instant
+            visibility into how their data is being used. Need more flexibility?
+            Use the API to pull metrics as JSON or add a badge to READMEs and
+            dashboards.
+          </p>
+
           <!-- DOI input -->
           <UCard>
             <template #header>
@@ -512,6 +521,15 @@ const sEmbedSnippet = computed(
       <!-- ── Researchers tab ── -->
       <template #researchers>
         <div class="flex flex-col gap-8">
+          <p class="text-muted text-sm">
+            Add a live S-index card to your personal website, GitHub profile, or
+            lab page with a single iframe without any backend changes required.
+            It displays your S-index, dataset count, citations, and mentions,
+            giving visitors a clear picture of your data sharing impact. Prefer
+            a lightweight option? Add a badge to your README or pull your
+            metrics as JSON to build your own display.
+          </p>
+
           <!-- Profile ID input -->
           <UCard>
             <template #header>
@@ -567,7 +585,7 @@ const sEmbedSnippet = computed(
                 </h2>
 
                 <p class="text-muted text-sm">
-                  Drop a live Scholar Index card into any page with an iframe.
+                  Drop a live S-index card into any page with an iframe.
                 </p>
               </div>
             </div>
@@ -587,9 +605,9 @@ const sEmbedSnippet = computed(
 
               <div class="space-y-5">
                 <p class="text-sm">
-                  Embed a small card showing Scholar Index, dataset count,
-                  citations, and mentions for your researcher profile. Use an
-                  iframe and pass your profile
+                  Embed a small card showing S-index, dataset count, citations,
+                  and mentions for your researcher profile. Use an iframe and
+                  pass your profile
                   <code
                     class="rounded bg-gray-200 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
                     >id</code
@@ -625,7 +643,7 @@ const sEmbedSnippet = computed(
                   <iframe
                     v-if="appliedUserId"
                     :src="sEmbedUrl"
-                    title="Scholar Index embed example"
+                    title="S-index embed example"
                     width="245"
                     height="240"
                   />
@@ -655,7 +673,7 @@ const sEmbedSnippet = computed(
                 <h2 class="text-lg font-semibold tracking-tight">API</h2>
 
                 <p class="text-muted text-sm">
-                  Fetch Scholar Index metrics as JSON or use badge endpoints for
+                  Fetch S-index metrics as JSON or use badge endpoints for
                   READMEs and dashboards.
                 </p>
               </div>
@@ -689,8 +707,8 @@ const sEmbedSnippet = computed(
                 </template>
 
                 <p class="text-muted text-sm">
-                  Returns Scholar Index, dataset count, total citations, and
-                  total mentions for a researcher profile.
+                  Returns S-index, dataset count, total citations, and total
+                  mentions for a researcher profile.
                 </p>
 
                 <div class="space-y-1.5">
@@ -738,8 +756,8 @@ const sEmbedSnippet = computed(
                 </template>
 
                 <p class="text-muted text-sm">
-                  SVG badge with the Scholar Index score for READMEs or docs.
-                  Use your profile ID in the path.
+                  SVG badge with the S-index score for READMEs or docs. Use your
+                  profile ID in the path.
                 </p>
 
                 <div class="space-y-1.5">
@@ -765,7 +783,7 @@ const sEmbedSnippet = computed(
                     <img
                       v-if="appliedUserId"
                       :src="sBadgeSvgUrl"
-                      alt="Scholar Index badge"
+                      alt="S-index badge"
                       class="inline-block"
                     />
 
