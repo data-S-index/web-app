@@ -260,7 +260,21 @@ const copyDoi = async () => {
               "
             >
               <template #header>
-                <h3 class="text-lg font-semibold">Metrics</h3>
+                <div class="flex items-center gap-2">
+                  <h3 class="text-lg font-semibold">Metrics</h3>
+
+                  <NuxtLink
+                    href="https://docs.scholardata.io/data-collection/overview"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="hover:text-primary-500 flex items-center gap-1 text-gray-400 dark:text-gray-400 dark:hover:text-gray-300"
+                  >
+                    <UIcon
+                      name="i-heroicons-information-circle-20-solid"
+                      class="h-4 w-4"
+                    />
+                  </NuxtLink>
+                </div>
               </template>
 
               <div class="space-y-4">
