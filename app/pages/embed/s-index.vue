@@ -103,7 +103,7 @@ const profileUrl = computed(() => {
     <!-- Success: metrics card -->
     <UCard
       v-else
-      :ui="{ root: 'max-w-[280px]' }"
+      :ui="{ root: 'max-w-[280px] w-full' }"
       variant="soft"
       title="Scholar Index"
     >
