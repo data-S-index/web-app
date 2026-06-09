@@ -16,7 +16,7 @@ useHead({
 });
 
 defineOgImage("NuxtSeo.takumi", {
-  title: "Scholar Data",
+  title: "",
   description:
     "Get credit for the data you share - clearly, fairly, and publicly.",
 });

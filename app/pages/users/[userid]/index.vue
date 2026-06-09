@@ -494,6 +494,7 @@ const handleDatasetsAdded = () => {
                   v-if="userProfile?.orcid"
                   variant="subtle"
                   size="sm"
+                  color="warning"
                   leading-icon="i-simple-icons-orcid"
                 >
                   {{
