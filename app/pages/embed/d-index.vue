@@ -30,7 +30,7 @@ const route = useRoute();
 const config = useRuntimeConfig().public;
 const doi = computed(() => (route.query.doi as string) || "");
 
-const { data, error, status } = await useFetch(
+const { data, error, status } = useFetch(
   () => `/api/v1/datasets/by-doi?doi=${encodeURIComponent(doi.value || "")}`,
   { watch: [doi] },
 );

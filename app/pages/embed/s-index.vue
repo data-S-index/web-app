@@ -30,7 +30,7 @@ const route = useRoute();
 const config = useRuntimeConfig().public;
 const userId = computed(() => (route.query.id as string) || "");
 
-const { data, error, status } = await useFetch(
+const { data, error, status } = useFetch(
   () =>
     `/api/v1/researchers/by-id?id=${encodeURIComponent(userId.value || "")}`,
   { watch: [userId] },
