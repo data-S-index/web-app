@@ -49,4 +49,33 @@ export default defineNuxtConfig({
   linkChecker: {
     failOnError: true,
   },
+  robots: {
+    groups: [
+      {
+        userAgent: "*",
+        allow: "/",
+        disallow: [
+          "/api/",
+          "/login",
+          "/signup",
+          "/forgot-password",
+          "/reset-password",
+          "/profile",
+          "/embed/",
+          "/fuji",
+        ],
+        contentUsage: {
+          bots: "y",
+          "train-ai": "n",
+          "ai-output": "n",
+          search: "y",
+        },
+        contentSignal: {
+          search: "yes",
+          "ai-input": "no",
+          "ai-train": "no",
+        },
+      },
+    ],
+  },
 });
