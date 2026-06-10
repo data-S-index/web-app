@@ -122,3 +122,46 @@ The application uses Prisma to interact with the PostgreSQL database.
 ### UI
 
 The application uses [Nuxt UI](https://ui.nuxt.com) to build the UI components. It also uses [Tailwind CSS](https://tailwindcss.com) for styling.
+
+### Sitemaps
+
+Sitemaps are split into two groups:
+
+| Sitemap                     | Source          | URL pattern                                |
+| --------------------------- | --------------- | ------------------------------------------ |
+| `pages`                     | Nuxt app routes | `/pages.xml`                               |
+| `datasets`, `users`, `orgs` | Pre-generated   | `cdn.scholardata.io/sitemaps/<type>-N.xml` |
+
+The root `/sitemap_index.xml` is served by the app and lists the static `pages` sitemap plus all pre-generated CDN chunks for datasets, users, and orgs.
+
+#### Generating all sitemaps
+
+All dynamic content (datasets ~70M, users ~4M, orgs ~250k) is pre-generated as static XML files and served from the CDN.
+
+1. **Generate the files** (requires a live `DATABASE_URL` and `NUXT_SITE_URL` in your `.env`):
+
+   ```bash
+   pnpm scripts:generate:sitemaps
+   ```
+
+   This writes XML files to `output/sitemaps/`:
+   - `datasets-0.xml`, `datasets-1.xml`, … (50,000 URLs each)
+   - `users-0.xml`, `users-1.xml`, …
+   - `orgs-0.xml`, `orgs-1.xml`, …
+   - `<type>-index.xml` for each type (sitemap index referencing all chunks)
+
+   When finished, the script prints the three chunk counts — note them down.
+
+2. **Upload to the CDN** — copy the entire `output/sitemaps/` folder to `cdn.scholardata.io/sitemaps/`.
+
+3. **Update `nuxt.config.ts`** with the three numbers printed by the script:
+
+   ```ts
+   const DATASET_SITEMAP_CHUNKS = <N>;
+   const USER_SITEMAP_CHUNKS    = <N>;
+   const ORG_SITEMAP_CHUNKS     = <N>;
+   ```
+
+4. **Redeploy** the app. `nuxt.config.ts` uses these constants to build the CDN entries included in `/sitemap_index.xml`.
+
+Re-run the script and re-upload after any large data import.

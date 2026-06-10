@@ -1,4 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+// Update these after running `pnpm scripts:generate:sitemaps` and uploading
+// the output to cdn.scholardata.io/sitemaps/
+const DATASET_SITEMAP_CHUNKS = 1407;
+const USER_SITEMAP_CHUNKS = 82;
+const ORG_SITEMAP_CHUNKS = 5;
+
+function cdnIndex(prefix: string, chunks: number) {
+  return Array.from({ length: chunks }, (_, i) => ({
+    sitemap: `https://cdn.scholardata.io/sitemaps/${prefix}-${i}.xml`,
+  }));
+}
+
+const sitemapIndex = [
+  ...cdnIndex("datasets", DATASET_SITEMAP_CHUNKS),
+  ...cdnIndex("users", USER_SITEMAP_CHUNKS),
+  ...cdnIndex("orgs", ORG_SITEMAP_CHUNKS),
+];
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-01-16",
   css: ["~/assets/css/main.css"],
@@ -48,6 +67,17 @@ export default defineNuxtConfig({
   },
   linkChecker: {
     failOnError: true,
+  },
+  sitemap: {
+    sitemapsPathPrefix: "/",
+    sitemaps: {
+      pages: {
+        includeAppSources: true,
+        exclude: ["/au/**", "/ao/**", "/datasets/**", "/users/**", "/embed/**"],
+        defaults: { changefreq: "monthly", priority: 0.7 },
+      },
+      ...(sitemapIndex.length > 0 && { index: sitemapIndex }),
+    },
   },
   robots: {
     groups: [
