@@ -1,6 +1,7 @@
 import { logwatch } from "~~/server/utils/logwatch";
 
 type RequestMetrics = {
+  environment: "prd" | "dev";
   method: string;
   url: string;
   statusCode: number;
@@ -21,6 +22,7 @@ export default defineEventHandler((event) => {
     }
 
     const metrics: RequestMetrics = {
+      environment: process.env.NODE_ENV === "production" ? "prd" : "dev",
       method: event.node.req.method ?? "UNKNOWN",
       url,
       statusCode: event.node.res.statusCode,
@@ -38,7 +40,7 @@ export default defineEventHandler((event) => {
 function storeMetrics(metrics: RequestMetrics) {
   logwatch.info({
     action: "request-timer",
-    message: `${metrics.method} ${metrics.url} ${metrics.statusCode} ${metrics.durationSec ?? metrics.durationMs}${metrics.durationSec ? "s" : "ms"}`,
+    message: `[${metrics.environment}] ${metrics.method} ${metrics.url} ${metrics.statusCode} ${metrics.durationSec ?? metrics.durationMs}${metrics.durationSec ? "s" : "ms"}`,
     ...metrics,
   });
 }
