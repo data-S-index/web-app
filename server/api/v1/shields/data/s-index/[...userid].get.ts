@@ -1,4 +1,4 @@
-const LABEL = "Scholar Index";
+const LABEL = "S-index";
 const LABEL_COLOR = "gray";
 
 function scoreToMessageAndColor(score: number | null | undefined): {

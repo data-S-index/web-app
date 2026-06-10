@@ -2,13 +2,13 @@
 useSeoMeta({
   title: "Integrations",
   description:
-    "Embed Dataset Index or Scholar Index widgets, or use our API to show metrics on your platform.",
+    "Embed Dataset Index or S-index widgets, or use our API to show metrics on your platform.",
 });
 
 defineOgImage("NuxtSeo.takumi", {
   title: "Integrations",
   description:
-    "Embed Dataset Index or Scholar Index widgets, or use our API to show metrics on your platform.",
+    "Embed Dataset Index or S-index widgets, or use our API to show metrics on your platform.",
 });
 
 const doiSpinner = ref(false);
@@ -109,7 +109,7 @@ const embedSnippet = computed(
 ></iframe>`,
 );
 
-// --- Scholar Index (S-index) ---
+// --- S-index ---
 const defaultUserId = "01KM74851RBVMZ7N7R85BMEVTK";
 const userIdInput = ref(defaultUserId);
 const appliedUserId = ref(defaultUserId);
@@ -194,7 +194,7 @@ const sEmbedSnippet = computed(
   >
     <UPageCTA
       title="Integrations"
-      description="Data repositories and researchers can use the embedded widget or API to display Dataset Index and Scholar Index metrics on their own platforms — dataset pages, lab sites, or personal websites"
+      description="Data repositories and researchers can use the embedded widget or API to display Dataset Index and S-index metrics on their own platforms — dataset pages, lab sites, or personal websites"
       variant="naked"
       :ui="{ container: '!py-5' }"
     />
