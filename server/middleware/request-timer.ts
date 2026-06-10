@@ -1,9 +1,11 @@
+import { logwatch } from "~~/server/utils/logwatch";
+
 type RequestMetrics = {
-  timestamp: string;
   method: string;
   url: string;
   statusCode: number;
   durationMs: number;
+  durationSec?: number;
 };
 
 const SKIPPED_PREFIXES = ["/_nuxt/", "/__nuxt"];
@@ -19,21 +21,24 @@ export default defineEventHandler((event) => {
     }
 
     const metrics: RequestMetrics = {
-      timestamp: new Date().toISOString(),
       method: event.node.req.method ?? "UNKNOWN",
       url,
       statusCode: event.node.res.statusCode,
       durationMs: Number((performance.now() - startTime).toFixed(2)),
     };
 
+    if (metrics.durationMs > 1000) {
+      metrics.durationSec = Number((metrics.durationMs / 1000).toFixed(2));
+    }
+
     storeMetrics(metrics);
   });
 });
 
 function storeMetrics(metrics: RequestMetrics) {
-  console.log(
-    `[TIMER] ${metrics.timestamp} ${metrics.method} ${metrics.url} ${metrics.statusCode} ${metrics.durationMs}ms`,
-  );
-
-  // Extend here to persist metrics to Prisma, Redis, or an external APM.
+  logwatch.info({
+    action: "request-timer",
+    message: `${metrics.method} ${metrics.url} ${metrics.statusCode} ${metrics.durationSec ?? metrics.durationMs}${metrics.durationSec ? "s" : "ms"}`,
+    ...metrics,
+  });
 }

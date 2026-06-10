@@ -34,6 +34,7 @@
     "@vueuse/core": "14.2.1",
     "badge-maker": "5.0.2",
     "bcrypt": "6.0.0",
+    "consola": "3.4.2",
     "date-fns": "4.1.0",
     "dayjs": "1.11.20",
     "ioredis": "5.10.1",

@@ -48,3 +48,4 @@ env:
     - RESEND_API_KEY
     - NUXT_SITE_URL
     - NUXT_OG_IMAGE_SECRET
+    - LOGWATCH_URL

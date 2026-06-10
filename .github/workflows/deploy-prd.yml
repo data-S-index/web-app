@@ -31,6 +31,7 @@ jobs:
       RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
       NUXT_SITE_URL: ${{ secrets.NUXT_SITE_URL }}
       NUXT_OG_IMAGE_SECRET: ${{ secrets.NUXT_OG_IMAGE_SECRET }}
+      LOGWATCH_URL: ${{ secrets.LOGWATCH_URL }}
 
     steps:
       # Step 1: Checkout the repository code
