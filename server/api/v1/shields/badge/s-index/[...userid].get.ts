@@ -82,7 +82,7 @@ export default defineEventHandler(async (event) => {
   });
 
   setResponseHeader(event, "Content-Type", "image/svg+xml");
-  setResponseHeader(event, "Cache-Control", "public, max-age=3600");
+  setResponseHeader(event, "Cache-Control", "public, max-age=86400");
 
   return svg;
 });
