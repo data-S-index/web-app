@@ -2,8 +2,9 @@
 
 import { PrismaClient } from "../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { mkdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
+import { createHash } from "crypto";
 import { consola } from "consola";
 import "dotenv/config";
 
@@ -17,6 +18,12 @@ const CDN_BASE = "https://cdn.scholardata.io/sitemaps";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
+
+// e.g. https://storage.bunnycdn.com/my-zone  or a regional endpoint
+const BUNNY_BASE = (process.env.BUNNY_STORAGE_BASE ?? "").replace(/\/$/, "");
+const BUNNY_KEY = process.env.BUNNY_STORAGE_API_KEY ?? "";
+const BUNNY_REMOTE_PATH = "sitemaps";
+const UPLOAD_CONCURRENCY = 5;
 
 // ── Progress bar ──────────────────────────────────────────────────────────────
 
@@ -136,6 +143,52 @@ async function generateSitemapFiles<T extends { id: number }>(opts: {
   return chunkIndex;
 }
 
+// ── Bunny CDN upload ─────────────────────────────────────────────────────────
+
+async function uploadFileToBunny(fileName: string): Promise<void> {
+  const content = readFileSync(join(OUTPUT_DIR, fileName));
+  const checksum = createHash("sha256")
+    .update(content)
+    .digest("hex")
+    .toUpperCase();
+  const url = `${BUNNY_BASE}/${BUNNY_REMOTE_PATH}/${fileName}`;
+
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: { AccessKey: BUNNY_KEY, Checksum: checksum },
+    body: content,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Bunny upload failed [${fileName}]: ${res.status} ${await res.text()}`,
+    );
+  }
+}
+
+async function uploadWithConcurrency(
+  files: string[],
+  concurrency: number,
+): Promise<void> {
+  const total = files.length;
+  const queue = [...files];
+  let done = 0;
+  const startMs = Date.now();
+
+  await Promise.all(
+    Array.from({ length: concurrency }, async () => {
+      while (queue.length > 0) {
+        const file = queue.shift()!;
+        await uploadFileToBunny(file);
+        done++;
+        renderProgress(done, total, startMs);
+      }
+    }),
+  );
+
+  clearProgress();
+}
+
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 async function main() {
@@ -184,10 +237,30 @@ async function main() {
     toEntry: (r) => ({ loc: `/ao/${r.id}` }),
   });
 
+  if (!BUNNY_BASE || !BUNNY_KEY) {
+    consola.warn(
+      "BUNNY_STORAGE_BASE or BUNNY_STORAGE_API_KEY not set — skipping upload.",
+    );
+  } else {
+    consola.start("Uploading to Bunny CDN...");
+
+    const allFiles: string[] = [];
+    for (const { prefix, chunks } of [
+      { prefix: "datasets", chunks: datasetChunks },
+      { prefix: "users", chunks: userChunks },
+      { prefix: "orgs", chunks: orgChunks },
+    ]) {
+      for (let i = 0; i < chunks; i++) allFiles.push(`${prefix}-${i}.xml`);
+      allFiles.push(`${prefix}-index.xml`);
+    }
+
+    await uploadWithConcurrency(allFiles, UPLOAD_CONCURRENCY);
+    consola.success(`\n${allFiles.length} files uploaded to Bunny CDN.`);
+  }
+
   consola.box(
     [
-      "Upload output/sitemaps/ to cdn.scholardata.io/sitemaps/",
-      "Then update nuxt.config.ts:\n",
+      "Update nuxt.config.ts:\n",
       `  const DATASET_SITEMAP_CHUNKS = ${datasetChunks};`,
       `  const USER_SITEMAP_CHUNKS    = ${userChunks};`,
       `  const ORG_SITEMAP_CHUNKS     = ${orgChunks};`,
