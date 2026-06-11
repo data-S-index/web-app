@@ -11,7 +11,7 @@ defineOgImage("NuxtSeo.takumi", {
     "FAIR assessment and machine stats for datasets on Scholar Data.",
 });
 
-// Fetch fuji score percentage and machine stats (client-side only)
+// Fetch fuji score percentage and job stats (client-side only)
 const {
   data: fujiScoreData,
   status: fujiScoreStatus,
@@ -22,22 +22,6 @@ const {
   datasetsWithFujiScore: number;
   jobsDoneLast10Minutes: number;
   jobsCount: number;
-  machineStats?: {
-    timeWindow: string;
-    totalMachines: number;
-    stats: Array<{
-      machineName: string;
-      totalRequests: number;
-      totalResults: number;
-    }>;
-  };
-  // When machineName query param is provided
-  machineName?: string;
-  totalRequests?: number;
-  totalResults?: number;
-  requests?: Array<{
-    count: number;
-  }>;
 }>("/api/datasets/fuji-score-percentage", {
   server: false,
 });
@@ -294,39 +278,6 @@ const formattedEta = computed(() => {
           >
             ETA: {{ formattedEta }}
           </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Machine Stats - Minimal display in bottom right -->
-    <div
-      v-if="
-        fujiScoreData?.machineStats &&
-        fujiScoreData.machineStats.stats &&
-        fujiScoreData.machineStats.stats.length > 0
-      "
-      class="absolute right-4 bottom-4 z-10 rounded-lg bg-white/90 p-3 text-xs shadow-lg dark:bg-gray-900/90"
-    >
-      <div class="mb-1 font-semibold">
-        Machine Processing ({{ fujiScoreData.machineStats.timeWindow }})
-      </div>
-
-      <div class="space-y-1">
-        <div
-          v-for="stat in fujiScoreData.machineStats.stats"
-          :key="stat.machineName"
-          class="flex items-center justify-between gap-3"
-        >
-          <span class="text-gray-600 dark:text-gray-400">
-            {{ stat.machineName }}
-          </span>
-
-          <span class="font-medium"
-            >{{ stat.totalResults.toLocaleString() }} ({{
-              stat.totalRequests.toLocaleString()
-            }}
-            requests)</span
-          >
         </div>
       </div>
     </div>

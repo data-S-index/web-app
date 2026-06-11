@@ -1,4 +1,4 @@
-const MAX_ID = 49009522;
+const MAX_ID = 70336851;
 
 // Returns the percentage of datasets that have a fuji score and machine stats
 export default defineEventHandler(async (event) => {
@@ -65,7 +65,7 @@ export default defineEventHandler(async (event) => {
 
       for (let i = 0; i < keys.length; i++) {
         const key = keys[i];
-        const parsed = parseKey(key);
+        const parsed = parseKey(key as string);
         if (!parsed) continue;
 
         const countStr = values[i];
