@@ -172,26 +172,29 @@ async function processDataset(datasetId: number): Promise<void> {
     (r) => r.automatedOrganizationId,
   );
 
-  await prisma.$transaction([
-    prisma.dIndex.deleteMany({ where: { datasetId } }),
-    prisma.dIndex.createMany({
-      data: series.map(({ year, score }) => ({ datasetId, score, year })),
-    }),
-  ]);
+  await prisma.$transaction(
+    [
+      prisma.dIndex.deleteMany({ where: { datasetId } }),
+      prisma.dIndex.createMany({
+        data: series.map(({ year, score }) => ({ datasetId, score, year })),
+      }),
+    ],
+    { timeout: 60000 },
+  );
 
   console.log(
     `Updated d-index for dataset ${datasetId} with ${series.length} entries`,
   );
 
   if (automatedUserIds.length > 0) {
-    prisma.automatedUserSIndexJob.createMany({
+    await prisma.automatedUserSIndexJob.createMany({
       data: automatedUserIds.map((id) => ({ automatedUserId: id })),
       skipDuplicates: true,
     });
   }
 
   if (automatedOrgIds.length > 0) {
-    prisma.automatedOrganizationSIndexJob.createMany({
+    await prisma.automatedOrganizationSIndexJob.createMany({
       data: automatedOrgIds.map((id) => ({
         automatedOrganizationId: id,
       })),
