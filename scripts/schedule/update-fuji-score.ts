@@ -12,6 +12,10 @@ const FUJI_USERNAME = process.env.FUJI_USERNAME ?? "marvel";
 const FUJI_PASSWORD = process.env.FUJI_PASSWORD ?? "wonderwoman";
 const FUJI_AUTH = `Basic ${Buffer.from(`${FUJI_USERNAME}:${FUJI_PASSWORD}`).toString("base64")}`;
 
+const HARDCODED_DOI_SCORES: Record<string, number> = {
+  "10.57451/": 63.46,
+};
+
 const HEALTH_CHECK_INTERVAL_MS = 10_000;
 const HEALTH_CHECK_ATTEMPTS = 10;
 
@@ -88,6 +92,41 @@ async function evaluateDataset(datasetId: number): Promise<void> {
   if (dataset.identifierType !== "doi") {
     console.warn(
       `Dataset ${datasetId} has identifierType "${dataset.identifierType}", skipping (only DOI supported)`,
+    );
+
+    return;
+  }
+
+  const matchedPrefix = Object.keys(HARDCODED_DOI_SCORES).find((prefix) =>
+    dataset.identifier.startsWith(prefix),
+  );
+
+  if (matchedPrefix !== undefined) {
+    const evaluationDate = new Date();
+    const metricVersion = "estimated";
+    const softwareVersion = "extrapolated";
+    const score = HARDCODED_DOI_SCORES[matchedPrefix];
+
+    await prisma.fujiScore.upsert({
+      where: { datasetId },
+      create: {
+        datasetId,
+        score,
+        evaluationDate,
+        metricVersion,
+        softwareVersion,
+      },
+      update: { score, evaluationDate, metricVersion, softwareVersion },
+    });
+
+    await prisma.dIndexJob.upsert({
+      where: { datasetId },
+      create: { datasetId },
+      update: {},
+    });
+
+    console.log(
+      `Scored dataset ${datasetId} (${dataset.identifier}): ${score.toFixed(2)} [hardcoded for ${matchedPrefix} prefix]`,
     );
 
     return;

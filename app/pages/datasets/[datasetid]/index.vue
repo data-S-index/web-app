@@ -27,7 +27,7 @@ if (error.value) {
 }
 
 useSeoMeta({
-  title: "Scholar Data",
+  title: dataset.value?.title || "Scholar Data",
   description:
     dataset.value?.description ||
     "View this dataset's details and metrics on Scholar Data.",
