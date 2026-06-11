@@ -2,7 +2,7 @@
 
 import { PrismaClient } from "../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { mkdirSync, readdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 import { createHash } from "crypto";
 import { consola } from "consola";
@@ -23,7 +23,7 @@ const prisma = new PrismaClient({ adapter });
 const BUNNY_BASE = (process.env.BUNNY_STORAGE_BASE ?? "").replace(/\/$/, "");
 const BUNNY_KEY = process.env.BUNNY_STORAGE_API_KEY ?? "";
 const BUNNY_REMOTE_PATH = "sitemaps";
-const UPLOAD_CONCURRENCY = 5;
+const UPLOAD_ONLY = process.argv.includes("--upload-only");
 
 // ── Progress bar ──────────────────────────────────────────────────────────────
 
@@ -166,76 +166,82 @@ async function uploadFileToBunny(fileName: string): Promise<void> {
   }
 }
 
-async function uploadWithConcurrency(
-  files: string[],
-  concurrency: number,
-): Promise<void> {
+async function uploadFiles(files: string[]): Promise<void> {
   const total = files.length;
-  const queue = [...files];
-  let done = 0;
   const startMs = Date.now();
 
-  await Promise.all(
-    Array.from({ length: concurrency }, async () => {
-      while (queue.length > 0) {
-        const file = queue.shift()!;
-        await uploadFileToBunny(file);
-        done++;
-        renderProgress(done, total, startMs);
-      }
-    }),
-  );
+  for (let i = 0; i < files.length; i++) {
+    await uploadFileToBunny(files[i]);
+    renderProgress(i + 1, total, startMs);
+  }
 
   clearProgress();
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
+function countChunks(prefix: string): number {
+  return readdirSync(OUTPUT_DIR).filter(
+    (f) => f.startsWith(`${prefix}-`) && f !== `${prefix}-index.xml`,
+  ).length;
+}
+
 async function main() {
   mkdirSync(OUTPUT_DIR, { recursive: true });
   consola.info(`Output: ${OUTPUT_DIR}\n`);
 
-  const [datasetTotal, userTotal, orgTotal] = await Promise.all([
-    prisma.dataset.count(),
-    prisma.automatedUser.count(),
-    prisma.automatedOrganization.count(),
-  ]);
+  let datasetChunks: number;
+  let userChunks: number;
+  let orgChunks: number;
 
-  const datasetChunks = await generateSitemapFiles({
-    prefix: "datasets",
-    total: datasetTotal,
-    fetchBatch: (lastId, limit) =>
-      prisma.$queryRaw<{ id: number; updated: Date }[]>`
-        SELECT id, updated FROM "Dataset"
-        WHERE id > ${lastId} ORDER BY id ASC LIMIT ${limit}
-      `,
-    toEntry: (r) => ({
-      loc: `/datasets/${r.id}`,
-      lastmod: r.updated.toISOString().split("T")[0],
-    }),
-  });
+  if (UPLOAD_ONLY) {
+    consola.info("--upload-only: skipping generation, reading existing files.");
+    datasetChunks = countChunks("datasets");
+    userChunks = countChunks("users");
+    orgChunks = countChunks("orgs");
+  } else {
+    const [datasetTotal, userTotal, orgTotal] = await Promise.all([
+      prisma.dataset.count(),
+      prisma.automatedUser.count(),
+      prisma.automatedOrganization.count(),
+    ]);
 
-  const userChunks = await generateSitemapFiles({
-    prefix: "users",
-    total: userTotal,
-    fetchBatch: (lastId, limit) =>
-      prisma.$queryRaw<{ id: number }[]>`
-        SELECT id FROM "AutomatedUser"
-        WHERE id > ${lastId} ORDER BY id ASC LIMIT ${limit}
-      `,
-    toEntry: (r) => ({ loc: `/au/${r.id}` }),
-  });
+    datasetChunks = await generateSitemapFiles({
+      prefix: "datasets",
+      total: datasetTotal,
+      fetchBatch: (lastId, limit) =>
+        prisma.$queryRaw<{ id: number; updated: Date }[]>`
+          SELECT id, updated FROM "Dataset"
+          WHERE id > ${lastId} ORDER BY id ASC LIMIT ${limit}
+        `,
+      toEntry: (r) => ({
+        loc: `/datasets/${r.id}`,
+        lastmod: r.updated.toISOString().split("T")[0],
+      }),
+    });
 
-  const orgChunks = await generateSitemapFiles({
-    prefix: "orgs",
-    total: orgTotal,
-    fetchBatch: (lastId, limit) =>
-      prisma.$queryRaw<{ id: number }[]>`
-        SELECT id FROM "AutomatedOrganization"
-        WHERE id > ${lastId} ORDER BY id ASC LIMIT ${limit}
-      `,
-    toEntry: (r) => ({ loc: `/ao/${r.id}` }),
-  });
+    userChunks = await generateSitemapFiles({
+      prefix: "users",
+      total: userTotal,
+      fetchBatch: (lastId, limit) =>
+        prisma.$queryRaw<{ id: number }[]>`
+          SELECT id FROM "AutomatedUser"
+          WHERE id > ${lastId} ORDER BY id ASC LIMIT ${limit}
+        `,
+      toEntry: (r) => ({ loc: `/au/${r.id}` }),
+    });
+
+    orgChunks = await generateSitemapFiles({
+      prefix: "orgs",
+      total: orgTotal,
+      fetchBatch: (lastId, limit) =>
+        prisma.$queryRaw<{ id: number }[]>`
+          SELECT id FROM "AutomatedOrganization"
+          WHERE id > ${lastId} ORDER BY id ASC LIMIT ${limit}
+        `,
+      toEntry: (r) => ({ loc: `/ao/${r.id}` }),
+    });
+  }
 
   if (!BUNNY_BASE || !BUNNY_KEY) {
     consola.warn(
@@ -254,7 +260,7 @@ async function main() {
       allFiles.push(`${prefix}-index.xml`);
     }
 
-    await uploadWithConcurrency(allFiles, UPLOAD_CONCURRENCY);
+    await uploadFiles(allFiles);
     consola.success(`\n${allFiles.length} files uploaded to Bunny CDN.`);
   }
 
