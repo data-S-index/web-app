@@ -68,7 +68,8 @@ export default defineEventHandler(async (event) => {
     (sum, ud) => sum + (ud.dataset.dindices[0]?.score ?? 0),
     0,
   );
-  const sIndexScore = user.userDatasets.length > 0 ? total : null;
+  const sIndexScore =
+    user.userDatasets.length > 0 ? parseFloat(total.toFixed(1)) : null;
   const { message, color } = scoreToMessageAndColor(sIndexScore);
 
   return {

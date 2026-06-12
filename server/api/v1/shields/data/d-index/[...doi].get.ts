@@ -64,7 +64,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const latestDIndex = dataset.dindices[0];
-  const dIndexScore = latestDIndex?.score ?? null;
+  const dIndexScore =
+    latestDIndex?.score != null
+      ? parseFloat(latestDIndex.score.toFixed(1))
+      : null;
   const { message, color } = scoreToMessageAndColor(dIndexScore);
 
   return {
