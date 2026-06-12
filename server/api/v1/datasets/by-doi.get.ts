@@ -98,8 +98,12 @@ export default defineEventHandler(async (event) => {
       })(),
     ]);
 
+  const siteUrl = process.env.NUXT_SITE_URL || "";
+  const datasetUrl = siteUrl ? `${siteUrl}/datasets/${dataset.id}` : null;
+
   const responseData = {
     datasetId: dataset.id,
+    datasetUrl,
     totalCitations: citationTotal,
     totalMentions: mentionTotal,
     fujiScore,

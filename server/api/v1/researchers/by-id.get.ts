@@ -64,8 +64,12 @@ export default defineEventHandler(async (event) => {
     totalMentions += ud.dataset._count.mentions;
   }
 
+  const siteUrl = process.env.NUXT_SITE_URL || "";
+  const researcherUrl = siteUrl ? `${siteUrl}/users/${userId}` : null;
+
   const responseData = {
     userId,
+    researcherUrl,
     currentSIndex,
     datasetCount: userDatasets.length,
     totalCitations,
