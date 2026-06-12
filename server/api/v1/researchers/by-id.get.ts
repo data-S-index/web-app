@@ -70,7 +70,7 @@ export default defineEventHandler(async (event) => {
   const responseData = {
     userId,
     researcherUrl,
-    currentSIndex,
+    currentSIndex: parseFloat(currentSIndex.toFixed(1)),
     datasetCount: userDatasets.length,
     totalCitations,
     totalMentions,

@@ -107,7 +107,9 @@ export default defineEventHandler(async (event) => {
     totalCitations: citationTotal,
     totalMentions: mentionTotal,
     fujiScore,
-    latestDIndex,
+    latestDIndex: latestDIndex
+      ? { ...latestDIndex, score: parseFloat(latestDIndex.score.toFixed(1)) }
+      : null,
   };
 
   await redis.setex(
