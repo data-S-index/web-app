@@ -43,5 +43,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run FUJI score update
-        run: pnpm tsx scripts/schedule/update-fuji-score.ts
+      # - name: Run FUJI score update
+      #   run: pnpm tsx scripts/schedule/update-fuji-score.ts
