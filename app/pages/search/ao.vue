@@ -240,6 +240,11 @@ const searchForOrganizations = async (
             />
           </div>
 
+          <SearchTips
+            :tips="['Search by organization name']"
+            :exact-match-examples="['Yale Peabody Museum']"
+          />
+
           <div v-if="!hasSearched" class="space-y-6">
             <div
               class="border-primary-200 from-primary-50/80 to-primary-100/40 dark:border-primary-800/50 dark:from-primary-950/40 dark:to-primary-900/30 rounded-2xl border bg-gradient-to-br p-6"

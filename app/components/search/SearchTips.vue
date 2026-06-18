@@ -1,17 +1,24 @@
+<script setup lang="ts">
+defineProps<{
+  tips: string[];
+  exactMatchExamples?: string[];
+}>();
+</script>
+
 <template>
   <div
     class="rounded-xl border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800/40"
   >
     <ul class="space-y-1.5 text-sm text-gray-600 dark:text-gray-400">
-      <li class="flex items-start gap-2">
+      <li v-for="tip in tips" :key="tip" class="flex items-start gap-2">
         <Icon
           name="i-heroicons-information-circle-20-solid"
           class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
         />
-        Search by dataset title, author name, DOI, ORCID, or keywords
+        {{ tip }}
       </li>
 
-      <li class="flex items-start gap-2">
+      <li v-if="exactMatchExamples?.length" class="flex items-start gap-2">
         <Icon
           name="i-heroicons-information-circle-20-solid"
           class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
@@ -19,15 +26,16 @@
 
         <span>
           Wrap a term in quotes for an exact match, e.g.
-          <code
-            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
-            >"10.5061/dryad.abc123"</code
+          <template
+            v-for="(example, index) in exactMatchExamples"
+            :key="example"
           >
-          or
-          <code
-            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
-            >"0000-0002-1825-0097"</code
-          >
+            <code
+              class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
+              >"{{ example }}"</code
+            >
+            <span v-if="index < exactMatchExamples.length - 1"> or </span>
+          </template>
         </span>
       </li>
     </ul>

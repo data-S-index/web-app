@@ -252,7 +252,12 @@ watch(
       />
     </div>
 
-    <DatasetSearchTips />
+    <SearchTips
+      :tips="[
+        'Search by dataset title, author name, DOI, ORCID, or keywords',
+      ]"
+      :exact-match-examples="['10.5061/dryad.abc123', '0000-0002-1825-0097']"
+    />
 
     <div v-if="searchResults.length > 0" class="flex flex-1 flex-col">
       <div class="flex flex-1 flex-col gap-5">

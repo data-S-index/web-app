@@ -326,7 +326,15 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
             />
           </div>
 
-          <DatasetSearchTips />
+          <SearchTips
+            :tips="[
+              'Search by dataset title, author name, DOI, ORCID, or keywords',
+            ]"
+            :exact-match-examples="[
+              '10.5061/dryad.abc123',
+              '0000-0002-1825-0097',
+            ]"
+          />
 
           <div v-if="!hasSearched" class="space-y-6">
             <div
