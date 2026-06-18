@@ -84,7 +84,7 @@ const footerRightItems: NavigationMenuItem[] = [
     label: "Documentation",
     to: "https://docs.scholardata.io",
     target: "_blank",
-    icon: "i-heroicons-document-text-solid",
+    icon: "solar:document-broken",
   },
   {
     label: "GitHub",
@@ -109,6 +109,18 @@ const footerRightItems: NavigationMenuItem[] = [
       <UNavigationMenu :items="headerItems" class="hidden md:flex" />
 
       <template #right>
+        <UTooltip text="Documentation">
+          <UButton
+            to="https://docs.scholardata.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            icon="solar:document-broken"
+            color="neutral"
+            variant="ghost"
+            aria-label="Documentation"
+          />
+        </UTooltip>
+
         <UColorModeButton />
 
         <AuthState v-slot="{ loggedIn }">
@@ -163,20 +175,38 @@ const footerRightItems: NavigationMenuItem[] = [
 
     <UFooter>
       <template #left>
-        <p class="text-muted text-sm">
+        <p class="text-muted hidden text-sm sm:block">
           Copyright © {{ new Date().getFullYear() }}
           | Made with ♥ by the S-Index Team
         </p>
+
+        <div class="flex flex-col items-start gap-3 sm:hidden">
+          <p class="text-muted pl-4 text-left text-sm">
+            Copyright © {{ new Date().getFullYear() }}
+            | Made with ♥ by the S-Index Team
+          </p>
+
+          <UNavigationMenu
+            :items="footerRightItems"
+            orientation="vertical"
+            variant="link"
+            color="primary"
+          />
+
+          <UColorModeButton />
+        </div>
       </template>
 
       <template #right>
-        <UColorModeButton />
+        <div class="hidden items-center gap-2 sm:flex">
+          <UColorModeButton />
 
-        <UNavigationMenu
-          :items="footerRightItems"
-          variant="link"
-          color="primary"
-        />
+          <UNavigationMenu
+            :items="footerRightItems"
+            variant="link"
+            color="primary"
+          />
+        </div>
       </template>
     </UFooter>
   </div>
