@@ -106,7 +106,10 @@ export default defineEventHandler(async (event) => {
     datasetUrl,
     totalCitations: citationTotal,
     totalMentions: mentionTotal,
-    fujiScore,
+    fujiScore:
+      fujiScore && fujiScore.score !== null
+        ? { ...fujiScore, score: Math.round(fujiScore.score) }
+        : fujiScore,
     latestDIndex: latestDIndex
       ? { ...latestDIndex, score: parseFloat(latestDIndex.score.toFixed(1)) }
       : null,
