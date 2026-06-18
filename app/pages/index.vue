@@ -515,7 +515,7 @@ const actualProfilesDisplay = computed(() => {
           </h2>
 
           <div
-            class="text-muted mb-10 flex flex-col gap-4 text-base sm:text-lg"
+            class="text-muted mb-10 flex flex-col gap-4 text-base text-balance sm:text-lg"
           >
             <p>
               Scholar Data is free to use. Our source code is open on GitHub,
@@ -547,6 +547,21 @@ const actualProfilesDisplay = computed(() => {
         </span> -->
       </NuxtLink>
     </UMarquee>
+
+    <div class="mt-6 flex justify-center">
+      <UButton
+        to="https://docs.scholardata.io/data-collection/overview"
+        target="_blank"
+        rel="noopener noreferrer"
+        color="neutral"
+        variant="link"
+        size="sm"
+        trailing-icon="i-heroicons-arrow-top-right-on-square"
+        class="hover:text-primary-500 text-slate-400 transition-all"
+      >
+        Learn more about how we use these resources
+      </UButton>
+    </div>
 
     <UPageSection>
       <template #body>
