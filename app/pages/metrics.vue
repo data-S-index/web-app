@@ -123,12 +123,14 @@ const sources = ref([
     value: 9.7,
     suffix: "M+",
     description: "Parsed citations to find citations to our datasets.",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/citations",
   },
   {
     name: "OpenAlex",
     value: 450,
     suffix: "M+",
     description: "References from works analyzed for dataset citations.",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/citations",
   },
   {
     name: "Software Heritage",
@@ -477,6 +479,21 @@ const fieldPieChartOption = computed(() => ({
             </div>
 
             <p class="mt-2 text-sm">{{ source.description }}</p>
+
+            <template v-if="source.learnMoreUrl" #footer>
+              <UButton
+                :to="source.learnMoreUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="primary"
+                variant="link"
+                size="sm"
+                trailing-icon="i-heroicons-arrow-top-right-on-square"
+                class="p-0"
+              >
+                Learn more
+              </UButton>
+            </template>
           </UCard>
         </div>
       </Vue3Marquee>
