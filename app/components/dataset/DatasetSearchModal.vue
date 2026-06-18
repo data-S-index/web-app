@@ -144,32 +144,27 @@ const attachDatasetsToUser = async () => {
     });
 };
 
-// Computed property to check if all selectable items are selected
-const allSelectableSelected = computed(() => {
-  const selectableResults = searchResults.value.filter(
+// Datasets the user already has are hidden from the results entirely
+const visibleResults = computed(() =>
+  searchResults.value.filter(
     (result) => !existingDatasetIds.value.has(result.id),
-  );
-  if (selectableResults.length === 0) return false;
+  ),
+);
 
-  return selectableResults.every(
+// Computed property to check if all visible items are selected
+const allSelectableSelected = computed(() => {
+  if (visibleResults.value.length === 0) return false;
+
+  return visibleResults.value.every(
     (result) => rowSelection.value[String(result.id)] === true,
   );
 });
 
-// Watch selectAll to toggle all checkboxes (excluding disabled ones)
+// Watch selectAll to toggle all visible checkboxes
 watch(selectAll, (value) => {
-  if (value) {
-    searchResults.value.forEach((result) => {
-      // Only select if not already owned
-      if (!existingDatasetIds.value.has(result.id)) {
-        rowSelection.value[String(result.id)] = true;
-      }
-    });
-  } else {
-    searchResults.value.forEach((result) => {
-      rowSelection.value[String(result.id)] = false;
-    });
-  }
+  visibleResults.value.forEach((result) => {
+    rowSelection.value[String(result.id)] = value;
+  });
 });
 
 // Watch searchResults to update selectAll state
@@ -182,25 +177,16 @@ watch(
 );
 
 // Helper functions for result item
-const isAlreadyAdded = (resultId: number) => {
-  return existingDatasetIds.value.has(resultId);
-};
-
 const isSelected = (resultId: number) => {
   return rowSelection.value[String(resultId)] === true;
 };
 
 const toggleSelection = (resultId: number) => {
-  if (!isAlreadyAdded(resultId)) {
-    rowSelection.value[String(resultId)] = !isSelected(resultId);
-  }
+  rowSelection.value[String(resultId)] = !isSelected(resultId);
 };
 
 const getCardClasses = (result: SearchResult) => {
   const base = "relative flex rounded-lg border-2 p-4 transition-all";
-  if (isAlreadyAdded(result.id)) {
-    return `${base} cursor-not-allowed border-gray-300 bg-gray-100 opacity-60 dark:border-gray-600 dark:bg-gray-800/30`;
-  }
   if (isSelected(result.id)) {
     return `${base} cursor-pointer border-primary-500 bg-primary-50 ring-primary-500/20 dark:border-primary-400 dark:bg-primary-950/30 dark:ring-primary-400/20 ring-2`;
   }
@@ -211,9 +197,6 @@ const getCardClasses = (result: SearchResult) => {
 const getCheckboxClasses = (result: SearchResult) => {
   const base =
     "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all";
-  if (isAlreadyAdded(result.id)) {
-    return `${base} border-gray-400 bg-gray-400 dark:border-gray-500 dark:bg-gray-500`;
-  }
   if (isSelected(result.id)) {
     return `${base} border-primary-500 bg-primary-500 dark:border-primary-400 dark:bg-primary-400`;
   }
@@ -221,13 +204,8 @@ const getCheckboxClasses = (result: SearchResult) => {
   return `${base} border-gray-300 dark:border-gray-600`;
 };
 
-const getTitleClasses = (result: SearchResult) => {
-  const base =
-    "line-clamp-2 text-base leading-snug font-semibold transition-colors";
-
-  return isAlreadyAdded(result.id)
-    ? `${base} text-gray-500 dark:text-gray-400`
-    : `${base} group-hover:text-primary-600 dark:group-hover:text-primary-400`;
+const getTitleClasses = () => {
+  return "line-clamp-2 text-base leading-snug font-semibold transition-colors group-hover:text-primary-600 dark:group-hover:text-primary-400";
 };
 
 // Reset state when modal opens
@@ -297,9 +275,7 @@ watch(
               v-model="selectAll"
               label="Select all"
               size="md"
-              :disabled="
-                searchResults.filter((r) => !isAlreadyAdded(r.id)).length === 0
-              "
+              :disabled="visibleResults.length === 0"
             />
 
             <div class="flex items-center gap-3">
@@ -332,9 +308,15 @@ watch(
 
           <USeparator class="my-4" />
 
-          <div class="min-h-0 flex-1 space-y-3 overflow-y-auto">
+          <div v-if="visibleResults.length === 0" class="py-6 text-center">
+            <p class="text-base text-gray-500 dark:text-gray-400">
+              All datasets on this page have already been added to your profile.
+            </p>
+          </div>
+
+          <div v-else class="min-h-0 flex-1 space-y-3 overflow-y-auto">
             <div
-              v-for="result in searchResults"
+              v-for="result in visibleResults"
               :key="result.id"
               :class="getCardClasses(result)"
               @click="toggleSelection(result.id)"
@@ -342,13 +324,7 @@ watch(
               <div class="flex min-w-0 flex-1 items-start gap-3">
                 <div :class="getCheckboxClasses(result)">
                   <Icon
-                    v-if="isAlreadyAdded(result.id)"
-                    name="i-heroicons-check-circle-20-solid"
-                    class="h-3 w-3 text-white"
-                  />
-
-                  <Icon
-                    v-else-if="isSelected(result.id)"
+                    v-if="isSelected(result.id)"
                     name="i-heroicons-check-20-solid"
                     class="h-3 w-3 text-white"
                   />
@@ -362,21 +338,10 @@ watch(
                       class="group min-w-0 flex-1"
                       @click.stop
                     >
-                      <h3 :class="getTitleClasses(result)">
+                      <h3 :class="getTitleClasses()">
                         {{ result.title }}
                       </h3>
                     </a>
-
-                    <UBadge
-                      v-if="isAlreadyAdded(result.id)"
-                      color="neutral"
-                      variant="soft"
-                      size="sm"
-                      label="Already added"
-                      icon="i-heroicons-check-circle-20-solid"
-                      class="shrink-0"
-                      @click.stop
-                    />
 
                     <UBadge
                       v-if="result.version"
@@ -474,6 +439,5 @@ watch(
         No results found. Try a different search term.
       </p>
     </div>
-
   </div>
 </template>
