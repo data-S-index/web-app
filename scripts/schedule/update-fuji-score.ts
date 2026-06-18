@@ -1,9 +1,4 @@
-import { PrismaClient } from "../../shared/generated/client";
-import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
-
-const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
-const prisma = new PrismaClient({ adapter });
 
 const FUJI_BASE_URL = process.env.FUJI_URL ?? "http://localhost:1071";
 const FUJI_EVALUATE_URL = `${FUJI_BASE_URL}/fuji/api/v1/evaluate`;
@@ -11,6 +6,10 @@ const FUJI_HEALTH_URL = `${FUJI_BASE_URL}/fuji/api/v1/`;
 const FUJI_USERNAME = process.env.FUJI_USERNAME ?? "marvel";
 const FUJI_PASSWORD = process.env.FUJI_PASSWORD ?? "wonderwoman";
 const FUJI_AUTH = `Basic ${Buffer.from(`${FUJI_USERNAME}:${FUJI_PASSWORD}`).toString("base64")}`;
+
+const API_BASE_URL = "https://scholardata.io";
+const FUJI_JOB_CLAIM_URL = `${API_BASE_URL}/api/fuji-job/claim`;
+const FUJI_JOB_SUBMIT_URL = `${API_BASE_URL}/api/fuji-job/submit`;
 
 const HARDCODED_DOI_SCORES: Record<string, number> = {
   "10.57451/": 63.46,
@@ -29,6 +28,19 @@ interface FujiEvaluateResponse {
   metric_version: string;
   software_version: string;
 }
+
+interface SubmitPayload {
+  datasetId: number;
+  score: number;
+  evaluationDate?: string;
+  metricVersion: string;
+  softwareVersion: string;
+}
+
+type ClaimResponse =
+  | { status: "empty" }
+  | { status: "skipped"; datasetId: number; reason: string }
+  | { status: "pending"; datasetId: number; identifier: string };
 
 async function waitForFujiService(): Promise<void> {
   console.log(`Checking FUJI service at ${FUJI_BASE_URL}...`);
@@ -62,71 +74,50 @@ async function waitForFujiService(): Promise<void> {
   );
 }
 
-async function claimNextJob(): Promise<number | null> {
-  const rows = await prisma.$queryRaw<{ datasetId: number }[]>`
-    DELETE FROM "FujiJob"
-    WHERE "datasetId" = (
-      SELECT "datasetId" FROM "FujiJob"
-      ORDER BY "created" ASC
-      LIMIT 1
-      FOR UPDATE SKIP LOCKED
-    )
-    RETURNING "datasetId"
-  `;
+async function claimNextJob(): Promise<ClaimResponse> {
+  const response = await fetch(FUJI_JOB_CLAIM_URL, { method: "POST" });
 
-  return rows.length > 0 ? Number(rows[0].datasetId) : null;
+  if (!response.ok) {
+    throw new Error(`Claim request failed with status ${response.status}`);
+  }
+
+  return (await response.json()) as ClaimResponse;
 }
 
-async function evaluateDataset(datasetId: number): Promise<void> {
-  const dataset = await prisma.dataset.findUnique({
-    where: { id: datasetId },
-    select: { identifier: true, identifierType: true },
+async function submitResult(payload: SubmitPayload): Promise<void> {
+  const response = await fetch(FUJI_JOB_SUBMIT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
   });
 
-  if (!dataset) {
-    console.warn(`Dataset ${datasetId} not found, skipping`);
-
-    return;
-  }
-
-  if (dataset.identifierType !== "doi") {
-    console.warn(
-      `Dataset ${datasetId} has identifierType "${dataset.identifierType}", skipping (only DOI supported)`,
+  if (!response.ok) {
+    throw new Error(
+      `Submit request failed with status ${response.status} for dataset ${payload.datasetId}`,
     );
-
-    return;
   }
+}
 
+async function evaluateDataset(
+  datasetId: number,
+  identifier: string,
+): Promise<void> {
   const matchedPrefix = Object.keys(HARDCODED_DOI_SCORES).find((prefix) =>
-    dataset.identifier.startsWith(prefix),
+    identifier.startsWith(prefix),
   );
 
   if (matchedPrefix !== undefined) {
-    const evaluationDate = new Date();
-    const metricVersion = "estimated";
-    const softwareVersion = "extrapolated";
     const score = HARDCODED_DOI_SCORES[matchedPrefix];
 
-    await prisma.fujiScore.upsert({
-      where: { datasetId },
-      create: {
-        datasetId,
-        score,
-        evaluationDate,
-        metricVersion,
-        softwareVersion,
-      },
-      update: { score, evaluationDate, metricVersion, softwareVersion },
-    });
-
-    await prisma.dIndexJob.upsert({
-      where: { datasetId },
-      create: { datasetId },
-      update: {},
+    await submitResult({
+      datasetId,
+      score,
+      metricVersion: "estimated",
+      softwareVersion: "extrapolated",
     });
 
     console.log(
-      `Scored dataset ${datasetId} (${dataset.identifier}): ${score.toFixed(2)} [hardcoded for ${matchedPrefix} prefix]`,
+      `Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)} [hardcoded for ${matchedPrefix} prefix]`,
     );
 
     return;
@@ -136,7 +127,7 @@ async function evaluateDataset(datasetId: number): Promise<void> {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: FUJI_AUTH },
     body: JSON.stringify({
-      object_identifier: dataset.identifier,
+      object_identifier: identifier,
       test_debug: true,
       use_datacite: true,
       use_github: false,
@@ -158,85 +149,57 @@ async function evaluateDataset(datasetId: number): Promise<void> {
     throw new Error(`No FAIR score in FUJI response for dataset ${datasetId}`);
   }
 
-  const evaluationDate = data.end_timestamp
-    ? new Date(data.end_timestamp)
-    : new Date();
-
-  const metricVersion = data.metric_version ?? "metrics_v0.8";
-  // const softwareVersion = data.software_version ?? "unknown";
-
-  const softwareVersion = "extrapolation_test";
-
-  await prisma.fujiScore.upsert({
-    where: { datasetId },
-    create: {
-      datasetId,
-      score: parseFloat(String(score)),
-      evaluationDate,
-      metricVersion,
-      softwareVersion,
-    },
-    update: {
-      score: parseFloat(String(score)),
-      evaluationDate,
-      metricVersion,
-      softwareVersion,
-    },
-  });
-
-  await prisma.dIndexJob.upsert({
-    where: { datasetId },
-    create: { datasetId },
-    update: {},
+  await submitResult({
+    datasetId,
+    score: parseFloat(String(score)),
+    evaluationDate: data.end_timestamp,
+    metricVersion: data.metric_version ?? "metrics_v0.8",
+    softwareVersion: "extrapolation_test",
   });
 
   console.log(
-    `Scored dataset ${datasetId} (${dataset.identifier}): ${score.toFixed(2)}`,
+    `Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)}`,
   );
 }
 
 async function main() {
   await waitForFujiService();
 
-  const total = await prisma.fujiJob.count();
-  console.log(
-    `Starting FUJI score calculation... ${total.toLocaleString()} jobs`,
-  );
-
-  if (total === 0) {
-    console.log("No jobs to process.");
-
-    return;
-  }
+  console.log("Starting FUJI score calculation...");
 
   let processed = 0;
   let failed = 0;
   const startTime = Date.now();
 
   while (true) {
-    const datasetId = await claimNextJob();
-    if (datasetId === null) break;
+    const job = await claimNextJob();
+    if (job.status === "empty") break;
 
     try {
-      await evaluateDataset(datasetId);
+      switch (job.status) {
+        case "skipped":
+          console.warn(`Dataset ${job.datasetId} skipped: ${job.reason}`);
+          break;
+        case "pending":
+          await evaluateDataset(job.datasetId, job.identifier);
+          break;
+      }
       processed++;
     } catch (error) {
       failed++;
-      console.error(`Failed dataset ${datasetId}:`, error);
+      console.error(`Failed dataset ${job.datasetId}:`, error);
     }
 
-    const done = processed + failed;
-    const pct = ((done / total) * 100).toFixed(1);
-    console.log(`[${pct}%] ${done.toLocaleString()}/${total.toLocaleString()}`);
+    console.log(
+      `Processed ${(processed + failed).toLocaleString()} jobs so far`,
+    );
   }
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
   console.log(`Done. ${processed} processed, ${failed} failed in ${elapsed}s`);
 }
 
-main()
-  .catch((err) => {
-    console.error("Fatal error:", err);
-    process.exit(1);
-  })
-  .finally(() => prisma.$disconnect());
+main().catch((err) => {
+  console.error("Fatal error:", err);
+  process.exit(1);
+});
