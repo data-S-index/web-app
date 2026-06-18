@@ -1,0 +1,47 @@
+name: Update FUJI scores
+
+on:
+  schedule:
+    - cron: "50 */8 * * *"
+  workflow_dispatch:
+
+jobs:
+  update-fuji-score:
+    runs-on: ubuntu-latest
+
+    services:
+      fujirest:
+        image: ghcr.io/pangaea-data-publisher/fuji:latest
+        ports:
+          - 1071:1071
+        env:
+          ENABLE_CORS: "true"
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      FUJI_URL: http://localhost:1071
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Connect to Tailscale
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run FUJI score update
+        run: pnpm tsx scripts/schedule/update-fuji-score.ts
