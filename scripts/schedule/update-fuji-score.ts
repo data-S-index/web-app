@@ -162,10 +162,9 @@ async function evaluateDataset(datasetId: number): Promise<void> {
     ? new Date(data.end_timestamp)
     : new Date();
 
-  // const metricVersion = data.metric_version ?? "metrics_v0.8";
+  const metricVersion = data.metric_version ?? "metrics_v0.8";
   // const softwareVersion = data.software_version ?? "unknown";
 
-  const metricVersion = "extrapolation_test";
   const softwareVersion = "extrapolation_test";
 
   await prisma.fujiScore.upsert({

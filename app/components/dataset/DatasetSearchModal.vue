@@ -274,6 +274,8 @@ watch(
       />
     </div>
 
+    <DatasetSearchTips />
+
     <div v-if="searchResults.length > 0" class="flex flex-1 flex-col">
       <div class="flex flex-1 flex-col gap-5">
         <div v-if="searchLoading">
@@ -473,8 +475,5 @@ watch(
       </p>
     </div>
 
-    <div v-else-if="!searchLoading && !hasSearched" class="flex flex-col gap-5">
-      <DatasetSearchTips title="How search works" />
-    </div>
   </div>
 </template>
