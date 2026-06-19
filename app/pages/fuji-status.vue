@@ -195,18 +195,16 @@ watch(
 const etaMinutes = computed(() => {
   if (!fujiScoreData.value) return null;
 
-  const { totalDatasets, datasetsWithFujiScore, jobsDoneLast10Minutes } =
-    fujiScoreData.value;
-  const remainingDatasets = totalDatasets - datasetsWithFujiScore;
+  const { jobsCount, jobsDoneLast10Minutes } = fujiScoreData.value;
 
   // If no jobs done in last 10 minutes, can't calculate ETA
-  if (jobsDoneLast10Minutes === 0 || remainingDatasets <= 0) return null;
+  if (jobsDoneLast10Minutes === 0 || jobsCount <= 0) return null;
 
   // Calculate rate: jobs per minute
   const jobsPerMinute = jobsDoneLast10Minutes / 10;
 
-  // Calculate ETA in minutes
-  return remainingDatasets / jobsPerMinute;
+  // Calculate ETA in minutes based on remaining seeds left
+  return jobsCount / jobsPerMinute;
 });
 
 // Format ETA nicely
