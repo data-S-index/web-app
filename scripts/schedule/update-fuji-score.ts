@@ -152,7 +152,8 @@ async function evaluateDataset(
     score: parseFloat(String(score)),
     evaluationDate: data.end_timestamp,
     metricVersion: data.metric_version ?? "metrics_v0.8",
-    softwareVersion: "extrapolation_test",
+    // softwareVersion: "extrapolation_test",
+    softwareVersion: data.software_version ?? "unknown",
   });
 
   console.log(
