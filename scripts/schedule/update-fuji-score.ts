@@ -1,10 +1,8 @@
-import "dotenv/config";
-
-const FUJI_BASE_URL = process.env.FUJI_URL ?? "http://localhost:1071";
+const FUJI_BASE_URL = "http://localhost:1071";
 const FUJI_EVALUATE_URL = `${FUJI_BASE_URL}/fuji/api/v1/evaluate`;
 const FUJI_HEALTH_URL = `${FUJI_BASE_URL}/fuji/api/v1/`;
-const FUJI_USERNAME = process.env.FUJI_USERNAME ?? "marvel";
-const FUJI_PASSWORD = process.env.FUJI_PASSWORD ?? "wonderwoman";
+const FUJI_USERNAME = "marvel";
+const FUJI_PASSWORD = "wonderwoman";
 const FUJI_AUTH = `Basic ${Buffer.from(`${FUJI_USERNAME}:${FUJI_PASSWORD}`).toString("base64")}`;
 
 const API_BASE_URL = "https://scholardata.io";
