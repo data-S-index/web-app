@@ -4,6 +4,9 @@ import type { NavigationMenuItem } from "@nuxt/ui";
 const { clear, user, loggedIn: loggedInSession } = useUserSession();
 const route = useRoute();
 
+const maintenanceMode =
+  (useRuntimeConfig().public?.maintenanceMode as boolean) ?? false;
+
 const logout = async () => {
   clear();
   await navigateTo("/login");
@@ -168,6 +171,15 @@ const footerRightItems: NavigationMenuItem[] = [
         </div>
       </template>
     </UHeader>
+
+    <UAlert
+      v-if="maintenanceMode"
+      color="warning"
+      variant="subtle"
+      title="Site is currently under maintenance"
+      description="Some features may be unavailable or limited during this time. We apologize for any inconvenience and appreciate your patience."
+      icon="i-heroicons-exclamation-triangle-solid"
+    />
 
     <UMain>
       <slot />

@@ -1,3 +1,8 @@
+<script setup lang="ts">
+const maintenanceMode =
+  (useRuntimeConfig().public?.maintenanceMode as boolean) ?? false;
+</script>
+
 <template>
   <div class="overlay relative flex h-screen items-center justify-center">
     <div class="gradient" />
@@ -8,6 +13,16 @@
       to="/"
       color="neutral"
       class="absolute top-4"
+    />
+
+    <UAlert
+      v-if="maintenanceMode"
+      class="absolute bottom-4 left-1/2 w-full max-w-md -translate-x-1/2 px-4"
+      color="warning"
+      variant="subtle"
+      icon="i-heroicons-exclamation-triangle-solid"
+      title="Site under maintenance"
+      description="Some features may be unavailable or limited during this time. We apologize for any inconvenience and appreciate your patience."
     />
 
     <slot />

@@ -18,6 +18,10 @@ const sitemapIndex = [
   ...cdnIndex("orgs", ORG_SITEMAP_CHUNKS),
 ];
 
+// Flip to true before doing risky database work, then back to false when done.
+// Blocks the "add dataset" flow and auth (login/signup/forgot/reset password).
+const MAINTENANCE_MODE = true;
+
 export default defineNuxtConfig({
   compatibilityDate: "2025-01-16",
   css: ["~/assets/css/main.css"],
@@ -44,6 +48,7 @@ export default defineNuxtConfig({
     public: {
       baseUrl: process.env.NUXT_SITE_URL,
       environment: process.env.NUXT_SITE_ENV,
+      maintenanceMode: MAINTENANCE_MODE,
     },
   },
   eslint: {},

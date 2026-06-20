@@ -23,6 +23,9 @@ const isCurrentUser = computed(() => {
   return loggedIn.value && user.value?.id === userid;
 });
 
+const maintenanceMode =
+  (useRuntimeConfig().public?.maintenanceMode as boolean) ?? false;
+
 const { data: userData, error } = await useFetch(
   `/api/users/${userid}/datasets`,
 );
@@ -694,6 +697,7 @@ const handleDatasetsAdded = () => {
                 label="Add a dataset"
                 color="primary"
                 variant="solid"
+                :disabled="maintenanceMode"
                 @click="showAddDatasetModal = true"
               />
             </template>
@@ -720,6 +724,7 @@ const handleDatasetsAdded = () => {
               label="Add a dataset"
               color="primary"
               variant="solid"
+              :disabled="maintenanceMode"
               @click="showAddDatasetModal = true"
             />
           </div>
