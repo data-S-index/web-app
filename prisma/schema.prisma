@@ -142,7 +142,9 @@ model Dataset {
     version     String?
 
     publisher   String?
+    publisherId String   @default("")
     publishedAt DateTime
+    pubYear     Int      @default(0)
 
     subjects String[]
 
