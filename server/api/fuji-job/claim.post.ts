@@ -28,7 +28,7 @@ export default defineEventHandler(async () => {
 
   const dataset = await prisma.dataset.findUnique({
     where: { id: datasetId },
-    select: { identifier: true, identifierType: true },
+    select: { identifier: true, identifierType: true, publisherId: true },
   });
 
   if (!dataset) {
@@ -51,5 +51,6 @@ export default defineEventHandler(async () => {
     status: "pending" as const,
     datasetId,
     identifier: dataset.identifier,
+    publisherId: dataset.publisherId,
   };
 });
