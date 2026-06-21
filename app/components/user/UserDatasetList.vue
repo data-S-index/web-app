@@ -16,6 +16,7 @@ export interface DatasetListItem {
     identifier?: string;
     version?: string | null;
     publishedAt?: Date | string;
+    pubYear?: number;
   };
 }
 
@@ -284,7 +285,11 @@ const onRemove = (datasetId: number) => {
                 color="info"
                 variant="subtle"
                 class="cursor-help"
-                :label="$dayjs(item.dataset.publishedAt).format('MMMM YYYY ')"
+                :label="
+                  item.dataset.pubYear
+                    ? item.dataset.pubYear.toString()
+                    : 'Unknown Year'
+                "
                 icon="i-heroicons-calendar-20-solid"
               />
             </UTooltip>

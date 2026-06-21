@@ -9,6 +9,7 @@ interface UserDatasetItem {
     mentions: Array<unknown>;
     fujiScore?: { score: number | null };
     publishedAt?: string | Date | null;
+    pubYear?: number;
   };
 }
 

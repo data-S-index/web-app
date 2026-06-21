@@ -152,12 +152,12 @@ const copyDoi = async () => {
       <UPageHeader>
         <div class="flex flex-col space-y-2">
           <div class="flex items-center gap-2">
-            <div class="flex items-center gap-1">
+            <div class="flex hidden items-center gap-1">
               <UIcon name="i-heroicons-calendar-20-solid" class="h-4 w-4" />
 
               <p class="text-sm font-light">
                 Published on
-                {{ $dayjs(dataset.publishedAt).format("DD MMMM YYYY") }}
+                {{ dataset.pubYear || "Unknown Year" }}
                 {{ dataset.version ? `| ` : "" }}
               </p>
             </div>
@@ -180,7 +180,13 @@ const copyDoi = async () => {
             <UButton
               color="primary"
               variant="solid"
-              :to="`https://doi.org/${dataset.identifier}`"
+              :to="
+                dataset.identifierType === 'doi'
+                  ? `https://doi.org/${dataset.identifier}`
+                  : dataset.identifierType === 'emdb'
+                    ? `https://www.ebi.ac.uk/emdb/${dataset.identifier}`
+                    : dataset.identifier
+              "
               target="_blank"
               rel="noopener noreferrer"
               icon="i-heroicons-arrow-top-right-on-square-20-solid"
