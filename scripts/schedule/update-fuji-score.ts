@@ -101,6 +101,8 @@ const HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
 const HEALTH_CHECK_INTERVAL_MS = 10_000;
 const HEALTH_CHECK_ATTEMPTS = 10;
 
+const ts = () => new Date().toISOString();
+
 interface FujiEvaluateResponse {
   summary: {
     score_percent: {
@@ -131,22 +133,22 @@ type ClaimResponse =
     };
 
 async function waitForFujiService(): Promise<void> {
-  console.log(`Checking FUJI service at ${FUJI_BASE_URL}...`);
+  console.log(`[${ts()}] Checking FUJI service at ${FUJI_BASE_URL}...`);
 
   for (let attempt = 1; attempt <= HEALTH_CHECK_ATTEMPTS; attempt++) {
     try {
       const res = await fetch(FUJI_HEALTH_URL);
       if (res.ok || res.status < 500) {
-        console.log(`FUJI service is ready (attempt ${attempt})`);
+        console.log(`[${ts()}] FUJI service is ready (attempt ${attempt})`);
 
         return;
       }
       console.log(
-        `Attempt ${attempt}/${HEALTH_CHECK_ATTEMPTS}: service returned ${res.status}, retrying...`,
+        `[${ts()}] Attempt ${attempt}/${HEALTH_CHECK_ATTEMPTS}: service returned ${res.status}, retrying...`,
       );
     } catch {
       console.log(
-        `Attempt ${attempt}/${HEALTH_CHECK_ATTEMPTS}: service unreachable, retrying...`,
+        `[${ts()}] Attempt ${attempt}/${HEALTH_CHECK_ATTEMPTS}: service unreachable, retrying...`,
       );
     }
 
@@ -202,7 +204,7 @@ async function evaluateDataset(
     });
 
     console.log(
-      `Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)} [hardcoded for publisher ${publisherId}]`,
+      `[${ts()}] Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)} [hardcoded for publisher ${publisherId}]`,
     );
 
     return;
@@ -244,14 +246,14 @@ async function evaluateDataset(
   });
 
   console.log(
-    `Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)}`,
+    `[${ts()}] Scored dataset ${datasetId} (${identifier}) (${publisherId}): ${score.toFixed(2)}`,
   );
 }
 
 async function main() {
   await waitForFujiService();
 
-  console.log("Starting FUJI score calculation...");
+  console.log(`[${ts()}] Starting FUJI score calculation...`);
 
   let processed = 0;
   let failed = 0;
@@ -264,7 +266,9 @@ async function main() {
     try {
       switch (job.status) {
         case "skipped":
-          console.warn(`Dataset ${job.datasetId} skipped: ${job.reason}`);
+          console.warn(
+            `[${ts()}] Dataset ${job.datasetId} skipped: ${job.reason}`,
+          );
           break;
         case "pending":
           await evaluateDataset(job.datasetId, job.identifier, job.publisherId);
@@ -273,19 +277,21 @@ async function main() {
       processed++;
     } catch (error) {
       failed++;
-      console.error(`Failed dataset ${job.datasetId}:`, error);
+      console.error(`[${ts()}] Failed dataset ${job.datasetId}:`, error);
     }
 
     console.log(
-      `Processed ${(processed + failed).toLocaleString()} jobs so far`,
+      `[${ts()}] Processed ${(processed + failed).toLocaleString()} jobs so far`,
     );
   }
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`Done. ${processed} processed, ${failed} failed in ${elapsed}s`);
+  console.log(
+    `[${ts()}] Done. ${processed} processed, ${failed} failed in ${elapsed}s`,
+  );
 }
 
 main().catch((err) => {
-  console.error("Fatal error:", err);
+  console.error(`[${ts()}] Fatal error:`, err);
   process.exit(1);
 });
