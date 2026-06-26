@@ -260,7 +260,14 @@ async function main() {
   const startTime = Date.now();
 
   while (true) {
-    const job = await claimNextJob();
+    let job: ClaimResponse;
+    try {
+      job = await claimNextJob();
+    } catch (error) {
+      failed++;
+      console.error(`[${ts()}] Claim request failed, skipping:`, error);
+      continue;
+    }
     if (job.status === "empty") break;
 
     try {
