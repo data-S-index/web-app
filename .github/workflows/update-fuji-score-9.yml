@@ -2,7 +2,7 @@ name: Update FUJI scores (9/10)
 
 on:
   schedule:
-    - cron: "40 */5 * * *"
+    - cron: "40 */3 * * *"
   workflow_dispatch:
 
 jobs:
