@@ -12,61 +12,61 @@ export default defineEventHandler(async (event) => {
   const page = parseInt(query.page as string) || 1;
   const userid = userId;
 
-  // Use Meilisearch default limit of 20 results per page
-  // Note: Meilisearch has a maximum of 1000 results per query
-  // So max offset is 1000 - limit = 980 (for limit 20, max page is 50)
-  const limit = 20;
+  // Fetch from Meilisearch in batches of FETCH_LIMIT, filter out existing IDs,
+  // and return VISIBLE_LIMIT results per page. Offset steps by FETCH_LIMIT so
+  // consecutive pages don't return duplicate items after filtering.
+  const VISIBLE_LIMIT = 10;
+  const FETCH_LIMIT = 20;
   const MEILISEARCH_MAX_RESULTS = 1000;
-  const maxOffset = MEILISEARCH_MAX_RESULTS - limit; // 980
-  const maxPage = Math.floor(MEILISEARCH_MAX_RESULTS / limit); // 50
-  const offset = (page - 1) * limit;
+  const maxOffset = MEILISEARCH_MAX_RESULTS - FETCH_LIMIT;
+  const maxPage = Math.floor(MEILISEARCH_MAX_RESULTS / FETCH_LIMIT);
+  const offset = (page - 1) * FETCH_LIMIT;
+
+  // Fetch existing dataset IDs first so we can filter Meilisearch results
+  let existingDatasetIds: number[] = [];
+  if (userid) {
+    const userDatasets = await prisma.userDataset.findMany({
+      where: {
+        userId: userid,
+      },
+      select: {
+        datasetId: true,
+      },
+    });
+    existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
+  }
 
   // If no search term, return empty results
   if (!searchTerm.trim()) {
-    // Still fetch existing dataset IDs if userid is provided
-    let existingDatasetIds: number[] = [];
-    if (userid) {
-      const userDatasets = await prisma.userDataset.findMany({
-        where: {
-          userId: userid,
-        },
-        select: {
-          datasetId: true,
-        },
-      });
-      existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
-    }
-
     return {
       datasets: [],
       total: 0,
       page,
-      limit,
+      limit: VISIBLE_LIMIT,
       queryDuration: "0ms",
       existingDatasetIds,
     };
   }
 
   try {
-    // Validate offset doesn't exceed Meilisearch's limit
-    // Meilisearch can only return up to 1000 results total
     const validatedOffset = Math.min(offset, maxOffset);
     const validatedPageForOffset =
       validatedOffset !== offset
-        ? Math.floor(validatedOffset / limit) + 1
+        ? Math.floor(validatedOffset / FETCH_LIMIT) + 1
         : page;
 
-    // Search Meilisearch index for dataset IDs
     const index = meilisearch.index("dataset");
     const searchResults = await index.search(searchTerm, {
-      limit: limit,
+      limit: FETCH_LIMIT,
       offset: validatedOffset,
     });
 
-    // Extract dataset IDs from search results and convert to numbers
-    const datasetIds = searchResults.hits
+    const existingSet = new Set(existingDatasetIds);
+
+    // Extract dataset IDs from search results, filter out existing ones
+    const allDatasetIds = searchResults.hits
       .map((hit) => {
-        const id = (hit as Record<string, unknown>).id;
+        const { id } = hit as Record<string, unknown>;
 
         return typeof id === "string" ? parseInt(id, 10) : id;
       })
@@ -74,7 +74,17 @@ export default defineEventHandler(async (event) => {
         (id): id is number => typeof id === "number" && !isNaN(id),
       ) as number[];
 
-    // If no results from Meilisearch, return empty
+    const datasetIds = allDatasetIds
+      .filter((id) => !existingSet.has(id))
+      .slice(0, VISIBLE_LIMIT);
+
+    const rawTotalCount = searchResults.estimatedTotalHits || 0;
+    const cappedTotal = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
+
+    // Adjust total so that (total / VISIBLE_LIMIT) gives the correct page count.
+    // Each Meilisearch page covers FETCH_LIMIT items, so divide total proportionally.
+    const totalCount = Math.ceil(cappedTotal / FETCH_LIMIT) * VISIBLE_LIMIT;
+
     if (datasetIds.length === 0) {
       const queryEndTime = performance.now();
       const queryDuration = queryEndTime - queryStartTime;
@@ -83,35 +93,16 @@ export default defineEventHandler(async (event) => {
           ? `${(queryDuration / 1000).toFixed(2)}s`
           : `${queryDuration.toFixed(2)}ms`;
 
-      // Still fetch existing dataset IDs if userid is provided
-      let existingDatasetIds: number[] = [];
-      if (userid) {
-        const userDatasets = await prisma.userDataset.findMany({
-          where: {
-            userId: userid,
-          },
-          select: {
-            datasetId: true,
-          },
-        });
-        existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
-      }
-
-      // Cap total at Meilisearch's maximum (1000) for pagination purposes
-      const rawTotalCount = searchResults.estimatedTotalHits || 0;
-      const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
-
       return {
         datasets: [],
         total: totalCount,
         page,
-        limit,
+        limit: VISIBLE_LIMIT,
         queryDuration: executionTime,
         existingDatasetIds,
       };
     }
 
-    // Fetch full dataset details from database
     const datasets = await prisma.dataset.findMany({
       where: {
         id: { in: datasetIds },
@@ -130,7 +121,6 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // Get authors for each dataset
     const authors = await prisma.datasetAuthor.findMany({
       where: {
         datasetId: { in: datasetIds },
@@ -141,20 +131,18 @@ export default defineEventHandler(async (event) => {
       },
     });
 
-    // Group authors by dataset
     const authorsByDataset = authors.reduce(
       (acc: Record<number, Array<{ name: string }>>, author) => {
         if (!acc[author.datasetId]) {
           acc[author.datasetId] = [];
         }
-        acc[author.datasetId].push({ name: author.name });
+        acc[author.datasetId]?.push({ name: author.name });
 
         return acc;
       },
       {} as Record<number, Array<{ name: string }>>,
     );
 
-    // Format results - maintain order from Meilisearch results
     const datasetMap = new Map(datasets.map((d) => [d.id, d]));
     const formattedDatasets = datasetIds
       .map((id: number) => {
@@ -188,36 +176,13 @@ export default defineEventHandler(async (event) => {
         } => item !== null,
       );
 
-    // Always get total count from Meilisearch (don't cache it)
-    // This ensures accuracy as Meilisearch's estimatedTotalHits is the source of truth
-    const rawTotalCount = searchResults.estimatedTotalHits || 0;
-
-    // Cap total at Meilisearch's maximum (1000) for pagination purposes
-    // This prevents trying to access pages beyond what Meilisearch can return
-    const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
-
-    // Validate page number - use the smaller of calculated max page or Meilisearch limit
     const calculatedMaxPage =
-      totalCount > 0 ? Math.ceil(totalCount / limit) : 1;
+      totalCount > 0 ? Math.ceil(totalCount / VISIBLE_LIMIT) : 1;
     const actualMaxPage = Math.min(calculatedMaxPage, maxPage);
     const validatedPage = Math.max(
       1,
       Math.min(validatedPageForOffset, actualMaxPage),
     );
-
-    // Fetch existing dataset IDs for the user if userid is provided
-    let existingDatasetIds: number[] = [];
-    if (userid) {
-      const userDatasets = await prisma.userDataset.findMany({
-        where: {
-          userId: userid,
-        },
-        select: {
-          datasetId: true,
-        },
-      });
-      existingDatasetIds = userDatasets.map((ud) => ud.datasetId);
-    }
 
     const queryEndTime = performance.now();
     const queryDuration = queryEndTime - queryStartTime;
@@ -226,14 +191,11 @@ export default defineEventHandler(async (event) => {
         ? `${(queryDuration / 1000).toFixed(2)}s`
         : `${queryDuration.toFixed(2)}ms`;
 
-    // Ensure total never exceeds Meilisearch's limit (safety check)
-    const finalTotal = Math.min(totalCount, MEILISEARCH_MAX_RESULTS);
-
     return {
       datasets: formattedDatasets,
-      total: finalTotal, // Capped at 1000 to match Meilisearch's limit
-      page: validatedPage, // Return validated page to ensure frontend stays in sync
-      limit,
+      total: totalCount,
+      page: validatedPage,
+      limit: VISIBLE_LIMIT,
       queryDuration: executionTime,
       existingDatasetIds,
     };

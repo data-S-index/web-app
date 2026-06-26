@@ -428,7 +428,7 @@ watch(
           <UPagination
             v-model:page="searchPage"
             :total="Math.min(searchTotal, 1000)"
-            :items-per-page="20"
+            :items-per-page="10"
             :disabled="searchLoading"
             @update:page="updateSearchPage"
           />
