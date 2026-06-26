@@ -77,43 +77,51 @@ const sIndexMetrics = computed(() => [
     name: "Datasets registered",
     value: 49061167,
     description: "Total number of datasets registered in the platform",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/datasets",
   },
   {
     name: "Total citations identified",
     value: 7669225,
     description: "Total number of citations identified in the platform",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/citations",
   },
   {
     name: "Total mentions identified",
     value: 91891,
     description: "Total number of mentions identified in the platform",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/mentions",
   },
   {
     name: "Total FAIR scores computed",
     value: 49061167,
     description:
       "Total number of FAIR scores computed for datasets in the platform",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/fair-scores",
   },
   {
     name: "Total Research Fields assigned",
     value: 49061167,
     description:
       "Total number of research fields assigned to datasets in the platform",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/research-fields",
   },
   {
     name: "Total Dataset Indices computed",
     value: 50338032,
     description: "Total number of  dataset index records in our database",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/datasets",
   },
   {
     name: "Researcher Accounts",
     value: platformMetrics.value?.userCount ?? 0,
     description: "Profiles created and actively managed by researchers",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/overview",
   },
   {
     name: "Generated Profiles",
     value: 4093652,
     description: "Researcher profiles automatically generated for demo purpose",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/overview",
   },
 ]);
 
@@ -123,32 +131,40 @@ const sources = ref([
     value: 9.7,
     suffix: "M+",
     description: "Parsed citations to find citations to our datasets.",
-    learnMoreUrl: "https://docs.scholardata.io/data-collection/citations",
+    learnMoreUrl:
+      "https://docs.scholardata.io/data-collection/citations#make-data-count-mdc-data-citation-corpus",
   },
   {
     name: "OpenAlex",
     value: 450,
     suffix: "M+",
     description: "References from works analyzed for dataset citations.",
-    learnMoreUrl: "https://docs.scholardata.io/data-collection/citations",
+    learnMoreUrl:
+      "https://docs.scholardata.io/data-collection/citations#openalex",
   },
   {
     name: "Software Heritage",
     value: 220,
     suffix: "M+",
     description: "READMEs from GitHub repos scanned for dataset mentions.",
+    learnMoreUrl:
+      "https://docs.scholardata.io/data-collection/mentions#software-heritage",
   },
   {
     name: "Hugging Face",
     value: 2.2,
     suffix: "M+",
     description: "Model cards scanned for dataset mentions.",
+    learnMoreUrl:
+      "https://docs.scholardata.io/data-collection/mentions#hugging-face",
   },
   {
     name: "USPTO",
     value: 6.4,
     suffix: "M+",
     description: "Granted patents scanned for dataset mentions.",
+    learnMoreUrl:
+      "https://docs.scholardata.io/data-collection/mentions#uspto-patents",
   },
 ]);
 
@@ -390,6 +406,21 @@ const fieldPieChartOption = computed(() => ({
         </div>
 
         <p class="mt-2 text-sm">{{ metric.description }}</p>
+
+        <template v-if="metric.learnMoreUrl" #footer>
+          <UButton
+            :to="metric.learnMoreUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            color="primary"
+            variant="link"
+            size="sm"
+            trailing-icon="i-heroicons-arrow-top-right-on-square"
+            class="p-0"
+          >
+            Learn more
+          </UButton>
+        </template>
       </UCard>
     </div>
 
