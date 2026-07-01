@@ -12,15 +12,8 @@ export default defineEventHandler(async (event) => {
   const page = parseInt(query.page as string) || 1;
   const userid = userId;
 
-  // Fetch from Meilisearch in batches of FETCH_LIMIT, filter out existing IDs,
-  // and return VISIBLE_LIMIT results per page. Offset steps by FETCH_LIMIT so
-  // consecutive pages don't return duplicate items after filtering.
   const VISIBLE_LIMIT = 10;
-  const FETCH_LIMIT = 20;
   const MEILISEARCH_MAX_RESULTS = 1000;
-  const maxOffset = MEILISEARCH_MAX_RESULTS - FETCH_LIMIT;
-  const maxPage = Math.floor(MEILISEARCH_MAX_RESULTS / FETCH_LIMIT);
-  const offset = (page - 1) * FETCH_LIMIT;
 
   // Fetch existing dataset IDs first so we can filter Meilisearch results
   let existingDatasetIds: number[] = [];
@@ -49,16 +42,15 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const validatedOffset = Math.min(offset, maxOffset);
-    const validatedPageForOffset =
-      validatedOffset !== offset
-        ? Math.floor(validatedOffset / FETCH_LIMIT) + 1
-        : page;
-
+    // Fetch all matching hits (up to Meilisearch's result cap) in one go, then
+    // filter out existing datasets and paginate in memory. This avoids losing
+    // results: filtering per-page batch can discard eligible items that don't
+    // happen to land within that batch's slice.
     const index = meilisearch.index("dataset");
     const searchResults = await index.search(searchTerm, {
-      limit: FETCH_LIMIT,
-      offset: validatedOffset,
+      limit: MEILISEARCH_MAX_RESULTS,
+      offset: 0,
+      attributesToRetrieve: ["id"],
     });
 
     const existingSet = new Set(existingDatasetIds);
@@ -74,16 +66,18 @@ export default defineEventHandler(async (event) => {
         (id): id is number => typeof id === "number" && !isNaN(id),
       ) as number[];
 
-    const datasetIds = allDatasetIds
-      .filter((id) => !existingSet.has(id))
-      .slice(0, VISIBLE_LIMIT);
+    const eligibleDatasetIds = allDatasetIds.filter(
+      (id) => !existingSet.has(id),
+    );
 
-    const rawTotalCount = searchResults.estimatedTotalHits || 0;
-    const cappedTotal = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
+    const totalCount = eligibleDatasetIds.length;
+    const maxPage = totalCount > 0 ? Math.ceil(totalCount / VISIBLE_LIMIT) : 1;
+    const validatedPage = Math.max(1, Math.min(page, maxPage));
 
-    // Adjust total so that (total / VISIBLE_LIMIT) gives the correct page count.
-    // Each Meilisearch page covers FETCH_LIMIT items, so divide total proportionally.
-    const totalCount = Math.ceil(cappedTotal / FETCH_LIMIT) * VISIBLE_LIMIT;
+    const datasetIds = eligibleDatasetIds.slice(
+      (validatedPage - 1) * VISIBLE_LIMIT,
+      validatedPage * VISIBLE_LIMIT,
+    );
 
     if (datasetIds.length === 0) {
       const queryEndTime = performance.now();
@@ -96,7 +90,7 @@ export default defineEventHandler(async (event) => {
       return {
         datasets: [],
         total: totalCount,
-        page,
+        page: validatedPage,
         limit: VISIBLE_LIMIT,
         queryDuration: executionTime,
         existingDatasetIds,
@@ -175,14 +169,6 @@ export default defineEventHandler(async (event) => {
           citationCount: number;
         } => item !== null,
       );
-
-    const calculatedMaxPage =
-      totalCount > 0 ? Math.ceil(totalCount / VISIBLE_LIMIT) : 1;
-    const actualMaxPage = Math.min(calculatedMaxPage, maxPage);
-    const validatedPage = Math.max(
-      1,
-      Math.min(validatedPageForOffset, actualMaxPage),
-    );
 
     const queryEndTime = performance.now();
     const queryDuration = queryEndTime - queryStartTime;

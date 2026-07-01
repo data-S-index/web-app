@@ -115,13 +115,12 @@ const sIndexMetrics = computed(() => [
     name: "Researcher Accounts",
     value: platformMetrics.value?.userCount ?? 0,
     description: "Profiles created and actively managed by researchers",
-    learnMoreUrl: "https://docs.scholardata.io/data-collection/overview",
   },
   {
     name: "Generated Profiles",
     value: 4093652,
     description: "Researcher profiles automatically generated for demo purpose",
-    learnMoreUrl: "https://docs.scholardata.io/data-collection/overview",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/auto-profiles",
   },
 ]);
 

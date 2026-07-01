@@ -253,9 +253,7 @@ watch(
     </div>
 
     <SearchTips
-      :tips="[
-        'Search by dataset title, author name, DOI, ORCID, or keywords',
-      ]"
+      :tips="['Search by dataset title, author name, DOI, ORCID, or keywords']"
       :exact-match-examples="['10.5061/dryad.abc123', '0000-0002-1825-0097']"
     />
 
@@ -337,16 +335,16 @@ watch(
 
                 <div class="flex min-w-0 flex-1 flex-col gap-2">
                   <div class="flex items-start justify-between gap-3">
-                    <a
+                    <!-- <a
                       :href="`/datasets/${result.id}`"
                       target="_blank"
                       class="group min-w-0 flex-1"
                       @click.stop
-                    >
-                      <h3 :class="getTitleClasses()">
-                        {{ result.title }}
-                      </h3>
-                    </a>
+                    > -->
+                    <h3 :class="getTitleClasses()">
+                      {{ result.title }}
+                    </h3>
+                    <!-- </a> -->
 
                     <UBadge
                       v-if="result.version"
