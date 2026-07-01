@@ -39,14 +39,6 @@ export default defineEventHandler(async () => {
     };
   }
 
-  if (dataset.identifierType !== "doi") {
-    return {
-      status: "skipped" as const,
-      datasetId,
-      reason: `Unsupported identifierType "${dataset.identifierType}"`,
-    };
-  }
-
   return {
     status: "pending" as const,
     datasetId,
