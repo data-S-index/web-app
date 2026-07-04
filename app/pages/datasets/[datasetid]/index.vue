@@ -29,10 +29,34 @@ if (error.value) {
 const truncate = (text: string, maxLength: number): string =>
   text.length > maxLength ? `${text.slice(0, maxLength - 1).trim()}…` : text;
 
-const ogTitle = truncate(dataset.value?.title || "Scholar Data", 70);
-const ogDescription = truncate(
+// Lets title and description borrow unused budget from each other so a
+// short one doesn't force the other to be cut shorter than it needs to be.
+const truncateOgText = (
+  title: string,
+  description: string,
+  titleBudget: number,
+  descriptionBudget: number,
+) => {
+  const unusedTitleBudget = Math.max(0, titleBudget - title.length);
+  const unusedDescriptionBudget = Math.max(
+    0,
+    descriptionBudget - description.length,
+  );
+
+  return {
+    title: truncate(title, titleBudget + unusedDescriptionBudget),
+    description: truncate(
+      description,
+      descriptionBudget + unusedTitleBudget,
+    ),
+  };
+};
+
+const { title: ogTitle, description: ogDescription } = truncateOgText(
+  dataset.value?.title || "Scholar Data",
   dataset.value?.description ||
     "View this dataset's details and metrics on Scholar Data.",
+  70,
   200,
 );
 
