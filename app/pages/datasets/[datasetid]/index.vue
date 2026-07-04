@@ -26,6 +26,16 @@ if (error.value) {
   });
 }
 
+const truncate = (text: string, maxLength: number): string =>
+  text.length > maxLength ? `${text.slice(0, maxLength - 1).trim()}…` : text;
+
+const ogTitle = truncate(dataset.value?.title || "Scholar Data", 70);
+const ogDescription = truncate(
+  dataset.value?.description ||
+    "View this dataset's details and metrics on Scholar Data.",
+  200,
+);
+
 useSeoMeta({
   title: dataset.value?.title || "Scholar Data",
   description:
@@ -34,10 +44,8 @@ useSeoMeta({
 });
 
 defineOgImage("NuxtSeo.takumi", {
-  title: dataset.value?.title || "Scholar Data",
-  description:
-    dataset.value?.description ||
-    "View this dataset's details and metrics on Scholar Data.",
+  title: ogTitle,
+  description: ogDescription,
 });
 
 const getAuthorTooltipText = (author: Author): string => {
