@@ -45,10 +45,7 @@ const truncateOgText = (
 
   return {
     title: truncate(title, titleBudget + unusedDescriptionBudget),
-    description: truncate(
-      description,
-      descriptionBudget + unusedTitleBudget,
-    ),
+    description: truncate(description, descriptionBudget + unusedTitleBudget),
   };
 };
 
@@ -56,8 +53,8 @@ const { title: ogTitle, description: ogDescription } = truncateOgText(
   dataset.value?.title || "Scholar Data",
   dataset.value?.description ||
     "View this dataset's details and metrics on Scholar Data.",
-  70,
-  200,
+  50,
+  80,
 );
 
 useSeoMeta({
