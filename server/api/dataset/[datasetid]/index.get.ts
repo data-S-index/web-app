@@ -61,6 +61,13 @@ export default defineEventHandler(async (event) => {
           mtw: true,
         },
       },
+      datasetRights: {
+        select: {
+          name: true,
+          identifier: true,
+          uri: true,
+        },
+      },
       datasetTopic: true,
     },
   });

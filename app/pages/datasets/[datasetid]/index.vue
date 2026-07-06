@@ -440,6 +440,40 @@ const copyDoi = async () => {
                       {{ dataset.publisher }}
                     </p>
                   </div>
+
+                  <div
+                    v-if="
+                      dataset.datasetRights && dataset.datasetRights.length > 0
+                    "
+                    class="space-y-0"
+                  >
+                    <p class="mb-1 text-sm font-medium">License</p>
+
+                    <div
+                      v-for="(right, index) in dataset.datasetRights"
+                      :key="index"
+                      class="flex items-start gap-1"
+                    >
+                      <p
+                        class="line-clamp-2 text-sm text-gray-700 dark:text-gray-300"
+                      >
+                        {{ right.name || right.identifier }}
+                      </p>
+
+                      <NuxtLink
+                        v-if="right.uri"
+                        :href="right.uri"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="hover:text-primary-600 dark:hover:text-primary-400 shrink-0 text-gray-400 transition-colors dark:text-gray-400"
+                      >
+                        <UIcon
+                          name="i-heroicons-arrow-top-right-on-square-20-solid"
+                          class="size-4"
+                        />
+                      </NuxtLink>
+                    </div>
+                  </div>
                 </div>
               </div>
             </UCard>
