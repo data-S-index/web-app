@@ -83,7 +83,6 @@ model UserDataset {
 model AutomatedUser {
     id Int @id @default(autoincrement())
 
-    nameType        String?
     name            String   @default("")
     nameIdentifiers String[] @default([])
     affiliations    String[] @default([])
