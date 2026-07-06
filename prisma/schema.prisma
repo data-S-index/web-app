@@ -164,10 +164,27 @@ model Dataset {
     dindices                      DIndex[]
     automatedUserDatasets         AutomatedUserDataset[]
     automatedOrganizationDatasets AutomatedOrganizationDataset[]
+    datasetRights                 DatasetRights[]
 
     @@unique([identifierType, identifier])
     @@index([identifier])
     @@index([publishedAt])
+}
+
+model DatasetRights {
+    id BigInt @id @default(autoincrement())
+
+    dataset   Dataset @relation(fields: [datasetId], references: [id], onDelete: Cascade)
+    datasetId Int
+
+    name       String? // e.g. Creative Commons Attribution 4.0 International License
+    identifier String? // e.g. CC-BY-4.0, CC0, etc.
+    uri        String? // e.g. https://creativecommons.org/licenses/by/4.0/
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@index([datasetId])
 }
 
 model DatasetAuthor {
