@@ -53,26 +53,26 @@ onMounted(() => {
   }
 });
 
-// 14773	Schiebel, Ralf			840	26682.386616270604	2025	31.76	39057
-// 1002	Hemleben, Christoph			762	23119.658062356193	2025	30.34	33881
-// 430013	Motz, Gary	Personal	Yale Peabody Museum	10	9545.833550065021	2025	954.58	28627
-// 3640718	Krizhevsky, Alex	Personal		9	8628.512587474217	2025	958.72	25638
-// 432818	Grant, Sharon	Personal	Field Museum of Natural History	11	7664.501405795111	2025	696.77	22607
-// 1009	Mackensen, Andreas			576	6814.500882927574	2025	11.83	9421
-// 16707	Assmy, Philipp			250	5324.177973344383	2025	21.3	8160
-// 14790	Stangeew, Elena			118	5192.257787662468	2024	44	7618
-// 19724	Armonies, Werner			184	4543.086065965589	2024	24.69	7550
-// 17749	Psarra, Stella			271	4032.2259456781276	2024	14.88	6160
+// 14766	Schiebel, Ralf		875	26215.304732383098	2025	29.96	39066
+// 1002	Hemleben, Christoph		1265	23329.75006276463	2025	18.44	34602
+// 409984	Motz, Gary	Yale Peabody Museum	10	9545.891681232324	2025	954.59	28627
+// 3452990	Krizhevsky, Alex		9	8627.849194021781	2025	958.65	25657
+// 412731	Grant, Sharon	Field Museum of Natural History	11	7659.239464813532	2025	696.29	22608
+// 1009	Mackensen, Andreas		576	6446.135973837611	2025	11.19	9421
+// 16699	Assmy, Philipp		385	5269.643194706694	2025	13.69	8229
+// 14783	Stangeew, Elena		189	5112.071606422363	2024	27.05	7618
+// 19713	Armonies, Werner		184	4341.9183188925335	2024	23.60	7550
+// 17740	Psarra, Stella		364	7239.141094460737	2024	19.89	11409
 
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
   {
-    id: 14773,
+    id: 14766,
     name: "Schiebel, Ralf",
     nameIdentifiers: ["0000-0002-6252-7647"],
     affiliations: [],
-    datasetCount: 840,
-    sIndex: 26682.386616270604,
+    datasetCount: 875,
+    sIndex: 26215.304732383098,
     profileType: "au",
   },
   {
@@ -80,35 +80,35 @@ const defaultSearchResults = ref<SearchResult[]>([
     name: "Hemleben, Christoph",
     nameIdentifiers: [],
     affiliations: [],
-    datasetCount: 762,
-    sIndex: 23119.658062356193,
+    datasetCount: 1265,
+    sIndex: 23329.75006276463,
     profileType: "au",
   },
   {
-    id: 430013,
+    id: 409984,
     name: "Motz, Gary",
     nameIdentifiers: [],
     affiliations: ["Yale Peabody Museum"],
     datasetCount: 10,
-    sIndex: 9545.833550065021,
+    sIndex: 9545.891681232324,
     profileType: "au",
   },
   {
-    id: 3640718,
+    id: 3452990,
     name: "Krizhevsky, Alex",
     nameIdentifiers: [],
     affiliations: [],
     datasetCount: 9,
-    sIndex: 8628.512587474217,
+    sIndex: 8627.849194021781,
     profileType: "au",
   },
   {
-    id: 432818,
+    id: 412731,
     name: "Grant, Sharon",
     nameIdentifiers: [],
     affiliations: ["Field Museum of Natural History"],
     datasetCount: 11,
-    sIndex: 7664.501405795111,
+    sIndex: 7659.239464813532,
     profileType: "au",
   },
   {
@@ -117,43 +117,43 @@ const defaultSearchResults = ref<SearchResult[]>([
     nameIdentifiers: ["https://orcid.org/0000-0002-5024-4455"],
     affiliations: [],
     datasetCount: 576,
-    sIndex: 6814.500882927574,
+    sIndex: 6446.135973837611,
     profileType: "au",
   },
   {
-    id: 16707,
+    id: 16699,
     name: "Assmy, Philipp",
     nameIdentifiers: [],
     affiliations: [],
-    datasetCount: 250,
-    sIndex: 5324.177973344383,
+    datasetCount: 385,
+    sIndex: 5269.643194706694,
     profileType: "au",
   },
   {
-    id: 14790,
+    id: 14783,
     name: "Stangeew, Elena",
     nameIdentifiers: [],
     affiliations: [],
-    datasetCount: 118,
-    sIndex: 5192.257787662468,
+    datasetCount: 189,
+    sIndex: 5112.071606422363,
     profileType: "au",
   },
   {
-    id: 19724,
+    id: 19713,
     name: "Armonies, Werner",
     nameIdentifiers: ["https://orcid.org/0000-0001-5546-2462"],
     affiliations: [],
     datasetCount: 184,
-    sIndex: 4543.086065965589,
+    sIndex: 4341.9183188925335,
     profileType: "au",
   },
   {
-    id: 17749,
+    id: 17740,
     name: "Psarra, Stella",
     nameIdentifiers: [],
     affiliations: [],
-    datasetCount: 271,
-    sIndex: 4032.2259456781276,
+    datasetCount: 364,
+    sIndex: 7239.141094460737,
     profileType: "au",
   },
 ]);

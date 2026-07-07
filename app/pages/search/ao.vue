@@ -49,16 +49,16 @@ onMounted(() => {
   }
 });
 
-// 3087	Naturalis Biodiversity Center	460	18665.83233281953	2025	40.58	54087
+// 3087	Naturalis Biodiversity Center	460	18665.83233281953	2025	40.58	55194
 // 18492	University of Alaska Fairbanks - School of Fisheries and Oceans	59	1750.130674790651	2024	29.66	4125
-// 9523	Yale Peabody Museum	22	9568.066494731056	2025	434.91	28635
-// 653	California Academy of Sciences	297	9262.133983899585	2025	31.19	26631
-// 2496	University of Colorado	794	2520.968694784173	2025	3.18	3733
-// 45730	Bloomberg	31	7198.113511451558	2025	232.2	16949
-// 10543	University of Kansas, Biodiversity Institute	8	3870.560131932596	2025	483.82	11585
-// 179	University of Exeter	2772	3593.562857698414	2025	1.3	2270
-// 440	Boston University	3013	3632.0423205792004	2025	1.21	2733
-// 9895	Danish Biodiversity Information Facility (DanBIF)	119	2719.152466734635	2025	22.85	4980
+// 9523	Yale Peabody Museum	22	9568.066494731056	2025	434.91	28637
+// 653	California Academy of Sciences	297	9262.133983899585	2025	31.19	29042
+// 2496	University of Colorado	794	2520.968694784173	2025	3.18	3781
+// 45730	Bloomberg	31	7198.113511451558	2025	232.20	17206
+// 10543	University of Kansas, Biodiversity Institute	8	3870.560131932596	2025	483.82	21697
+// 179	University of Exeter	2772	3593.562857698414	2025	1.30	2356
+// 440	Boston University	3013	3632.0423205792004	2025	1.21	2946
+// 9895	Danish Biodiversity Information Facility (DanBIF)	119	2719.152466734635	2025	22.85	5246
 
 // Populate via query; placeholder data for layout only
 const defaultSearchResults = ref<SearchResult[]>([
