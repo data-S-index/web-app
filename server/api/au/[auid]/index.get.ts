@@ -35,7 +35,6 @@ export default defineEventHandler(async (event) => {
     where: { id: auid },
     select: {
       id: true,
-      nameType: true,
       name: true,
       nameIdentifiers: true,
       affiliations: true,
@@ -51,7 +50,6 @@ export default defineEventHandler(async (event) => {
 
   const payload = {
     id: automatedUser.id,
-    nameType: automatedUser.nameType ?? undefined,
     name: automatedUser.name ?? "",
     nameIdentifiers: automatedUser.nameIdentifiers ?? [],
     affiliations: automatedUser.affiliations ?? [],

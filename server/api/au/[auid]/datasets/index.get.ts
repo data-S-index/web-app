@@ -75,7 +75,6 @@ export default defineEventHandler(async (event) => {
           datasetAuthors: {
             select: {
               name: true,
-              nameType: true,
               affiliations: true,
               nameIdentifiers: true,
             },
