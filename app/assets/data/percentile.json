@@ -1,0 +1,2502 @@
+[
+  {
+    "metric_name": "s_index",
+    "percentile": 1,
+    "score_threshold": 0.0859890417085989
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 2,
+    "score_threshold": 0.09520272361497989
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 3,
+    "score_threshold": 0.11590926219006709
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 4,
+    "score_threshold": 0.17650657693484248
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 5,
+    "score_threshold": 0.2097327091750973
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 6,
+    "score_threshold": 0.2499535747446611
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 7,
+    "score_threshold": 0.273785205818632
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 8,
+    "score_threshold": 0.3050708032199307
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 9,
+    "score_threshold": 0.3333333333333333
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 10,
+    "score_threshold": 0.3333333333333333
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 11,
+    "score_threshold": 0.3571030640668524
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 12,
+    "score_threshold": 0.3810054482417038
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 13,
+    "score_threshold": 0.41179769552360557
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 14,
+    "score_threshold": 0.4358666666666667
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 15,
+    "score_threshold": 0.4444444444444445
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 16,
+    "score_threshold": 0.476225854383358
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 17,
+    "score_threshold": 0.5098399102681758
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 18,
+    "score_threshold": 0.5397061251444609
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 19,
+    "score_threshold": 0.5778008898133704
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 20,
+    "score_threshold": 0.6221400508435405
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 21,
+    "score_threshold": 0.6518758185039674
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 22,
+    "score_threshold": 0.6666666666666666
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 23,
+    "score_threshold": 0.6666666666666666
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 24,
+    "score_threshold": 0.6666666666666666
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 25,
+    "score_threshold": 0.6904363974001857
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 26,
+    "score_threshold": 0.7233621402638533
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 27,
+    "score_threshold": 0.7380996595481274
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 28,
+    "score_threshold": 0.7575041361380288
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 29,
+    "score_threshold": 0.7745742836749261
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 30,
+    "score_threshold": 0.7852987837123214
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 31,
+    "score_threshold": 0.8064407916806441
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 32,
+    "score_threshold": 0.8217467115325787
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 33,
+    "score_threshold": 0.8394966615305597
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 34,
+    "score_threshold": 0.857231302625062
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 35,
+    "score_threshold": 0.8717333333333334
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 36,
+    "score_threshold": 0.8889589242567496
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 37,
+    "score_threshold": 0.9111342231467036
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 38,
+    "score_threshold": 0.9265839992078938
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 39,
+    "score_threshold": 0.9495220086143501
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 40,
+    "score_threshold": 0.9683011391778108
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 41,
+    "score_threshold": 0.977870225920148
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 42,
+    "score_threshold": 0.999938099659548
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 43,
+    "score_threshold": 1.0149022042843836
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 44,
+    "score_threshold": 1.0434848142286532
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 45,
+    "score_threshold": 1.0512666666666666
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 46,
+    "score_threshold": 1.0794122502889218
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 47,
+    "score_threshold": 1.1025333333333334
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 48,
+    "score_threshold": 1.1282666666666668
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 49,
+    "score_threshold": 1.159972917343733
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 50,
+    "score_threshold": 1.1919319256224392
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 51,
+    "score_threshold": 1.22233130662605
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 52,
+    "score_threshold": 1.257855738383525
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 53,
+    "score_threshold": 1.3011229850095332
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 54,
+    "score_threshold": 1.3333333333333333
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 55,
+    "score_threshold": 1.3333333333333333
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 56,
+    "score_threshold": 1.3803905722206948
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 57,
+    "score_threshold": 1.4177009975108188
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 58,
+    "score_threshold": 1.4647945334556525
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 59,
+    "score_threshold": 1.5053114167505313
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 60,
+    "score_threshold": 1.5384
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 61,
+    "score_threshold": 1.5764370611263323
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 62,
+    "score_threshold": 1.621893879639342
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 63,
+    "score_threshold": 1.659271242585317
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 64,
+    "score_threshold": 1.6947874055258219
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 65,
+    "score_threshold": 1.7256525056766092
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 66,
+    "score_threshold": 1.7691999999999999
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 67,
+    "score_threshold": 1.8209583922402628
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 68,
+    "score_threshold": 1.872848020645268
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 69,
+    "score_threshold": 1.9421207325344791
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 70,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 71,
+    "score_threshold": 2.0637279181112764
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 72,
+    "score_threshold": 2.1502851392150286
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 73,
+    "score_threshold": 2.248840150844468
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 74,
+    "score_threshold": 2.3580411640941588
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 75,
+    "score_threshold": 2.463745944448733
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 76,
+    "score_threshold": 2.5996157784590586
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 77,
+    "score_threshold": 2.693631616719474
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 78,
+    "score_threshold": 2.8468967411872743
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 79,
+    "score_threshold": 2.9855575563715933
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 80,
+    "score_threshold": 3.133628372343175
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 81,
+    "score_threshold": 3.305621562661437
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 82,
+    "score_threshold": 3.445018119639301
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 83,
+    "score_threshold": 3.6707941196962097
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 84,
+    "score_threshold": 3.9337960352079366
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 85,
+    "score_threshold": 4.19040544722996
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 86,
+    "score_threshold": 4.505835879783363
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 87,
+    "score_threshold": 4.851689329399723
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 88,
+    "score_threshold": 5.229071759112572
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 89,
+    "score_threshold": 5.717349471287077
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 90,
+    "score_threshold": 6.281733333333333
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 91,
+    "score_threshold": 6.932531392743856
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 92,
+    "score_threshold": 7.705000000000001
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 93,
+    "score_threshold": 8.688796440746517
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 94,
+    "score_threshold": 10.041989872600757
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 95,
+    "score_threshold": 11.781866666666664
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 96,
+    "score_threshold": 14.26657863172833
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 97,
+    "score_threshold": 18.309892729960655
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 98,
+    "score_threshold": 26.230175999999986
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 99,
+    "score_threshold": 48.614621333333346
+  },
+  {
+    "metric_name": "s_index",
+    "percentile": 100,
+    "score_threshold": 2091687.6466232995
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 1,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 2,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 3,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 4,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 5,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 6,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 7,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 8,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 9,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 10,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 11,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 12,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 13,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 14,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 15,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 16,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 17,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 18,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 19,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 20,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 21,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 22,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 23,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 24,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 25,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 26,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 27,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 28,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 29,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 30,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 31,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 32,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 33,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 34,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 35,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 36,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 37,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 38,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 39,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 40,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 41,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 42,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 43,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 44,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 45,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 46,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 47,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 48,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 49,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 50,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 51,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 52,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 53,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 54,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 55,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 56,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 57,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 58,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 59,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 60,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 61,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 62,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 63,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 64,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 65,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 66,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 67,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 68,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 69,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 70,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 71,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 72,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 73,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 74,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 75,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 76,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 77,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 78,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 79,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 80,
+    "score_threshold": 5
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 81,
+    "score_threshold": 5
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 82,
+    "score_threshold": 5
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 83,
+    "score_threshold": 6
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 84,
+    "score_threshold": 6
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 85,
+    "score_threshold": 6
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 86,
+    "score_threshold": 7
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 87,
+    "score_threshold": 7
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 88,
+    "score_threshold": 8
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 89,
+    "score_threshold": 8
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 90,
+    "score_threshold": 9
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 91,
+    "score_threshold": 10
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 92,
+    "score_threshold": 11
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 93,
+    "score_threshold": 13
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 94,
+    "score_threshold": 14
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 95,
+    "score_threshold": 16
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 96,
+    "score_threshold": 20
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 97,
+    "score_threshold": 25
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 98,
+    "score_threshold": 35
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 99,
+    "score_threshold": 63
+  },
+  {
+    "metric_name": "dataset_count",
+    "percentile": 100,
+    "score_threshold": 5727142
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 1,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 2,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 3,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 4,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 5,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 6,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 7,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 8,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 9,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 10,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 11,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 12,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 13,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 14,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 15,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 16,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 17,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 18,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 19,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 20,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 21,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 22,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 23,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 24,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 25,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 26,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 27,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 28,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 29,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 30,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 31,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 32,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 33,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 34,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 35,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 36,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 37,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 38,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 39,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 40,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 41,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 42,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 43,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 44,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 45,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 46,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 47,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 48,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 49,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 50,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 51,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 52,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 53,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 54,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 55,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 56,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 57,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 58,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 59,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 60,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 61,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 62,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 63,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 64,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 65,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 66,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 67,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 68,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 69,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 70,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 71,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 72,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 73,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 74,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 75,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 76,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 77,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 78,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 79,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 80,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 81,
+    "score_threshold": 2
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 82,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 83,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 84,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 85,
+    "score_threshold": 3
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 86,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 87,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 88,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 89,
+    "score_threshold": 4
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 90,
+    "score_threshold": 5
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 91,
+    "score_threshold": 6
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 92,
+    "score_threshold": 6
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 93,
+    "score_threshold": 8
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 94,
+    "score_threshold": 9
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 95,
+    "score_threshold": 11
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 96,
+    "score_threshold": 14
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 97,
+    "score_threshold": 18
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 98,
+    "score_threshold": 26
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 99,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "total_citations",
+    "percentile": 100,
+    "score_threshold": 659218
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 1,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 2,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 3,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 4,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 5,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 6,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 7,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 8,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 9,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 10,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 11,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 12,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 13,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 14,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 15,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 16,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 17,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 18,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 19,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 20,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 21,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 22,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 23,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 24,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 25,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 26,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 27,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 28,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 29,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 30,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 31,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 32,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 33,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 34,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 35,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 36,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 37,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 38,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 39,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 40,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 41,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 42,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 43,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 44,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 45,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 46,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 47,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 48,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 49,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 50,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 51,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 52,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 53,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 54,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 55,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 56,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 57,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 58,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 59,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 60,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 61,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 62,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 63,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 64,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 65,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 66,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 67,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 68,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 69,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 70,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 71,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 72,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 73,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 74,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 75,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 76,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 77,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 78,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 79,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 80,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 81,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 82,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 83,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 84,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 85,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 86,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 87,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 88,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 89,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 90,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 91,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 92,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 93,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 94,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 95,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 96,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 97,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 98,
+    "score_threshold": 0
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 99,
+    "score_threshold": 1
+  },
+  {
+    "metric_name": "total_mentions",
+    "percentile": 100,
+    "score_threshold": 1500
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 1,
+    "score_threshold": 13.46
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 2,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 3,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 4,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 5,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 6,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 7,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 8,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 9,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 10,
+    "score_threshold": 15.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 11,
+    "score_threshold": 22.21777777777778
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 12,
+    "score_threshold": 29.227999999999998
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 13,
+    "score_threshold": 30.77
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 14,
+    "score_threshold": 30.77
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 15,
+    "score_threshold": 32.69
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 16,
+    "score_threshold": 34.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 17,
+    "score_threshold": 37.79086956521739
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 18,
+    "score_threshold": 39.23924986905282
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 19,
+    "score_threshold": 41.345
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 20,
+    "score_threshold": 42.31
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 21,
+    "score_threshold": 42.94666666666668
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 22,
+    "score_threshold": 44.2275
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 23,
+    "score_threshold": 44.230000000000004
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 24,
+    "score_threshold": 45.61676821975528
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 25,
+    "score_threshold": 46.15428571428572
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 26,
+    "score_threshold": 48.08
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 27,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 28,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 29,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 30,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 31,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 32,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 33,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 34,
+    "score_threshold": 50
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 35,
+    "score_threshold": 50.965
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 36,
+    "score_threshold": 51.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 37,
+    "score_threshold": 53.85
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 38,
+    "score_threshold": 56.73
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 39,
+    "score_threshold": 57.69
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 40,
+    "score_threshold": 57.69
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 41,
+    "score_threshold": 59.614999999999995
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 42,
+    "score_threshold": 59.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 43,
+    "score_threshold": 59.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 44,
+    "score_threshold": 61.54
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 45,
+    "score_threshold": 63.05107142857144
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 46,
+    "score_threshold": 65.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 47,
+    "score_threshold": 65.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 48,
+    "score_threshold": 65.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 49,
+    "score_threshold": 65.38
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 50,
+    "score_threshold": 67.31
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 51,
+    "score_threshold": 69.23
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 52,
+    "score_threshold": 69.23
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 53,
+    "score_threshold": 69.23
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 54,
+    "score_threshold": 71.155
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 55,
+    "score_threshold": 73.08
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 56,
+    "score_threshold": 73.08
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 57,
+    "score_threshold": 73.08
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 58,
+    "score_threshold": 74.0375
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 59,
+    "score_threshold": 75.002
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 60,
+    "score_threshold": 75.9625
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 61,
+    "score_threshold": 76.91999999999999
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 62,
+    "score_threshold": 76.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 63,
+    "score_threshold": 76.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 64,
+    "score_threshold": 76.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 65,
+    "score_threshold": 76.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 66,
+    "score_threshold": 76.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 67,
+    "score_threshold": 76.92
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 68,
+    "score_threshold": 77.56166666666667
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 69,
+    "score_threshold": 77.88462060439561
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 70,
+    "score_threshold": 78.845
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 71,
+    "score_threshold": 78.845
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 72,
+    "score_threshold": 78.85
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 73,
+    "score_threshold": 80.77
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 74,
+    "score_threshold": 80.77
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 75,
+    "score_threshold": 82.695
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 76,
+    "score_threshold": 83.795
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 77,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 78,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 79,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 80,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 81,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 82,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 83,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 84,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 85,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 86,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 87,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 88,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 89,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 90,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 91,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 92,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 93,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 94,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 95,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 96,
+    "score_threshold": 84.62
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 97,
+    "score_threshold": 88.46
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 98,
+    "score_threshold": 90.38499999999999
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 99,
+    "score_threshold": 94.23
+  },
+  {
+    "metric_name": "avg_fair_score",
+    "percentile": 100,
+    "score_threshold": 100
+  }
+]

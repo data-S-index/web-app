@@ -711,6 +711,9 @@ const handleDatasetsAdded = () => {
           <UserMetricsSection
             :sindex="sindex"
             :dataset-count="datasetCount"
+            :total-citations="totalCitations"
+            :total-mentions="totalMentions"
+            :average-fair-score="averageFairScore"
             :sindex-over-time="sindexOverTime"
             :cumulative-citations="cumulativeCitations"
             :cumulative-mentions="cumulativeMentions"
