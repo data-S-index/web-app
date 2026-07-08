@@ -521,7 +521,7 @@ const handleDatasetsAdded = () => {
                 <h3 class="text-lg font-semibold">Current S-Index</h3>
 
                 <NuxtLink
-                  to="https://docs.scholardata.io/concepts"
+                  to="https://docs.scholardata.io/s-index-guide/concepts"
                   target="_blank"
                   rel="noopener noreferrer"
                   class="text-gray-400 transition-colors hover:text-pink-500"

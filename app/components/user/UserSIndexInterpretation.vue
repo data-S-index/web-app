@@ -47,7 +47,7 @@ defineProps<{
       <p>
         More information
         <NuxtLink
-          to="https://docs.scholardata.io/concepts"
+          to="https://docs.scholardata.io/s-index-guide/concepts"
           target="_blank"
           rel="noopener noreferrer"
           class="text-primary hover:text-primary-600 transition-all"

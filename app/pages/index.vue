@@ -486,7 +486,7 @@ const actualProfilesDisplay = computed(() => {
 
           <div class="mt-8 flex justify-center">
             <NuxtLink
-              to="https://docs.scholardata.io/concepts"
+              to="https://docs.scholardata.io/s-index-guide/concepts"
               target="_blank"
               rel="noopener noreferrer"
             >

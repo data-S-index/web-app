@@ -21,7 +21,7 @@ function num(key: string, altKey?: string) {
         <h3 class="text-lg font-semibold">Normalization Factors</h3>
 
         <NuxtLink
-          href="https://docs.scholardata.io/concepts"
+          href="https://docs.scholardata.io/s-index-guide/concepts"
           target="_blank"
           rel="noopener noreferrer"
           class="hover:text-primary-500 flex items-center gap-1 text-gray-400 dark:text-gray-400 dark:hover:text-gray-300"
