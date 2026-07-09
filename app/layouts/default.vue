@@ -70,13 +70,7 @@ const mobileHeaderItems = computed<NavigationMenuItem[]>(() => [
   ...headerItems.value,
 ]);
 
-const footerMiddleItems: NavigationMenuItem[] = [
-  {
-    label: "Made with ♥ by the S-Index Team",
-  },
-];
-
-const footerRightItems: NavigationMenuItem[] = [
+const footerItems: NavigationMenuItem[] = [
   {
     label: "Contact Us",
     to: "/contact",
@@ -187,38 +181,19 @@ const footerRightItems: NavigationMenuItem[] = [
 
     <UFooter>
       <template #left>
-        <p class="text-muted hidden text-sm sm:block">
+        <p class="text-muted text-sm">
           Copyright © {{ new Date().getFullYear() }}
-          | Made with ♥ by the S-Index Team
         </p>
-
-        <div class="flex flex-col items-start gap-3 sm:hidden">
-          <p class="text-muted pl-4 text-left text-sm">
-            Copyright © {{ new Date().getFullYear() }}
-            | Made with ♥ by the S-Index Team
-          </p>
-
-          <UNavigationMenu
-            :items="footerRightItems"
-            orientation="vertical"
-            variant="link"
-            color="primary"
-          />
-
-          <UColorModeButton />
-        </div>
       </template>
 
-      <template #right>
-        <div class="hidden items-center gap-2 sm:flex">
-          <UColorModeButton />
+      <UNavigationMenu :items="footerItems" variant="link" color="primary" />
 
-          <UNavigationMenu
-            :items="footerRightItems"
-            variant="link"
-            color="primary"
-          />
-        </div>
+      <template #right>
+        <p class="text-muted text-sm">Made with ♥ by the S-Index Team</p>
+
+        <USeparator orientation="vertical" class="h-4" />
+
+        <UColorModeButton />
       </template>
     </UFooter>
   </div>
