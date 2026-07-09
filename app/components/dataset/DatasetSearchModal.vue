@@ -2,6 +2,7 @@
 const props = defineProps<{
   userid: string;
   userName: string;
+  userOrcid?: string | null;
   isOpen?: boolean;
 }>();
 
@@ -21,7 +22,9 @@ type SearchResult = {
   citationCount: number;
 };
 
-const searchTerm = ref<string>(props.userName || "");
+const defaultSearchTerm = () => props.userOrcid?.trim() || props.userName || "";
+
+const searchTerm = ref<string>(defaultSearchTerm());
 const searchLoading = ref(false);
 const searchResults = ref<SearchResult[]>([]);
 const searchPage = ref(1);
@@ -214,7 +217,7 @@ watch(
   (newValue) => {
     if (newValue) {
       // Reset search state when modal opens
-      searchTerm.value = props.userName || "";
+      searchTerm.value = defaultSearchTerm();
       searchResults.value = [];
       rowSelection.value = {};
       selectAll.value = false;
@@ -223,8 +226,17 @@ watch(
       searchTotal.value = -1;
       searchDuration.value = "0ms";
       existingDatasetIds.value = new Set();
+
+      // Automatically run the search if we have a prefilled term (ORCID or name)
+      if (searchTerm.value.trim()) {
+        searchForDatasets(1, true);
+      }
     }
   },
+  // The modal's body content is only mounted once it's already open, so the
+  // prop starts out `true` with no prior `false` to transition from — without
+  // `immediate` this watcher would never fire on that first open.
+  { immediate: true },
 );
 </script>
 
@@ -257,7 +269,16 @@ watch(
       :exact-match-examples="['10.5061/dryad.abc123', '0000-0002-1825-0097']"
     />
 
-    <div v-if="searchResults.length > 0" class="flex flex-1 flex-col">
+    <div v-if="searchLoading && searchResults.length === 0" class="py-6 text-center">
+      <Icon
+        name="i-heroicons-arrow-path-20-solid"
+        class="text-primary-500 mx-auto h-10 w-10 animate-spin"
+      />
+
+      <p class="mt-2 text-base dark:text-gray-400">Searching...</p>
+    </div>
+
+    <div v-else-if="searchResults.length > 0" class="flex flex-1 flex-col">
       <div class="flex flex-1 flex-col gap-5">
         <div v-if="searchLoading">
           <div class="py-6 text-center">

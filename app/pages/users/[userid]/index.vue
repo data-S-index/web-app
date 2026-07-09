@@ -758,6 +758,7 @@ const handleDatasetsAdded = () => {
             <DatasetSearchModal
               :userid="userid"
               :user-name="fullName"
+              :user-orcid="userProfile?.orcid"
               :is-open="showAddDatasetModal"
               @close="showAddDatasetModal = false"
               @datasets-added="handleDatasetsAdded"
