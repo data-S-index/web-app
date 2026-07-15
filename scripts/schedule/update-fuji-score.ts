@@ -9,6 +9,11 @@ const API_BASE_URL = "https://scholardata.io";
 const FUJI_JOB_CLAIM_URL = `${API_BASE_URL}/api/fuji-job/claim`;
 const FUJI_JOB_SUBMIT_URL = `${API_BASE_URL}/api/fuji-job/submit`;
 
+const FUJI_JOB_SECRET = process.env.FUJI_JOB_SECRET;
+if (!FUJI_JOB_SECRET) {
+  throw new Error("FUJI_JOB_SECRET environment variable is required");
+}
+
 // Keyed by Dataset.publisherId (the DataCite client/repository id, e.g. "tib.ubp")
 const HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
   "rpht.nifs": 63.46,
@@ -165,7 +170,10 @@ async function waitForFujiService(): Promise<void> {
 }
 
 async function claimNextJob(): Promise<ClaimResponse> {
-  const response = await fetch(FUJI_JOB_CLAIM_URL, { method: "POST" });
+  const response = await fetch(FUJI_JOB_CLAIM_URL, {
+    method: "POST",
+    headers: { "x-fuji-job-secret": FUJI_JOB_SECRET },
+  });
 
   if (!response.ok) {
     throw new Error(`Claim request failed with status ${response.status}`);
@@ -177,7 +185,10 @@ async function claimNextJob(): Promise<ClaimResponse> {
 async function submitResult(payload: SubmitPayload): Promise<void> {
   const response = await fetch(FUJI_JOB_SUBMIT_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      "x-fuji-job-secret": FUJI_JOB_SECRET,
+    },
     body: JSON.stringify(payload),
   });
 

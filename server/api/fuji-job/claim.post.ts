@@ -19,7 +19,9 @@ async function claimNextJob(): Promise<number | null> {
  * decisions (hardcoded shortcuts, FUJI calls, metric/software versions) are
  * made by the caller and reported back via /api/fuji-job/submit.
  */
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  requireFujiJobSecret(event);
+
   const datasetId = await claimNextJob();
 
   if (datasetId === null) {

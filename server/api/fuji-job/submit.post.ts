@@ -16,6 +16,8 @@ const submitSchema = z.object({
  * whatever it's given.
  */
 export default defineEventHandler(async (event) => {
+  requireFujiJobSecret(event);
+
   const body = await readValidatedBody(event, (b) => submitSchema.safeParse(b));
 
   if (!body.success) {

@@ -19,6 +19,7 @@ jobs:
 
     env:
       FUJI_URL: http://localhost:1071
+      FUJI_JOB_SECRET: ${{ secrets.FUJI_JOB_SECRET }}
 
     steps:
       - uses: actions/checkout@v4
