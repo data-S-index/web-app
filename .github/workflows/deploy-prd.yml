@@ -32,6 +32,7 @@ jobs:
       NUXT_SITE_URL: ${{ secrets.NUXT_SITE_URL }}
       NUXT_OG_IMAGE_SECRET: ${{ secrets.NUXT_OG_IMAGE_SECRET }}
       LOGWATCH_URL: ${{ secrets.LOGWATCH_URL }}
+      FUJI_JOB_SECRET: ${{ secrets.FUJI_JOB_SECRET }}
 
     steps:
       # Step 1: Checkout the repository code
