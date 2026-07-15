@@ -138,7 +138,7 @@ const sources = ref([
     name: "OpenAlex",
     value: 450,
     suffix: "M+",
-    description: "References from works analyzed for dataset citations.",
+    description: "Works analyzed for dataset citations.",
     learnMoreUrl:
       "https://docs.scholardata.io/data-collection/citations#openalex",
   },
