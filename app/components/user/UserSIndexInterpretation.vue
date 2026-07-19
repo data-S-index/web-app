@@ -17,12 +17,19 @@ const {
   showRanking?: boolean;
 }>();
 
+const averageDIndex = computed(() =>
+  datasetCount > 0 ? sindex / datasetCount : 0,
+);
+
 const sindexPercentile = computed(() => getPercentile(sindex, "s_index"));
 const datasetCountPercentile = computed(() =>
   getPercentile(datasetCount, "dataset_count"),
 );
 const averageFairScorePercentile = computed(() =>
   getPercentile(averageFairScore, "avg_fair_score"),
+);
+const averageDIndexPercentile = computed(() =>
+  getPercentile(averageDIndex.value, "average_d_index"),
 );
 const totalCitationsPercentile = computed(() =>
   getPercentile(totalCitations, "total_citations"),
@@ -85,6 +92,11 @@ function formatPercentile(percentile: number | null) {
           <li>
             Your S-index is higher than
             {{ formatPercentile(sindexPercentile) }} of researchers
+          </li>
+
+          <li>
+            Your average D-Index is higher than
+            {{ formatPercentile(averageDIndexPercentile) }} of researchers
           </li>
 
           <li>
