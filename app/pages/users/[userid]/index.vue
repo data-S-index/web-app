@@ -717,7 +717,7 @@ const handleDatasetsAdded = () => {
             :sindex-over-time="sindexOverTime"
             :cumulative-citations="cumulativeCitations"
             :cumulative-mentions="cumulativeMentions"
-            :show-ranking="isCurrentUser"
+            :show-ranking="true"
           />
 
           <div class="flex items-center justify-between">
