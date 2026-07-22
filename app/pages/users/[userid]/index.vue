@@ -699,7 +699,11 @@ const handleDatasetsAdded = () => {
                 color="primary"
                 variant="solid"
                 :disabled="maintenanceMode"
-                @click="showAddDatasetModal = true"
+                @click="
+                  () => {
+                    showAddDatasetModal = true;
+                  }
+                "
               />
             </template>
           </UEmpty>
@@ -730,7 +734,11 @@ const handleDatasetsAdded = () => {
               color="primary"
               variant="solid"
               :disabled="maintenanceMode"
-              @click="showAddDatasetModal = true"
+              @click="
+                () => {
+                  showAddDatasetModal = true;
+                }
+              "
             />
           </div>
 
