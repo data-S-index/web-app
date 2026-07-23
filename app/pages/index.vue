@@ -147,7 +147,7 @@ const actualProfilesDisplay = computed(() => {
 
       <template #headline>
         <a
-          href="https://www.linkedin.com/posts/chiangmf_can-we-develop-the-best-metrics-to-measure-activity-7485466949792116736-HEpY?utm_source=share&utm_medium=member_desktop&rcm=ACoAAB3LDZ4BwA0finyrwOxEi1mVXgno_5eFzMo"
+          href="https://www.linkedin.com/posts/chiangmf_can-we-develop-the-best-metrics-to-measure-activity-7485466949792116736-HEpY"
           target="_blank"
           rel="noopener noreferrer"
         >
