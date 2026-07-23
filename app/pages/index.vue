@@ -8,7 +8,7 @@ useColorMode().value = "light";
 useSeoMeta({
   title: "Scholar Data",
   description:
-    "Get credit for the data you share - clearly, fairly, and publicly.",
+    "Get credit for the data you share - clearly, fairly, and publicly. Winner of the NIH S-index Challenge to incentivize data sharing.",
 });
 
 useHead({
@@ -18,7 +18,7 @@ useHead({
 defineOgImage("NuxtSeo.takumi", {
   title: "",
   description:
-    "Get credit for the data you share - clearly, fairly, and publicly.",
+    "Get credit for the data you share - clearly, fairly, and publicly. \n Winner of the NIH S-index Challenge to incentivize data sharing.",
 });
 
 const links = ref<ButtonProps[]>([
@@ -336,23 +336,29 @@ const actualProfilesDisplay = computed(() => {
                 class="bg-primary/10 absolute inset-0 animate-pulse rounded-xl blur-md"
               />
 
-              <UCard class="relative h-full w-full text-center">
-                <div class="flex flex-col items-center gap-3 py-4">
-                  <UIcon
-                    name="i-heroicons-trophy"
-                    class="h-10 w-10 text-pink-600"
-                  />
+              <NuxtLink
+                to="https://www.linkedin.com/posts/chiangmf_can-we-develop-the-best-metrics-to-measure-activity-7485466949792116736-HEpY"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <UCard class="relative h-full w-full text-center">
+                  <div class="flex flex-col items-center gap-3 py-4">
+                    <UIcon
+                      name="i-heroicons-trophy"
+                      class="h-10 w-10 text-pink-600"
+                    />
 
-                  <div class="text-5xl font-bold text-pink-600">NIH</div>
+                    <div class="text-5xl font-bold text-pink-600">NIH</div>
 
-                  <p class="text-lg font-semibold">Challenge Finalist</p>
+                    <p class="text-lg font-semibold">Challenge Winner</p>
 
-                  <p class="text-muted text-sm">
-                    Recognized as a Phase 1 finalist in the NIH Challenge to
-                    incentivize data sharing.
-                  </p>
-                </div>
-              </UCard>
+                    <p class="text-muted text-sm">
+                      Recognized as the winner of the NIH S-index Challenge to
+                      incentivize data sharing.
+                    </p>
+                  </div>
+                </UCard>
+              </NuxtLink>
             </div>
           </div>
         </div>
