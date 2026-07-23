@@ -147,7 +147,7 @@ const actualProfilesDisplay = computed(() => {
 
       <template #headline>
         <a
-          href="https://www.nei.nih.gov/research-and-training/research-news/nih-challenge-aimed-incentivizing-data-sharing-recognizes-phase-1-winners"
+          href="https://www.linkedin.com/posts/chiangmf_can-we-develop-the-best-metrics-to-measure-activity-7485466949792116736-HEpY?utm_source=share&utm_medium=member_desktop&rcm=ACoAAB3LDZ4BwA0finyrwOxEi1mVXgno_5eFzMo"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -157,7 +157,7 @@ const actualProfilesDisplay = computed(() => {
             class="cursor-pointer"
             icon="tabler:award"
           >
-            NIH Challenge Finalist
+            NIH Challenge Winner
           </UBadge>
         </a>
       </template>
