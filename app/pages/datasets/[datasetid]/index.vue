@@ -26,6 +26,37 @@ if (error.value) {
   });
 }
 
+// Citations and mentions can be large lists, so they're fetched separately
+// from the client after the main dataset content has rendered instead of
+// blocking the initial page load.
+const { data: citations, status: citationsStatus } = useLazyFetch(
+  `/api/dataset/${datasetid}/citations`,
+  {
+    method: "GET",
+    server: false,
+  },
+);
+
+const { data: mentions, status: mentionsStatus } = useLazyFetch(
+  `/api/dataset/${datasetid}/mentions`,
+  {
+    method: "GET",
+    server: false,
+  },
+);
+
+const datasetWithRelations = computed(() => {
+  if (!dataset.value) {
+    return dataset.value;
+  }
+
+  return {
+    ...dataset.value,
+    citations: citations.value ?? [],
+    mentions: mentions.value ?? [],
+  };
+});
+
 const truncate = (text: string, maxLength: number): string =>
   text.length > maxLength ? `${text.slice(0, maxLength - 1).trim()}…` : text;
 
@@ -276,16 +307,28 @@ const copyDoi = async () => {
             </UCard>
 
             <!-- Citations -->
-            <DatasetCitationsDisplay
-              v-if="dataset.citations"
-              :citations="dataset.citations"
-            />
+            <UCard v-if="citationsStatus === 'pending'">
+              <div class="flex items-center justify-center py-8">
+                <UIcon
+                  name="i-heroicons-arrow-path"
+                  class="h-6 w-6 animate-spin"
+                />
+              </div>
+            </UCard>
+
+            <DatasetCitationsDisplay v-else :citations="citations ?? []" />
 
             <!-- Mentions -->
-            <DatasetMentionsDisplay
-              v-if="dataset.mentions"
-              :mentions="dataset.mentions"
-            />
+            <UCard v-if="mentionsStatus === 'pending'">
+              <div class="flex items-center justify-center py-8">
+                <UIcon
+                  name="i-heroicons-arrow-path"
+                  class="h-6 w-6 animate-spin"
+                />
+              </div>
+            </UCard>
+
+            <DatasetMentionsDisplay v-else :mentions="mentions ?? []" />
           </div>
 
           <!-- Sidebar -->
@@ -363,7 +406,7 @@ const copyDoi = async () => {
                     <div
                       class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
                     >
-                      {{ dataset.citations.length.toLocaleString() }}
+                      {{ dataset._count.citations.toLocaleString() }}
                     </div>
                   </div>
 
@@ -376,7 +419,7 @@ const copyDoi = async () => {
                     <div
                       class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
                     >
-                      {{ dataset.mentions.length.toLocaleString() }}
+                      {{ dataset._count.mentions.toLocaleString() }}
                     </div>
                   </div>
                 </div>
@@ -390,7 +433,7 @@ const copyDoi = async () => {
               </template>
 
               <div class="space-y-4">
-                <DatasetMetricsTabs :dataset="dataset" />
+                <DatasetMetricsTabs :dataset="datasetWithRelations" />
               </div>
             </UCard>
 

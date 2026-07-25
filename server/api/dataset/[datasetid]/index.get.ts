@@ -16,19 +16,6 @@ export default defineEventHandler(async (event) => {
           nameIdentifiers: true,
         },
       },
-      citations: {
-        select: {
-          citationLink: true,
-          datacite: true,
-          citationWeight: true,
-          mdc: true,
-          openAlex: true,
-          citedDate: true,
-        },
-        orderBy: {
-          citedDate: "desc",
-        },
-      },
       fujiScore: {
         select: {
           score: true,
@@ -46,14 +33,6 @@ export default defineEventHandler(async (event) => {
           year: "asc",
         },
       },
-      mentions: {
-        select: {
-          mentionLink: true,
-          mentionWeight: true,
-          source: true,
-          mentionedDate: true,
-        },
-      },
       normalizationFactor: {
         select: {
           ft: true,
@@ -69,6 +48,12 @@ export default defineEventHandler(async (event) => {
         },
       },
       datasetTopic: true,
+      _count: {
+        select: {
+          citations: true,
+          mentions: true,
+        },
+      },
     },
   });
 
@@ -79,14 +64,14 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Upsert a new fuji job if dataset doesn't have a fuji score
-  if (!dataset.fujiScore) {
-    await prisma.fujiJob.upsert({
-      where: { datasetId: dataset.id },
-      update: {},
-      create: { datasetId: dataset.id },
-    });
-  }
+  // // Upsert a new fuji job if dataset doesn't have a fuji score
+  // if (!dataset.fujiScore) {
+  //   await prisma.fujiJob.upsert({
+  //     where: { datasetId: dataset.id },
+  //     update: {},
+  //     create: { datasetId: dataset.id },
+  //   });
+  // }
 
   const topic = dataset.datasetTopic;
   const domain =
