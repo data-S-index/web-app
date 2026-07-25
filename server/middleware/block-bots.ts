@@ -15,7 +15,10 @@ const buckets = new Map<string, { tokens: number; lastRefill: number }>();
 // Returns null if the request should be let through, otherwise seconds until a token is available
 function takeToken(key: string): number | null {
   const now = Date.now();
-  const bucket = buckets.get(key) ?? { tokens: BUCKET_CAPACITY, lastRefill: now };
+  const bucket = buckets.get(key) ?? {
+    tokens: BUCKET_CAPACITY,
+    lastRefill: now,
+  };
 
   const elapsedSeconds = (now - bucket.lastRefill) / 1000;
   bucket.tokens = Math.min(
