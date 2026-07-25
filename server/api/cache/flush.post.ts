@@ -1,5 +1,3 @@
-import { getRedisClient } from "../../utils/redis";
-
 /**
  * POST /api/cache/flush
  * Flushes the current Redis database (cache). Use with care.

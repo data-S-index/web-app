@@ -1,6 +1,3 @@
-import { checkRateLimit, getRateLimitIdentifier } from "../../utils/rateLimit";
-import { getRedisClient } from "../../utils/redis";
-
 // Rate limit configuration: 5 requests per minute per user/IP (stricter)
 const RATE_LIMIT_CONFIG = {
   maxRequests: 5,

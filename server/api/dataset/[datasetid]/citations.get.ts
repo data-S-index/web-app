@@ -1,5 +1,3 @@
-import prisma from "../../../utils/prisma";
-
 export default defineEventHandler(async (event) => {
   const { datasetid } = event.context.params as { datasetid: string };
 
