@@ -120,9 +120,9 @@ const platforms = [
   },
 ];
 
-const { data: platformMetrics } = await useFetch<{
+const { data: platformMetrics } = useFetch<{
   userCount: number;
-}>("/api/metrics");
+}>("/api/metrics", { lazy: true });
 
 const actualProfilesDisplay = computed(() => {
   const count = platformMetrics.value?.userCount ?? 0;
