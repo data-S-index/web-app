@@ -73,6 +73,37 @@ const fields = ref([
   { name: "Other", value: 5414702 },
 ]);
 
+const publishers = ref([
+  { name: "National Institute for Fusion Science (NIFS)", value: 39093778 },
+  { name: "Distributed System of Scientific Collections", value: 7088730 },
+  { name: "The Global Biodiversity Information Facility", value: 4293274 },
+  { name: "UNITE Community", value: 3571661 },
+  {
+    name: "University of Southern California Digital Library (USC.DL)",
+    value: 1447959,
+  },
+  { name: "DSMZ", value: 1220655 },
+  { name: "Zenodo", value: 1218618 },
+  { name: "Cambridge Crystallographic Data Centre", value: 1199185 },
+  { name: "figshare", value: 801034 },
+  { name: "Harvard Dataverse", value: 774081 },
+  { name: "Other", value: 9627872 },
+]);
+
+const licenses = ref([
+  { name: "cc0-1.0", value: 7929747 },
+  { name: "cc-by-4.0", value: 4094021 },
+  { name: "cc-by-nc-4.0", value: 3908404 },
+  { name: "cc-by-3.0", value: 292930 },
+  { name: "cc-by-sa-4.0", value: 164181 },
+  { name: "cc-by-nc-sa-4.0", value: 135261 },
+  { name: "cc by-nc-sa 4.0", value: 113813 },
+  { name: "cc-by-1.0", value: 80346 },
+  { name: "unknown", value: 44429 },
+  { name: "bsrn-1.0", value: 34322 },
+  { name: "Other", value: 134912 },
+]);
+
 const sIndexMetrics = computed(() => [
   {
     name: "Datasets registered",
@@ -174,6 +205,8 @@ const datasetsByYearValues = computed(() =>
 );
 const institutionData = computed(() => institutions.value);
 const fieldData = computed(() => fields.value);
+const publisherData = computed(() => publishers.value);
+const licenseData = computed(() => licenses.value);
 
 const barChartOption = computed<ECOption>(() => ({
   title: {
@@ -382,6 +415,140 @@ const fieldPieChartOption = computed(() => ({
     },
   ],
 }));
+
+const publisherPieChartOption = computed(() => ({
+  title: {
+    text: "Datasets by Publisher",
+    left: "center",
+    textStyle: {
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+  },
+  backgroundColor: "transparent",
+  tooltip: {
+    trigger: "item",
+    formatter: (params: unknown) => {
+      const item = params as {
+        name: string;
+        value: number;
+        percent: number;
+        seriesName: string;
+      };
+      if (!item) return "";
+
+      const name = item.name ?? "";
+      const value = formatNumber(item.value);
+      const percent = item.percent.toFixed(1);
+
+      return `${name}<br/>Datasets: ${value} (${percent}%)`;
+    },
+  },
+  legend: {
+    top: "10%",
+    left: "center",
+    orient: "horizontal",
+    textStyle: {
+      fontSize: 10,
+    },
+  },
+  series: [
+    {
+      name: "Publisher",
+      type: "pie",
+      radius: ["30%", "70%"],
+      center: ["50%", "60%"],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 8,
+        borderColor: "#fff",
+        borderWidth: 2,
+      },
+      label: {
+        show: false,
+        position: "center",
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 16,
+          fontWeight: "bold",
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      data: publisherData.value,
+    },
+  ],
+}));
+
+const licensePieChartOption = computed(() => ({
+  title: {
+    text: "Datasets by License",
+    left: "center",
+    textStyle: {
+      fontSize: 16,
+      fontWeight: "bold",
+    },
+  },
+  backgroundColor: "transparent",
+  tooltip: {
+    trigger: "item",
+    formatter: (params: unknown) => {
+      const item = params as {
+        name: string;
+        value: number;
+        percent: number;
+        seriesName: string;
+      };
+      if (!item) return "";
+
+      const name = item.name ?? "";
+      const value = formatNumber(item.value);
+      const percent = item.percent.toFixed(1);
+
+      return `${name}<br/>Datasets: ${value} (${percent}%)`;
+    },
+  },
+  legend: {
+    top: "10%",
+    left: "center",
+    orient: "horizontal",
+    textStyle: {
+      fontSize: 10,
+    },
+  },
+  series: [
+    {
+      name: "License",
+      type: "pie",
+      radius: ["30%", "70%"],
+      center: ["50%", "60%"],
+      avoidLabelOverlap: false,
+      itemStyle: {
+        borderRadius: 8,
+        borderColor: "#fff",
+        borderWidth: 2,
+      },
+      label: {
+        show: false,
+        position: "center",
+      },
+      emphasis: {
+        label: {
+          show: true,
+          fontSize: 16,
+          fontWeight: "bold",
+        },
+      },
+      labelLine: {
+        show: false,
+      },
+      data: licenseData.value,
+    },
+  ],
+}));
 </script>
 
 <template>
@@ -470,6 +637,42 @@ const fieldPieChartOption = computed(() => ({
               class="flex h-full items-center justify-center text-gray-500"
             >
               No field data available
+            </div>
+          </div>
+        </UCard>
+      </div>
+    </ClientOnly>
+
+    <ClientOnly>
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <UCard>
+          <div style="height: 700px">
+            <VChart
+              v-if="publisherData.length > 0"
+              :option="publisherPieChartOption"
+            />
+
+            <div
+              v-else
+              class="flex h-full items-center justify-center text-gray-500"
+            >
+              No publisher data available
+            </div>
+          </div>
+        </UCard>
+
+        <UCard>
+          <div style="height: 700px">
+            <VChart
+              v-if="licenseData.length > 0"
+              :option="licensePieChartOption"
+            />
+
+            <div
+              v-else
+              class="flex h-full items-center justify-center text-gray-500"
+            >
+              No license data available
             </div>
           </div>
         </UCard>
