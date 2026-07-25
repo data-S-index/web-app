@@ -13,6 +13,7 @@ const CACHE_TTL_MS = 5000;
 interface StatusResponse {
   status: ServiceStatus;
   checkedAt: string;
+  serverTimeMs: number;
   services: ServiceCheck[];
 }
 
@@ -64,6 +65,8 @@ export default defineEventHandler(async (): Promise<StatusResponse> => {
     return cachedResponse;
   }
 
+  const serverStart = performance.now();
+
   const services = await Promise.all([
     checkService("Database", () => prisma.$queryRaw`SELECT 1`),
     checkService("Redis Cache", () => getRedisClient().ping()),
@@ -73,6 +76,7 @@ export default defineEventHandler(async (): Promise<StatusResponse> => {
   const response: StatusResponse = {
     status: overallStatus(services),
     checkedAt: new Date().toISOString(),
+    serverTimeMs: Math.round(performance.now() - serverStart),
     services,
   };
 

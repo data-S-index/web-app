@@ -21,10 +21,14 @@ interface ServiceCheck {
 interface StatusResponse {
   status: ServiceStatus;
   checkedAt: string;
+  serverTimeMs: number;
   services: ServiceCheck[];
 }
 
 const REFRESH_INTERVAL_MS = 15000;
+
+const roundTripMs = ref<number | null>(null);
+let requestStartedAt = 0;
 
 const {
   data: statusData,
@@ -32,6 +36,12 @@ const {
   refresh: refreshStatus,
 } = await useFetch<StatusResponse>("/api/status", {
   server: false,
+  onRequest() {
+    requestStartedAt = performance.now();
+  },
+  onResponse() {
+    roundTripMs.value = Math.round(performance.now() - requestStartedAt);
+  },
 });
 
 const STATUS_META: Record<
@@ -103,6 +113,28 @@ onUnmounted(() => {
           : undefined
       "
     />
+
+    <div v-if="statusData" class="grid grid-cols-2 gap-4">
+      <UCard :ui="{ body: 'text-center' }">
+        <p class="text-muted text-xs uppercase">Server response time</p>
+
+        <p class="mt-1 text-2xl font-bold tabular-nums">
+          {{ statusData.serverTimeMs }}ms
+        </p>
+
+        <p class="text-muted mt-1 text-xs">Time spent checking dependencies</p>
+      </UCard>
+
+      <UCard :ui="{ body: 'text-center' }">
+        <p class="text-muted text-xs uppercase">Full delay</p>
+
+        <p class="mt-1 text-2xl font-bold tabular-nums">
+          {{ roundTripMs !== null ? `${roundTripMs}ms` : "…" }}
+        </p>
+
+        <p class="text-muted mt-1 text-xs">Round trip from your browser</p>
+      </UCard>
+    </div>
 
     <UCard>
       <template #header>
