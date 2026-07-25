@@ -72,6 +72,11 @@ const mobileHeaderItems = computed<NavigationMenuItem[]>(() => [
 
 const footerItems: NavigationMenuItem[] = [
   {
+    label: "Status",
+    to: "/status",
+    icon: "i-heroicons-signal-solid",
+  },
+  {
     label: "Contact Us",
     to: "/contact",
     icon: "i-heroicons-envelope-solid",
