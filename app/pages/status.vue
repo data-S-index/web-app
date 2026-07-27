@@ -44,6 +44,30 @@ const {
   },
 });
 
+const MAX_DATASET_ID = 70000000;
+
+const randomDatasetMs = ref<number | null>(null);
+const randomDatasetPending = ref(false);
+let randomDatasetStartedAt = 0;
+
+async function checkRandomDataset() {
+  const randomId = Math.floor(Math.random() * MAX_DATASET_ID) + 1;
+
+  randomDatasetPending.value = true;
+  randomDatasetStartedAt = performance.now();
+
+  try {
+    await $fetch(`/api/dataset/${randomId}`);
+  } catch {
+    // A 404 for a non-existent dataset id still measures a real round trip.
+  } finally {
+    randomDatasetMs.value = Math.round(
+      performance.now() - randomDatasetStartedAt,
+    );
+    randomDatasetPending.value = false;
+  }
+}
+
 const STATUS_META: Record<
   ServiceStatus,
   { label: string; color: "success" | "warning" | "error"; icon: string }
@@ -83,8 +107,11 @@ const overallTitle = computed(() => {
 let intervalId: ReturnType<typeof setInterval> | null = null;
 
 onMounted(() => {
+  checkRandomDataset();
+
   intervalId = setInterval(() => {
     refreshStatus();
+    checkRandomDataset();
   }, REFRESH_INTERVAL_MS);
 });
 
@@ -114,7 +141,7 @@ onUnmounted(() => {
       "
     />
 
-    <div v-if="statusData" class="grid grid-cols-2 gap-4">
+    <div v-if="statusData" class="grid grid-cols-2 gap-4 sm:grid-cols-3">
       <UCard :ui="{ body: 'text-center' }">
         <p class="text-muted text-xs uppercase">Server response time</p>
 
@@ -133,6 +160,24 @@ onUnmounted(() => {
         </p>
 
         <p class="text-muted mt-1 text-xs">Round trip from your browser</p>
+      </UCard>
+
+      <UCard :ui="{ body: 'text-center' }" class="col-span-2 sm:col-span-1">
+        <p class="text-muted text-xs uppercase">Random dataset lookup</p>
+
+        <p class="mt-1 text-2xl font-bold tabular-nums">
+          {{
+            randomDatasetPending
+              ? "…"
+              : randomDatasetMs !== null
+                ? `${randomDatasetMs}ms`
+                : "…"
+          }}
+        </p>
+
+        <p class="text-muted mt-1 text-xs">
+          Fetching a random dataset (id 1-{{ MAX_DATASET_ID.toLocaleString() }})
+        </p>
       </UCard>
     </div>
 
@@ -154,7 +199,7 @@ onUnmounted(() => {
         </div>
       </template>
 
-      <div v-if="statusData" class="divide-y divide-default">
+      <div v-if="statusData" class="divide-default divide-y">
         <div
           v-for="service in statusData.services"
           :key="service.name"
