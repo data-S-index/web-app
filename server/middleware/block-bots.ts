@@ -2,6 +2,7 @@ const BLOCKED_USER_AGENTS = [
   "meta-externalagent/1.1 (+https://developers.facebook.com/docs/sharing/webmasters/crawler)",
   "ClaudeBot/1.0",
   "GPTBot/1.4",
+  "Googlebot/2.1",
 ];
 
 // Max burst size per bot before it starts getting throttled
