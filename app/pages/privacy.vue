@@ -54,6 +54,24 @@ defineOgImage("NuxtSeo.takumi", {
 
             <li>
               <span class="font-medium text-gray-900 dark:text-gray-100"
+                >Anonymous usage analytics:</span
+              >
+              aggregated, non-personally-identifiable data about how the
+              platform is used, such as page views and general navigation
+              patterns. We use
+              <a
+                href="https://umami.is"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary font-medium hover:underline"
+                >Umami</a
+              >, a privacy-focused analytics tool that does not collect
+              personal information, does not use cookies, and does not track
+              users across sites.
+            </li>
+
+            <li>
+              <span class="font-medium text-gray-900 dark:text-gray-100"
                 >Support and feedback:</span
               >
               information you provide if you contact us with questions,
@@ -84,7 +102,11 @@ defineOgImage("NuxtSeo.takumi", {
 
             <li>
               Computing and displaying your S-index and dataset impact metrics;
-              and
+            </li>
+
+            <li>
+              Monitoring service performance and security (for example, using
+              logs and anonymous analytics); and
             </li>
 
             <li>
@@ -97,7 +119,30 @@ defineOgImage("NuxtSeo.takumi", {
         <USeparator />
 
         <section>
-          <h2 class="mb-4 text-xl font-semibold">3. Sharing of Information</h2>
+          <h2 class="mb-4 text-xl font-semibold">3. Cookies and Analytics</h2>
+
+          <p class="text-muted text-sm">
+            Scholar Data uses cookies strictly to keep you logged in and
+            remember your preferences. For usage analytics, we use
+            <a
+              href="https://umami.is"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-primary font-medium hover:underline"
+              >Umami</a
+            >, a privacy-focused, open-source analytics platform. Umami does
+            not collect any personally identifiable information (PII), does
+            not use cookies for tracking, and does not track users across
+            sites or sessions. The analytics data we collect is fully
+            anonymous and used only to understand general usage patterns and
+            improve the platform. We do not sell your personal information.
+          </p>
+        </section>
+
+        <USeparator />
+
+        <section>
+          <h2 class="mb-4 text-xl font-semibold">4. Sharing of Information</h2>
 
           <p class="text-muted mb-3 text-sm">
             We may share information in the following situations:
@@ -139,7 +184,7 @@ defineOgImage("NuxtSeo.takumi", {
         <USeparator />
 
         <section>
-          <h2 class="mb-4 text-xl font-semibold">4. Data Security</h2>
+          <h2 class="mb-4 text-xl font-semibold">5. Data Security</h2>
 
           <p class="text-muted text-sm">
             We use technical and organizational measures to help protect
@@ -153,7 +198,7 @@ defineOgImage("NuxtSeo.takumi", {
         <USeparator />
 
         <section>
-          <h2 class="mb-4 text-xl font-semibold">5. Data Retention</h2>
+          <h2 class="mb-4 text-xl font-semibold">6. Data Retention</h2>
 
           <p class="text-muted text-sm">
             We retain information for as long as reasonably necessary to operate
@@ -166,7 +211,7 @@ defineOgImage("NuxtSeo.takumi", {
         <USeparator />
 
         <section>
-          <h2 class="mb-4 text-xl font-semibold">6. Your Choices and Rights</h2>
+          <h2 class="mb-4 text-xl font-semibold">7. Your Choices and Rights</h2>
 
           <p class="text-muted mb-3 text-sm">
             Depending on your location and applicable laws, you may have certain
@@ -200,7 +245,7 @@ defineOgImage("NuxtSeo.takumi", {
 
         <section>
           <h2 class="mb-4 text-xl font-semibold">
-            7. Third-Party Links and Services
+            8. Third-Party Links and Services
           </h2>
 
           <p class="text-muted text-sm">
@@ -215,7 +260,7 @@ defineOgImage("NuxtSeo.takumi", {
         <USeparator />
 
         <section>
-          <h2 class="mb-4 text-xl font-semibold">8. Changes to This Policy</h2>
+          <h2 class="mb-4 text-xl font-semibold">9. Changes to This Policy</h2>
 
           <p class="text-muted text-sm">
             We may update this Privacy Policy from time to time to reflect
@@ -228,7 +273,7 @@ defineOgImage("NuxtSeo.takumi", {
         <USeparator />
 
         <section>
-          <h2 class="mb-4 text-xl font-semibold">9. Contact Us</h2>
+          <h2 class="mb-4 text-xl font-semibold">10. Contact Us</h2>
 
           <p class="text-muted text-sm">
             If you have questions about this Privacy Policy or how your
@@ -245,7 +290,7 @@ defineOgImage("NuxtSeo.takumi", {
 
         <USeparator />
 
-        <p class="text-muted text-center text-xs">Last updated: June 8, 2026</p>
+        <p class="text-muted text-center text-xs">Last updated: July 27, 2026</p>
       </div>
     </div>
   </UContainer>
