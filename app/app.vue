@@ -31,6 +31,12 @@ useHead({
       src: "https://tally.so/widgets/embed.js",
       async: true,
     },
+    {
+      defer: true,
+      src: "https://umami.fairdataihub.org/mushroom",
+      "data-website-id": "a259fbbd-af7d-4fa6-b940-408f301706f2",
+      "data-exclude-search": true,
+    },
   ],
 });
 
