@@ -7,8 +7,7 @@ const BLOCKED_USER_AGENTS = [
 
 // Max burst size per bot before it starts getting throttled
 const BUCKET_CAPACITY = 2;
-// Steady-state tokens added back per second (1 request every 5s)
-const REFILL_PER_SECOND = 0.2;
+const REFILL_PER_SECOND = 1 / 3; // 1 request every 3s
 
 // One token bucket per matched bot UA, shared across all requests from that bot
 const buckets = new Map<string, { tokens: number; lastRefill: number }>();

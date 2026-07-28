@@ -10,34 +10,10 @@ const RATE_LIMIT_CONFIG = {
   keyPrefix: "v1:datasets:by-doi",
 };
 
+// PhysioNet DOI prefix - exempt from rate limiting
+const PHYSIONET_DOI_PREFIX = "10.13026";
+
 export default defineEventHandler(async (event) => {
-  const identifier = await getRateLimitIdentifier(event);
-  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
-
-  if (!rateLimitResult.allowed) {
-    throw createError({
-      statusCode: 429,
-      statusMessage: "Too Many Requests",
-      data: {
-        message: "Rate limit exceeded. Please try again later.",
-        resetAt: rateLimitResult.resetAt,
-        remaining: rateLimitResult.remaining,
-      },
-    });
-  }
-
-  setHeader(
-    event,
-    "X-RateLimit-Limit",
-    RATE_LIMIT_CONFIG.maxRequests.toString(),
-  );
-  setHeader(
-    event,
-    "X-RateLimit-Remaining",
-    rateLimitResult.remaining.toString(),
-  );
-  setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
-
   const query = getQuery(event);
   const doiParam = (query.doi as string) || "";
 
@@ -50,6 +26,38 @@ export default defineEventHandler(async (event) => {
 
   // Normalize DOI (handles encoded values like %2F, full URLs, and case)
   const normalizedDoi = normalizeDoi(doiParam);
+
+  if (!normalizedDoi.startsWith(PHYSIONET_DOI_PREFIX)) {
+    const identifier = await getRateLimitIdentifier(event);
+    const rateLimitResult = await checkRateLimit(
+      identifier,
+      RATE_LIMIT_CONFIG,
+    );
+
+    if (!rateLimitResult.allowed) {
+      throw createError({
+        statusCode: 429,
+        statusMessage: "Too Many Requests",
+        data: {
+          message: "Rate limit exceeded. Please try again later.",
+          resetAt: rateLimitResult.resetAt,
+          remaining: rateLimitResult.remaining,
+        },
+      });
+    }
+
+    setHeader(
+      event,
+      "X-RateLimit-Limit",
+      RATE_LIMIT_CONFIG.maxRequests.toString(),
+    );
+    setHeader(
+      event,
+      "X-RateLimit-Remaining",
+      rateLimitResult.remaining.toString(),
+    );
+    setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
+  }
 
   const cacheKey = `${CACHE_KEY_PREFIX}:${normalizedDoi}`;
   const redis = getRedisClient();
