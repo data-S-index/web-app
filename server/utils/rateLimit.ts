@@ -1,3 +1,4 @@
+import { getClientIp } from "./ip";
 import { getRedisClient } from "./redis";
 
 export interface RateLimitOptions {
@@ -42,8 +43,7 @@ export async function checkRateLimit(
 ): Promise<RateLimitResult> {
   const redis = getRedisClient();
   const key = `${options.keyPrefix || "ratelimit"}:${identifier}`;
-  const windowSeconds = options.windowSeconds;
-  const maxRequests = options.maxRequests;
+  const { windowSeconds, maxRequests } = options;
 
   // Get current count
   const currentCount = await redis.get(key);
@@ -99,24 +99,5 @@ export async function getRateLimitIdentifier(event: any): Promise<string> {
     // Session might not exist, continue to IP-based identification
   }
 
-  // Fall back to IP address
-  const headers = event.node.req.headers;
-  const forwardedFor = headers["x-forwarded-for"];
-  const realIp = headers["x-real-ip"];
-  const remoteAddress = event.node.req.socket?.remoteAddress;
-
-  // Get IP from forwarded headers (for proxies/load balancers)
-  let ip = "";
-  if (forwardedFor) {
-    ip = Array.isArray(forwardedFor)
-      ? forwardedFor[0]
-      : forwardedFor.split(",")[0].trim();
-  } else if (realIp) {
-    ip = Array.isArray(realIp) ? realIp[0] : realIp;
-  } else if (remoteAddress) {
-    ip = remoteAddress;
-  }
-
-  // Fallback to a default if no IP found
-  return ip || "unknown";
+  return getClientIp(event);
 }

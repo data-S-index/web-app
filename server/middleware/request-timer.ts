@@ -8,6 +8,7 @@ type RequestMetrics = {
   durationMs: number;
   durationSec?: number;
   userAgent?: string;
+  ip: string;
 };
 
 const SKIPPED_PREFIXES = ["/_nuxt/", "/__nuxt"];
@@ -29,6 +30,7 @@ export default defineEventHandler((event) => {
       statusCode: event.node.res.statusCode,
       durationMs: Number((performance.now() - startTime).toFixed(2)),
       userAgent: event.node.req.headers["user-agent"],
+      ip: getClientIp(event),
     };
 
     if (metrics.durationMs > 1000) {
@@ -42,7 +44,7 @@ export default defineEventHandler((event) => {
 function storeMetrics(metrics: RequestMetrics) {
   logwatch.info({
     action: "request-timer",
-    message: `[${metrics.environment}] ${metrics.method} ${metrics.url} ${metrics.statusCode} ${metrics.durationSec ?? metrics.durationMs}${metrics.durationSec ? "s" : "ms"} | ${metrics.userAgent ?? "unknown"}`,
+    message: `[${metrics.environment}] ${metrics.method} ${metrics.url} ${metrics.statusCode} ${metrics.durationSec ?? metrics.durationMs}${metrics.durationSec ? "s" : "ms"} | ${metrics.userAgent ?? "unknown"} | ${metrics.ip}`,
     ...metrics,
   });
 }

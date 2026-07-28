@@ -3,9 +3,9 @@ import normalizeDoi from "~~/server/utils/doi";
 const CACHE_EXPIRATION_SECONDS = 5 * 60; // 5 minutes
 const CACHE_KEY_PREFIX = "v1:datasets:by-doi";
 
-// Rate limit configuration: 30 requests per minute per user/IP
+// Rate limit configuration: 60 requests per minute per user/IP
 const RATE_LIMIT_CONFIG = {
-  maxRequests: 30,
+  maxRequests: 60,
   windowSeconds: 60,
   keyPrefix: "v1:datasets:by-doi",
 };
