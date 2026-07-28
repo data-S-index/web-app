@@ -3,7 +3,41 @@ import normalizeDoi from "~~/server/utils/doi";
 const CACHE_EXPIRATION_SECONDS = 5 * 60; // 5 minutes
 const CACHE_KEY_PREFIX = "v1:datasets:by-doi";
 
+// Rate limit configuration: 30 requests per minute per user/IP
+const RATE_LIMIT_CONFIG = {
+  maxRequests: 30,
+  windowSeconds: 60,
+  keyPrefix: "v1:datasets:by-doi",
+};
+
 export default defineEventHandler(async (event) => {
+  const identifier = await getRateLimitIdentifier(event);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
+
+  if (!rateLimitResult.allowed) {
+    throw createError({
+      statusCode: 429,
+      statusMessage: "Too Many Requests",
+      data: {
+        message: "Rate limit exceeded. Please try again later.",
+        resetAt: rateLimitResult.resetAt,
+        remaining: rateLimitResult.remaining,
+      },
+    });
+  }
+
+  setHeader(
+    event,
+    "X-RateLimit-Limit",
+    RATE_LIMIT_CONFIG.maxRequests.toString(),
+  );
+  setHeader(
+    event,
+    "X-RateLimit-Remaining",
+    rateLimitResult.remaining.toString(),
+  );
+  setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
+
   const query = getQuery(event);
   const doiParam = (query.doi as string) || "";
 
