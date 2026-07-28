@@ -405,6 +405,21 @@ const sEmbedSnippet = computed(
                     >{{ apiByDoiExample }}</pre
                   >
                 </div>
+
+                <div
+                  class="flex flex-col gap-1 border-t border-gray-200/80 pt-3 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-gray-700/50"
+                >
+                  <span class="text-muted"
+                    >Rate limited to 30 requests/minute per IP.</span
+                  >
+
+                  <NuxtLink
+                    to="/contact"
+                    class="text-primary-600 dark:text-primary-400 font-medium hover:underline"
+                  >
+                    Need a higher limit? Contact us
+                  </NuxtLink>
+                </div>
               </UCard>
 
               <UCard>
