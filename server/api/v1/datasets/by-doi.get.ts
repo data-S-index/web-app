@@ -5,7 +5,7 @@ const CACHE_KEY_PREFIX = "v1:datasets:by-doi";
 
 // Rate limit configuration: 60 requests per minute per user/IP
 const RATE_LIMIT_CONFIG = {
-  maxRequests: 60,
+  maxRequests: 120,
   windowSeconds: 60,
   keyPrefix: "v1:datasets:by-doi",
 };
@@ -29,10 +29,7 @@ export default defineEventHandler(async (event) => {
 
   if (!normalizedDoi.startsWith(PHYSIONET_DOI_PREFIX)) {
     const identifier = await getRateLimitIdentifier(event);
-    const rateLimitResult = await checkRateLimit(
-      identifier,
-      RATE_LIMIT_CONFIG,
-    );
+    const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
 
     if (!rateLimitResult.allowed) {
       throw createError({

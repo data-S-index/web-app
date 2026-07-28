@@ -6,7 +6,7 @@ const BLOCKED_USER_AGENTS = [
 ];
 
 // Max burst size per bot before it starts getting throttled
-const BUCKET_CAPACITY = 2;
+const BUCKET_CAPACITY = 3;
 const REFILL_PER_SECOND = 1 / 3; // 1 request every 3s
 
 // One token bucket per matched bot UA, shared across all requests from that bot

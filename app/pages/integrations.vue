@@ -410,7 +410,7 @@ const sEmbedSnippet = computed(
                   class="flex flex-col gap-1 border-t border-gray-200/80 pt-3 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-gray-700/50"
                 >
                   <span class="text-muted"
-                    >Rate limited to 60 requests/minute per IP.</span
+                    >Rate limited to 120 requests/minute per IP.</span
                   >
 
                   <NuxtLink
