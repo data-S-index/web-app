@@ -147,7 +147,7 @@ const actualProfilesDisplay = computed(() => {
 
       <template #headline>
         <a
-          href="https://www.linkedin.com/posts/chiangmf_can-we-develop-the-best-metrics-to-measure-activity-7485466949792116736-HEpY"
+          href="https://www.nih.gov/challenges/nih-data-sharing-index-s-index-challenge#winners"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -337,7 +337,7 @@ const actualProfilesDisplay = computed(() => {
               />
 
               <NuxtLink
-                to="https://www.linkedin.com/posts/chiangmf_can-we-develop-the-best-metrics-to-measure-activity-7485466949792116736-HEpY"
+                to="https://www.nih.gov/challenges/nih-data-sharing-index-s-index-challenge#winners"
                 target="_blank"
                 rel="noopener noreferrer"
               >
