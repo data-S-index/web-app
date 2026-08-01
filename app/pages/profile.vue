@@ -272,7 +272,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <div class="space-y-6">
             <!-- Edit Profile Form -->
             <UCard>
-              <h2 class="mb-6 text-xl font-semibold">Edit profile</h2>
+              <h2 class="text-xl font-semibold">Edit profile</h2>
+
+              <p class="mt-1 mb-6 text-sm text-gray-500 dark:text-gray-400">
+                Fields marked
+                <span class="text-highlighted font-medium">Shown publicly</span>
+                appear on your
+                <NuxtLink
+                  v-if="userData?.id"
+                  :to="`/users/${userData.id}`"
+                  class="text-primary-500 hover:underline"
+                >
+                  public profile
+                </NuxtLink>
+                <span v-else>public profile</span>. Everything else is only
+                visible to you.
+              </p>
 
               <UForm
                 :schema="schema"
@@ -301,8 +316,17 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 <UFormField
                   label="Additional names"
                   name="additionalNamesStr"
-                  description="Comma-separated (e.g. middle name, nickname)"
+                  description="Comma-separated (e.g. Nicknames)"
                 >
+                  <template #hint>
+                    <UBadge
+                      color="neutral"
+                      variant="subtle"
+                      size="sm"
+                      label="Private"
+                    />
+                  </template>
+
                   <UInput
                     v-model="state.additionalNamesStr"
                     type="text"
@@ -315,6 +339,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   name="affiliation"
                   description="Institution or organization"
                 >
+                  <template #hint>
+                    <UBadge
+                      color="success"
+                      variant="subtle"
+                      size="sm"
+                      label="Shown publicly"
+                    />
+                  </template>
+
                   <UInput
                     v-model="state.affiliation"
                     type="text"
@@ -327,6 +360,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   name="homePage"
                   description="Personal or lab website URL"
                 >
+                  <template #hint>
+                    <UBadge
+                      color="success"
+                      variant="subtle"
+                      size="sm"
+                      label="Shown publicly"
+                    />
+                  </template>
+
                   <UInput
                     v-model="state.homePage"
                     type="url"
@@ -339,6 +381,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   name="areasOfInterestStr"
                   description="Comma-separated (e.g. machine learning, open science)"
                 >
+                  <template #hint>
+                    <UBadge
+                      color="neutral"
+                      variant="subtle"
+                      size="sm"
+                      label="Private"
+                    />
+                  </template>
+
                   <UInput
                     v-model="state.areasOfInterestStr"
                     type="text"
@@ -351,6 +402,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   name="orcid"
                   description="Your ORCID identifier (e.g. 0000-0002-1825-0097)"
                 >
+                  <template #hint>
+                    <UBadge
+                      color="success"
+                      variant="subtle"
+                      size="sm"
+                      label="Shown publicly"
+                    />
+                  </template>
+
                   <UInput
                     v-model="state.orcid"
                     type="text"
@@ -381,15 +441,24 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
               <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    {{
-                      userData?.anonymous
-                        ? "Temporary Username"
-                        : "Email Address"
-                    }}
-                  </label>
+                  <div class="flex items-center justify-between gap-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      {{
+                        userData?.anonymous
+                          ? "Temporary Username"
+                          : "Email Address"
+                      }}
+                    </label>
+
+                    <UBadge
+                      color="neutral"
+                      variant="subtle"
+                      size="sm"
+                      label="Private"
+                    />
+                  </div>
 
                   <p class="mt-1 text-gray-900 dark:text-white">
                     {{ userData?.login }}
@@ -397,11 +466,20 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 </div>
 
                 <div>
-                  <label
-                    class="block text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    Account created
-                  </label>
+                  <div class="flex items-center justify-between gap-1">
+                    <label
+                      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                    >
+                      Account created
+                    </label>
+
+                    <UBadge
+                      color="neutral"
+                      variant="subtle"
+                      size="sm"
+                      label="Private"
+                    />
+                  </div>
 
                   <p class="mt-1 text-gray-900 dark:text-white">
                     {{

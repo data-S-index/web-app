@@ -11,11 +11,9 @@ export default defineEventHandler(async (event) => {
       anonymous: true,
       givenName: true,
       familyName: true,
-      login: true,
       orcid: true,
       affiliation: true,
       homePage: true,
-      areasOfInterest: true,
     },
   });
 
