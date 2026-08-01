@@ -6,19 +6,42 @@ import type { ButtonProps } from "@nuxt/ui";
 useColorMode().value = "light";
 
 useSeoMeta({
-  title: "Scholar Data",
+  title: "Scholar Data - NIH S-Index for Data Sharing Impact",
   description:
-    "Get credit for the data you share - clearly, fairly, and publicly. Winner of the NIH S-index Challenge to incentivize data sharing.",
+    "Track your NIH S-index, the official metric from the NIH Data Sharing S-index Challenge. Get credit for the data you share - clearly, fairly, and publicly.",
+  keywords:
+    "NIH S-index, NIH S index, NIH Data Sharing S-index Challenge, S-index, data sharing metric, dataset impact score, research data metrics, h-index for data",
 });
 
 useHead({
   titleTemplate: "",
 });
 
+useSchemaOrg([
+  defineWebPage({
+    "@type": ["WebPage", "FAQPage"],
+  }),
+  defineQuestion({
+    name: "What is the NIH S-index?",
+    answer:
+      "The NIH S-index is a metric that measures the impact of shared research datasets, similar to how the h-index measures publication impact. It was introduced through the NIH Data Sharing S-index Challenge to give researchers credit for the data they share.",
+  }),
+  defineQuestion({
+    name: "How is the NIH S-index calculated?",
+    answer:
+      "Scholar Data calculates the S-index by combining three signals for each dataset: FAIRness (how findable, accessible, interoperable, and reusable it is), citations across sources like OpenAlex, Make Data Count, and DataCite, and mentions in code, patents, and policy documents.",
+  }),
+  defineQuestion({
+    name: "Who won the NIH Data Sharing S-index Challenge?",
+    answer:
+      "Scholar Data was recognized as a winner of the NIH Data Sharing S-index Challenge, which aimed to develop a metric that incentivizes and rewards researchers for sharing their data.",
+  }),
+]);
+
 defineOgImage("NuxtSeo.takumi", {
   title: "",
   description:
-    "Get credit for the data you share - clearly, fairly, and publicly. \n Winner of the NIH S-index Challenge to incentivize data sharing.",
+    "Track your NIH S-index. Get credit for the data you share - clearly, fairly, and publicly. \n Winner of the NIH S-index Challenge to incentivize data sharing.",
 });
 
 const links = ref<ButtonProps[]>([
@@ -26,6 +49,29 @@ const links = ref<ButtonProps[]>([
     label: "Create your profile",
     to: "/signup",
     icon: "i-heroicons-user-plus",
+  },
+]);
+
+const faqItems = ref([
+  {
+    label: "What is the NIH S-index?",
+    content:
+      "The NIH S-index is a metric that measures the impact of shared research datasets, similar to how the h-index measures publication impact. It was introduced through the NIH Data Sharing S-index Challenge to give researchers credit for the data they share.",
+  },
+  {
+    label: "How is the NIH S-index calculated?",
+    content:
+      "Scholar Data calculates the S-index by combining three signals for each dataset: FAIRness (how findable, accessible, interoperable, and reusable it is, scored via F-UJI), citations across sources like OpenAlex, Make Data Count, and DataCite, and mentions in code, patents, and policy documents.",
+  },
+  {
+    label: "Who won the NIH Data Sharing S-index Challenge?",
+    content:
+      "Scholar Data was recognized as a winner of the NIH Data Sharing S-index Challenge, which aimed to develop a metric that incentivizes and rewards researchers for sharing their data.",
+  },
+  {
+    label: "How do I get my NIH S-index score?",
+    content:
+      "Create a free Scholar Data profile, claim your datasets from our index of over 49 million datasets, and your NIH S-index score is calculated automatically from your data sharing impact.",
   },
 ]);
 
@@ -134,7 +180,7 @@ const actualProfilesDisplay = computed(() => {
 <template>
   <section>
     <UPageHero
-      description="Scholar Data helps you measure, improve, and showcase the impact of your datasets, similarly to how you track publication impact on Google Scholar."
+      description="Scholar Data helps you measure, improve, and showcase your NIH S-index, the new metric for data sharing impact, similarly to how you track publication impact on Google Scholar."
       :ui="{ container: '!pb-10' }"
       :links="links"
     >
@@ -505,6 +551,26 @@ const actualProfilesDisplay = computed(() => {
               </UButton>
             </NuxtLink>
           </div>
+        </div>
+      </template>
+    </UPageSection>
+
+    <USeparator />
+
+    <UPageSection :ui="{ container: '!py-10' }" class="hidden">
+      <template #body>
+        <div class="mx-auto max-w-3xl">
+          <p
+            class="text-primary mb-4 text-center text-xs font-semibold uppercase"
+          >
+            Frequently asked questions
+          </p>
+
+          <h2 class="mb-8 text-center text-3xl font-bold sm:text-4xl">
+            Everything you need to know about the NIH S-index
+          </h2>
+
+          <UAccordion :items="faqItems" />
         </div>
       </template>
     </UPageSection>

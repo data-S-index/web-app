@@ -1,6 +1,6 @@
 {
-  "name": "MyWebSite",
-  "short_name": "MySite",
+  "name": "Scholar Data",
+  "short_name": "Scholar Data",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",

@@ -19,7 +19,7 @@ useHead({
   meta: [
     { charset: "utf-8" },
     { name: "viewport", content: "width=device-width, initial-scale=1" },
-    { name: "apple-mobile-web-app-title", content: "MyWebSite" },
+    { name: "apple-mobile-web-app-title", content: "Scholar Data" },
     {
       name: "theme-color",
       content: colorMode.value === "dark" ? "#111827" : "white",
@@ -44,12 +44,27 @@ useSeoMeta({
   titleTemplate: "%s - Scholar Data",
   description:
     "Get credit for the data you share - clearly, fairly, and publicly.",
+  keywords:
+    "NIH S-index, NIH S index, NIH Data Sharing S-index Challenge, data sharing metric, dataset impact score",
   twitterCard: "summary_large_image",
   ogUrl: "https://scholardata.io",
+  ogSiteName: "Scholar Data",
   twitterTitle: "Scholar Data",
   twitterDescription:
     "Get credit for the data you share - clearly, fairly, and publicly.",
 });
+
+useSchemaOrg([
+  defineWebSite({
+    name: "Scholar Data",
+  }),
+  defineOrganization({
+    name: "Scholar Data",
+    description:
+      "Scholar Data measures, improves, and showcases the impact of shared research datasets through the NIH S-index.",
+    award: "Winner, NIH Data Sharing S-index Challenge",
+  }),
+]);
 </script>
 
 <template>
