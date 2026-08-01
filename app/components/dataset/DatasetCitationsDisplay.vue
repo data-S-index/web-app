@@ -69,7 +69,6 @@ const paginatedCitations = computed(() => {
               <UBadge
                 v-if="citation.datacite"
                 color="success"
-                variant="subtle"
                 size="sm"
               >
                 DataCite
@@ -81,7 +80,6 @@ const paginatedCitations = computed(() => {
                 <UBadge
                   v-if="citation.mdc"
                   color="success"
-                  variant="subtle"
                   size="sm"
                   class="cursor-help"
                 >
@@ -92,7 +90,6 @@ const paginatedCitations = computed(() => {
               <UBadge
                 v-if="citation.openAlex"
                 color="success"
-                variant="subtle"
                 size="sm"
               >
                 OpenAlex

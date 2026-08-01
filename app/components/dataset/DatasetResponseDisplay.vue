@@ -44,7 +44,6 @@ const reloadPage = () => {
         <UBadge
           v-if="dataset.version"
           color="success"
-          variant="soft"
           size="sm"
           :label="`Version ${dataset.version}`"
           icon="i-heroicons-tag-20-solid"
@@ -267,7 +266,6 @@ const reloadPage = () => {
               >
                 <UBadge
                   color="success"
-                  variant="subtle"
                   :label="dataset.identifier"
                   icon="i-heroicons-link-20-solid"
                   class="cursor-pointer"
@@ -299,7 +297,6 @@ const reloadPage = () => {
               v-for="(subject, index) in dataset.subjects"
               :key="index"
               color="info"
-              variant="subtle"
             >
               {{ subject }}
             </UBadge>

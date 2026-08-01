@@ -316,7 +316,6 @@ const searchForOrganizations = async (
                   <UBadge
                     icon="i-heroicons-clock-20-solid"
                     color="primary"
-                    variant="soft"
                     :label="searchDuration"
                   />
                 </div>

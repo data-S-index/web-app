@@ -245,7 +245,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   >
                     <UBadge
                       color="warning"
-                      variant="soft"
                       label="Temporary Account"
                       icon="i-heroicons-eye-slash"
                       class="cursor-help"

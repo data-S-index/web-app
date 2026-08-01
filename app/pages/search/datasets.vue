@@ -392,27 +392,33 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                         {{ result.title }}
                       </h3>
 
-                      <div class="mt-1 flex items-center gap-2">
-                        <UBadge
-                          color="info"
-                          variant="soft"
-                          size="sm"
-                          :label="`D-Index: ${formatter.format(result.dIndex)}`"
-                        />
+                      <div
+                        class="mt-1 flex shrink-0 items-center gap-x-3 text-xs text-gray-600 dark:text-gray-400"
+                      >
+                        <span>
+                          <span class="text-highlighted font-semibold">
+                            {{ formatter.format(result.dIndex) }}
+                          </span>
+                          D-Index
+                        </span>
 
-                        <UBadge
-                          color="info"
-                          variant="soft"
-                          size="sm"
-                          :label="`Citations: ${formatter.format(result.citationCount)}`"
-                        />
+                        <span class="text-gray-300 dark:text-gray-600">|</span>
 
-                        <UBadge
-                          color="info"
-                          variant="soft"
-                          size="sm"
-                          :label="`Mentions: ${formatter.format(result.mentionCount)}`"
-                        />
+                        <span>
+                          <span class="text-highlighted font-semibold">
+                            {{ formatter.format(result.citationCount) }}
+                          </span>
+                          Citations
+                        </span>
+
+                        <span class="text-gray-300 dark:text-gray-600">|</span>
+
+                        <span>
+                          <span class="text-highlighted font-semibold">
+                            {{ formatter.format(result.mentionCount) }}
+                          </span>
+                          Mentions
+                        </span>
                       </div>
                     </div>
 
@@ -438,9 +444,9 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                       <UTooltip text="Click to copy identifier">
                         <UBadge
                           v-if="result.identifier"
-                          color="primary"
-                          variant="soft"
-                          size="sm"
+                          color="neutral"
+                          variant="outline"
+                          size="xs"
                           :label="result.identifier"
                           :icon="
                             result.identifierType === 'doi'
@@ -483,7 +489,6 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                   <UBadge
                     icon="i-heroicons-clock-20-solid"
                     color="primary"
-                    variant="soft"
                     :label="searchDuration"
                   />
                 </div>
@@ -505,27 +510,37 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                           {{ result.title }}
                         </h3>
 
-                        <div class="mt-1 flex items-center gap-2">
-                          <UBadge
-                            color="info"
-                            variant="soft"
-                            size="sm"
-                            :label="`D-Index: ${formatter.format(result.dIndex)}`"
-                          />
+                        <div
+                          class="mt-1 flex shrink-0 items-center gap-x-3 text-xs text-gray-600 dark:text-gray-400"
+                        >
+                          <span>
+                            <span class="text-highlighted font-semibold">
+                              {{ formatter.format(result.dIndex) }}
+                            </span>
+                            D-Index
+                          </span>
 
-                          <UBadge
-                            color="info"
-                            variant="soft"
-                            size="sm"
-                            :label="`Citations: ${formatter.format(result.citationCount)}`"
-                          />
+                          <span class="text-gray-300 dark:text-gray-600">
+                            |
+                          </span>
 
-                          <UBadge
-                            color="info"
-                            variant="soft"
-                            size="sm"
-                            :label="`Mentions: ${formatter.format(result.mentionCount)}`"
-                          />
+                          <span>
+                            <span class="text-highlighted font-semibold">
+                              {{ formatter.format(result.citationCount) }}
+                            </span>
+                            Citations
+                          </span>
+
+                          <span class="text-gray-300 dark:text-gray-600">
+                            |
+                          </span>
+
+                          <span>
+                            <span class="text-highlighted font-semibold">
+                              {{ formatter.format(result.mentionCount) }}
+                            </span>
+                            Mentions
+                          </span>
                         </div>
                       </div>
 
@@ -551,9 +566,9 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                         <UTooltip text="Click to copy identifier">
                           <UBadge
                             v-if="result.identifier"
-                            color="primary"
-                            variant="soft"
-                            size="sm"
+                            color="neutral"
+                            variant="outline"
+                            size="xs"
                             :label="result.identifier"
                             :icon="
                               result.identifierType === 'doi'

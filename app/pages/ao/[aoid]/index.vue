@@ -297,7 +297,6 @@ const cumulativeMentions = computed(() => {
               <UBadge
                 class="w-max cursor-help"
                 color="warning"
-                variant="subtle"
                 label="Automated Organization Profile"
                 icon="ic:round-auto-awesome"
               />

@@ -298,7 +298,6 @@ const cumulativeMentions = computed(() => {
               <UBadge
                 class="w-max cursor-help"
                 color="warning"
-                variant="subtle"
                 label="Automated Author Profile"
                 icon="ic:round-auto-awesome"
               />
@@ -316,7 +315,6 @@ const cumulativeMentions = computed(() => {
                 v-for="value in author.affiliations"
                 :key="value"
                 color="primary"
-                variant="subtle"
                 :label="value"
               />
             </div>
@@ -329,7 +327,6 @@ const cumulativeMentions = computed(() => {
                 v-for="value in author.nameIdentifiers"
                 :key="value"
                 color="secondary"
-                variant="subtle"
                 :icon="
                   value.includes('orcid')
                     ? 'simple-icons:orcid'

@@ -269,7 +269,10 @@ watch(
       :exact-match-examples="['10.5061/dryad.abc123', '0000-0002-1825-0097']"
     />
 
-    <div v-if="searchLoading && searchResults.length === 0" class="py-6 text-center">
+    <div
+      v-if="searchLoading && searchResults.length === 0"
+      class="py-6 text-center"
+    >
       <Icon
         name="i-heroicons-arrow-path-20-solid"
         class="text-primary-500 mx-auto h-10 w-10 animate-spin"
@@ -370,7 +373,6 @@ watch(
                     <UBadge
                       v-if="result.version"
                       color="primary"
-                      variant="soft"
                       size="sm"
                       :label="`v${result.version}`"
                       icon="i-heroicons-tag-20-solid"
@@ -431,7 +433,7 @@ watch(
                         size="xs"
                         variant="subtle"
                         color="primary"
-                        label="View dataset"
+                        label="View dataset on Scholar Data"
                         trailing-icon="i-heroicons-arrow-top-right-on-square"
                         @click.stop
                       />

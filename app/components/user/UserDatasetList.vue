@@ -110,7 +110,7 @@ const onRemove = (datasetId: number) => {
               target="_blank"
               class="group flex-1"
             >
-              <UTooltip text="View Dataset">
+              <UTooltip text="View Dataset on Scholar Data">
                 <UButton
                   color="primary"
                   variant="solid"
@@ -212,7 +212,6 @@ const onRemove = (datasetId: number) => {
             <UBadge
               color="neutral"
               size="sm"
-              variant="subtle"
               :label="`${item.dataset.citations.length} Citation${item.dataset.citations.length !== 1 ? 's' : ''}`"
               icon="i-heroicons-book-open-20-solid"
             />
@@ -220,7 +219,6 @@ const onRemove = (datasetId: number) => {
             <UBadge
               color="neutral"
               size="sm"
-              variant="subtle"
               :label="`${item.dataset.mentions.length} Mention${item.dataset.mentions.length !== 1 ? 's' : ''}`"
               icon="i-heroicons-chat-bubble-bottom-center-text-20-solid"
             />
@@ -231,7 +229,6 @@ const onRemove = (datasetId: number) => {
               <UBadge
                 color="neutral"
                 size="sm"
-                variant="subtle"
                 class="cursor-help"
                 :label="
                   item.dataset.fujiScore?.score
@@ -249,7 +246,6 @@ const onRemove = (datasetId: number) => {
             <UBadge
               color="neutral"
               size="sm"
-              variant="subtle"
               :label="
                 item.dataset.dindices?.[0]?.score
                   ? `${(item.dataset.dindices?.[0]?.score || 0).toFixed(1)} Dataset Index`
@@ -283,7 +279,6 @@ const onRemove = (datasetId: number) => {
             >
               <UBadge
                 color="info"
-                variant="subtle"
                 class="cursor-help"
                 :label="
                   item.dataset.pubYear

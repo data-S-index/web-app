@@ -197,12 +197,7 @@ const actualProfilesDisplay = computed(() => {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <UBadge
-            variant="soft"
-            color="success"
-            class="cursor-pointer"
-            icon="tabler:award"
-          >
+          <UBadge color="success" class="cursor-pointer" icon="tabler:award">
             NIH Challenge Winner
           </UBadge>
         </a>

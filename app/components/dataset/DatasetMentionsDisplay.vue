@@ -65,7 +65,6 @@ const paginatedMentions = computed(() => {
                 v-for="(source, sourceIndex) in mention.source"
                 :key="sourceIndex"
                 color="info"
-                variant="subtle"
                 size="sm"
                 class="w-max"
               >

@@ -232,7 +232,6 @@ onUnmounted(() => {
 
             <UBadge
               :color="STATUS_META[service.status].color"
-              variant="subtle"
               size="sm"
             >
               {{ STATUS_META[service.status].label }}
