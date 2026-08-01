@@ -33,13 +33,24 @@ export default defineEventHandler(async (event) => {
     const searchResults = await index.search(searchTerm, {
       limit,
       offset: validatedOffset,
+      showRankingScore: true,
     });
 
+    const rankingScoreByDatasetId = new Map<number, number>();
     const datasetIds = searchResults.hits
       .map((hit) => {
-        const { id } = hit as Record<string, unknown>;
+        const { id, _rankingScore } = hit as Record<string, unknown>;
+        const numericId = typeof id === "string" ? parseInt(id, 10) : id;
 
-        return typeof id === "string" ? parseInt(id, 10) : id;
+        if (
+          typeof numericId === "number" &&
+          !isNaN(numericId) &&
+          typeof _rankingScore === "number"
+        ) {
+          rankingScoreByDatasetId.set(numericId, _rankingScore);
+        }
+
+        return numericId;
       })
       .filter(
         (id): id is number => typeof id === "number" && !isNaN(id),
@@ -142,6 +153,7 @@ export default defineEventHandler(async (event) => {
           dIndex: dIndexByDatasetId.get(dataset.id) ?? 0,
           citationCount: dataset._count.citations,
           mentionCount: dataset._count.mentions,
+          rankingScore: rankingScoreByDatasetId.get(dataset.id),
         };
       })
       .filter(
@@ -158,6 +170,7 @@ export default defineEventHandler(async (event) => {
           dIndex: number;
           citationCount: number;
           mentionCount: number;
+          rankingScore: number | undefined;
         } => item !== null,
       );
 

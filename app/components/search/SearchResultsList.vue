@@ -1,5 +1,9 @@
 <script setup lang="ts">
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
+const percentFormatter = Intl.NumberFormat("en", {
+  style: "percent",
+  maximumFractionDigits: 0,
+});
 
 type UserResult = {
   id: number | string;
@@ -9,6 +13,7 @@ type UserResult = {
   sIndex: number;
   datasetCount: number;
   profileType?: "au" | "user";
+  rankingScore?: number;
 };
 
 type OrgResult = {
@@ -16,6 +21,7 @@ type OrgResult = {
   name: string;
   datasetCount: number;
   sIndex: number;
+  rankingScore?: number;
 };
 
 defineProps<{
@@ -90,6 +96,18 @@ const linkTo = (item: UserResult | OrgResult, type: "user" | "org") => {
             icon="i-lucide-bot"
             label="Automated Author Profile"
           />
+
+          <UTooltip
+            v-if="result.rankingScore !== undefined"
+            text="How closely this result matches your search"
+          >
+            <UBadge
+              color="primary"
+              variant="subtle"
+              size="xs"
+              :label="`${percentFormatter.format(result.rankingScore)} match`"
+            />
+          </UTooltip>
         </div>
 
         <!-- User: identifiers, affiliations, badges -->

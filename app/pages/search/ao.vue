@@ -14,6 +14,7 @@ type SearchResult = {
   name: string;
   datasetCount: number;
   sIndex: number;
+  rankingScore?: number;
 };
 
 const route = useRoute();

@@ -17,6 +17,7 @@ type SearchResult = {
   sIndex: number;
   datasetCount: number;
   profileType: "au" | "user";
+  rankingScore?: number;
 };
 
 const route = useRoute();

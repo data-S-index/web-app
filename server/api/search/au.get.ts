@@ -36,11 +36,19 @@ export default defineEventHandler(async (event) => {
     // Search indexes based on filter; gracefully handle missing user index
     const [auSearchResults, userSearchResults] = await Promise.all([
       profileType !== "user"
-        ? auIndex.search(searchTerm, { limit, offset: validatedOffset })
+        ? auIndex.search(searchTerm, {
+            limit,
+            offset: validatedOffset,
+            showRankingScore: true,
+          })
         : Promise.resolve({ hits: [], estimatedTotalHits: 0 }),
       profileType !== "au"
         ? userIndex
-            .search(searchTerm, { limit, offset: validatedOffset })
+            .search(searchTerm, {
+              limit,
+              offset: validatedOffset,
+              showRankingScore: true,
+            })
             .catch(() => ({ hits: [], estimatedTotalHits: 0 }))
         : Promise.resolve({ hits: [], estimatedTotalHits: 0 }),
     ]);
@@ -50,6 +58,7 @@ export default defineEventHandler(async (event) => {
       name?: string;
       nameIdentifiers?: string[];
       affiliations?: string[];
+      _rankingScore?: number;
     };
 
     type UserHit = {
@@ -57,6 +66,7 @@ export default defineEventHandler(async (event) => {
       name?: string;
       nameIdentifiers?: string[];
       affiliations?: string[];
+      _rankingScore?: number;
     };
 
     const parseAuId = (id: string | number): number | null => {
@@ -166,6 +176,7 @@ export default defineEventHandler(async (event) => {
           datasetCount: userCountById.get(id) ?? 0,
           sIndex: userSIndexById.get(id) ?? 0,
           profileType: "user" as const,
+          rankingScore: hit._rankingScore,
         };
       })
       .filter((u): u is NonNullable<typeof u> => u != null);
@@ -183,6 +194,7 @@ export default defineEventHandler(async (event) => {
           datasetCount: auCountByUserId.get(id) ?? 0,
           sIndex: sindexByUserId.get(id) ?? 0,
           profileType: "au" as const,
+          rankingScore: hit._rankingScore,
         };
       })
       .filter((u): u is NonNullable<typeof u> => u != null);

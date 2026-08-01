@@ -25,7 +25,13 @@ type SearchResult = {
   dIndex: number;
   citationCount: number;
   mentionCount: number;
+  rankingScore?: number;
 };
+
+const percentFormatter = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  maximumFractionDigits: 0,
+});
 
 const route = useRoute();
 const router = useRouter();
@@ -563,22 +569,36 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
                           </p>
                         </div>
 
-                        <UTooltip text="Click to copy identifier">
-                          <UBadge
-                            v-if="result.identifier"
-                            color="neutral"
-                            variant="outline"
-                            size="xs"
-                            :label="result.identifier"
-                            :icon="
-                              result.identifierType === 'doi'
-                                ? 'simple-icons:doi'
-                                : 'mdi:identifier'
-                            "
-                            class="max-w cursor-pointer truncate font-mono text-xs"
-                            @click="copyToClipboard(result.identifier)"
-                          />
-                        </UTooltip>
+                        <div class="flex shrink-0 items-center gap-2">
+                          <UTooltip
+                            v-if="result.rankingScore !== undefined"
+                            text="How closely this result matches your search"
+                          >
+                            <UBadge
+                              color="primary"
+                              variant="subtle"
+                              size="xs"
+                              :label="`${percentFormatter.format(result.rankingScore)} match`"
+                            />
+                          </UTooltip>
+
+                          <UTooltip text="Click to copy identifier">
+                            <UBadge
+                              v-if="result.identifier"
+                              color="neutral"
+                              variant="outline"
+                              size="xs"
+                              :label="result.identifier"
+                              :icon="
+                                result.identifierType === 'doi'
+                                  ? 'simple-icons:doi'
+                                  : 'mdi:identifier'
+                              "
+                              class="max-w cursor-pointer truncate font-mono text-xs"
+                              @click="copyToClipboard(result.identifier)"
+                            />
+                          </UTooltip>
+                        </div>
                       </div>
                     </div>
                   </NuxtLink>

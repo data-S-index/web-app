@@ -33,9 +33,14 @@ export default defineEventHandler(async (event) => {
     const searchResults = await index.search(searchTerm, {
       limit,
       offset: validatedOffset,
+      showRankingScore: true,
     });
 
-    type Hit = { id: string | number; name?: string };
+    type Hit = {
+      id: string | number;
+      name?: string;
+      _rankingScore?: number;
+    };
     const parseId = (id: string | number): number | null => {
       const n = typeof id === "number" ? id : parseInt(String(id), 10);
 
@@ -102,6 +107,7 @@ export default defineEventHandler(async (event) => {
           name: hit.name ?? "",
           datasetCount: countByOrgId.get(id) ?? 0,
           sIndex: sindexByOrgId.get(id) ?? 0,
+          rankingScore: hit._rankingScore,
         };
       })
       .filter((o): o is NonNullable<typeof o> => o != null);
