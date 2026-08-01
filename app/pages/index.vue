@@ -44,12 +44,20 @@ defineOgImage("NuxtSeo.takumi", {
     "Track your NIH S-index. Get credit for the data you share - clearly, fairly, and publicly. \n Winner of the NIH S-index Challenge to incentivize data sharing.",
 });
 
-const links = ref<ButtonProps[]>([
-  {
-    label: "Create your profile",
-    to: "/signup",
-    icon: "i-heroicons-user-plus",
-  },
+const { user, loggedIn } = useUserSession();
+
+const links = computed<ButtonProps[]>(() => [
+  loggedIn.value && user.value?.id
+    ? {
+        label: "View profile",
+        to: `/users/${user.value.id}`,
+        icon: "i-heroicons-user-circle",
+      }
+    : {
+        label: "Create your profile",
+        to: "/signup",
+        icon: "i-heroicons-user-plus",
+      },
 ]);
 
 const faqItems = ref([
