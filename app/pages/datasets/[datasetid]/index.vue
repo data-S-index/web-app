@@ -236,21 +236,28 @@ const copyDoi = async () => {
               {{ dataset.title }}
             </h1>
 
-            <UButton
-              color="primary"
-              variant="solid"
-              :to="
-                dataset.identifierType === 'doi'
-                  ? `https://doi.org/${dataset.identifier}`
-                  : dataset.identifierType === 'emdb'
-                    ? `https://www.ebi.ac.uk/emdb/${dataset.identifier}`
-                    : dataset.identifier
-              "
-              target="_blank"
-              rel="noopener noreferrer"
-              icon="i-heroicons-arrow-top-right-on-square-20-solid"
-              label="View Dataset"
-            />
+            <div class="flex items-center gap-2">
+              <DatasetClaimButton
+                :dataset-id="dataset.id"
+                :initial-claimed="dataset.isClaimedByUser"
+              />
+
+              <UButton
+                color="primary"
+                variant="solid"
+                :to="
+                  dataset.identifierType === 'doi'
+                    ? `https://doi.org/${dataset.identifier}`
+                    : dataset.identifierType === 'emdb'
+                      ? `https://www.ebi.ac.uk/emdb/${dataset.identifier}`
+                      : dataset.identifier
+                "
+                target="_blank"
+                rel="noopener noreferrer"
+                icon="i-heroicons-arrow-top-right-on-square-20-solid"
+                label="View Dataset"
+              />
+            </div>
           </div>
 
           <div

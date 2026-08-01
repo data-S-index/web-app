@@ -89,5 +89,16 @@ export default defineEventHandler(async (event) => {
 
   const { datasetTopic: _t, ...rest } = dataset;
 
-  return { ...rest, domain };
+  const session = await getUserSession(event);
+  const userId = session.user?.id;
+
+  const isClaimedByUser = userId
+    ? Boolean(
+        await prisma.userDataset.findUnique({
+          where: { userId_datasetId: { userId, datasetId: dataset.id } },
+        }),
+      )
+    : false;
+
+  return { ...rest, domain, isClaimedByUser };
 });

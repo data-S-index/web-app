@@ -435,7 +435,6 @@ watch(
                         variant="subtle"
                         color="primary"
                         label="View dataset on Scholar Data"
-                        trailing-icon="i-heroicons-arrow-top-right-on-square"
                         @click.stop
                       />
                     </div>
