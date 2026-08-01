@@ -289,6 +289,7 @@ const searchForUsers = async (page: number = 1, reset: boolean = false) => {
           <SearchTips
             :tips="['Search by researcher name, ORCID iD, or affiliation']"
             :exact-match-examples="['0000-0002-1825-0097']"
+            auto-detect-identifiers
           />
 
           <div v-if="!hasSearched" class="space-y-6">

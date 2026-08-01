@@ -267,6 +267,7 @@ watch(
     <SearchTips
       :tips="['Search by dataset title, author name, DOI, ORCID, or keywords']"
       :exact-match-examples="['10.5061/dryad.abc123', '0000-0002-1825-0097']"
+      auto-detect-identifiers
     />
 
     <div

@@ -47,11 +47,14 @@ export default defineEventHandler(async (event) => {
     // results: filtering per-page batch can discard eligible items that don't
     // happen to land within that batch's slice.
     const index = meilisearch.index("dataset");
-    const searchResults = await index.search(searchTerm, {
-      limit: MEILISEARCH_MAX_RESULTS,
-      offset: 0,
-      attributesToRetrieve: ["id"],
-    });
+    const searchResults = await index.search(
+      autoExactMatchSearchTerm(searchTerm),
+      {
+        limit: MEILISEARCH_MAX_RESULTS,
+        offset: 0,
+        attributesToRetrieve: ["id"],
+      },
+    );
 
     const existingSet = new Set(existingDatasetIds);
 

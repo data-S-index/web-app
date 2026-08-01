@@ -340,6 +340,7 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
               '10.5061/dryad.abc123',
               '0000-0002-1825-0097',
             ]"
+            auto-detect-identifiers
           />
 
           <div v-if="!hasSearched" class="space-y-6">
