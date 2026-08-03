@@ -1,13 +1,37 @@
 import { PrismaClient } from "../../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { writeFileSync } from "fs";
-import { join } from "path";
+import { createHash, randomUUID } from "crypto";
+import { consola } from "consola";
 import "dotenv/config";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 });
 const prisma = new PrismaClient({ adapter });
+
+const BUNNY_BASE = (process.env.BUNNY_STORAGE_BASE ?? "").replace(/\/$/, "");
+const BUNNY_KEY = process.env.BUNNY_STORAGE_API_KEY ?? "";
+const BUNNY_REMOTE_PATH = "user-dataset-backup";
+
+async function uploadToBunny(fileName: string, content: Buffer): Promise<void> {
+  const checksum = createHash("sha256")
+    .update(content)
+    .digest("hex")
+    .toUpperCase();
+  const url = `${BUNNY_BASE}/${BUNNY_REMOTE_PATH}/${fileName}`;
+
+  const res = await fetch(url, {
+    method: "PUT",
+    headers: { AccessKey: BUNNY_KEY, Checksum: checksum },
+    body: content,
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Bunny upload failed [${fileName}]: ${res.status} ${await res.text()}`,
+    );
+  }
+}
 
 const main = async () => {
   const records = await prisma.userDataset.findMany({
@@ -39,18 +63,24 @@ const main = async () => {
     datasetIdentifierType: r.dataset.identifierType,
   }));
 
-  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const filename = `user-dataset-backup-${timestamp}.json`;
-  const outPath = join(process.cwd(), "scripts", "backup", filename);
+  const date = new Date().toISOString().split("T")[0];
+  const filename = `${date}-${randomUUID()}.json`;
+  const content = Buffer.from(JSON.stringify(output, null, 2));
 
-  writeFileSync(outPath, JSON.stringify(output, null, 2));
+  if (!BUNNY_BASE || !BUNNY_KEY) {
+    throw new Error(
+      "BUNNY_STORAGE_BASE or BUNNY_STORAGE_API_KEY not set — cannot upload backup.",
+    );
+  }
 
-  console.log(`Backed up ${output.length} user-dataset records to ${filename}`);
+  await uploadToBunny(filename, content);
+
+  consola.success(`Backed up ${output.length} user-dataset records.`);
 };
 
 main()
   .catch((error) => {
-    console.error(error);
+    consola.error(error);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
