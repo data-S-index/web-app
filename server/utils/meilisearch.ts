@@ -23,11 +23,25 @@ declare const globalThis: {
   meilisearchGlobal: ReturnType<typeof meilisearchClientSingleton> | undefined;
 };
 
-const meilisearch =
-  globalThis.meilisearchGlobal ?? meilisearchClientSingleton();
+// Resolved lazily (on first property access) rather than at module load, so
+// importing this file doesn't require the Meilisearch env vars to be set —
+// e.g. during the Nitro build, which loads every server route's module graph.
+function resolveMeilisearchClient() {
+  if (globalThis.meilisearchGlobal) return globalThis.meilisearchGlobal;
 
-if (process.env.NODE_ENV !== "production") {
-  globalThis.meilisearchGlobal = meilisearch;
+  const client = meilisearchClientSingleton();
+
+  if (process.env.NODE_ENV !== "production") {
+    globalThis.meilisearchGlobal = client;
+  }
+
+  return client;
 }
+
+const meilisearch = new Proxy({} as MeiliSearch, {
+  get(_target, prop, receiver) {
+    return Reflect.get(resolveMeilisearchClient(), prop, receiver);
+  },
+});
 
 export default meilisearch;
