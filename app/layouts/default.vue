@@ -50,19 +50,34 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
     to: "/search/datasets",
   },
   {
-    label: "Evaluate Datasets",
-    to: "/evaluate",
-    active: route.path.startsWith("/evaluate"),
-  },
-  {
-    label: "Integrate",
-    to: "/integrations",
-    active: route.path.startsWith("/integrations"),
-  },
-  {
-    label: "Platform Metrics",
-    to: "/metrics",
-    active: route.path.startsWith("/metrics"),
+    label: "More",
+    active:
+      route.path.startsWith("/evaluate") ||
+      route.path.startsWith("/integrations") ||
+      route.path.startsWith("/metrics"),
+    children: [
+      {
+        label: "Evaluate Datasets",
+        to: "/evaluate",
+        icon: "i-heroicons-clipboard-document-check",
+        description: "Assess dataset quality and readiness",
+        active: route.path.startsWith("/evaluate"),
+      },
+      {
+        label: "Integrate",
+        to: "/integrations",
+        icon: "i-heroicons-puzzle-piece",
+        description: "Connect your data pipelines and tools",
+        active: route.path.startsWith("/integrations"),
+      },
+      {
+        label: "Platform Metrics",
+        to: "/metrics",
+        icon: "i-heroicons-chart-bar",
+        description: "View platform-wide statistics and metrics",
+        active: route.path.startsWith("/metrics"),
+      },
+    ],
   },
 ]);
 
@@ -111,6 +126,16 @@ const footerItems: NavigationMenuItem[] = [
       <UNavigationMenu :items="headerItems" class="hidden md:flex" />
 
       <template #right>
+        <UTooltip text="Announcements">
+          <UButton
+            to="/announcements"
+            icon="i-heroicons-megaphone-20-solid"
+            color="neutral"
+            variant="ghost"
+            aria-label="Announcements"
+          />
+        </UTooltip>
+
         <UTooltip text="Documentation">
           <UButton
             to="https://docs.scholardata.io"
