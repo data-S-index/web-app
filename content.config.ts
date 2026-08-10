@@ -8,9 +8,13 @@ export default defineContentConfig({
       source: "announcements/*.md",
       schema: z.object({
         date: z.string(),
-        // Set `sitemap: false` in a post's frontmatter to keep it out of the
-        // sitemap and off the /announcements listing (used for the test post).
+        // Set `draft: true` in a post's frontmatter to keep it off the
+        // /announcements listing (used for the test post).
+        draft: z.boolean().optional(),
         sitemap: defineSitemapSchema(),
+        // Set to link the post straight to an outside URL (e.g. a press
+        // article) instead of rendering the Markdown body on its own page.
+        externalUrl: z.string().url().optional(),
       }),
     }),
   },

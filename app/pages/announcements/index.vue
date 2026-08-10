@@ -13,9 +13,9 @@ const { $dayjs } = useNuxtApp();
 
 const { data: announcements } = await useAsyncData("announcements-list", () =>
   queryCollection("announcements")
-    .where("sitemap", "IS NOT NULL")
     .order("date", "DESC")
-    .all(),
+    .all()
+    .then((posts) => posts.filter((post) => !post.draft)),
 );
 </script>
 
@@ -28,36 +28,61 @@ const { data: announcements } = await useAsyncData("announcements-list", () =>
       :ui="{ container: '!pb-6' }"
     />
 
-    <div v-if="announcements?.length" class="flex flex-col gap-4">
-      <UPageCard
-        v-for="post in announcements"
-        :key="post.path"
-        :to="post.path"
-        :title="post.title"
-        :description="post.description"
-        class="hover:ring-primary transition-shadow"
-      >
-        <template #footer>
-          <span class="text-muted text-xs">
-            {{ $dayjs(post.date).format("DD MMMM YYYY") }}
-          </span>
-        </template>
-      </UPageCard>
+    <div class="flex flex-col">
+      <template v-for="post in announcements" :key="post.path">
+        <NuxtLink
+          :to="post.externalUrl ?? post.path"
+          :target="post.externalUrl ? '_blank' : undefined"
+          class="group ring-primary/10 hover:ring-primary/40 -mx-4 grid grid-cols-[4.5rem_1fr] items-start gap-4 rounded-lg border-slate-100 px-4 py-5 ring-1 transition-all hover:shadow-sm sm:grid-cols-[5.5rem_1fr] sm:gap-6"
+        >
+          <div class="flex flex-col pt-0.5">
+            <span
+              class="text-muted text-[0.65rem] font-semibold tracking-wider uppercase"
+            >
+              {{ $dayjs(post.date).format("MMM") }}
+            </span>
+
+            <span
+              class="text-highlighted text-2xl leading-tight font-bold tabular-nums"
+            >
+              {{ $dayjs(post.date).format("DD") }}
+            </span>
+
+            <span class="text-muted text-xs">
+              {{ $dayjs(post.date).format("YYYY") }}
+            </span>
+          </div>
+
+          <div class="flex min-w-0 flex-col gap-1.5">
+            <div class="flex flex-wrap items-center gap-2">
+              <h2
+                class="text-highlighted group-hover:text-primary font-semibold transition-colors"
+              >
+                {{ post.title }}
+              </h2>
+
+              <UBadge
+                v-if="post.externalUrl"
+                color="neutral"
+                variant="subtle"
+                size="sm"
+                icon="i-heroicons-arrow-top-right-on-square"
+              >
+                External
+              </UBadge>
+
+              <UIcon
+                name="i-heroicons-arrow-right"
+                class="text-primary size-4 -translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100"
+              />
+            </div>
+
+            <p class="text-muted line-clamp-2 text-sm">
+              {{ post.description }}
+            </p>
+          </div>
+        </NuxtLink>
+      </template>
     </div>
-
-    <UCard v-else>
-      <div class="flex flex-col items-center gap-2 py-10 text-center">
-        <UIcon
-          name="i-heroicons-megaphone"
-          class="text-muted size-8 shrink-0"
-        />
-
-        <p class="font-medium">No announcements yet</p>
-
-        <p class="text-muted text-sm">
-          We'll post news and platform updates here — check back soon.
-        </p>
-      </div>
-    </UCard>
   </div>
 </template>

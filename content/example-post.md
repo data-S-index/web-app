@@ -31,6 +31,19 @@ Full write-up goes here...
 
 This post is automatically picked up by [content.config.ts](/) and appears on the [Announcements](/announcements) page, newest first.
 
+### Linking to an external post
+
+If the announcement lives elsewhere (a press article, a partner's blog), add `externalUrl` to the frontmatter instead of writing a body. The listing card gets an "External" badge and links straight out; visiting the post's own URL directly redirects to `externalUrl` too.
+
+```md [content/announcements/03.press-mention.md]
+---
+title: Scholar Data featured in Nature
+description: A short recap of the coverage.
+date: 2026-02-01
+externalUrl: https://www.nature.com/some-article
+---
+```
+
 ## Formatting basics
 
 Standard Markdown works as expected: **bold**, _italic_, `inline code`, and [links](/announcements).

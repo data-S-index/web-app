@@ -24,7 +24,7 @@
     "scripts:index:users": "tsx scripts/schedule/create-user-index.ts",
     "scripts:split:ndjson": "tsx scripts/split_nd_json.ts",
     "scripts:generate:sitemaps": "tsx scripts/generate-sitemaps.ts",
-    "reset": " rimraf .nuxt && rimraf .output && rimraf dist && rimraf node_modules && pnpm install",
+    "reset": " rimraf .nuxt && rimraf .output && rimraf dist && rimraf .data && rimraf node_modules && pnpm install",
     "prune-branches": "git removed-branches --prune --force"
   },
   "dependencies": {

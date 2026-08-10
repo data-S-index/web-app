@@ -15,6 +15,10 @@ if (!post.value) {
   });
 }
 
+if (post.value.externalUrl) {
+  await navigateTo(post.value.externalUrl, { external: true });
+}
+
 useSeoMeta({
   title: post.value.title,
   description: post.value.description,
