@@ -41,6 +41,9 @@ export default defineNuxtConfig({
     "nuxt-echarts",
     "@nuxtjs/robots",
     "@nuxtjs/sitemap",
+    // Must load after @nuxtjs/sitemap so its content-collection integration
+    // (sitemap: false frontmatter, etc.) registers correctly.
+    "@nuxt/content",
     "nuxt-schema-org",
     "nuxt-link-checker",
   ],
@@ -98,6 +101,8 @@ export default defineNuxtConfig({
           "/profile",
           "/embed/",
           "/fuji",
+          // Placeholder/example post — content/announcements/00.test.md
+          "/announcements/test",
         ],
         contentUsage: {
           bots: "y",

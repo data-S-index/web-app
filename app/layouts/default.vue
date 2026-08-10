@@ -126,7 +126,7 @@ const footerItems: NavigationMenuItem[] = [
       <UNavigationMenu :items="headerItems" class="hidden md:flex" />
 
       <template #right>
-        <UTooltip text="Announcements">
+        <!-- <UTooltip text="Announcements">
           <UButton
             to="/announcements"
             icon="i-heroicons-megaphone-20-solid"
@@ -134,7 +134,7 @@ const footerItems: NavigationMenuItem[] = [
             variant="ghost"
             aria-label="Announcements"
           />
-        </UTooltip>
+        </UTooltip> -->
 
         <UTooltip text="Documentation">
           <UButton
