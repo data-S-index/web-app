@@ -9,13 +9,14 @@ const API_BASE_URL = "https://scholardata.io";
 const FUJI_JOB_CLAIM_URL = `${API_BASE_URL}/api/fuji-job/claim`;
 const FUJI_JOB_SUBMIT_URL = `${API_BASE_URL}/api/fuji-job/submit`;
 
-const FUJI_JOB_SECRET = process.env.FUJI_JOB_SECRET;
+const { FUJI_JOB_SECRET } = process.env;
+
 if (!FUJI_JOB_SECRET) {
   throw new Error("FUJI_JOB_SECRET environment variable is required");
 }
 
 // Keyed by Dataset.publisherId (the DataCite client/repository id, e.g. "tib.ubp")
-const HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
+const AUTOMATED_HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
   "rpht.nifs": 63.46,
   "ylqb.ybhfwy": 65.38,
   "estdoi.bio": 53.85,
@@ -101,6 +102,16 @@ const HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
   "subgoe.jna": 13.46,
   "nreu.famosh": 13.46,
   emdb: 42.31,
+};
+
+const MANUAL_PUBLISHER_ID_SCORES: Record<string, number> = {
+  "sul.openneuro": 42.31,
+  // "dartlib.dandi": 88.46,
+};
+
+const HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
+  ...AUTOMATED_HARDCODED_PUBLISHER_ID_SCORES,
+  ...MANUAL_PUBLISHER_ID_SCORES,
 };
 
 const HEALTH_CHECK_INTERVAL_MS = 10_000;
