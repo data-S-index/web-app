@@ -50,9 +50,9 @@ defineOgImage("NuxtSeo.takumi", {
         :ui="{ container: '!pb-6' }"
       />
 
-      <p class="text-muted -mt-4 text-sm">
+      <time class="text-muted -mt-4 text-sm" :datetime="post.date">
         {{ $dayjs(post.date).format("DD MMMM YYYY") }}
-      </p>
+      </time>
 
       <UCard class="mt-6">
         <ContentRenderer
