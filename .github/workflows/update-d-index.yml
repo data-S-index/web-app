@@ -34,5 +34,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      # - name: Run d-index update
-      #   run: pnpm tsx scripts/schedule/update-d-index.ts
+      - name: Run d-index update
+        run: pnpm tsx scripts/schedule/update-d-index.ts
