@@ -32,7 +32,14 @@ export default defineEventHandler(async (event) => {
   if (cached) {
     setHeader(event, "X-Cache", "HIT");
 
-    return JSON.parse(cached);
+    const queryEndTime = performance.now();
+    const queryDuration = queryEndTime - queryStartTime;
+    const executionTime =
+      queryDuration > 1000
+        ? `${(queryDuration / 1000).toFixed(2)}s`
+        : `${queryDuration.toFixed(2)}ms`;
+
+    return { ...JSON.parse(cached), queryDuration: executionTime };
   }
 
   try {
