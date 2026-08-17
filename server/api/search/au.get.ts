@@ -1,3 +1,6 @@
+const CACHE_TTL_SECONDS = 86400; // 1 day
+const CACHE_KEY_PREFIX = "search:au";
+
 // Public search - no auth required. Returns a paginated list of users (regular + automated), with regular users first.
 export default defineEventHandler(async (event) => {
   const queryStartTime = performance.now();
@@ -21,6 +24,15 @@ export default defineEventHandler(async (event) => {
       limit,
       queryDuration: "0ms",
     };
+  }
+
+  const cacheKey = `${CACHE_KEY_PREFIX}:${searchTerm.trim().toLowerCase()}:${page}:${profileType}`;
+  const redis = getRedisClient();
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    setHeader(event, "X-Cache", "HIT");
+
+    return JSON.parse(cached);
   }
 
   try {
@@ -225,13 +237,17 @@ export default defineEventHandler(async (event) => {
         ? `${(queryDuration / 1000).toFixed(2)}s`
         : `${queryDuration.toFixed(2)}ms`;
 
-    return {
+    const result = {
       users,
       total: totalCount,
       page: validatedPage,
       limit,
       queryDuration: executionTime,
     };
+    await redis.setex(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(result));
+    setHeader(event, "X-Cache", "MISS");
+
+    return result;
   } catch (error) {
     console.error("AU search error:", error);
     throw createError({

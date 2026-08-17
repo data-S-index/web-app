@@ -1,3 +1,6 @@
+const CACHE_TTL_SECONDS = 86400; // 1 day
+const CACHE_KEY_PREFIX = "search:ao";
+
 // Public automated-organization search - no auth required. Returns a paginated list of organizations.
 export default defineEventHandler(async (event) => {
   const queryStartTime = performance.now();
@@ -20,6 +23,15 @@ export default defineEventHandler(async (event) => {
       limit,
       queryDuration: "0ms",
     };
+  }
+
+  const cacheKey = `${CACHE_KEY_PREFIX}:${searchTerm.trim().toLowerCase()}:${page}`;
+  const redis = getRedisClient();
+  const cached = await redis.get(cacheKey);
+  if (cached) {
+    setHeader(event, "X-Cache", "HIT");
+
+    return JSON.parse(cached);
   }
 
   try {
@@ -62,13 +74,21 @@ export default defineEventHandler(async (event) => {
       const rawTotalCount = searchResults.estimatedTotalHits || 0;
       const totalCount = Math.min(rawTotalCount, MEILISEARCH_MAX_RESULTS);
 
-      return {
+      const emptyResult = {
         organizations: [],
         total: totalCount,
         page,
         limit,
         queryDuration: executionTime,
       };
+      await redis.setex(
+        cacheKey,
+        CACHE_TTL_SECONDS,
+        JSON.stringify(emptyResult),
+      );
+      setHeader(event, "X-Cache", "MISS");
+
+      return emptyResult;
     }
 
     const [countRows, sindexRows] = await Promise.all([
@@ -131,13 +151,17 @@ export default defineEventHandler(async (event) => {
 
     const finalTotal = Math.min(totalCount, MEILISEARCH_MAX_RESULTS);
 
-    return {
+    const result = {
       organizations,
       total: finalTotal,
       page: validatedPage,
       limit,
       queryDuration: executionTime,
     };
+    await redis.setex(cacheKey, CACHE_TTL_SECONDS, JSON.stringify(result));
+    setHeader(event, "X-Cache", "MISS");
+
+    return result;
   } catch (error) {
     console.error("AO search error:", error);
     throw createError({
