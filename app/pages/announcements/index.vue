@@ -35,9 +35,9 @@ const { data: announcements } = await useAsyncData("announcements-list", () =>
           :target="post.externalUrl ? '_blank' : undefined"
           class="group ring-primary/10 hover:ring-primary/40 -mx-4 mb-2 grid grid-cols-[4.5rem_1fr] items-start gap-4 rounded-lg border-slate-100 px-4 py-5 ring-1 transition-all hover:shadow-sm sm:grid-cols-[5.5rem_1fr] sm:gap-6"
         >
-          <div class="flex flex-col pt-0.5">
+          <time class="flex flex-col pt-0.5" :datetime="post.date">
             <span
-              class="text-muted text-[0.65rem] font-semibold tracking-wider uppercase"
+              class="text-muted text-xs font-semibold tracking-wider uppercase"
             >
               {{ $dayjs(post.date).format("MMM") }}
             </span>
@@ -51,7 +51,7 @@ const { data: announcements } = await useAsyncData("announcements-list", () =>
             <span class="text-muted text-xs">
               {{ $dayjs(post.date).format("YYYY") }}
             </span>
-          </div>
+          </time>
 
           <div class="flex min-w-0 flex-col gap-1.5">
             <div class="flex flex-wrap items-center gap-2">
