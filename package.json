@@ -2,6 +2,7 @@
   "name": "scholar-data",
   "private": true,
   "type": "module",
+  "version": "1.4.0",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
