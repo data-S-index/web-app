@@ -101,8 +101,6 @@ export default defineNuxtConfig({
           "/profile",
           "/embed/",
           "/fuji",
-          // Placeholder/example post — content/announcements/00.test.md
-          "/announcements/test",
         ],
         contentUsage: {
           bots: "y",

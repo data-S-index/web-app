@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { hash } from "bcrypt";
-import { MeiliSearch } from "meilisearch";
+import { Meilisearch } from "meilisearch";
 
 const signupSchema = z.object({
   temporary: z.boolean(),
@@ -73,7 +73,7 @@ export default defineEventHandler(async (event) => {
 
   if (!temporary) {
     try {
-      const meili = new MeiliSearch({
+      const meili = new Meilisearch({
         host: (process.env.MEILISEARCH_API_URL ?? "").replace(/\/$/, ""),
         apiKey: process.env.MEILISEARCH_API_KEY,
       });

@@ -1,8 +1,7 @@
-import { MeiliSearch } from "meilisearch";
+import { Meilisearch } from "meilisearch";
 
 const meilisearchClientSingleton = () => {
-  const MEILISEARCH_API_KEY = process.env.MEILISEARCH_API_KEY;
-  const MEILISEARCH_API_URL = process.env.MEILISEARCH_API_URL;
+  const { MEILISEARCH_API_KEY, MEILISEARCH_API_URL } = process.env;
 
   if (!MEILISEARCH_API_KEY || !MEILISEARCH_API_URL) {
     throw new Error(
@@ -13,7 +12,7 @@ const meilisearchClientSingleton = () => {
   // Remove trailing slash from URL if present
   const normalizedUrl = MEILISEARCH_API_URL.replace(/\/$/, "");
 
-  return new MeiliSearch({
+  return new Meilisearch({
     host: normalizedUrl,
     apiKey: MEILISEARCH_API_KEY,
   });
@@ -38,7 +37,7 @@ function resolveMeilisearchClient() {
   return client;
 }
 
-const meilisearch = new Proxy({} as MeiliSearch, {
+const meilisearch = new Proxy({} as Meilisearch, {
   get(_target, prop, receiver) {
     return Reflect.get(resolveMeilisearchClient(), prop, receiver);
   },

@@ -1,4 +1,4 @@
-import { MeiliSearch } from "meilisearch";
+import { Meilisearch } from "meilisearch";
 import { PrismaClient } from "../../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
@@ -12,7 +12,7 @@ if (!MEILISEARCH_API_KEY || !MEILISEARCH_API_URL) {
   process.exit(1);
 }
 
-const client = new MeiliSearch({
+const client = new Meilisearch({
   host: MEILISEARCH_API_URL.replace(/\/$/, ""),
   apiKey: MEILISEARCH_API_KEY,
 });
