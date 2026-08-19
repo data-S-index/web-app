@@ -37,7 +37,7 @@
     "@vueuse/core": "14.4.0",
     "badge-maker": "6.0.0",
     "bcrypt": "6.0.0",
-    "better-sqlite3": "13.0.3",
+    "better-sqlite3": "12.10.0",
     "consola": "3.4.2",
     "date-fns": "4.4.0",
     "dayjs": "1.11.21",
