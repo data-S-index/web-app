@@ -2,7 +2,6 @@
 defineProps<{
   tips: string[];
   exactMatchExamples?: string[];
-  autoDetectIdentifiers?: boolean;
 }>();
 </script>
 
@@ -38,14 +37,6 @@ defineProps<{
             <span v-if="index < exactMatchExamples.length - 1"> or </span>
           </template>
         </span>
-      </li>
-
-      <li v-if="autoDetectIdentifiers" class="flex items-start gap-2">
-        <Icon
-          name="i-heroicons-information-circle-20-solid"
-          class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
-        />
-        A DOI or ORCID iD is automatically searched as an exact match.
       </li>
     </ul>
 

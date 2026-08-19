@@ -51,12 +51,11 @@ export default defineEventHandler(async (event) => {
 
     const auIndex = meilisearch.index("automated-user");
     const userIndex = meilisearch.index("user");
-    const meiliSearchTerm = autoExactMatchSearchTerm(searchTerm);
 
     // Search indexes based on filter; gracefully handle missing user index
     const [auSearchResults, userSearchResults] = await Promise.all([
       profileType !== "user"
-        ? auIndex.search(meiliSearchTerm, {
+        ? auIndex.search(searchTerm, {
             limit,
             offset: validatedOffset,
             showRankingScore: true,
@@ -64,7 +63,7 @@ export default defineEventHandler(async (event) => {
         : Promise.resolve({ hits: [], estimatedTotalHits: 0 }),
       profileType !== "au"
         ? userIndex
-            .search(meiliSearchTerm, {
+            .search(searchTerm, {
               limit,
               offset: validatedOffset,
               showRankingScore: true,

@@ -49,14 +49,11 @@ export default defineEventHandler(async (event) => {
         : page;
 
     const index = meilisearch.index("dataset");
-    const searchResults = await index.search(
-      autoExactMatchSearchTerm(searchTerm),
-      {
-        limit,
-        offset: validatedOffset,
-        showRankingScore: true,
-      },
-    );
+    const searchResults = await index.search(searchTerm, {
+      limit,
+      offset: validatedOffset,
+      showRankingScore: true,
+    });
 
     const rankingScoreByDatasetId = new Map<number, number>();
     const datasetIds = searchResults.hits

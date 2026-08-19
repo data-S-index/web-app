@@ -39,7 +39,10 @@ const toast = useToast();
 const searchTerm = ref((route.query.q as string) ?? "");
 const searchLoading = ref(false);
 const searchResults = ref<SearchResult[]>([]);
-const searchPage = ref(1);
+const initialPage = Number(route.query.page);
+const searchPage = ref(
+  Number.isInteger(initialPage) && initialPage > 0 ? initialPage : 1,
+);
 const searchTotal = ref(-1);
 const searchDuration = ref<string>("0ms");
 const hasSearched = ref(false);
@@ -58,11 +61,22 @@ watch(
   },
 );
 
+// Sync page from URL when user navigates back/forward and re-run search
+watch(
+  () => route.query.page,
+  (p) => {
+    const value = Number(p) > 0 ? Number(p) : 1;
+    if (searchPage.value !== value && searchTerm.value.trim()) {
+      searchForDatasets(value, false);
+    }
+  },
+);
+
 // On load, if URL has a search term, run the search
 onMounted(() => {
   const q = (route.query.q as string)?.trim();
   if (q) {
-    searchForDatasets(1, true);
+    searchForDatasets(searchPage.value, false);
   }
 });
 
@@ -239,29 +253,29 @@ const clearSearch = async () => {
   hasSearched.value = false;
   await router.replace({
     path: route.path,
-    query: { ...route.query, q: undefined },
+    query: { ...route.query, q: undefined, page: undefined },
   });
 };
 
 const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
   if (reset) {
-    searchPage.value = 1;
+    page = 1;
     searchTotal.value = -1;
     searchResults.value = [];
-    page = 1;
-    // Persist search term in URL so back/forward restores the search
-    await router.replace({
-      path: route.path,
-      query: {
-        ...route.query,
-        ...(searchTerm.value.trim()
-          ? { q: searchTerm.value.trim() }
-          : { q: undefined }),
-      },
-    });
-  } else {
-    searchPage.value = page;
   }
+  searchPage.value = page;
+
+  // Persist search term and page in URL so back/forward/reload restores the search
+  await router.replace({
+    path: route.path,
+    query: {
+      ...route.query,
+      ...(searchTerm.value.trim()
+        ? { q: searchTerm.value.trim() }
+        : { q: undefined }),
+      ...(page > 1 ? { page } : { page: undefined }),
+    },
+  });
 
   searchLoading.value = true;
 
@@ -340,7 +354,6 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
               '10.5061/dryad.abc123',
               '0000-0002-1825-0097',
             ]"
-            auto-detect-identifiers
           />
 
           <div v-if="!hasSearched" class="space-y-6">
