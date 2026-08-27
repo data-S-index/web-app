@@ -2,6 +2,7 @@
 defineProps<{
   tips: string[];
   exactMatchExamples?: string[];
+  publisherScope?: boolean;
 }>();
 </script>
 
@@ -36,6 +37,26 @@ defineProps<{
             >
             <span v-if="index < exactMatchExamples.length - 1"> or </span>
           </template>
+        </span>
+      </li>
+
+      <li v-if="publisherScope" class="flex items-start gap-2">
+        <Icon
+          name="i-heroicons-information-circle-20-solid"
+          class="text-primary-500 mt-0.5 h-4 w-4 shrink-0"
+        />
+
+        <span>
+          Prefix with
+          <code
+            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
+            >publisher:</code
+          >
+          to search only the publisher field, e.g.
+          <code
+            class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
+            >publisher:"Dryad"</code
+          >
         </span>
       </li>
     </ul>

@@ -1,6 +1,27 @@
 const CACHE_TTL_SECONDS = 86400; // 1 day
 const CACHE_KEY_PREFIX = "search:datasets";
 
+// Matches a leading "publisher:" scope prefix, e.g. `publisher:"Dryad"`.
+const PUBLISHER_SCOPE_PREFIX = /^publisher:\s*/i;
+
+// If the term starts with "publisher:", scope the search to just the
+// publisher field via Meilisearch's attributesToSearchOn instead of
+// searching every searchable attribute. An empty remainder (bare
+// "publisher:") is treated as a normal, unscoped search term.
+function parsePublisherScopedQuery(rawTerm: string): {
+  query: string;
+  attributesToSearchOn?: string[];
+} {
+  const trimmed = rawTerm.trim();
+  const match = trimmed.match(PUBLISHER_SCOPE_PREFIX);
+  if (!match) return { query: rawTerm };
+
+  const remainder = trimmed.slice(match[0].length).trim();
+  if (!remainder) return { query: rawTerm };
+
+  return { query: remainder, attributesToSearchOn: ["publisher"] };
+}
+
 // Public dataset search - no auth required. Returns a paginated list of datasets.
 export default defineEventHandler(async (event) => {
   const queryStartTime = performance.now();
@@ -48,11 +69,15 @@ export default defineEventHandler(async (event) => {
         ? Math.floor(validatedOffset / limit) + 1
         : page;
 
+    const { query, attributesToSearchOn } =
+      parsePublisherScopedQuery(searchTerm);
+
     const index = meilisearch.index("dataset");
-    const searchResults = await index.search(searchTerm, {
+    const searchResults = await index.search(query, {
       limit,
       offset: validatedOffset,
       showRankingScore: true,
+      ...(attributesToSearchOn ? { attributesToSearchOn } : {}),
     });
 
     const rankingScoreByDatasetId = new Map<number, number>();
