@@ -46,15 +46,15 @@ export default defineEventHandler((event) => {
 
   if (!blocked) return;
 
-  // Temp block all bots (until reindexing is done)
-  setResponseStatus(event, 403);
-  return "Forbidden";
+  // // Temp block all bots (until reindexing is done)
+  // setResponseStatus(event, 403);
+  // return "Forbidden";
 
-  // const retryAfterSeconds = takeToken(blocked);
+  const retryAfterSeconds = takeToken(blocked);
 
-  // if (retryAfterSeconds !== null) {
-  //   setResponseStatus(event, 429);
-  //   setHeader(event, "Retry-After", retryAfterSeconds);
-  //   return "Too Many Requests";
-  // }
+  if (retryAfterSeconds !== null) {
+    setResponseStatus(event, 429);
+    setHeader(event, "Retry-After", retryAfterSeconds);
+    return "Too Many Requests";
+  }
 });
