@@ -20,7 +20,7 @@ const sitemapIndex = [
 
 // Flip to true before doing risky database work, then back to false when done.
 // Blocks the "add dataset" flow and auth (login/signup/forgot/reset password).
-const MAINTENANCE_MODE = false;
+const MAINTENANCE_MODE = true;
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-01-16",
