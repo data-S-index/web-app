@@ -4,6 +4,7 @@ const BLOCKED_USER_AGENTS = [
   "GPTBot/1.4",
   "Googlebot/2.1",
   "YandexBot/3.0",
+  "Applebot/0.1",
 ];
 
 // Max burst size per bot before it starts getting throttled
