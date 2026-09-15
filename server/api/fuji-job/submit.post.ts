@@ -12,8 +12,8 @@ const submitSchema = z.object({
  * POST /api/fuji-job/submit
  * Persists a score for a previously claimed job. The caller is responsible
  * for deciding the score, metricVersion, and softwareVersion (e.g. via a
- * hardcoded shortcut or a FUJI evaluation) — this endpoint just stores
- * whatever it's given.
+ * hardcoded shortcut or a FUJI evaluation) — this endpoint only stores it
+ * if it's higher than the dataset's existing score.
  */
 export default defineEventHandler(async (event) => {
   requireFujiJobSecret(event);
@@ -31,6 +31,18 @@ export default defineEventHandler(async (event) => {
   const evaluationDate = body.data.evaluationDate
     ? new Date(body.data.evaluationDate)
     : new Date();
+
+  const existing = await prisma.fujiScore.findUnique({
+    where: { datasetId },
+    select: { score: true },
+  });
+
+  if (existing && existing.score && score <= existing.score) {
+    return {
+      datasetId,
+      score: existing.score,
+    };
+  }
 
   await prisma.fujiScore.upsert({
     where: { datasetId },
