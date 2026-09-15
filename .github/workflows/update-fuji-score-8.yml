@@ -11,7 +11,7 @@ jobs:
 
     services:
       fujirest:
-        image: ghcr.io/pangaea-data-publisher/fuji:latest
+        image: ghcr.io/pangaea-data-publisher/fuji:3.5.0
         ports:
           - 1071:1071
         env:
