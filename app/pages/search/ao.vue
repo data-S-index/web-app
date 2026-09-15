@@ -217,7 +217,7 @@ const searchForOrganizations = async (
     <UPage>
       <UPageHeader
         title="Browse Organizations"
-        description="We have automatically created 220K+ organization profiles from a large scale analysis of 49M+ dataset. They are available for demo purpose. Search an organization below to view its profile and S-index."
+        description="We have automatically created 220K+ organization profiles from a large scale analysis of 70M+ dataset. They are available for demo purpose. Search an organization below to view its profile and S-index."
       />
 
       <UPageBody>

@@ -79,7 +79,7 @@ const faqItems = ref([
   {
     label: "How do I get my NIH S-index score?",
     content:
-      "Create a free Scholar Data profile, claim your datasets from our index of over 49 million datasets, and your NIH S-index score is calculated automatically from your data sharing impact.",
+      "Create a free Scholar Data profile, claim your datasets from our index of over 70 million datasets, and your NIH S-index score is calculated automatically from your data sharing impact.",
   },
 ]);
 
@@ -99,7 +99,7 @@ const features = ref([
   {
     title: "Browse datasets",
     description:
-      "Explore the impact pages of the 49M datasets we have processed, including their Dataset Index and FAIR scores.",
+      "Explore the impact pages of the 70M datasets we have processed, including their Dataset Index and FAIR scores.",
     icon: "i-heroicons-magnifying-glass-circle",
     buttonTitles: [
       {
@@ -249,7 +249,7 @@ const actualProfilesDisplay = computed(() => {
             <h3 class="mb-2 text-lg font-semibold">Claim your datasets</h3>
 
             <p class="text-muted text-sm">
-              Find your datasets from our index of 49 million datasets and add
+              Find your datasets from our index of 70 million datasets and add
               them to your profile.
             </p>
           </div>
@@ -368,7 +368,7 @@ const actualProfilesDisplay = computed(() => {
                     class="h-10 w-10 text-pink-600"
                   />
 
-                  <div class="text-5xl font-bold text-pink-600">49M+</div>
+                  <div class="text-5xl font-bold text-pink-600">70M+</div>
 
                   <p class="text-lg font-semibold">Datasets Indexed</p>
 

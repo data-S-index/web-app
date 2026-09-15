@@ -308,7 +308,7 @@ const searchForDatasets = async (page: number = 1, reset: boolean = false) => {
     <UPage>
       <UPageHeader
         title="Browse Datasets"
-        description="We have created 49M+ dataset impact pages from our large scale analysis. Search a dataset below to view its impact."
+        description="We have created 70M+ dataset impact pages from our large scale analysis. Search a dataset below to view its impact."
       />
 
       <UPageBody>
