@@ -43,3 +43,4 @@ output/sitemaps/
 # Custom fair score files
 fair-scores-bf-discover.json
 pre-fair-scores-bf-discover.json
+post-fair-scores-bf-discover.json
