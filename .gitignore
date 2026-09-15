@@ -39,4 +39,7 @@ integrations.md
 fair_score_sparc.ndjson
 scripts/backup/*.json
 output/sitemaps/
+
+# Custom fair score files
 fair-scores-bf-discover.json
+pre-fair-scores-bf-discover.json
