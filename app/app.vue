@@ -71,10 +71,13 @@ useSchemaOrg([
   <UApp>
     <NuxtLoadingIndicator />
 
-    <div class="hidden bg-yellow-500 p-1 text-center text-sm text-black">
-      The site is currently undergoing database migration. This may cause some
-      instability and slow performance. We apologize for the inconvenience and
-      appreciate your patience.
+    <div
+      role="alert"
+      class="bg-red-600 px-4 py-2 text-center text-sm font-medium text-white"
+    >
+      We are currently experiencing a major outage. Our team is actively
+      working on a fix. Some pages and features may be unavailable. We apologize
+      for the inconvenience and appreciate your patience.
     </div>
 
     <NuxtLayout>
