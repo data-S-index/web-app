@@ -1,5 +1,39 @@
+// Rate limit configuration: 20 requests per minute per user/IP
+const RATE_LIMIT_CONFIG = {
+  maxRequests: 20,
+  windowSeconds: 60,
+  keyPrefix: "dataset:get",
+};
+
 export default defineEventHandler(async (event) => {
   const { datasetid } = event.context.params as { datasetid: string };
+
+  const identifier = await getRateLimitIdentifier(event);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
+
+  if (!rateLimitResult.allowed) {
+    throw createError({
+      statusCode: 429,
+      statusMessage: "Too Many Requests",
+      data: {
+        message: "Rate limit exceeded. Please try again later.",
+        resetAt: rateLimitResult.resetAt,
+        remaining: rateLimitResult.remaining,
+      },
+    });
+  }
+
+  setHeader(
+    event,
+    "X-RateLimit-Limit",
+    RATE_LIMIT_CONFIG.maxRequests.toString(),
+  );
+  setHeader(
+    event,
+    "X-RateLimit-Remaining",
+    rateLimitResult.remaining.toString(),
+  );
+  setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
 
   const dataset = await prisma.dataset.findUnique({
     where: {
