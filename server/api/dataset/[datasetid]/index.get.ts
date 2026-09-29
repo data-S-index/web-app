@@ -85,18 +85,7 @@ async function fetchDataset(datasetId: number) {
   return { ...rest, domain };
 }
 
-// Temp block while the DIndex(datasetId) index is being built. Flip back to false when done.
-const TEMP_DISABLED = true;
-
 export default defineEventHandler(async (event) => {
-  if (TEMP_DISABLED) {
-    setHeader(event, "Retry-After", 3600);
-    throw createError({
-      statusCode: 503,
-      statusMessage: "Service temporarily unavailable",
-    });
-  }
-
   const { datasetid } = event.context.params as { datasetid: string };
 
   const identifier = await getRateLimitIdentifier(event);
