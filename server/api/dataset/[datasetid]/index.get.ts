@@ -5,39 +5,10 @@ const RATE_LIMIT_CONFIG = {
   keyPrefix: "dataset:get",
 };
 
-export default defineEventHandler(async (event) => {
-  const { datasetid } = event.context.params as { datasetid: string };
-
-  const identifier = await getRateLimitIdentifier(event);
-  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
-
-  if (!rateLimitResult.allowed) {
-    throw createError({
-      statusCode: 429,
-      statusMessage: "Too Many Requests",
-      data: {
-        message: "Rate limit exceeded. Please try again later.",
-        resetAt: rateLimitResult.resetAt,
-        remaining: rateLimitResult.remaining,
-      },
-    });
-  }
-
-  setHeader(
-    event,
-    "X-RateLimit-Limit",
-    RATE_LIMIT_CONFIG.maxRequests.toString(),
-  );
-  setHeader(
-    event,
-    "X-RateLimit-Remaining",
-    rateLimitResult.remaining.toString(),
-  );
-  setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
-
+async function fetchDataset(datasetId: number) {
   const dataset = await prisma.dataset.findUnique({
     where: {
-      id: parseInt(datasetid),
+      id: datasetId,
     },
     include: {
       datasetAuthors: {
@@ -90,20 +61,8 @@ export default defineEventHandler(async (event) => {
   });
 
   if (!dataset) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: "Dataset not found",
-    });
+    return null;
   }
-
-  // // Upsert a new fuji job if dataset doesn't have a fuji score
-  // if (!dataset.fujiScore) {
-  //   await prisma.fujiJob.upsert({
-  //     where: { datasetId: dataset.id },
-  //     update: {},
-  //     create: { datasetId: dataset.id },
-  //   });
-  // }
 
   const topic = dataset.datasetTopic;
   const domain =
@@ -123,6 +82,68 @@ export default defineEventHandler(async (event) => {
 
   const { datasetTopic: _t, ...rest } = dataset;
 
+  return { ...rest, domain };
+}
+
+// Temp block while the DIndex(datasetId) index is being built. Flip back to false when done.
+const TEMP_DISABLED = true;
+
+export default defineEventHandler(async (event) => {
+  if (TEMP_DISABLED) {
+    setHeader(event, "Retry-After", 3600);
+    throw createError({
+      statusCode: 503,
+      statusMessage: "Service temporarily unavailable",
+    });
+  }
+
+  const { datasetid } = event.context.params as { datasetid: string };
+
+  const identifier = await getRateLimitIdentifier(event);
+  const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
+
+  if (!rateLimitResult.allowed) {
+    throw createError({
+      statusCode: 429,
+      statusMessage: "Too Many Requests",
+      data: {
+        message: "Rate limit exceeded. Please try again later.",
+        resetAt: rateLimitResult.resetAt,
+        remaining: rateLimitResult.remaining,
+      },
+    });
+  }
+
+  setHeader(
+    event,
+    "X-RateLimit-Limit",
+    RATE_LIMIT_CONFIG.maxRequests.toString(),
+  );
+  setHeader(
+    event,
+    "X-RateLimit-Remaining",
+    rateLimitResult.remaining.toString(),
+  );
+  setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
+
+  const datasetId = Number.parseInt(datasetid, 10);
+
+  if (!Number.isInteger(datasetId) || datasetId <= 0) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Invalid dataset id",
+    });
+  }
+
+  const dataset = await fetchDataset(datasetId);
+
+  if (!dataset) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: "Dataset not found",
+    });
+  }
+
   const session = await getUserSession(event);
   const userId = session.user?.id;
 
@@ -134,5 +155,5 @@ export default defineEventHandler(async (event) => {
       )
     : false;
 
-  return { ...rest, domain, isClaimedByUser };
+  return { ...dataset, isClaimedByUser };
 });

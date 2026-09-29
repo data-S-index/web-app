@@ -335,6 +335,8 @@ model DIndex {
     year  Int // 4 digit year
 
     created DateTime @default(now())
+
+    @@index([datasetId])
 }
 
 model DIndexJob {
