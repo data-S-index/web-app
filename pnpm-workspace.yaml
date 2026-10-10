@@ -8,6 +8,7 @@ allowBuilds:
   sharp: true
   unrs-resolver: true
   vue-demi: true
+  workerd: true
 
 # setting the minimum release age to 5 days (7200 minutes) to ensure that releases are stable before being used in the workspace
 minimumReleaseAge: 7200
