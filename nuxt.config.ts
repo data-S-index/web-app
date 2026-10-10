@@ -55,6 +55,15 @@ export default defineNuxtConfig({
     },
   },
   eslint: {},
+  icon: {
+    // Embed every icon used in the app into the client bundle. Also scan .ts/.js
+    // so icons set in app.config.ts or nav link arrays aren't missed.
+    clientBundle: {
+      scan: {
+        globInclude: ["**/*.{vue,jsx,tsx,md,mdc,mdx,yml,yaml,ts,js}"],
+      },
+    },
+  },
   echarts: {
     charts: ["BarChart", "PieChart", "LineChart"],
     components: [
