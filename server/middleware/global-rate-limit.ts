@@ -1,6 +1,9 @@
 // Global per-IP rate limit. Kept fully in-memory so throttled requests never
 // touch Redis or the database.
 
+// Temporarily disabled. Flip back to true to re-enable.
+const ENABLED = false;
+
 // Max burst size per IP before it starts getting throttled
 const BUCKET_CAPACITY = 60;
 const REFILL_PER_SECOND = 2; // 120 requests/minute sustained
@@ -47,6 +50,8 @@ function takeToken(key: string): number | null {
 }
 
 export default defineEventHandler((event) => {
+  if (!ENABLED) return;
+
   const url = event.node.req.url ?? "";
 
   if (SKIPPED_PREFIXES.some((prefix) => url.startsWith(prefix))) return;

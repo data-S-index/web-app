@@ -107,13 +107,19 @@ export default defineEventHandler(async (event) => {
         description: true,
         version: true,
         publishedAt: true,
-        _count: {
-          select: {
-            citations: true,
-          },
-        },
       },
     });
+
+    // Counted separately: Prisma's `_count` select aggregates the whole
+    // Citation table before filtering, which doesn't use the index.
+    const citationCounts = await prisma.citation.groupBy({
+      by: ["datasetId"],
+      where: { datasetId: { in: datasetIds } },
+      _count: { _all: true },
+    });
+    const citationCountByDataset = new Map(
+      citationCounts.map((c) => [c.datasetId, c._count._all]),
+    );
 
     const authors = await prisma.datasetAuthor.findMany({
       where: {
@@ -154,7 +160,7 @@ export default defineEventHandler(async (event) => {
           authors: authorsNamesString,
           version: dataset.version,
           publishedAt: dataset.publishedAt,
-          citationCount: dataset._count.citations,
+          citationCount: citationCountByDataset.get(dataset.id) ?? 0,
         };
       })
       .filter(

@@ -13,15 +13,15 @@ cd web-app
 docker exec -t 318c3bcfe4c9 pg_dump -U admin -Fd -j 4 -Z 6 -f /tmp/backup_dir s_index_local
 
 # Copy to host when done
-docker cp 318c3bcfe4c9:/tmp/backup_dir ./backup_07_25_2026.dir
+docker cp 318c3bcfe4c9:/tmp/backup_dir ./backup_10_10_2026.dir
 
 # Cleanup container backup directory
 docker exec 318c3bcfe4c9 rm -rf /tmp/backup_dir
 
 # scp backup folder from remote server to local machine
-scp -r user@host:/root/web-app/backup_07_25_2026.dir ./
+scp -r user@host:/root/web-app/backup_10_10_2026.dir ./
 ```
 
-<!-- scp -r root@s-index-resources:/root/web-app/backup_07_25_2026.dir ./ -->
+<!-- scp -r root@s-index-resources:/root/web-app/backup_10_10_2026.dir ./ -->
 
 This command creates a directory format backup of the s_index_local database, using 4 parallel jobs and compression level 6. The backup directory is written inside the container at /tmp/backup_dir. After the backup is complete, it is copied to the host machine using docker cp, and then can be transferred to a remote server using scp. Finally, the temporary backup directory inside the container is cleaned up.

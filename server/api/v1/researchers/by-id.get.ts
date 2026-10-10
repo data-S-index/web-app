@@ -46,22 +46,23 @@ export default defineEventHandler(async (event) => {
             take: 1,
             select: { score: true },
           },
-          _count: {
-            select: { citations: true, mentions: true },
-          },
         },
       },
     },
   });
 
+  // Counted separately: Prisma's `_count` include aggregates the whole
+  // Citation/Mention tables before filtering, which doesn't use the index.
+  const datasetIds = userDatasets.map((ud) => ud.datasetId);
+  const [totalCitations, totalMentions] = await Promise.all([
+    prisma.citation.count({ where: { datasetId: { in: datasetIds } } }),
+    prisma.mention.count({ where: { datasetId: { in: datasetIds } } }),
+  ]);
+
   let currentSIndex = 0;
-  let totalCitations = 0;
-  let totalMentions = 0;
 
   for (const ud of userDatasets) {
     currentSIndex += ud.dataset.dindices[0]?.score ?? 0;
-    totalCitations += ud.dataset._count.citations;
-    totalMentions += ud.dataset._count.mentions;
   }
 
   const siteUrl = process.env.NUXT_SITE_URL || "";

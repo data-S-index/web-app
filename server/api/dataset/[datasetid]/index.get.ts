@@ -6,59 +6,59 @@ const RATE_LIMIT_CONFIG = {
 };
 
 async function fetchDataset(datasetId: number) {
-  const dataset = await prisma.dataset.findUnique({
-    where: {
-      id: datasetId,
-    },
-    include: {
-      datasetAuthors: {
-        select: {
-          name: true,
-          nameType: true,
-          affiliations: true,
-          nameIdentifiers: true,
-        },
+  // Counts are fetched separately: Prisma's `_count` include aggregates the
+  // whole Citation/Mention tables before filtering, which doesn't use the index.
+  const [dataset, citationCount, mentionCount] = await Promise.all([
+    prisma.dataset.findUnique({
+      where: {
+        id: datasetId,
       },
-      fujiScore: {
-        select: {
-          score: true,
-          evaluationDate: true,
-          metricVersion: true,
-          softwareVersion: true,
+      include: {
+        datasetAuthors: {
+          select: {
+            name: true,
+            nameType: true,
+            affiliations: true,
+            nameIdentifiers: true,
+          },
         },
+        fujiScore: {
+          select: {
+            score: true,
+            evaluationDate: true,
+            metricVersion: true,
+            softwareVersion: true,
+          },
+        },
+        dindices: {
+          select: {
+            score: true,
+            year: true,
+          },
+          orderBy: {
+            year: "asc",
+          },
+        },
+        normalizationFactor: {
+          select: {
+            ft: true,
+            ctw: true,
+            mtw: true,
+          },
+        },
+        datasetRights: {
+          select: {
+            name: true,
+            identifier: true,
+            uri: true,
+          },
+        },
+        datasetTopic: true,
       },
-      dindices: {
-        select: {
-          score: true,
-          year: true,
-        },
-        orderBy: {
-          year: "asc",
-        },
-      },
-      normalizationFactor: {
-        select: {
-          ft: true,
-          ctw: true,
-          mtw: true,
-        },
-      },
-      datasetRights: {
-        select: {
-          name: true,
-          identifier: true,
-          uri: true,
-        },
-      },
-      datasetTopic: true,
-      _count: {
-        select: {
-          citations: true,
-          mentions: true,
-        },
-      },
-    },
-  });
+    }),
+    prisma.citation.count({ where: { datasetId } }),
+    prisma.mention.count({ where: { datasetId } }),
+  ]);
 
   if (!dataset) {
     return null;
@@ -82,7 +82,11 @@ async function fetchDataset(datasetId: number) {
 
   const { datasetTopic: _t, ...rest } = dataset;
 
-  return { ...rest, domain };
+  return {
+    ...rest,
+    _count: { citations: citationCount, mentions: mentionCount },
+    domain,
+  };
 }
 
 export default defineEventHandler(async (event) => {
