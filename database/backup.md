@@ -10,13 +10,13 @@ Use -Fd -j 4 -Z 6 options to create a directory format backup with parallel jobs
 cd web-app
 
 # Dump in parallel into container's /tmp
-docker exec -t 3e3adc6927ca pg_dump -U admin -Fd -j 4 -Z 6 -f /tmp/backup_dir s_index_local
+docker exec -t 318c3bcfe4c9 pg_dump -U admin -Fd -j 4 -Z 6 -f /tmp/backup_dir s_index_local
 
 # Copy to host when done
-docker cp 3e3adc6927ca:/tmp/backup_dir ./backup_07_25_2026.dir
+docker cp 318c3bcfe4c9:/tmp/backup_dir ./backup_07_25_2026.dir
 
 # Cleanup container backup directory
-docker exec 3e3adc6927ca rm -rf /tmp/backup_dir
+docker exec 318c3bcfe4c9 rm -rf /tmp/backup_dir
 
 # scp backup folder from remote server to local machine
 scp -r user@host:/root/web-app/backup_07_25_2026.dir ./
