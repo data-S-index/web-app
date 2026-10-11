@@ -10,22 +10,10 @@ export default defineEventHandler(async (event) => {
     include: {
       dataset: {
         include: {
-          citations: {
+          _count: {
             select: {
-              citationLink: true,
-              citationWeight: true,
-              datacite: true,
-              mdc: true,
-              openAlex: true,
-              citedDate: true,
-            },
-          },
-          mentions: {
-            select: {
-              mentionLink: true,
-              mentionWeight: true,
-              source: true,
-              mentionedDate: true,
+              citations: true,
+              mentions: true,
             },
           },
           fujiScore: {
@@ -63,17 +51,12 @@ export default defineEventHandler(async (event) => {
     .filter((dataset) => !dataset.dataset.fujiScore)
     .map((dataset) => dataset.datasetId);
 
-  // Upsert a new job for each dataset that doesn't have a fuji score
+  // Queue a job for each dataset that doesn't have a fuji score
   if (datasetIDsWithoutFujiScore.length > 0) {
-    await Promise.all(
-      datasetIDsWithoutFujiScore.map((datasetId) =>
-        prisma.fujiJob.upsert({
-          where: { datasetId },
-          update: {},
-          create: { datasetId },
-        }),
-      ),
-    );
+    await prisma.fujiJob.createMany({
+      data: datasetIDsWithoutFujiScore.map((datasetId) => ({ datasetId })),
+      skipDuplicates: true,
+    });
   }
 
   return (

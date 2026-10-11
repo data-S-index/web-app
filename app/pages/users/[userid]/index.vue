@@ -5,12 +5,17 @@ interface UserDatasetItem {
   datasetId: number;
   dataset: {
     dindices?: Array<{ score: number; year: number }>;
-    citations: Array<unknown>;
-    mentions: Array<unknown>;
+    _count: { citations: number; mentions: number };
     fujiScore?: { score: number | null };
     publishedAt?: string | Date | null;
     pubYear?: number;
   };
+}
+
+interface YearlyTotal {
+  year: number;
+  raw: number;
+  weighted: number;
 }
 
 const { user, loggedIn } = useUserSession();
@@ -27,9 +32,13 @@ const isCurrentUser = computed(() => {
 const maintenanceMode =
   (useRuntimeConfig().public?.maintenanceMode as boolean) ?? false;
 
-const { data: userData, error } = await useFetch(
-  `/api/users/${userid}/datasets`,
-);
+const [
+  { data: userData, error },
+  { data: userProfile, error: userProfileError },
+] = await Promise.all([
+  useFetch(`/api/users/${userid}/datasets`),
+  useFetch(`/api/users/${userid}`),
+]);
 
 if (error.value) {
   toast.add({
@@ -40,11 +49,6 @@ if (error.value) {
   });
 }
 
-// Fetch user profile info
-const { data: userProfile, error: userProfileError } = await useFetch(
-  `/api/users/${userid}`,
-);
-
 if (userProfileError.value) {
   toast.add({
     title: "Error fetching user profile",
@@ -53,6 +57,13 @@ if (userProfileError.value) {
     color: "error",
   });
 }
+
+// Citation/mention yearly totals are only needed for the charts, so load
+// them after the page renders
+const { data: userMetrics } = useLazyFetch(
+  `/api/users/${userid}/datasets/metrics`,
+  { server: false },
+);
 
 // Generate avatar URL from dicebear using userid as seed
 const avatarUrl = computed(() => {
@@ -132,7 +143,7 @@ const totalCitations = computed(() => {
   if (!userData.value) return 0;
 
   return (userData.value as UserDatasetItem[]).reduce(
-    (sum: number, item: UserDatasetItem) => sum + item.dataset.citations.length,
+    (sum: number, item: UserDatasetItem) => sum + item.dataset._count.citations,
     0,
   );
 });
@@ -141,7 +152,7 @@ const totalMentions = computed(() => {
   if (!userData.value) return 0;
 
   return (userData.value as UserDatasetItem[]).reduce(
-    (sum: number, item: UserDatasetItem) => sum + item.dataset.mentions.length,
+    (sum: number, item: UserDatasetItem) => sum + item.dataset._count.mentions,
     0,
   );
 });
@@ -242,9 +253,10 @@ const sindexOverTime = computed(() => {
   return { years, scores };
 });
 
-// Cumulative citations (raw and weighted) across all datasets
-const cumulativeCitations = computed(() => {
-  if (!userData.value) {
+// Builds a cumulative (raw and weighted) series from per-year totals,
+// starting at the earliest dataset publication year
+const buildCumulativeSeries = (totals: YearlyTotal[] | undefined) => {
+  if (!userData.value || !totals || totals.length === 0) {
     return {
       dates: [],
       rawValues: [],
@@ -255,40 +267,6 @@ const cumulativeCitations = computed(() => {
   }
 
   const datasets = userData.value as UserDatasetItem[];
-
-  // Collect all citations from all datasets
-  const allCitations: Array<{ date: Date; weight: number }> = [];
-
-  datasets.forEach((item) => {
-    if (item.dataset.citations && Array.isArray(item.dataset.citations)) {
-      (
-        item.dataset.citations as Array<{
-          citedDate?: string | null;
-          citationWeight?: number | null;
-        }>
-      ).forEach((citation) => {
-        if (citation.citedDate) {
-          allCitations.push({
-            date: new Date(citation.citedDate),
-            weight: citation.citationWeight ?? 1.0,
-          });
-        }
-      });
-    }
-  });
-
-  if (allCitations.length === 0) {
-    return {
-      dates: [],
-      rawValues: [],
-      weightedValues: [],
-      earliestDate: null,
-      endDate: null,
-    };
-  }
-
-  // Sort by date
-  allCitations.sort((a, b) => a.date.getTime() - b.date.getTime());
 
   const publishedYears = datasets
     .map((item) => item.dataset.publishedAt)
@@ -297,19 +275,10 @@ const cumulativeCitations = computed(() => {
   const startYear =
     publishedYears.length > 0
       ? Math.min(...publishedYears)
-      : allCitations[0]!.date.getFullYear();
+      : Math.min(...totals.map((t) => t.year));
   const endYear = new Date().getFullYear() - 1; // current year - 1
 
-  const citationsByYear = new Map<number, { raw: number; weighted: number }>();
-
-  allCitations.forEach((citation) => {
-    const year = citation.date.getFullYear();
-    const existing = citationsByYear.get(year) || { raw: 0, weighted: 0 };
-    citationsByYear.set(year, {
-      raw: existing.raw + 1,
-      weighted: existing.weighted + citation.weight,
-    });
-  });
+  const totalsByYear = new Map(totals.map((t) => [t.year, t]));
 
   const dates: string[] = [];
   const rawValues: number[] = [];
@@ -319,10 +288,10 @@ const cumulativeCitations = computed(() => {
 
   for (let year = startYear; year <= endYear; year++) {
     dates.push(String(year));
-    const yearCitations = citationsByYear.get(year);
-    if (yearCitations) {
-      cumulativeRaw += yearCitations.raw;
-      cumulativeWeighted += yearCitations.weighted;
+    const yearTotals = totalsByYear.get(year);
+    if (yearTotals) {
+      cumulativeRaw += yearTotals.raw;
+      cumulativeWeighted += yearTotals.weighted;
     }
     rawValues.push(cumulativeRaw);
     weightedValues.push(cumulativeWeighted);
@@ -335,102 +304,17 @@ const cumulativeCitations = computed(() => {
     earliestDate: new Date(startYear, 0, 1),
     endDate: new Date(endYear, 11, 31),
   };
-});
+};
+
+// Cumulative citations (raw and weighted) across all datasets
+const cumulativeCitations = computed(() =>
+  buildCumulativeSeries(userMetrics.value?.citations),
+);
 
 // Cumulative mentions (raw and weighted) across all datasets
-const cumulativeMentions = computed(() => {
-  if (!userData.value) {
-    return {
-      dates: [],
-      rawValues: [],
-      weightedValues: [],
-      earliestDate: null,
-      endDate: null,
-    };
-  }
-
-  const datasets = userData.value as UserDatasetItem[];
-
-  // Collect all mentions from all datasets
-  const allMentions: Array<{ date: Date; weight: number }> = [];
-
-  datasets.forEach((item) => {
-    if (item.dataset.mentions && Array.isArray(item.dataset.mentions)) {
-      (
-        item.dataset.mentions as Array<{
-          mentionedDate?: string | null;
-          mentionWeight?: number | null;
-        }>
-      ).forEach((mention) => {
-        if (mention.mentionedDate) {
-          allMentions.push({
-            date: new Date(mention.mentionedDate),
-            weight: mention.mentionWeight ?? 1.0,
-          });
-        }
-      });
-    }
-  });
-
-  if (allMentions.length === 0) {
-    return {
-      dates: [],
-      rawValues: [],
-      weightedValues: [],
-      earliestDate: null,
-      endDate: null,
-    };
-  }
-
-  // Sort by date
-  allMentions.sort((a, b) => a.date.getTime() - b.date.getTime());
-
-  const publishedYearsM = datasets
-    .map((item) => item.dataset.publishedAt)
-    .filter(Boolean)
-    .map((d) => new Date(d!).getFullYear());
-  const startYear =
-    publishedYearsM.length > 0
-      ? Math.min(...publishedYearsM)
-      : allMentions[0]!.date.getFullYear();
-  const endYear = new Date().getFullYear() - 1; // current year - 1
-
-  const mentionsByYear = new Map<number, { raw: number; weighted: number }>();
-
-  allMentions.forEach((mention) => {
-    const year = mention.date.getFullYear();
-    const existing = mentionsByYear.get(year) || { raw: 0, weighted: 0 };
-    mentionsByYear.set(year, {
-      raw: existing.raw + 1,
-      weighted: existing.weighted + mention.weight,
-    });
-  });
-
-  const dates: string[] = [];
-  const rawValues: number[] = [];
-  const weightedValues: number[] = [];
-  let cumulativeRaw = 0;
-  let cumulativeWeighted = 0;
-
-  for (let year = startYear; year <= endYear; year++) {
-    dates.push(String(year));
-    const yearMentions = mentionsByYear.get(year);
-    if (yearMentions) {
-      cumulativeRaw += yearMentions.raw;
-      cumulativeWeighted += yearMentions.weighted;
-    }
-    rawValues.push(cumulativeRaw);
-    weightedValues.push(cumulativeWeighted);
-  }
-
-  return {
-    dates,
-    rawValues,
-    weightedValues,
-    earliestDate: new Date(startYear, 0, 1),
-    endDate: new Date(endYear, 11, 31),
-  };
-});
+const cumulativeMentions = computed(() =>
+  buildCumulativeSeries(userMetrics.value?.mentions),
+);
 
 // Modal state for dataset search
 const showAddDatasetModal = ref(false);

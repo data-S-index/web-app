@@ -5,8 +5,7 @@ export interface DatasetListItem {
   datasetId: number;
   dataset: {
     dindices?: Array<{ score: number; year: number }>;
-    citations: Array<unknown>;
-    mentions: Array<unknown>;
+    _count: { citations: number; mentions: number };
     fujiScore?: { score: number | null } | null;
     datasetAuthors?:
       | Author[]
@@ -212,14 +211,14 @@ const onRemove = (datasetId: number) => {
             <UBadge
               color="neutral"
               size="sm"
-              :label="`${item.dataset.citations.length} Citation${item.dataset.citations.length !== 1 ? 's' : ''}`"
+              :label="`${item.dataset._count.citations} Citation${item.dataset._count.citations !== 1 ? 's' : ''}`"
               icon="i-heroicons-book-open-20-solid"
             />
 
             <UBadge
               color="neutral"
               size="sm"
-              :label="`${item.dataset.mentions.length} Mention${item.dataset.mentions.length !== 1 ? 's' : ''}`"
+              :label="`${item.dataset._count.mentions} Mention${item.dataset._count.mentions !== 1 ? 's' : ''}`"
               icon="i-heroicons-chat-bubble-bottom-center-text-20-solid"
             />
 
