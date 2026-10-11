@@ -14,6 +14,8 @@ const LOGIN_IDENTIFIER_RATE_LIMIT = {
   keyPrefix: "auth:login:identifier",
 };
 
+const PROD_DISABLED_LOGINS = new Set(["lonesomevermouth"]);
+
 const loginSchema = z.object({
   login: z.string().trim().min(3, "Must be at least 3 characters"),
   password: z.string().trim().min(8),
@@ -97,7 +99,8 @@ export default defineEventHandler(async (event) => {
     },
   });
 
-  if (!user) {
+  // Block logins for disabled accounts in production
+  if (!user || (!import.meta.dev && PROD_DISABLED_LOGINS.has(user.login))) {
     throw createError({
       statusCode: 401,
       statusMessage: "Invalid login/email or password",
