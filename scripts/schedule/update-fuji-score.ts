@@ -117,6 +117,9 @@ const HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
 const HEALTH_CHECK_INTERVAL_MS = 10_000;
 const HEALTH_CHECK_ATTEMPTS = 10;
 
+const MAX_CONSECUTIVE_CLAIM_FAILURES = 5;
+const CLAIM_RETRY_DELAY_MS = 5_000;
+
 const ts = () => new Date().toISOString();
 
 interface FujiEvaluateResponse {
@@ -279,6 +282,7 @@ async function main() {
 
   let processed = 0;
   let failed = 0;
+  let consecutiveClaimFailures = 0;
   const startTime = Date.now();
 
   while (true) {
@@ -286,10 +290,24 @@ async function main() {
     try {
       job = await claimNextJob();
     } catch (error) {
-      failed++;
-      console.error(`[${ts()}] Claim request failed, skipping:`, error);
+      consecutiveClaimFailures++;
+      console.error(
+        `[${ts()}] Claim request failed (${consecutiveClaimFailures}/${MAX_CONSECUTIVE_CLAIM_FAILURES}):`,
+        error,
+      );
+
+      if (consecutiveClaimFailures >= MAX_CONSECUTIVE_CLAIM_FAILURES) {
+        throw new Error(
+          `Aborting after ${consecutiveClaimFailures} consecutive claim failures`,
+        );
+      }
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, CLAIM_RETRY_DELAY_MS * consecutiveClaimFailures),
+      );
       continue;
     }
+    consecutiveClaimFailures = 0;
     if (job.status === "empty") break;
 
     try {
