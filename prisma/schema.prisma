@@ -387,3 +387,28 @@ model AutomatedOrganizationSIndexJob {
     created DateTime @default(now())
     updated DateTime @default(now()) @updatedAt
 }
+
+// One row per source and day whose harvested records have been loaded into
+// Dataset by the pipeline's automation jobs (s-index-pipeline/automation)
+model IngestLog {
+    id Int @id @default(autoincrement())
+
+    source String // e.g. "datacite"
+    day    DateTime @db.Date // the day the records were created at the source
+
+    records  Int // records in the harvested file
+    inserted Int // new Dataset rows
+    skipped  Int // already in Dataset, or without an identifier
+    failed   Int // rejected by the database or not valid JSON
+
+    filePath        String // the harvested file in the storage zone
+    fileSha256      String
+    harvestedAt     DateTime
+    durationSeconds Float
+    runUrl          String? // GitHub Actions run that loaded the day, if any
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+
+    @@unique([source, day])
+}
