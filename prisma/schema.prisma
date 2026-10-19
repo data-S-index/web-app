@@ -168,7 +168,6 @@ model Dataset {
     @@unique([identifierType, identifier])
     @@index([identifier])
     @@index([publishedAt])
-    @@index([url])
 }
 
 model DatasetAuthor {
