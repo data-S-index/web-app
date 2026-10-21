@@ -10,8 +10,9 @@ const RATE_LIMIT_CONFIG = {
   keyPrefix: "v1:datasets:by-doi",
 };
 
-// PhysioNet DOI prefix - exempt from rate limiting
+// exempt from rate limiting
 const PHYSIONET_DOI_PREFIX = "10.13026";
+const NIH_SPARC_PREFIX = "10.26275";
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event);
@@ -27,7 +28,10 @@ export default defineEventHandler(async (event) => {
   // Normalize DOI (handles encoded values like %2F, full URLs, and case)
   const normalizedDoi = normalizeDoi(doiParam);
 
-  if (!normalizedDoi.startsWith(PHYSIONET_DOI_PREFIX)) {
+  if (
+    !normalizedDoi.startsWith(PHYSIONET_DOI_PREFIX) &&
+    !normalizedDoi.startsWith(NIH_SPARC_PREFIX)
+  ) {
     const identifier = await getRateLimitIdentifier(event);
     const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
 
@@ -96,16 +100,14 @@ export default defineEventHandler(async (event) => {
         return result;
       })(),
       (async () => {
-        const result = await prisma.mention.count({
+        return await prisma.mention.count({
           where: {
             datasetId: dataset.id,
           },
         });
-
-        return result;
       })(),
       (async () => {
-        const result = await prisma.fujiScore.findUnique({
+        return await prisma.fujiScore.findUnique({
           where: {
             datasetId: dataset.id,
           },
@@ -116,11 +118,9 @@ export default defineEventHandler(async (event) => {
             softwareVersion: true,
           },
         });
-
-        return result;
       })(),
       (async () => {
-        const result = await prisma.dIndex.findFirst({
+        return await prisma.dIndex.findFirst({
           where: {
             datasetId: dataset.id,
           },
@@ -132,8 +132,6 @@ export default defineEventHandler(async (event) => {
             year: true,
           },
         });
-
-        return result;
       })(),
     ]);
 
