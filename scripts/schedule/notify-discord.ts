@@ -65,7 +65,7 @@ export async function notifyRunResult(
   }
 
   await postEmbed({
-    title: `${failed > 0 ? "⚠️" : "✅"} ${jobName} finished`,
+    title: `${failed > 0 ? "⚠️" : ""} ${jobName} finished`,
     description: total === 0 ? "No jobs to process." : "Run completed.",
     color: failed > 0 ? COLOR_WARNING : COLOR_SUCCESS,
     fields: total === 0 ? [] : fields,
@@ -78,7 +78,7 @@ export async function notifyRunSummary(
   fields: Record<string, string | number> = {},
 ): Promise<void> {
   await postEmbed({
-    title: `✅ ${jobName} finished`,
+    title: `${jobName} finished`,
     description,
     color: COLOR_SUCCESS,
     fields: Object.entries(fields).map(([name, value]) => ({
@@ -97,7 +97,7 @@ export async function notifyRunFailure(
     error instanceof Error ? (error.stack ?? error.message) : String(error);
 
   await postEmbed({
-    title: `❌ ${jobName} failed`,
+    title: `${jobName} failed`,
     description: `\`\`\`\n${message.slice(0, 3900)}\n\`\`\``,
     color: COLOR_FAILURE,
   });
