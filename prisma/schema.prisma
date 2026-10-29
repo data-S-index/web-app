@@ -407,6 +407,9 @@ model IngestLog {
     durationSeconds Float
     runUrl          String? // GitHub Actions run that loaded the day, if any
 
+    indexedAt DateTime? // when the day's datasets were added to Meilisearch
+    indexed   Int? // documents sent to Meilisearch
+
     created DateTime @default(now())
     updated DateTime @updatedAt
 
