@@ -16,130 +16,60 @@ const formatNumber = (number: number) => {
   }).format(number);
 };
 
+type NamedCount = { name: string; value: number };
+
 const { data: platformMetrics } = await useFetch<{
   userCount: number;
+  counts: Record<string, number>;
+  datasetsByYear: { year: string; value: number }[];
+  institutions: NamedCount[];
+  fields: NamedCount[];
+  publishers: NamedCount[];
+  licenses: NamedCount[];
+  updated: string | null;
 }>("/api/metrics");
 
-const datasetsByYear = ref([
-  { year: "1950-2010", value: 1115512 },
-  { year: "2011", value: 135507 },
-  { year: "2012", value: 345877 },
-  { year: "2013", value: 219836 },
-  { year: "2014", value: 587345 },
-  { year: "2015", value: 1112311 },
-  { year: "2016", value: 575156 },
-  { year: "2017", value: 964989 },
-  { year: "2018", value: 1183405 },
-  { year: "2019", value: 1109236 },
-  { year: "2020", value: 1658968 },
-  { year: "2021", value: 3991695 },
-  { year: "2022", value: 2205818 },
-  { year: "2023", value: 2586122 },
-  { year: "2024", value: 12662008 },
-  { year: "2025", value: 27020968 },
-  { year: "2026", value: 12861952 },
-]);
-
-const institutions = ref([
-  { name: "National Institute for Fusion Science", value: 23388953 },
-  {
-    name: "Leibniz Institute DSMZ - German Collection of Microorganisms and Cell Cultures",
-    value: 460822,
-  },
-  { name: "Pacific Northwest National Laboratory", value: 444883 },
-  { name: "Environmental Molecular Sciences Laboratory", value: 406437 },
-  { name: "CBS NCCB", value: 130972 },
-  { name: "none", value: 111420 },
-  { name: "University of Bergen", value: 107005 },
-  { name: "Harvard University", value: 61389 },
-  { name: "University of Texas at Austin", value: 56663 },
-  { name: "UT Health McGovern Medical School", value: 56151 },
-  { name: "California Institute of Technology", value: 47891 },
-  { name: "UNIVERSITY OF STUTTGART", value: 45166 },
-  { name: "Other", value: 4886995 },
-]);
-
-const fields = ref([
-  { name: "Physics and Astronomy", value: 24779096 },
-  { name: "Engineering", value: 12011594 },
-  { name: "Biochemistry, Genetics and Molecular Biology", value: 7098129 },
-  { name: "Agricultural and Biological Sciences", value: 5682791 },
-  { name: "Computer Science", value: 4145863 },
-  { name: "Medicine", value: 3922121 },
-  { name: "Social Sciences", value: 2332859 },
-  { name: "Environmental Science", value: 1971798 },
-  { name: "Materials Science", value: 1584821 },
-  { name: "Earth and Planetary Sciences", value: 1393010 },
-  { name: "Other", value: 5414702 },
-]);
-
-const publishers = ref([
-  { name: "National Institute for Fusion Science (NIFS)", value: 39093778 },
-  { name: "Distributed System of Scientific Collections", value: 7088730 },
-  { name: "The Global Biodiversity Information Facility", value: 4293274 },
-  { name: "UNITE Community", value: 3571661 },
-  {
-    name: "University of Southern California Digital Library (USC.DL)",
-    value: 1447959,
-  },
-  { name: "DSMZ", value: 1220655 },
-  { name: "Zenodo", value: 1218618 },
-  { name: "Cambridge Crystallographic Data Centre", value: 1199185 },
-  { name: "figshare", value: 801034 },
-  { name: "Harvard Dataverse", value: 774081 },
-  { name: "Other", value: 9627872 },
-]);
-
-const licenses = ref([
-  { name: "cc0-1.0", value: 7929747 },
-  { name: "cc-by-4.0", value: 4094021 },
-  { name: "cc-by-nc-4.0", value: 3908404 },
-  { name: "cc-by-3.0", value: 292930 },
-  { name: "cc-by-sa-4.0", value: 164181 },
-  { name: "cc-by-nc-sa-4.0", value: 135261 },
-  { name: "cc by-nc-sa 4.0", value: 113813 },
-  { name: "cc-by-1.0", value: 80346 },
-  { name: "unknown", value: 44429 },
-  { name: "bsrn-1.0", value: 34322 },
-  { name: "Other", value: 134912 },
-]);
+const counts = computed(() => platformMetrics.value?.counts ?? {});
+const datasetsByYear = computed(
+  () => platformMetrics.value?.datasetsByYear ?? [],
+);
 
 const sIndexMetrics = computed(() => [
   {
     name: "Datasets registered",
-    value: 70336850,
+    value: counts.value.datasets ?? 0,
     description: "Total number of datasets registered in the platform",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/datasets",
   },
   {
     name: "Total citations identified",
-    value: 8610545,
+    value: counts.value.citations ?? 0,
     description: "Total number of citations identified in the platform",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/citations",
   },
   {
     name: "Total mentions identified",
-    value: 91891,
+    value: counts.value.mentions ?? 0,
     description: "Total number of mentions identified in the platform",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/mentions",
   },
   {
     name: "Total FAIR scores computed",
-    value: 70336845,
+    value: counts.value.fairScores ?? 0,
     description:
       "Total number of FAIR scores computed for datasets in the platform",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/fair-scores",
   },
   {
     name: "Total Research Fields assigned",
-    value: 70336850,
+    value: counts.value.researchFields ?? 0,
     description:
       "Total number of research fields assigned to datasets in the platform",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/research-fields",
   },
   {
     name: "Total Dataset Indices computed",
-    value: 71660358,
+    value: counts.value.datasetIndices ?? 0,
     description: "Total number of  dataset index records in our database",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/datasets",
   },
@@ -150,7 +80,7 @@ const sIndexMetrics = computed(() => [
   },
   {
     name: "Generated Profiles",
-    value: 4226528,
+    value: counts.value.generatedProfiles ?? 0,
     description: "Researcher profiles automatically generated for demo purpose",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/auto-profiles",
   },
@@ -203,10 +133,12 @@ const years = computed(() => datasetsByYear.value.map((d) => d.year));
 const datasetsByYearValues = computed(() =>
   datasetsByYear.value.map((d) => d.value),
 );
-const institutionData = computed(() => institutions.value);
-const fieldData = computed(() => fields.value);
-const publisherData = computed(() => publishers.value);
-const licenseData = computed(() => licenses.value);
+const institutionData = computed(
+  () => platformMetrics.value?.institutions ?? [],
+);
+const fieldData = computed(() => platformMetrics.value?.fields ?? []);
+const publisherData = computed(() => platformMetrics.value?.publishers ?? []);
+const licenseData = computed(() => platformMetrics.value?.licenses ?? []);
 
 const barChartOption = computed<ECOption>(() => ({
   title: {

@@ -415,3 +415,13 @@ model IngestLog {
 
     @@unique([source, day])
 }
+
+// Precomputed platform metrics shown on /metrics, one row per metric key.
+// Refreshed daily by scripts/schedule/update-platform-metrics.ts
+model PlatformMetric {
+    key   String @id // e.g. "datasetsByYear", "publishers", "counts"
+    value Json
+
+    created DateTime @default(now())
+    updated DateTime @updatedAt
+}
