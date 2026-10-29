@@ -1,13 +1,24 @@
-name: Update FUJI scores (7/10)
+name: Update FUJI scores
 
 on:
   schedule:
-    - cron: "30 */3 * * *"
+    - cron: "0 */3 * * *"
   workflow_dispatch:
+
+# Queue the next scheduled run instead of overlapping with one still in progress
+concurrency:
+  group: update-fuji-score
+  cancel-in-progress: false
 
 jobs:
   update-fuji-score:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    strategy:
+      fail-fast: false
+      matrix:
+        worker: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
     services:
       fujirest:
@@ -21,6 +32,7 @@ jobs:
       FUJI_URL: http://localhost:1071
       FUJI_JOB_SECRET: ${{ secrets.FUJI_JOB_SECRET }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      JOB_NAME: Update FUJI scores (${{ matrix.worker }}/10)
 
     steps:
       - uses: actions/checkout@v4

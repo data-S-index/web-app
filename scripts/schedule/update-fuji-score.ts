@@ -13,8 +13,9 @@ const FUJI_JOB_SUBMIT_URL = `${API_BASE_URL}/api/fuji-job/submit`;
 
 const { FUJI_JOB_SECRET } = process.env;
 
-// Each of the 10 workflows runs this script, so use the workflow name to tell them apart
-const JOB_NAME = process.env.GITHUB_WORKFLOW ?? "Update FUJI scores";
+// Each of the 10 matrix workers runs this script, so the workflow passes a per-worker name
+const JOB_NAME =
+  process.env.JOB_NAME ?? process.env.GITHUB_WORKFLOW ?? "Update FUJI scores";
 
 if (!FUJI_JOB_SECRET) {
   throw new Error("FUJI_JOB_SECRET environment variable is required");
