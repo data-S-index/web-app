@@ -222,7 +222,7 @@ async function evaluateDataset(
   datasetId: number,
   identifier: string,
   publisherId: string,
-): Promise<void> {
+): Promise<"hardcoded" | "organic"> {
   if (publisherId in HARDCODED_PUBLISHER_ID_SCORES) {
     const score = HARDCODED_PUBLISHER_ID_SCORES[publisherId];
 
@@ -237,7 +237,7 @@ async function evaluateDataset(
       `[${ts()}] Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)} [hardcoded for publisher ${publisherId}]`,
     );
 
-    return;
+    return "hardcoded";
   }
 
   const response = await fetch(FUJI_EVALUATE_URL, {
@@ -278,6 +278,8 @@ async function evaluateDataset(
   console.log(
     `[${ts()}] Scored dataset ${datasetId} (${identifier}) (${publisherId}): ${score.toFixed(2)}`,
   );
+
+  return "organic";
 }
 
 async function main() {
@@ -287,6 +289,8 @@ async function main() {
 
   let processed = 0;
   let failed = 0;
+  let hardcoded = 0;
+  let organic = 0;
   const failedIds: number[] = [];
   let consecutiveClaimFailures = 0;
   const startTime = Date.now();
@@ -323,9 +327,16 @@ async function main() {
             `[${ts()}] Dataset ${job.datasetId} skipped: ${job.reason}`,
           );
           break;
-        case "pending":
-          await evaluateDataset(job.datasetId, job.identifier, job.publisherId);
+        case "pending": {
+          const source = await evaluateDataset(
+            job.datasetId,
+            job.identifier,
+            job.publisherId,
+          );
+          if (source === "hardcoded") hardcoded++;
+          else organic++;
           break;
+        }
       }
       processed++;
     } catch (error) {
@@ -341,7 +352,7 @@ async function main() {
 
   const elapsedSeconds = (Date.now() - startTime) / 1000;
   console.log(
-    `[${ts()}] Done. ${processed} processed, ${failed} failed in ${elapsedSeconds.toFixed(1)}s`,
+    `[${ts()}] Done. ${processed} processed (${hardcoded} hardcoded, ${organic} organic), ${failed} failed in ${elapsedSeconds.toFixed(1)}s`,
   );
 
   // Skip empty runs, otherwise the 10 workers flood the channel when the queue is drained
@@ -352,6 +363,7 @@ async function main() {
       failed,
       elapsedSeconds,
       failedIds,
+      extraFields: { Hardcoded: hardcoded, Organic: organic },
     });
   }
 }

@@ -44,15 +44,28 @@ export async function notifyRunResult(
     failed: number;
     elapsedSeconds: number;
     failedIds?: number[];
+    extraFields?: Record<string, number>;
   },
 ): Promise<void> {
-  const { total, processed, failed, elapsedSeconds, failedIds = [] } = result;
+  const {
+    total,
+    processed,
+    failed,
+    elapsedSeconds,
+    failedIds = [],
+    extraFields = {},
+  } = result;
 
   const fields = [
     { name: "Queued", value: total.toLocaleString(), inline: true },
     { name: "Processed", value: processed.toLocaleString(), inline: true },
     { name: "Failed", value: failed.toLocaleString(), inline: true },
     { name: "Duration", value: `${elapsedSeconds.toFixed(1)}s`, inline: true },
+    ...Object.entries(extraFields).map(([name, value]) => ({
+      name,
+      value: value.toLocaleString(),
+      inline: true,
+    })),
   ];
 
   if (failedIds.length > 0) {
