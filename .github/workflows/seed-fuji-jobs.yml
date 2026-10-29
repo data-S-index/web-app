@@ -1,0 +1,38 @@
+name: Seed FUJI jobs
+
+on:
+  schedule:
+    - cron: "30 1 * * *"
+  workflow_dispatch:
+
+jobs:
+  seed-fuji-jobs:
+    runs-on: ubuntu-latest
+
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      NUXT_SITE_URL: ${{ secrets.NUXT_SITE_URL }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check maintenance mode
+        id: maintenance
+        run: |
+          enabled=$(curl -fsS "$NUXT_SITE_URL/api/maintenance" | jq -r '.maintenanceMode')
+          echo "enabled=$enabled" >> "$GITHUB_OUTPUT"
+          if [ "$enabled" = "true" ]; then
+            echo "::notice::Site is in maintenance mode, skipping FUJI job seed"
+          fi
+
+      - name: Connect to Tailscale
+        if: steps.maintenance.outputs.enabled != 'true'
+        uses: tailscale/github-action@v4
+        with:
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TAILSCALE_OAUTH_SECRET }}
+          tags: tag:ci
+
+      - name: Run FUJI job seed
+        if: steps.maintenance.outputs.enabled != 'true'
+        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f sql/fuji-job-seed.sql
