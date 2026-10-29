@@ -12,6 +12,7 @@ jobs:
     env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       NUXT_SITE_URL: ${{ secrets.NUXT_SITE_URL }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
     steps:
       - uses: actions/checkout@v4
@@ -23,6 +24,10 @@ jobs:
           echo "enabled=$enabled" >> "$GITHUB_OUTPUT"
           if [ "$enabled" = "true" ]; then
             echo "::notice::Site is in maintenance mode, skipping FUJI job seed"
+            bash .github/scripts/notify-discord.sh \
+              "⏸️ ${{ github.workflow }} skipped" \
+              "Site is in maintenance mode, skipping FUJI job seed." \
+              warning
           fi
 
       - name: Connect to Tailscale
@@ -35,4 +40,20 @@ jobs:
 
       - name: Run FUJI job seed
         if: steps.maintenance.outputs.enabled != 'true'
-        run: psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f sql/fuji-job-seed.sql
+        run: |
+          output=$(psql "$DATABASE_URL" -v ON_ERROR_STOP=1 -f sql/fuji-job-seed.sql 2>&1) || {
+            echo "$output"
+            bash .github/scripts/notify-discord.sh \
+              "❌ ${{ github.workflow }} failed" \
+              "$(printf '```\n%s\n```' "$(echo "$output" | tail -c 3900)")" \
+              failure
+            exit 1
+          }
+          echo "$output"
+
+          # psql prints "INSERT 0 <rows>" for the seed insert
+          inserted=$(echo "$output" | awk '/^INSERT/ { print $3 }' | tail -1)
+          bash .github/scripts/notify-discord.sh \
+            "✅ ${{ github.workflow }} finished" \
+            "Queued ${inserted:-0} new FUJI jobs." \
+            success

@@ -1,6 +1,9 @@
 import { PrismaClient } from "../../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
+import { notifyRunFailure, notifyRunResult } from "./notify-discord";
+
+const JOB_NAME = "D-index update";
 
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
 const prisma = new PrismaClient({ adapter });
@@ -215,12 +218,19 @@ async function main() {
 
   if (total === 0) {
     console.log("No jobs to process.");
+    await notifyRunResult(JOB_NAME, {
+      total,
+      processed: 0,
+      failed: 0,
+      elapsedSeconds: 0,
+    });
 
     return;
   }
 
   let processed = 0;
   let failed = 0;
+  const failedIds: number[] = [];
   const startTime = Date.now();
 
   while (true) {
@@ -232,6 +242,7 @@ async function main() {
       processed++;
     } catch (error) {
       failed++;
+      failedIds.push(datasetId);
       console.error(`Failed dataset ${datasetId}:`, error);
     }
 
@@ -240,13 +251,24 @@ async function main() {
     console.log(`[${pct}%] ${done.toLocaleString()}/${total.toLocaleString()}`);
   }
 
-  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-  console.log(`Done. ${processed} processed, ${failed} failed in ${elapsed}s`);
+  const elapsedSeconds = (Date.now() - startTime) / 1000;
+  console.log(
+    `Done. ${processed} processed, ${failed} failed in ${elapsedSeconds.toFixed(1)}s`,
+  );
+
+  await notifyRunResult(JOB_NAME, {
+    total,
+    processed,
+    failed,
+    elapsedSeconds,
+    failedIds,
+  });
 }
 
 main()
-  .catch((err) => {
+  .catch(async (err) => {
     console.error("Fatal error:", err);
+    await notifyRunFailure(JOB_NAME, err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

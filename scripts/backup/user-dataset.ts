@@ -3,6 +3,9 @@ import { PrismaPg } from "@prisma/adapter-pg";
 import { createHash, randomUUID } from "crypto";
 import { consola } from "consola";
 import "dotenv/config";
+import { notifyRunFailure, notifyRunSummary } from "../schedule/notify-discord";
+
+const JOB_NAME = "Backup user dataset";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
@@ -76,11 +79,17 @@ const main = async () => {
   await uploadToBunny(filename, content);
 
   consola.success(`Backed up ${output.length} user-dataset records.`);
+
+  await notifyRunSummary(JOB_NAME, "Backup uploaded to Bunny storage.", {
+    Records: output.length,
+    File: `${BUNNY_REMOTE_PATH}/${filename}`,
+  });
 };
 
 main()
-  .catch((error) => {
+  .catch(async (error) => {
     consola.error(error);
+    await notifyRunFailure(JOB_NAME, error);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

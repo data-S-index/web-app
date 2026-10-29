@@ -1,3 +1,5 @@
+import { notifyRunFailure, notifyRunResult } from "./notify-discord";
+
 const FUJI_BASE_URL = "http://localhost:1071";
 const FUJI_EVALUATE_URL = `${FUJI_BASE_URL}/fuji/api/v1/evaluate`;
 const FUJI_HEALTH_URL = `${FUJI_BASE_URL}/fuji/api/v1/`;
@@ -10,6 +12,9 @@ const FUJI_JOB_CLAIM_URL = `${API_BASE_URL}/api/fuji-job/claim`;
 const FUJI_JOB_SUBMIT_URL = `${API_BASE_URL}/api/fuji-job/submit`;
 
 const { FUJI_JOB_SECRET } = process.env;
+
+// Each of the 10 workflows runs this script, so use the workflow name to tell them apart
+const JOB_NAME = process.env.GITHUB_WORKFLOW ?? "Update FUJI scores";
 
 if (!FUJI_JOB_SECRET) {
   throw new Error("FUJI_JOB_SECRET environment variable is required");
@@ -282,6 +287,7 @@ async function main() {
 
   let processed = 0;
   let failed = 0;
+  const failedIds: number[] = [];
   let consecutiveClaimFailures = 0;
   const startTime = Date.now();
 
@@ -324,6 +330,7 @@ async function main() {
       processed++;
     } catch (error) {
       failed++;
+      failedIds.push(job.datasetId);
       console.error(`[${ts()}] Failed dataset ${job.datasetId}:`, error);
     }
 
@@ -332,13 +339,25 @@ async function main() {
     );
   }
 
-  const elapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  const elapsedSeconds = (Date.now() - startTime) / 1000;
   console.log(
-    `[${ts()}] Done. ${processed} processed, ${failed} failed in ${elapsed}s`,
+    `[${ts()}] Done. ${processed} processed, ${failed} failed in ${elapsedSeconds.toFixed(1)}s`,
   );
+
+  // Skip empty runs, otherwise the 10 workers flood the channel when the queue is drained
+  if (processed + failed > 0) {
+    await notifyRunResult(JOB_NAME, {
+      total: processed + failed,
+      processed,
+      failed,
+      elapsedSeconds,
+      failedIds,
+    });
+  }
 }
 
-main().catch((err) => {
+main().catch(async (err) => {
   console.error(`[${ts()}] Fatal error:`, err);
+  await notifyRunFailure(JOB_NAME, err);
   process.exit(1);
 });

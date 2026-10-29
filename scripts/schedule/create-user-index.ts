@@ -2,6 +2,9 @@ import { Meilisearch } from "meilisearch";
 import { PrismaClient } from "../../shared/generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
+import { notifyRunFailure, notifyRunSummary } from "./notify-discord";
+
+const JOB_NAME = "Index users";
 
 const { MEILISEARCH_API_KEY, MEILISEARCH_API_URL } = process.env;
 
@@ -42,6 +45,7 @@ async function main() {
 
   if (users.length === 0) {
     console.log("No users to index. Exiting.");
+    await notifyRunSummary(JOB_NAME, "No users to index.");
 
     return;
   }
@@ -71,11 +75,21 @@ async function main() {
   }
 
   console.log("Done. Documents have been queued for indexing in Meilisearch.");
+
+  await notifyRunSummary(
+    JOB_NAME,
+    "Documents have been queued for indexing in Meilisearch.",
+    {
+      Users: documents.length,
+      Batches: Math.ceil(documents.length / BATCH_SIZE),
+    },
+  );
 }
 
 main()
-  .catch((err) => {
+  .catch(async (err) => {
     console.error("Error:", err);
+    await notifyRunFailure(JOB_NAME, err);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());
