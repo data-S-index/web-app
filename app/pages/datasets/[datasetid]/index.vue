@@ -57,6 +57,15 @@ const datasetWithRelations = computed(() => {
   };
 });
 
+const hasFujiScore = computed(
+  () =>
+    dataset.value?.fujiScore !== null &&
+    dataset.value?.fujiScore !== undefined &&
+    dataset.value.fujiScore.score !== null,
+);
+
+const hasDIndex = computed(() => (dataset.value?.dindices?.length ?? 0) > 0);
+
 const truncate = (text: string, maxLength: number): string =>
   text.length > maxLength ? `${text.slice(0, maxLength - 1).trim()}…` : text;
 
@@ -212,15 +221,14 @@ const copyDoi = async () => {
       <UPageHeader>
         <div class="flex flex-col space-y-2">
           <div class="flex items-center gap-2">
-            <div class="flex hidden items-center gap-1">
-              <UIcon name="i-heroicons-calendar-20-solid" class="h-4 w-4" />
-
-              <p class="text-sm font-light">
-                Published on
-                {{ dataset.pubYear || "Unknown Year" }}
-                {{ dataset.version ? `| ` : "" }}
-              </p>
-            </div>
+            <UBadge
+              v-if="dataset.pubYear"
+              color="neutral"
+              variant="subtle"
+              size="sm"
+              :label="dataset.pubYear"
+              icon="i-heroicons-calendar-20-solid"
+            />
 
             <UBadge
               v-if="dataset.version"
@@ -340,12 +348,7 @@ const copyDoi = async () => {
           <!-- Sidebar -->
           <div class="space-y-6">
             <!-- Metrics -->
-            <UCard
-              v-if="
-                (dataset.fujiScore && dataset.fujiScore.score !== null) ||
-                (dataset.dindices && dataset.dindices.length > 0)
-              "
-            >
+            <UCard>
               <template #header>
                 <div class="flex items-center gap-2">
                   <h3 class="text-lg font-semibold">Metrics</h3>
@@ -366,47 +369,60 @@ const copyDoi = async () => {
 
               <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-6">
-                  <div
-                    v-if="dataset.dindices && dataset.dindices.length > 0"
-                    class="flex flex-col items-center text-center"
-                  >
+                  <div class="flex flex-col items-center text-center">
                     <p class="mb-2 text-sm font-medium">Dataset Index</p>
 
-                    <div class="flex items-center gap-2">
-                      <div
-                        class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
-                      >
-                        {{
-                          dataset.dindices.length > 0
-                            ? dataset.dindices[
-                                dataset.dindices.length - 1
-                              ]?.score.toLocaleString(undefined, {
-                                minimumFractionDigits: 1,
-                                maximumFractionDigits: 1,
-                              })
-                            : "0.0"
-                        }}
-                      </div>
+                    <div
+                      v-if="hasDIndex"
+                      class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
+                    >
+                      {{
+                        dataset.dindices[
+                          dataset.dindices.length - 1
+                        ]?.score.toLocaleString(undefined, {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        })
+                      }}
                     </div>
+
+                    <UTooltip
+                      v-else
+                      text="Pending: the Dataset Index will appear once it has been calculated"
+                    >
+                      <div class="flex h-9 cursor-help items-center">
+                        <UIcon
+                          name="i-lucide-hourglass"
+                          class="size-5 text-gray-400 dark:text-gray-500"
+                        />
+                      </div>
+                    </UTooltip>
                   </div>
 
-                  <div
-                    v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
-                    class="flex flex-col items-center text-center"
-                  >
+                  <div class="flex flex-col items-center text-center">
                     <p class="mb-2 text-sm font-medium">FAIR Score</p>
 
                     <div
+                      v-if="hasFujiScore"
                       class="text-primary-600 dark:text-primary-400 text-3xl font-bold"
                     >
-                      {{ Math.round(dataset.fujiScore.score) }}%
+                      {{ Math.round(dataset.fujiScore!.score!) }}%
                     </div>
+
+                    <UTooltip
+                      v-else
+                      text="Pending: the FAIR assessment for this dataset hasn't run yet"
+                    >
+                      <div class="flex h-9 cursor-help items-center">
+                        <UIcon
+                          name="i-lucide-hourglass"
+                          class="size-5 text-gray-400 dark:text-gray-500"
+                        />
+                      </div>
+                    </UTooltip>
                   </div>
 
-                  <div
-                    v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
-                    class="flex flex-col items-center text-center"
-                  >
+                  <div class="flex flex-col items-center text-center">
                     <p class="mb-2 text-sm font-medium">Citations</p>
 
                     <div
@@ -416,10 +432,7 @@ const copyDoi = async () => {
                     </div>
                   </div>
 
-                  <div
-                    v-if="dataset.fujiScore && dataset.fujiScore.score !== null"
-                    class="flex flex-col items-center text-center"
-                  >
+                  <div class="flex flex-col items-center text-center">
                     <p class="mb-2 text-sm font-medium">Mentions</p>
 
                     <div

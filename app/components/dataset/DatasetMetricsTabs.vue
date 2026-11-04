@@ -32,6 +32,15 @@ const tabItems = [
           :published-at="dataset.publishedAt"
         />
       </UCard>
+
+      <div v-else class="flex h-full items-center justify-center">
+        <UAlert
+          title="Dataset Index pending"
+          description="Check back soon."
+          color="info"
+          variant="subtle"
+        />
+      </div>
     </template>
 
     <template #citations>
