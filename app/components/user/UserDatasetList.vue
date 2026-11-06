@@ -13,7 +13,7 @@ export interface DatasetListItem {
     description?: string | null;
     identifier?: string;
     version?: string | null;
-    publishedAt?: Date | string;
+    publishedAt?: Date | string | null;
     pubYear?: number;
   };
 }

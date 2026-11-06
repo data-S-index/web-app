@@ -76,6 +76,19 @@ const response = computed(
 );
 const datasets = computed(() => response.value?.datasets ?? []);
 
+const datasetListItems = computed<DatasetListItem[]>(() =>
+  datasets.value.map((item) => ({
+    ...item,
+    dataset: {
+      ...item.dataset,
+      _count: {
+        citations: item.dataset.citations.length,
+        mentions: item.dataset.mentions.length,
+      },
+    },
+  })),
+);
+
 // Computed metrics for the 6 cards (use server values where provided)
 const sindex = computed(() => response.value?.currentSIndex ?? 0);
 
@@ -299,6 +312,7 @@ const cumulativeMentions = computed(() => {
                 class="w-max cursor-help"
                 color="warning"
                 label="Automated Author Profile"
+                variant="subtle"
                 icon="ic:round-auto-awesome"
               />
             </UTooltip>
@@ -455,7 +469,7 @@ const cumulativeMentions = computed(() => {
           description="Only the first 500 datasets are displayed."
         />
 
-        <UserDatasetList :items="datasets as DatasetListItem[]" />
+        <UserDatasetList :items="datasetListItems" />
       </UPageBody>
 
       <UPageBody v-else-if="authorError">
