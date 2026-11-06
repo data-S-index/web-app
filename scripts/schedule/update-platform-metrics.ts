@@ -140,6 +140,17 @@ async function counts() {
   };
 }
 
+// Most recent source creation day loaded by the pipeline, as YYYY-MM-DD.
+// Days that harvested no records don't have any datasets to report.
+async function latestDatasetDate() {
+  const { _max } = await prisma.ingestLog.aggregate({
+    _max: { day: true },
+    where: { records: { gt: 0 } },
+  });
+
+  return _max.day?.toISOString().slice(0, 10) ?? null;
+}
+
 async function timed<T>(label: string, fn: () => Promise<T>): Promise<T> {
   const start = Date.now();
   console.log(`Computing ${label}...`);
@@ -163,6 +174,11 @@ async function main() {
     publishers: await timed("publishers", () => publishers(10)),
     licenses: await timed("licenses", () => licenses(10)),
   };
+
+  // A JSON column can't be set to a plain null, so leave the key out when
+  // nothing has been ingested yet
+  const latestDate = await timed("latest dataset date", latestDatasetDate);
+  if (latestDate) metrics.latestDatasetDate = latestDate;
 
   await prisma.$transaction(
     Object.entries(metrics).map(([key, value]) =>

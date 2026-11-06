@@ -10,6 +10,7 @@ type PlatformMetrics = {
   fields: NamedCount[];
   publishers: NamedCount[];
   licenses: NamedCount[];
+  latestDatasetDate: string | null;
   updated: string | null;
 };
 
@@ -41,6 +42,7 @@ export default defineEventHandler(async () => {
       fields: (byKey.fields as NamedCount[]) ?? [],
       publishers: (byKey.publishers as NamedCount[]) ?? [],
       licenses: (byKey.licenses as NamedCount[]) ?? [],
+      latestDatasetDate: (byKey.latestDatasetDate as string) ?? null,
       updated: updated?.toISOString() ?? null,
     };
     cachedAt = now;

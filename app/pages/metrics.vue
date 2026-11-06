@@ -16,6 +16,14 @@ const formatNumber = (number: number) => {
   }).format(number);
 };
 
+// Dates are stored as YYYY-MM-DD, so format in UTC to keep the same day
+const formatDate = (date: string) => {
+  return Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeZone: "UTC",
+  }).format(new Date(date));
+};
+
 type NamedCount = { name: string; value: number };
 
 const { data: platformMetrics } = await useFetch<{
@@ -26,6 +34,7 @@ const { data: platformMetrics } = await useFetch<{
   fields: NamedCount[];
   publishers: NamedCount[];
   licenses: NamedCount[];
+  latestDatasetDate: string | null;
   updated: string | null;
 }>("/api/metrics");
 
@@ -83,6 +92,15 @@ const sIndexMetrics = computed(() => [
     value: counts.value.generatedProfiles ?? 0,
     description: "Researcher profiles automatically generated for demo purpose",
     learnMoreUrl: "https://docs.scholardata.io/data-collection/auto-profiles",
+  },
+  {
+    name: "Latest dataset date",
+    value: platformMetrics.value?.latestDatasetDate
+      ? formatDate(platformMetrics.value.latestDatasetDate)
+      : "N/A",
+    description:
+      "Most recent day of dataset records loaded into the platform from our sources",
+    learnMoreUrl: "https://docs.scholardata.io/data-collection/datasets",
   },
 ]);
 
@@ -501,7 +519,11 @@ const licensePieChartOption = computed(() => ({
         </template>
 
         <div class="text-3xl font-bold text-pink-600">
-          {{ formatNumber(metric.value) }}
+          {{
+            typeof metric.value === "number"
+              ? formatNumber(metric.value)
+              : metric.value
+          }}
         </div>
 
         <p class="mt-2 text-sm">{{ metric.description }}</p>
