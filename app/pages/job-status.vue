@@ -114,8 +114,8 @@ const JOBS = computed(() => [
     workflow: "update-fuji-score.yml",
     description:
       "10 workers claim queued datasets and compute their FAIR scores.",
-    schedule: "Every 3 hours",
-    intervalHours: 3,
+    schedule: "Daily at 06:17 and 18:17 UTC",
+    intervalHours: 12,
     queue: "fuji" as QueueKey,
     coverageLabel: "Datasets with a FAIR score",
     coverage: coverage(counts.value.fairScores, counts.value.datasets),

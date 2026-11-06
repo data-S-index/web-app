@@ -2,7 +2,7 @@ name: Update FUJI scores
 
 on:
   schedule:
-    - cron: "0 */3 * * *"
+    - cron: "17 6,18 * * *"
   workflow_dispatch:
 
 # Queue the next scheduled run instead of overlapping with one still in progress

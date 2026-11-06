@@ -126,6 +126,10 @@ const HEALTH_CHECK_ATTEMPTS = 10;
 const MAX_CONSECUTIVE_CLAIM_FAILURES = 5;
 const CLAIM_RETRY_DELAY_MS = 5_000;
 
+// Stop claiming before the workflow's 120 minute timeout, which would kill the
+// worker before it sends its summary and drop the dataset it had claimed
+const RUN_DEADLINE = Date.now() + 110 * 60 * 1000;
+
 const ts = () => new Date().toISOString();
 
 interface FujiEvaluateResponse {
@@ -297,6 +301,11 @@ async function main() {
   const startTime = Date.now();
 
   while (true) {
+    if (Date.now() >= RUN_DEADLINE) {
+      console.log(`[${ts()}] Time budget used, stopping with jobs left`);
+      break;
+    }
+
     let job: ClaimResponse;
     try {
       job = await claimNextJob();
