@@ -11,6 +11,13 @@ type PlatformMetrics = {
   publishers: NamedCount[];
   licenses: NamedCount[];
   latestDatasetDate: string | null;
+  jobStats: {
+    datasetsWithDIndex: number;
+    usersWithSIndex: number;
+    organizationsWithSIndex: number;
+    organizations: number;
+    fairScoresLast24h: number;
+  } | null;
   updated: string | null;
 };
 
@@ -43,6 +50,7 @@ export default defineEventHandler(async () => {
       publishers: (byKey.publishers as NamedCount[]) ?? [],
       licenses: (byKey.licenses as NamedCount[]) ?? [],
       latestDatasetDate: (byKey.latestDatasetDate as string) ?? null,
+      jobStats: (byKey.jobStats as PlatformMetrics["jobStats"]) ?? null,
       updated: updated?.toISOString() ?? null,
     };
     cachedAt = now;

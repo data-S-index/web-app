@@ -151,6 +151,26 @@ async function latestDatasetDate() {
   return _max.day?.toISOString().slice(0, 10) ?? null;
 }
 
+// Progress figures for /job-status that are too slow to compute on demand.
+// FujiScore."updated" is unindexed and these tables have tens of millions of rows.
+async function jobStats() {
+  const [row] = await prisma.$queryRaw<Record<string, bigint>[]>`
+    SELECT
+      (SELECT COUNT(DISTINCT "datasetId") FROM "DIndex") AS "datasetsWithDIndex",
+      (SELECT COUNT(DISTINCT "automatedUserId") FROM "AutomatedUserSIndex") AS "usersWithSIndex",
+      (SELECT COUNT(DISTINCT "automatedOrganizationId") FROM "AutomatedOrganizationSIndex") AS "organizationsWithSIndex",
+      (SELECT COUNT(*) FROM "AutomatedOrganization") AS "organizations",
+      (
+        SELECT COUNT(*) FROM "FujiScore"
+        WHERE "updated" >= (NOW() AT TIME ZONE 'UTC') - INTERVAL '24 hours'
+      ) AS "fairScoresLast24h"
+  `;
+
+  return Object.fromEntries(
+    Object.entries(row!).map(([key, value]) => [key, Number(value)]),
+  );
+}
+
 async function timed<T>(label: string, fn: () => Promise<T>): Promise<T> {
   const start = Date.now();
   console.log(`Computing ${label}...`);
@@ -173,6 +193,7 @@ async function main() {
     fields: await timed("fields", () => fields(10)),
     publishers: await timed("publishers", () => publishers(10)),
     licenses: await timed("licenses", () => licenses(10)),
+    jobStats: await timed("job stats", jobStats),
   };
 
   // A JSON column can't be set to a plain null, so leave the key out when

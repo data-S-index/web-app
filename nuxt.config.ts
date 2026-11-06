@@ -110,6 +110,7 @@ export default defineNuxtConfig({
           "/profile",
           "/embed/",
           "/fuji",
+          "/job-status",
         ],
         contentUsage: {
           bots: "y",
