@@ -124,6 +124,12 @@ async function onDeleteAccount() {
 
 const { data: userData, refresh: refreshUser } = await useFetch("/api/user");
 
+const avatarUrl = computed(
+  () => `https://api.dicebear.com/9.x/thumbs/svg?seed=${userData.value?.id}`,
+);
+
+const homePagePlaceholder = "https://";
+
 const schema = z.object({
   givenName: z.string(),
   familyName: z.string(),
@@ -221,7 +227,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
           <template #title>
             <div class="flex min-w-full gap-4">
               <UAvatar
-                :src="`https://api.dicebear.com/9.x/thumbs/svg?seed=${userData?.id}`"
+                :src="avatarUrl"
                 alt="User avatar"
                 size="3xl"
                 class="squircle rounded-none"
@@ -373,7 +379,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                   <UInput
                     v-model="state.homePage"
                     type="url"
-                    placeholder="https://"
+                    :placeholder="homePagePlaceholder"
                   />
                 </UFormField>
 
@@ -426,11 +432,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
                   <p class="text-sm text-gray-500 dark:text-gray-400">
                     Last updated:
-                    {{
-                      userData?.updated
-                        ? new Date(userData.updated).toLocaleString()
-                        : "-"
-                    }}
+                    <ClientOnly>
+                      {{
+                        userData?.updated
+                          ? $dayjs(userData.updated).format(
+                              "DD MMMM, YYYY HH:mm",
+                            )
+                          : "-"
+                      }}
+                    </ClientOnly>
                   </p>
                 </div>
               </UForm>
@@ -438,13 +448,22 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
             <!-- Account info (read-only) -->
             <UCard>
-              <h2 class="mb-4 text-lg font-semibold">Account</h2>
+              <div class="flex items-center justify-between gap-4">
+                <h2 class="mb-4 text-lg font-semibold">Account</h2>
+
+                <UBadge
+                  color="neutral"
+                  variant="subtle"
+                  size="sm"
+                  label="Private"
+                />
+              </div>
 
               <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div>
                   <div class="flex items-center justify-between gap-1">
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      class="block text-sm font-medium text-gray-500 dark:text-gray-300"
                     >
                       {{
                         userData?.anonymous
@@ -452,13 +471,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                           : "Email Address"
                       }}
                     </label>
-
-                    <UBadge
-                      color="neutral"
-                      variant="subtle"
-                      size="sm"
-                      label="Private"
-                    />
                   </div>
 
                   <p class="mt-1 text-gray-900 dark:text-white">
@@ -469,23 +481,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 <div>
                   <div class="flex items-center justify-between gap-1">
                     <label
-                      class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                      class="block text-sm font-medium text-gray-500 dark:text-gray-300"
                     >
                       Account created
                     </label>
-
-                    <UBadge
-                      color="neutral"
-                      variant="subtle"
-                      size="sm"
-                      label="Private"
-                    />
                   </div>
 
                   <p class="mt-1 text-gray-900 dark:text-white">
                     {{
                       userData?.created
-                        ? new Date(userData.created).toLocaleDateString()
+                        ? $dayjs(userData.created).format("DD MMMM, YYYY")
                         : "-"
                     }}
                   </p>
