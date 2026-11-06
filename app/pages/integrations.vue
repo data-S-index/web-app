@@ -59,6 +59,10 @@ const apiByDoiUrl = computed(
   () =>
     `${baseUrl.value}/api/v1/datasets/by-doi?doi=${encodeURIComponent(appliedDoi.value)}`,
 );
+const apiCitationsByDoiUrl = computed(
+  () =>
+    `${baseUrl.value}/api/v1/datasets/by-doi/citations?doi=${encodeURIComponent(appliedDoi.value)}&page=1&pageSize=5`,
+);
 const badgeSvgUrl = computed(
   () => `${baseUrl.value}/api/v1/shields/badge/d-index/${appliedDoi.value}.svg`,
 );
@@ -88,6 +92,24 @@ const apiByDoiExample = computed(() => {
     return "{\n  'error': 'Dataset not found or invalid DOI'\n}";
 
   return JSON.stringify(byDoiData.value, null, 2);
+});
+
+const {
+  data: citationsByDoiData,
+  pending: citationsByDoiPending,
+  error: citationsByDoiError,
+} = useFetch(
+  () =>
+    `/api/v1/datasets/by-doi/citations?doi=${encodeURIComponent(appliedDoi.value)}&page=1&pageSize=5`,
+  { watch: [appliedDoi] },
+);
+
+const apiCitationsByDoiExample = computed(() => {
+  if (citationsByDoiPending.value) return "Loading…";
+  if (citationsByDoiError.value || !citationsByDoiData.value)
+    return "{\n  'error': 'Dataset not found or invalid DOI'\n}";
+
+  return JSON.stringify(citationsByDoiData.value, null, 2);
 });
 
 const shieldsDataExample = computed(() => {
@@ -403,6 +425,87 @@ const sEmbedSnippet = computed(
                   <pre
                     class="max-h-44 min-h-[6rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
                     >{{ apiByDoiExample }}</pre
+                  >
+                </div>
+
+                <div
+                  class="flex flex-col gap-1 border-t border-gray-200/80 pt-3 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-gray-700/50"
+                >
+                  <span class="text-muted"
+                    >Rate limited to 120 requests/minute per IP.</span
+                  >
+
+                  <NuxtLink
+                    to="/contact"
+                    class="text-primary-600 dark:text-primary-400 font-medium hover:underline"
+                  >
+                    Need a higher limit? Contact us
+                  </NuxtLink>
+                </div>
+              </UCard>
+
+              <UCard
+                :ui="{
+                  root: 'ring-1 ring-gray-200/80 dark:ring-gray-700/50 overflow-hidden',
+                  header: 'border-b border-gray-200/80 dark:border-gray-700/50',
+                  body: 'flex flex-col gap-4 p-5 sm:p-6',
+                }"
+              >
+                <template #header>
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="flex size-9 items-center justify-center rounded-lg bg-gray-100 dark:bg-gray-800"
+                    >
+                      <UIcon
+                        name="i-heroicons-document-text"
+                        class="size-4 text-gray-600 dark:text-gray-400"
+                      />
+                    </div>
+
+                    <div>
+                      <span class="font-medium">Dataset citations by DOI</span>
+
+                      <span class="text-muted ml-2 text-xs">JSON</span>
+                    </div>
+                  </div>
+                </template>
+
+                <p class="text-muted text-sm">
+                  Returns a paginated list of works citing the dataset, newest
+                  first, with the citing DOI (when available), the sources that
+                  reported the citation, and the cited date. Use
+                  <code
+                    class="rounded bg-gray-200 px-1 py-0.5 font-mono dark:bg-gray-700"
+                    >page</code
+                  >
+                  and
+                  <code
+                    class="rounded bg-gray-200 px-1 py-0.5 font-mono dark:bg-gray-700"
+                    >pageSize</code
+                  >
+                  (default 25, max 100) to paginate.
+                </p>
+
+                <div class="space-y-1.5">
+                  <span class="text-muted text-xs font-medium">Request</span>
+
+                  <div
+                    class="overflow-hidden rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
+                  >
+                    <span class="text-emerald-600 dark:text-emerald-400"
+                      >GET</span
+                    >
+                    {{ " " }}
+                    <span class="break-all">{{ apiCitationsByDoiUrl }}</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1.5">
+                  <span class="text-muted text-xs font-medium">Response</span>
+
+                  <pre
+                    class="max-h-44 min-h-[6rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
+                    >{{ apiCitationsByDoiExample }}</pre
                   >
                 </div>
 
