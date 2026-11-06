@@ -61,7 +61,7 @@ const apiByDoiUrl = computed(
 );
 const apiCitationsByDoiUrl = computed(
   () =>
-    `${baseUrl.value}/api/v1/datasets/by-doi/citations?doi=${encodeURIComponent(appliedDoi.value)}&page=1&pageSize=5`,
+    `${baseUrl.value}/api/v1/datasets/by-doi/citations?doi=${encodeURIComponent(appliedDoi.value)}`,
 );
 const badgeSvgUrl = computed(
   () => `${baseUrl.value}/api/v1/shields/badge/d-index/${appliedDoi.value}.svg`,
@@ -100,7 +100,7 @@ const {
   error: citationsByDoiError,
 } = useFetch(
   () =>
-    `/api/v1/datasets/by-doi/citations?doi=${encodeURIComponent(appliedDoi.value)}&page=1&pageSize=5`,
+    `/api/v1/datasets/by-doi/citations?doi=${encodeURIComponent(appliedDoi.value)}`,
   { watch: [appliedDoi] },
 );
 

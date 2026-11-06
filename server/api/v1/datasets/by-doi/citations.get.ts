@@ -126,7 +126,6 @@ export default defineEventHandler(async (event) => {
         mdc: true,
         openAlex: true,
         citedDate: true,
-        citationWeight: true,
       },
       // id breaks ties so pages stay stable when dates repeat
       orderBy: [{ citedDate: "desc" }, { id: "desc" }],
@@ -158,7 +157,6 @@ export default defineEventHandler(async (event) => {
         sources,
         citedDate: citation.citedDate,
         year: citation.citedDate.getUTCFullYear(),
-        citationWeight: citation.citationWeight,
       };
     }),
   };
