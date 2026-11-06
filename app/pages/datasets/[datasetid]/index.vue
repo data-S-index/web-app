@@ -20,7 +20,8 @@ const { data: dataset, error } = await useFetch(`/api/dataset/${datasetid}`, {
 if (error.value) {
   toast.add({
     title: "Error fetching dataset",
-    description: error.value.data?.statusMessage,
+    description: (error.value.data as { statusMessage?: string } | undefined)
+      ?.statusMessage,
     icon: "material-symbols:error",
     color: "error",
   });
@@ -55,6 +56,20 @@ const datasetWithRelations = computed(() => {
     citations: citations.value ?? [],
     mentions: mentions.value ?? [],
   };
+});
+
+const datasetUrl = computed(() => {
+  const identifier = dataset.value?.identifier;
+
+  if (dataset.value?.identifierType === "doi") {
+    return `https://doi.org/${identifier}`;
+  }
+
+  if (dataset.value?.identifierType === "emdb") {
+    return `https://www.ebi.ac.uk/emdb/${identifier}`;
+  }
+
+  return identifier;
 });
 
 const hasFujiScore = computed(
@@ -253,13 +268,7 @@ const copyDoi = async () => {
               <UButton
                 color="primary"
                 variant="solid"
-                :to="
-                  dataset.identifierType === 'doi'
-                    ? `https://doi.org/${dataset.identifier}`
-                    : dataset.identifierType === 'emdb'
-                      ? `https://www.ebi.ac.uk/emdb/${dataset.identifier}`
-                      : dataset.identifier
-                "
+                :to="datasetUrl"
                 target="_blank"
                 rel="noopener noreferrer"
                 icon="i-heroicons-arrow-top-right-on-square-20-solid"

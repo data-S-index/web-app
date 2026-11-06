@@ -69,11 +69,13 @@ export async function checkRateLimit(
   pipeline.expire(key, windowSeconds);
   const results = await pipeline.exec();
 
-  if (!results || results.length === 0) {
+  const incrResult = results?.[0];
+
+  if (!incrResult) {
     throw new Error("Failed to execute rate limit check");
   }
 
-  const newCount = results[0][1] as number;
+  const newCount = incrResult[1] as number;
   const resetAt = Math.floor(Date.now() / 1000) + windowSeconds;
 
   return {

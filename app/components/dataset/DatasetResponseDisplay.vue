@@ -2,10 +2,16 @@
 <script setup lang="ts">
 import type { Author } from "#shared/types/dataset";
 
-defineProps<{
+const props = defineProps<{
   dataset: any;
   isFromCache?: boolean;
 }>();
+
+const datasetUrl = computed(() =>
+  props.dataset.identifier
+    ? `https://doi.org/${props.dataset.identifier}`
+    : props.dataset.url || null,
+);
 
 const getAuthorTooltipText = (author: Author): string => {
   const parts: string[] = [];
@@ -68,11 +74,7 @@ const reloadPage = () => {
             v-if="dataset.identifier || dataset.url"
             color="primary"
             variant="solid"
-            :to="
-              dataset.identifier
-                ? `https://doi.org/${dataset.identifier}`
-                : dataset.url || null
-            "
+            :to="datasetUrl"
             target="_blank"
             rel="noopener noreferrer"
             icon="i-heroicons-arrow-top-right-on-square-20-solid"
