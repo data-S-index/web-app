@@ -50,7 +50,9 @@ async function checkService(
 }
 
 function overallStatus(services: ServiceCheck[]): ServiceStatus {
-  const downCount = services.filter((service) => service.status === "down").length;
+  const downCount = services.filter(
+    (service) => service.status === "down",
+  ).length;
 
   if (downCount === 0) return "operational";
   if (downCount === services.length) return "down";

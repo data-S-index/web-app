@@ -26,6 +26,7 @@ const seedJobs = async () => {
 
   if (totalCount === 0) {
     console.log(`\n⚠️  No records found in ${INPUT_FILE}\n`);
+
     return;
   }
 

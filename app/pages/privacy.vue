@@ -65,9 +65,9 @@ defineOgImage("NuxtSeo.takumi", {
                 rel="noopener noreferrer"
                 class="text-primary font-medium hover:underline"
                 >Umami</a
-              >, a privacy-focused analytics tool that does not collect
-              personal information, does not use cookies, and does not track
-              users across sites.
+              >, a privacy-focused analytics tool that does not collect personal
+              information, does not use cookies, and does not track users across
+              sites.
             </li>
 
             <li>
@@ -130,12 +130,12 @@ defineOgImage("NuxtSeo.takumi", {
               rel="noopener noreferrer"
               class="text-primary font-medium hover:underline"
               >Umami</a
-            >, a privacy-focused, open-source analytics platform. Umami does
-            not collect any personally identifiable information (PII), does
-            not use cookies for tracking, and does not track users across
-            sites or sessions. The analytics data we collect is fully
-            anonymous and used only to understand general usage patterns and
-            improve the platform. We do not sell your personal information.
+            >, a privacy-focused, open-source analytics platform. Umami does not
+            collect any personally identifiable information (PII), does not use
+            cookies for tracking, and does not track users across sites or
+            sessions. The analytics data we collect is fully anonymous and used
+            only to understand general usage patterns and improve the platform.
+            We do not sell your personal information.
           </p>
         </section>
 
@@ -290,7 +290,9 @@ defineOgImage("NuxtSeo.takumi", {
 
         <USeparator />
 
-        <p class="text-muted text-center text-xs">Last updated: July 27, 2026</p>
+        <p class="text-muted text-center text-xs">
+          Last updated: July 27, 2026
+        </p>
       </div>
     </div>
   </UContainer>

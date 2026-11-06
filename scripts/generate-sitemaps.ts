@@ -53,6 +53,7 @@ function buildSitemapXml(
       const lastmodLine = e.lastmod
         ? `\n    <lastmod>${e.lastmod}</lastmod>`
         : "";
+
       return `  <url>\n    <loc>${BASE_URL}${e.loc}</loc>${lastmodLine}\n  </url>`;
     })
     .join("\n");

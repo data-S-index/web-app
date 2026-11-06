@@ -329,8 +329,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="overflow-x-auto p-4 font-mono text-xs leading-relaxed break-all whitespace-pre-wrap"
-                    >{{ embedSnippet }}</pre
-                  >
+                    >{{ embedSnippet }}</pre>
                 </div>
               </div>
 
@@ -424,8 +423,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="max-h-44 min-h-[6rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
-                    >{{ apiByDoiExample }}</pre
-                  >
+                    >{{ apiByDoiExample }}</pre>
                 </div>
 
                 <div
@@ -505,8 +503,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="max-h-44 min-h-[6rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
-                    >{{ apiCitationsByDoiExample }}</pre
-                  >
+                    >{{ apiCitationsByDoiExample }}</pre>
                 </div>
 
                 <div
@@ -627,8 +624,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="max-h-40 min-h-[5rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
-                    >{{ shieldsDataExample }}</pre
-                  >
+                    >{{ shieldsDataExample }}</pre>
                 </div>
               </UCard>
             </div>
@@ -747,8 +743,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="overflow-x-auto p-4 font-mono text-xs leading-relaxed break-all whitespace-pre-wrap"
-                    >{{ sEmbedSnippet }}</pre
-                  >
+                    >{{ sEmbedSnippet }}</pre>
                 </div>
               </div>
 
@@ -848,8 +843,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="max-h-44 min-h-[6rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
-                    >{{ apiByIdExample }}</pre
-                  >
+                    >{{ apiByIdExample }}</pre>
                 </div>
               </UCard>
 
@@ -956,8 +950,7 @@ const sEmbedSnippet = computed(
 
                   <pre
                     class="max-h-40 min-h-[5rem] overflow-auto rounded-lg border border-gray-200 bg-gray-50 p-3 font-mono text-xs dark:border-gray-700 dark:bg-gray-800/80"
-                    >{{ sShieldsDataExample }}</pre
-                  >
+                    >{{ sShieldsDataExample }}</pre>
                 </div>
               </UCard>
             </div>

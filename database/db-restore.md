@@ -36,9 +36,9 @@ docker exec <container_name> rm -rf /tmp/backup_dir
 
 ## Summary
 
-| Step | What it does |
-| ---- | ----------- |
-| `docker ps` | Finds the name of the running database container |
-| `docker cp` | Moves the backup into the container |
-| `pg_restore` | Restores the data into the database |
-| `rm -rf` | Cleans up the temporary backup files inside the container |
+| Step         | What it does                                              |
+| ------------ | --------------------------------------------------------- |
+| `docker ps`  | Finds the name of the running database container          |
+| `docker cp`  | Moves the backup into the container                       |
+| `pg_restore` | Restores the data into the database                       |
+| `rm -rf`     | Cleans up the temporary backup files inside the container |

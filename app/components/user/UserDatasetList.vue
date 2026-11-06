@@ -8,8 +8,7 @@ export interface DatasetListItem {
     _count: { citations: number; mentions: number };
     fujiScore?: { score: number | null } | null;
     datasetAuthors?:
-      | Author[]
-      | Array<{ name?: string; affiliations?: string[] }>;
+      Author[] | Array<{ name?: string; affiliations?: string[] }>;
     title?: string;
     description?: string | null;
     identifier?: string;

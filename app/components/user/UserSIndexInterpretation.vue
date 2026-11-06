@@ -40,6 +40,7 @@ const totalMentionsPercentile = computed(() =>
 
 function formatPercentile(percentile: number | null) {
   if (percentile === null) return "less than 1%";
+
   return `${percentile}%`;
 }
 </script>

@@ -25,8 +25,7 @@ function scoreToMessageAndColor(score: number | null | undefined): {
  */
 export default defineEventHandler(async (event) => {
   const params = event.context.params as
-    | { doi?: string | string[] }
-    | undefined;
+    { doi?: string | string[] } | undefined;
   const doiParam = params?.doi;
 
   if (!doiParam) {

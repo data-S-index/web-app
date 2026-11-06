@@ -35,6 +35,7 @@ defineProps<{
               class="rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-700"
               >"{{ example }}"</code
             >
+
             <span v-if="index < exactMatchExamples.length - 1"> or </span>
           </template>
         </span>

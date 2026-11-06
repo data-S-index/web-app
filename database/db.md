@@ -27,7 +27,7 @@ You should see a `postgres` service listed with a status of `running`.
 ## Connection details
 
 | Field    | Value         |
-|----------|---------------|
+| -------- | ------------- |
 | Host     | localhost     |
 | Port     | 43997         |
 | Database | s_index_local |

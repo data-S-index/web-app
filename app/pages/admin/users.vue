@@ -16,9 +16,7 @@ interface AdminUser {
   created: string;
 }
 
-const { data: users, status } = await useFetch<AdminUser[]>(
-  "/api/admin/users",
-);
+const { data: users, status } = await useFetch<AdminUser[]>("/api/admin/users");
 
 const columns = [
   { accessorKey: "name", header: "Name" },

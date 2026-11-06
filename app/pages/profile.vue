@@ -285,6 +285,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
                 >
                   public profile
                 </NuxtLink>
+
                 <span v-else>public profile</span>. Everything else is only
                 visible to you.
               </p>

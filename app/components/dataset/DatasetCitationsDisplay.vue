@@ -66,11 +66,7 @@ const paginatedCitations = computed(() => {
             </NuxtLink>
 
             <div class="flex flex-wrap gap-2">
-              <UBadge
-                v-if="citation.datacite"
-                color="success"
-                size="sm"
-              >
+              <UBadge v-if="citation.datacite" color="success" size="sm">
                 DataCite
               </UBadge>
 
@@ -87,11 +83,7 @@ const paginatedCitations = computed(() => {
                 </UBadge>
               </UTooltip>
 
-              <UBadge
-                v-if="citation.openAlex"
-                color="success"
-                size="sm"
-              >
+              <UBadge v-if="citation.openAlex" color="success" size="sm">
                 OpenAlex
               </UBadge>
             </div>

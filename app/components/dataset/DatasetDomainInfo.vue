@@ -84,7 +84,6 @@ defineProps<{
           >
             Scholar Data Model
           </p>
-
         </div>
       </div>
     </div>

@@ -71,10 +71,7 @@ const unclaimDataset = async () => {
 
 <template>
   <template v-if="loggedIn">
-    <UTooltip
-      v-if="!claimed"
-      text="Add this dataset to your profile"
-    >
+    <UTooltip v-if="!claimed" text="Add this dataset to your profile">
       <UButton
         color="primary"
         variant="outline"

@@ -16,9 +16,9 @@ proxy:
   host: <%= ENV["KAMAL_APP_DOMAIN"] %>
   # Proxy connects to your container on port 80 by default.
   app_port: 3000
-  forward_headers: true  # Forward client headers to your application
+  forward_headers: true # Forward client headers to your application
   healthcheck:
-    timeout: 60  # Health check timeout in seconds
+    timeout: 60 # Health check timeout in seconds
 
 # Credentials for your image host.
 registry:
@@ -39,7 +39,7 @@ env:
   clear:
     NODE_ENV: production
   secret:
-    - DATABASE_URL  # Database connection string
+    - DATABASE_URL # Database connection string
     - NUXT_APP_SECRET
     - MEILISEARCH_API_URL
     - MEILISEARCH_API_KEY

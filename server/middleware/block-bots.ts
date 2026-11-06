@@ -32,11 +32,13 @@ function takeToken(key: string): number | null {
   if (bucket.tokens < 1) {
     // Persist the refill we just calculated even though the request is denied
     buckets.set(key, bucket);
+
     return Math.ceil((1 - bucket.tokens) / REFILL_PER_SECOND);
   }
 
   bucket.tokens -= 1;
   buckets.set(key, bucket);
+
   return null;
 }
 
@@ -52,6 +54,7 @@ export default defineEventHandler((event) => {
   if (retryAfterSeconds !== null) {
     setResponseStatus(event, 429);
     setHeader(event, "Retry-After", retryAfterSeconds);
+
     return "Too Many Requests";
   }
 });

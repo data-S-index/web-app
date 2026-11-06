@@ -230,10 +230,7 @@ onUnmounted(() => {
               {{ service.latencyMs }}ms
             </span>
 
-            <UBadge
-              :color="STATUS_META[service.status].color"
-              size="sm"
-            >
+            <UBadge :color="STATUS_META[service.status].color" size="sm">
               {{ STATUS_META[service.status].label }}
             </UBadge>
           </div>

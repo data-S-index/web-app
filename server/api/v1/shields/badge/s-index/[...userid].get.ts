@@ -24,8 +24,7 @@ function scoreToMessageAndColor(score: number | null | undefined): {
  */
 export default defineEventHandler(async (event) => {
   const params = event.context.params as
-    | { userid?: string | string[] }
-    | undefined;
+    { userid?: string | string[] } | undefined;
   const useridParam = params?.userid;
 
   if (!useridParam) {
