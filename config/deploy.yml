@@ -40,7 +40,7 @@ env:
     NODE_ENV: production
   secret:
     - DATABASE_URL  # Database connection string
-    - NUXT_SESSION_PASSWORD
+    - NUXT_APP_SECRET
     - MEILISEARCH_API_URL
     - MEILISEARCH_API_KEY
     - REDIS_HOST
