@@ -42,3 +42,10 @@ body:
       description: Please provide a few URLs or DOIs for your datasets so we can test the ingestion pipeline.
     validations:
       required: true
+  - type: textarea
+    id: additional-info
+    attributes:
+      label: Additional Information
+      description: Any other comments, technical details, or specific requests for the Scholar Data team.
+    validations:
+      required: false
