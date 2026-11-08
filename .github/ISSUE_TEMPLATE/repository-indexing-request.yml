@@ -1,0 +1,44 @@
+name: Request for Scholar Data to track the impact of your datasets
+description: Submit a request to have datasets from your repository indexed and tracked by Scholar Data.
+title: "Request for Scholar Data to track the impact of your datasets: <Repository Name>"
+labels: ["indexing", "tracking"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for wanting Scholar Data to track your datasets! Please provide the technical details below so we can set up our harvesting pipeline.
+  - type: input
+    id: repo-name
+    attributes:
+      label: Repository or Platform Name
+      placeholder: e.g., Zenodo, My University Repo
+    validations:
+      required: true
+  - type: input
+    id: endpoint
+    attributes:
+      label: API or Harvesting Endpoint
+      description: Scholar Data registers minimal metadata to track datasets such as title, links, ID, and authors. Do you have an OAI-PMH endpoint, REST API, or GraphQL endpoint for automated metadata harvesting?
+      placeholder: e.g., https://api.myrepo.org/oai
+    validations:
+      required: true
+  - type: dropdown
+    id: metadata-schema
+    attributes:
+      label: Primary Metadata Schema
+      description: What standard format does your endpoint expose?
+      options:
+        - DataCite XML
+        - Schema.org (JSON-LD)
+        - DATS
+        - Dublin Core
+        - Custom / Other
+    validations:
+      required: true
+  - type: textarea
+    id: sample-data
+    attributes:
+      label: Sample Dataset URLs or Identifiers
+      description: Please provide a few URLs or DOIs for your datasets so we can test the ingestion pipeline.
+    validations:
+      required: true
