@@ -22,6 +22,14 @@ body:
       placeholder: e.g., https://api.myrepo.org/oai
     validations:
       required: true
+  - type: input
+    id: pid-type
+    attributes:
+      label: Persistent Identifier (PID) Type
+      description: What type of persistent identifier do you use for your datasets?
+      placeholder: e.g., DOI, Handle, ARK, PURL, or custom accession number
+    validations:
+      required: true
   - type: dropdown
     id: metadata-schema
     attributes:
