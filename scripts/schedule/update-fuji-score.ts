@@ -296,7 +296,6 @@ async function main() {
   let failed = 0;
   let hardcoded = 0;
   let organic = 0;
-  const failedIds: number[] = [];
   let consecutiveClaimFailures = 0;
   const startTime = Date.now();
 
@@ -319,6 +318,7 @@ async function main() {
       if (consecutiveClaimFailures >= MAX_CONSECUTIVE_CLAIM_FAILURES) {
         throw new Error(
           `Aborting after ${consecutiveClaimFailures} consecutive claim failures`,
+          { cause: error },
         );
       }
 
@@ -351,7 +351,6 @@ async function main() {
       processed++;
     } catch (error) {
       failed++;
-      failedIds.push(job.datasetId);
       console.error(`[${ts()}] Failed dataset ${job.datasetId}:`, error);
     }
 
@@ -372,7 +371,6 @@ async function main() {
       processed,
       failed,
       elapsedSeconds,
-      failedIds,
       extraFields: { Hardcoded: hardcoded, Organic: organic },
     });
   }

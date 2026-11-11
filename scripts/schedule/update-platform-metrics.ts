@@ -64,7 +64,12 @@ async function datasetsByYear() {
 
 async function institutions(topN: number) {
   const rows = await prisma.$queryRaw<{ name: string; value: bigint }[]>`
-    SELECT o.name, COUNT(aod."datasetId") AS value
+    SELECT
+      CASE
+        WHEN LOWER(TRIM(o.name)) IN ('', 'none') THEN 'Other'
+        ELSE o.name
+      END AS name,
+      COUNT(aod."datasetId") AS value
     FROM "AutomatedOrganization" o
     JOIN "AutomatedOrganizationDataset" aod ON aod."automatedOrganizationId" = o.id
     GROUP BY o.id, o.name
