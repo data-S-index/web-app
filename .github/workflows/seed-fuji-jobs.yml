@@ -53,7 +53,20 @@ jobs:
 
           # psql prints "INSERT 0 <rows>" for the seed insert
           inserted=$(echo "$output" | awk '/^INSERT/ { print $3 }' | tail -1)
+
+          # Datasets still without a FUJI score, and jobs currently in the queue
+          counts=$(psql "$DATABASE_URL" -tA -F ' ' -c '
+            SELECT
+              (SELECT COUNT(*) FROM "Dataset" d
+                 LEFT JOIN "FujiScore" f ON d."id" = f."datasetId"
+                 WHERE f."datasetId" IS NULL),
+              (SELECT COUNT(*) FROM "FujiJob");
+          ' 2>/dev/null) || counts=""
+          read -r remaining queued <<< "$counts"
+          echo "Remaining without FUJI score: ${remaining:-unknown}, jobs in queue: ${queued:-unknown}"
+
           bash .github/scripts/notify-discord.sh \
-            "✅ ${{ github.workflow }} finished" \
-            "Queued ${inserted:-0} new FUJI jobs." \
+            "${{ github.workflow }} finished" \
+            "$(printf 'Queued %s new FUJI jobs.\nTotal jobs in queue: %s\nDatasets remaining without a FUJI score: %s' \
+              "${inserted:-0}" "${queued:-unknown}" "${remaining:-unknown}")" \
             success
