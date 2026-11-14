@@ -34,7 +34,6 @@
     "@nuxtjs/robots": "7.0.2",
     "@nuxtjs/sitemap": "9.1.0",
     "@resvg/resvg-js": "2.6.2",
-    "@umami/node": "0.4.0",
     "@vueuse/core": "15.0.0",
     "badge-maker": "6.0.0",
     "bcrypt": "6.0.0",

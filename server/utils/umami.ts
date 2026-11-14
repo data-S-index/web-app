@@ -1,38 +1,18 @@
 import type { H3Event } from "h3";
-import { Umami } from "@umami/node";
 import { consola } from "consola";
 import { getDoiSource } from "./reference";
 
 // Same website as the frontend tracker in app/app.vue
 const UMAMI_WEBSITE_ID = "a259fbbd-af7d-4fa6-b940-408f301706f2";
 
-// Rename the collect endpoint to /api/harvest - see the tracker script at /mushroom. @umami/node hardcodes /api/send, so override send() to post to the custom endpoint instead.
-const UMAMI_COLLECT_PATH = "/api/harvest";
+const UMAMI_HOST_URL =
+  process.env.UMAMI_HOST_URL || "https://umami.fairdataihub.org";
 
-class CustomEndpointUmami extends Umami {
-  override send(
-    payload: Parameters<Umami["send"]>[0],
-    type: "event" | "identify" = "event",
-  ) {
-    const { hostUrl, userAgent } = this.options;
-
-    return fetch(`${hostUrl}${UMAMI_COLLECT_PATH}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "User-Agent": userAgent || "Mozilla/5.0",
-      },
-      body: JSON.stringify({ type, payload }),
-    });
-  }
-}
-
-const umami = new CustomEndpointUmami({
-  hostUrl: process.env.UMAMI_HOST_URL || "https://umami.fairdataihub.org",
-  websiteId: UMAMI_WEBSITE_ID,
-  // Umami drops anything that looks like a bot, so use a browser-like UA
-  userAgent: "Mozilla/5.0 (Server; ScholarData API)",
-});
+// A User-Agent is required, and Umami silently drops anything that looks
+// like a bot (responds 200 with {"beep":"boop"}). Short or generic UAs like
+// "Mozilla/5.0 (Server)" trip its bot check, so send a full browser UA.
+const UMAMI_USER_AGENT =
+  "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36";
 
 const getHostname = () => {
   try {
@@ -60,11 +40,30 @@ interface UmamiEvent {
 export function trackUmamiEvent(event: H3Event, umamiEvent: UmamiEvent) {
   if (process.env.NUXT_SITE_ENV === "development") return;
 
-  const request = umami
-    .track({ hostname: getHostname(), language: "en-US", ...umamiEvent })
-    .then((res) => {
+  const request = fetch(`${UMAMI_HOST_URL}/api/send`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "User-Agent": UMAMI_USER_AGENT,
+    },
+    body: JSON.stringify({
+      type: "event",
+      payload: {
+        website: UMAMI_WEBSITE_ID,
+        hostname: getHostname(),
+        language: "en-US",
+        ...umamiEvent,
+      },
+    }),
+  })
+    .then(async (res) => {
+      const body = await res.text();
+
       if (!res.ok) {
-        consola.warn(`Umami tracking failed: ${res.status} ${res.statusText}`);
+        consola.warn(`Umami tracking failed: ${res.status} ${body}`);
+      } else if (body.includes("beep")) {
+        // Umami returns 200 {"beep":"boop"} when it drops a request as a bot
+        consola.warn("Umami tracking dropped: request flagged as a bot");
       }
     })
     .catch((err) => consola.warn("Umami tracking failed:", err));
