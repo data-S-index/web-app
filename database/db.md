@@ -14,7 +14,7 @@ From the root of the project, run:
 docker compose -f dev-docker-compose.yaml up -d
 ```
 
-The `-d` flag runs the containers in the background. Docker will pull the required images on the first run — this may take a minute.
+The `-d` flag runs the containers in the background. Docker will pull the required images on the first run - this may take a minute.
 
 ## Verifying it is running
 

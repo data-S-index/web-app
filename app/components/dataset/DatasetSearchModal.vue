@@ -234,7 +234,7 @@ watch(
     }
   },
   // The modal's body content is only mounted once it's already open, so the
-  // prop starts out `true` with no prior `false` to transition from — without
+  // prop starts out `true` with no prior `false` to transition from - without
   // `immediate` this watcher would never fire on that first open.
   { immediate: true },
 );

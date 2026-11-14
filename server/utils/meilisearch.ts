@@ -23,7 +23,7 @@ declare const globalThis: {
 };
 
 // Resolved lazily (on first property access) rather than at module load, so
-// importing this file doesn't require the Meilisearch env vars to be set —
+// importing this file doesn't require the Meilisearch env vars to be set -
 // e.g. during the Nitro build, which loads every server route's module graph.
 function resolveMeilisearchClient() {
   if (globalThis.meilisearchGlobal) return globalThis.meilisearchGlobal;

@@ -216,7 +216,7 @@ const sEmbedSnippet = computed(
   >
     <UPageCTA
       title="Integrations"
-      description="Data repositories and researchers can use the embedded widget or API to display Dataset Index and S-index metrics on their own platforms — dataset pages, lab sites, or personal websites"
+      description="Data repositories and researchers can use the embedded widget or API to display Dataset Index and S-index metrics on their own platforms - dataset pages, lab sites, or personal websites"
       variant="naked"
       :ui="{ container: '!py-5' }"
     />

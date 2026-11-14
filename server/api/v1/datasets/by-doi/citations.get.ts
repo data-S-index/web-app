@@ -13,10 +13,6 @@ const RATE_LIMIT_CONFIG = {
   keyPrefix: "v1:datasets:by-doi:citations",
 };
 
-// exempt from rate limiting
-const PHYSIONET_DOI_PREFIX = "10.13026";
-const NIH_SPARC_PREFIX = "10.26275";
-
 const parsePositiveInt = (value: unknown, fallback: number) => {
   const parsed = parseInt(String(value ?? ""), 10);
 
@@ -50,10 +46,10 @@ export default defineEventHandler(async (event) => {
   // Normalize DOI (handles encoded values like %2F, full URLs, and case)
   const normalizedDoi = normalizeDoi(doiParam);
 
-  if (
-    !normalizedDoi.startsWith(PHYSIONET_DOI_PREFIX) &&
-    !normalizedDoi.startsWith(NIH_SPARC_PREFIX)
-  ) {
+  // PhysioNet and SPARC DOIs are exempt from rate limiting
+  const doiSource = getDoiSource(normalizedDoi);
+
+  if (doiSource === "other") {
     const identifier = await getRateLimitIdentifier(event);
     const rateLimitResult = await checkRateLimit(identifier, RATE_LIMIT_CONFIG);
 
@@ -81,6 +77,8 @@ export default defineEventHandler(async (event) => {
     );
     setHeader(event, "X-RateLimit-Reset", rateLimitResult.resetAt.toString());
   }
+
+  trackByDoiRequest(event, "by-doi-citations", normalizedDoi);
 
   const cacheKey = `${CACHE_KEY_PREFIX}:${normalizedDoi}:${page}:${pageSize}`;
   const redis = getRedisClient();

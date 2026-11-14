@@ -12,7 +12,7 @@ const submitSchema = z.object({
  * POST /api/fuji-job/submit
  * Persists a score for a previously claimed job. The caller is responsible
  * for deciding the score, metricVersion, and softwareVersion (e.g. via a
- * hardcoded shortcut or a FUJI evaluation) — this endpoint only stores it
+ * hardcoded shortcut or a FUJI evaluation) - this endpoint only stores it
  * if it's higher than the dataset's existing score.
  */
 export default defineEventHandler(async (event) => {

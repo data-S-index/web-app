@@ -72,7 +72,7 @@ const main = async () => {
 
   if (!BUNNY_BASE || !BUNNY_KEY) {
     throw new Error(
-      "BUNNY_STORAGE_BASE or BUNNY_STORAGE_API_KEY not set — cannot upload backup.",
+      "BUNNY_STORAGE_BASE or BUNNY_STORAGE_API_KEY not set - cannot upload backup.",
     );
   }
 

@@ -150,9 +150,9 @@ All dynamic content (datasets ~70M, users ~4M, orgs ~250k) is pre-generated as s
    - `orgs-0.xml`, `orgs-1.xml`, …
    - `<type>-index.xml` for each type (sitemap index referencing all chunks)
 
-   When finished, the script prints the three chunk counts — note them down.
+   When finished, the script prints the three chunk counts - note them down.
 
-2. **Upload to the CDN** — copy the entire `output/sitemaps/` folder to `cdn.scholardata.io/sitemaps/`.
+2. **Upload to the CDN** - copy the entire `output/sitemaps/` folder to `cdn.scholardata.io/sitemaps/`.
 
 3. **Update `nuxt.config.ts`** with the three numbers printed by the script:
 

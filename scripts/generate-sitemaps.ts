@@ -92,7 +92,7 @@ async function generateSitemapFiles<T extends { id: number }>(opts: {
   const { prefix, total, fetchBatch, toEntry } = opts;
 
   consola.start(
-    `${prefix}  —  ${total.toLocaleString()} rows  (~${Math.ceil(total / CHUNK_SIZE).toLocaleString()} chunks)`,
+    `${prefix}  -  ${total.toLocaleString()} rows  (~${Math.ceil(total / CHUNK_SIZE).toLocaleString()} chunks)`,
   );
 
   const startMs = Date.now();
@@ -138,7 +138,7 @@ async function generateSitemapFiles<T extends { id: number }>(opts: {
 
   const elapsed = ((Date.now() - startMs) / 1000).toFixed(1);
   consola.success(
-    `${prefix}  —  ${chunkIndex} chunk(s) + index  (${elapsed}s)`,
+    `${prefix}  -  ${chunkIndex} chunk(s) + index  (${elapsed}s)`,
   );
 
   return chunkIndex;
@@ -246,7 +246,7 @@ async function main() {
 
   if (!BUNNY_BASE || !BUNNY_KEY) {
     consola.warn(
-      "BUNNY_STORAGE_BASE or BUNNY_STORAGE_API_KEY not set — skipping upload.",
+      "BUNNY_STORAGE_BASE or BUNNY_STORAGE_API_KEY not set - skipping upload.",
     );
   } else {
     consola.start("Uploading to Bunny CDN...");
