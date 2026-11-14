@@ -44,3 +44,6 @@ output/sitemaps/
 fair-scores-bf-discover.json
 pre-fair-scores-bf-discover.json
 post-fair-scores-bf-discover.json
+
+# Local analysis
+.dev.local/
