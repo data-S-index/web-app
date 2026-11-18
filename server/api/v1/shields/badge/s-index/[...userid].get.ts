@@ -1,4 +1,6 @@
 import { makeBadge } from "badge-maker";
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, createError, setResponseHeader } from "h3";
 
 const LABEL = "S-index";
 const LABEL_COLOR = "gray";

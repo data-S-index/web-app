@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useSeoMeta } from "#app";
+import { defineOgImage } from "#imports";
+import { ref } from "vue";
+import { UCard, UContainer } from "#components";
+
 useSeoMeta({
   title: "Contact Us",
   description:

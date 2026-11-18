@@ -1,3 +1,7 @@
+import prisma from "#server/utils/prisma";
+import { defineEventHandler } from "h3";
+import { requireFujiJobSecret } from "#server/utils/requireFujiJobSecret";
+
 async function claimNextJob(): Promise<number | null> {
   const rows = await prisma.$queryRaw<{ datasetId: number }[]>`
     DELETE FROM "FujiJob"

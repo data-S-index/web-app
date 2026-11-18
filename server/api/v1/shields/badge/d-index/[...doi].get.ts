@@ -1,5 +1,7 @@
 import { makeBadge } from "badge-maker";
 import normalizeDoi from "~~/server/utils/doi";
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, createError, setResponseHeader } from "h3";
 
 const LABEL = "Dataset Index";
 const LABEL_COLOR = "gray";

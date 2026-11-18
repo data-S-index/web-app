@@ -1,4 +1,24 @@
 <script setup lang="ts">
+import SearchTips from "~/components/search/SearchTips.vue";
+import { useSeoMeta, useRoute, useRouter } from "#app";
+import { defineOgImage, useToast } from "#imports";
+import { ref, watch, onMounted } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UPageHeader,
+  UInput,
+  UButton,
+  Icon,
+  UBadge,
+  UTooltip,
+  NuxtLink,
+  USeparator,
+  UPagination,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
+
 useSeoMeta({
   title: "Search Datasets",
   description: "Search for datasets by title, DOI, or keywords.",

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useRuntimeConfig } from "#app";
+import { UButton, UAlert } from "#components";
+
 const maintenanceMode =
   (useRuntimeConfig().public?.maintenanceMode as boolean) ?? false;
 </script>

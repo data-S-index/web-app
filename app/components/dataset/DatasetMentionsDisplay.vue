@@ -1,5 +1,9 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import CardCollapsibleContent from "~/components/card/CollapsibleContent.vue";
+import { computed, ref } from "vue";
+import { NuxtLink, UBadge, UEmpty, UPagination } from "#components";
+
 const props = defineProps<{
   mentions: Array<{
     mentionLink: string;

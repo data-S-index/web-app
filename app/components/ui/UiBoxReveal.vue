@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { Motion } from "motion-v";
 import type { HTMLAttributes } from "vue";
+import cn from "~/utils/cn";
 
 interface BoxRevealProps {
   // eslint-disable-next-line vue/require-default-prop

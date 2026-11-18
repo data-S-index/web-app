@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Motion } from "motion-v";
+import { ref, useSlots, onMounted, watchEffect } from "vue";
 
 interface Props {
   blur?: string;

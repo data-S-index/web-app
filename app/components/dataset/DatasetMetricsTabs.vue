@@ -1,5 +1,10 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import DatasetDIndexPlot from "~/components/dataset/DatasetDIndexPlot.vue";
+import DatasetCitationsCumulativePlot from "~/components/dataset/DatasetCitationsCumulativePlot.vue";
+import DatasetMentionsCumulativePlot from "~/components/dataset/DatasetMentionsCumulativePlot.vue";
+import { UCard, UAlert, UTabs } from "#components";
+
 defineProps<{
   dataset: any;
 }>();

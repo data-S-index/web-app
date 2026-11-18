@@ -103,6 +103,7 @@
     "nuxt": "4.6.3",
     "nuxt-auth-utils": "0.6.0",
     "nuxt-echarts": "1.1.0",
+    "nuxt-explicit-imports": "0.1.0",
     "prettier": "3.9.10",
     "prettier-plugin-tailwindcss": "0.8.1",
     "prisma": "7.10.1",

@@ -1,5 +1,7 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import { UIcon, NuxtLink, UCard } from "#components";
+
 defineProps<{
   domain:
     | {

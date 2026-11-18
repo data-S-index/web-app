@@ -1,4 +1,24 @@
 <script setup lang="ts">
+import SearchTips from "~/components/search/SearchTips.vue";
+import SearchResultsList from "~/components/search/SearchResultsList.vue";
+import { useSeoMeta, useRoute, useRouter } from "#app";
+import { defineOgImage, useToast } from "#imports";
+import { ref, watch, onMounted } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UPageHeader,
+  UInput,
+  UButton,
+  UCheckbox,
+  Icon,
+  UBadge,
+  USeparator,
+  UPagination,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
+
 useSeoMeta({
   title: "Search Users",
   description: "Search for researchers by name, identifiers, or affiliations.",

@@ -1,3 +1,7 @@
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, createError } from "h3";
+import { getUserSession } from "#imports";
+
 async function fetchDataset(datasetId: number) {
   // Counts are fetched separately: Prisma's `_count` include aggregates the
   // whole Citation/Mention tables before filtering, which doesn't use the index.

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { Icon, NuxtLink } from "#components";
+
 defineProps<{
   tips: string[];
   exactMatchExamples?: string[];

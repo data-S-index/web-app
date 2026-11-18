@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useSeoMeta, useNuxtApp, useAsyncData } from "#app";
+import { defineOgImage, queryCollection } from "#imports";
+import { UPageCTA, UBadge, UIcon, NuxtLink } from "#components";
+
 useSeoMeta({
   title: "Announcements",
   description: "News, press mentions, and updates from the Scholar Data team.",

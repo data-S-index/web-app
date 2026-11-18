@@ -1,6 +1,23 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 import type { Author } from "#shared/types/dataset";
+import MarkdownRenderer from "~/components/markdown/MarkdownRenderer.vue";
+import DatasetCitationsDisplay from "~/components/dataset/DatasetCitationsDisplay.vue";
+import DatasetMentionsDisplay from "~/components/dataset/DatasetMentionsDisplay.vue";
+import DatasetMetricsTabs from "~/components/dataset/DatasetMetricsTabs.vue";
+import DatasetDomainInfo from "~/components/dataset/DatasetDomainInfo.vue";
+import DatasetNormalizationFactors from "~/components/dataset/DatasetNormalizationFactors.vue";
+import { computed } from "vue";
+import {
+  UIcon,
+  UBadge,
+  UButton,
+  UTooltip,
+  UPageHeader,
+  UCard,
+  UAlert,
+  UPageBody,
+} from "#components";
 
 const props = defineProps<{
   dataset: any;

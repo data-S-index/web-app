@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import { formatDistanceToNow } from "date-fns";
+import { useSeoMeta, useFetch } from "#app";
+import { defineOgImage } from "#imports";
+import { computed, onMounted, onUnmounted } from "vue";
+import { setInterval } from "#app/compat/interval";
+import {
+  UPageCTA,
+  UAlert,
+  UCard,
+  UButton,
+  UBadge,
+  UProgress,
+} from "#components";
 
 useSeoMeta({
   title: "Job Status",

@@ -1,4 +1,17 @@
 <script setup lang="ts">
+import { useSeoMeta, useRuntimeConfig, useFetch } from "#app";
+import { defineOgImage } from "#imports";
+import { ref, computed } from "vue";
+import {
+  UPageCTA,
+  UInput,
+  UButton,
+  UCard,
+  UIcon,
+  NuxtLink,
+  UTabs,
+} from "#components";
+
 useSeoMeta({
   title: "Integrations",
   description:

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useSeoMeta } from "#app";
+import { defineOgImage } from "#imports";
+
 useSeoMeta({
   title: "Page Not Found",
   description: "The page you're looking for doesn't exist.",

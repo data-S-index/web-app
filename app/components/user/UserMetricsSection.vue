@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import UserSIndexInterpretation from "~/components/user/UserSIndexInterpretation.vue";
+import UserSIndexPlot from "~/components/user/UserSIndexPlot.vue";
+import UserCumulativeCitationsPlot from "~/components/user/UserCumulativeCitationsPlot.vue";
+import UserCumulativeMentionsPlot from "~/components/user/UserCumulativeMentionsPlot.vue";
+
 defineProps<{
   sindex: number;
   datasetCount: number;

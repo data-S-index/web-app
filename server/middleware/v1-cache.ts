@@ -1,3 +1,5 @@
+import { defineEventHandler, setHeader } from "h3";
+
 const CACHE_MAX_AGE_SECONDS = 60 * 60 * 24;
 
 export default defineEventHandler((event) => {

@@ -1,6 +1,20 @@
 <script setup lang="ts">
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
+import { definePageMeta } from "#app/composables/pages";
+import { useSeoMeta, useRoute } from "#app";
+import { defineOgImage, useToast } from "#imports";
+import { ref, computed, reactive } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  Icon,
+  NuxtLink,
+  UInput,
+  UFormField,
+  UButton,
+  UForm,
+  UCard,
+} from "#components";
 
 definePageMeta({
   layout: "auth",

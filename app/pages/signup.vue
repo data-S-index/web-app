@@ -2,6 +2,23 @@
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
 import { generateUsername } from "unique-username-generator";
+import { useRuntimeConfig, navigateTo, useSeoMeta } from "#app";
+import { useUserSession, defineOgImage, useToast } from "#imports";
+import { definePageMeta } from "#app/composables/pages";
+import { ref, reactive, watch } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  NuxtLink,
+  UAlert,
+  UInput,
+  UButton,
+  UTooltip,
+  UFormField,
+  Icon,
+  USwitch,
+  UForm,
+  UCard,
+} from "#components";
 
 const config = useRuntimeConfig();
 const { environment } = config.public;

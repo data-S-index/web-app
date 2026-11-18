@@ -1,3 +1,5 @@
+import { defineEventHandler } from "h3";
+
 // Logs every page (frontend) and API (backend) request once the response is
 // sent. Static assets are skipped so they don't drown out the useful lines.
 

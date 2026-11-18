@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UAvatar, UBadge, UTooltip, UButton, NuxtLink } from "#components";
+
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 const percentFormatter = Intl.NumberFormat("en", {
   style: "percent",

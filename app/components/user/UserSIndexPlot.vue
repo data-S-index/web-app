@@ -1,5 +1,8 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import { computed } from "vue";
+import { VChart, UAlert, Icon, ClientOnly, UCard } from "#components";
+
 const props = defineProps<{
   sindexOverTime: {
     years: number[];

@@ -1,5 +1,33 @@
 <script setup lang="ts">
 import type { DatasetListItem } from "~/components/user/UserDatasetList.vue";
+import UserMetricsSection from "~/components/user/UserMetricsSection.vue";
+import UserDatasetList from "~/components/user/UserDatasetList.vue";
+import DatasetSearchModal from "~/components/dataset/DatasetSearchModal.vue";
+import { useUserSession, useToast, defineOgImage } from "#imports";
+import {
+  useRoute,
+  useRuntimeConfig,
+  useFetch,
+  useLazyFetch,
+  useSeoMeta,
+} from "#app";
+import { computed, ref } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UAvatar,
+  UIcon,
+  NuxtLink,
+  UBadge,
+  UPageHeader,
+  UCard,
+  USeparator,
+  UButton,
+  UEmpty,
+  UModal,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
 
 interface UserDatasetItem {
   datasetId: number;

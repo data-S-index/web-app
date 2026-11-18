@@ -2,6 +2,13 @@ import { z } from "zod";
 import { randomBytes, createHash } from "crypto";
 import { Resend } from "resend";
 import { checkRateLimit, getRateLimitIdentifier } from "../../utils/rateLimit";
+import prisma from "#server/utils/prisma";
+import {
+  defineEventHandler,
+  createError,
+  readValidatedBody,
+  setHeader,
+} from "h3";
 
 const FORGOT_PASSWORD_IP_RATE_LIMIT = {
   maxRequests: 10,

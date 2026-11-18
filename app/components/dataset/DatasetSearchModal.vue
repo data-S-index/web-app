@@ -1,4 +1,18 @@
 <script setup lang="ts">
+import SearchTips from "~/components/search/SearchTips.vue";
+import { useToast } from "#imports";
+import { ref, computed, watch } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UInput,
+  UButton,
+  Icon,
+  UCheckbox,
+  USeparator,
+  UBadge,
+  UPagination,
+} from "#components";
+
 const props = defineProps<{
   userid: string;
   userName: string;

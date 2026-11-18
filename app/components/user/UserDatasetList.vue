@@ -1,5 +1,17 @@
 <script setup lang="ts">
 import type { Author } from "#shared/types/dataset";
+import MarkdownRenderer from "~/components/markdown/MarkdownRenderer.vue";
+import { useToast } from "#imports";
+import { ref, computed, watch } from "vue";
+import {
+  UButton,
+  UTooltip,
+  NuxtLink,
+  UPopover,
+  UBadge,
+  UCard,
+  UPagination,
+} from "#components";
 
 export interface DatasetListItem {
   datasetId: number;

@@ -1,3 +1,6 @@
+import prisma from "#server/utils/prisma";
+import { defineEventHandler } from "h3";
+
 // Live job data that's cheap to read: queue tables stay small because workers
 // delete rows as they go, and IngestLog has one row per source and day.
 // Figures that need a full scan are precomputed into /api/metrics instead.

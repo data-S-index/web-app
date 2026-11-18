@@ -1,3 +1,6 @@
+import { defineEventHandler, createError } from "h3";
+import { getUserSession } from "#imports";
+
 // If the user does not exist on the request, throw a 401 error
 export default defineEventHandler(async (event) => {
   const session = await getUserSession(event);

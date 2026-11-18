@@ -1,5 +1,24 @@
 <script setup lang="ts">
 import type { NavigationMenuItem } from "@nuxt/ui";
+import UiAuroraBackground from "~/components/ui/UiAuroraBackground.vue";
+import { useUserSession } from "#imports";
+import { useRoute, useRuntimeConfig, navigateTo } from "#app";
+import { computed } from "vue";
+import {
+  NuxtLink,
+  UNavigationMenu,
+  UButton,
+  UTooltip,
+  UColorModeButton,
+  UAvatar,
+  Icon,
+  AuthState,
+  UHeader,
+  UAlert,
+  UMain,
+  USeparator,
+  UFooter,
+} from "#components";
 
 const { clear, user, loggedIn: loggedInSession } = useUserSession();
 const route = useRoute();

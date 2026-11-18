@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { hash } from "bcrypt";
 import { createHash } from "crypto";
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, readValidatedBody, createError } from "h3";
 
 const schema = z.object({
   token: z.string().trim().min(1, "Token is required"),

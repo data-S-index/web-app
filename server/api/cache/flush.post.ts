@@ -1,3 +1,6 @@
+import { defineEventHandler } from "h3";
+import { getRedisClient } from "#server/utils/redis";
+
 /**
  * POST /api/cache/flush
  * Flushes the current Redis database (cache). Use with care.

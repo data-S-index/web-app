@@ -1,3 +1,10 @@
+import { defineEventHandler, createError, getQuery, setHeader } from "h3";
+import {
+  getRateLimitIdentifier,
+  checkRateLimit,
+} from "#server/utils/rateLimit";
+import { getRedisClient } from "#server/utils/redis";
+
 // Rate limit configuration: 5 requests per minute per user/IP (stricter)
 const RATE_LIMIT_CONFIG = {
   maxRequests: 5,

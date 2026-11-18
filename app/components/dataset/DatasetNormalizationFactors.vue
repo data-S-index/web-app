@@ -1,5 +1,7 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import { UIcon, NuxtLink, UCard } from "#components";
+
 const props = defineProps<{
   /** Either { FT, CTw, MTw, n_year_gap, method } or { ft, ctw, mtw, topicIdUsed, yearUsed, ... } */
   normalizationFactors: any;

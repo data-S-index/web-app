@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import {
+  useRoute,
+  useNuxtApp,
+  useAsyncData,
+  createError,
+  navigateTo,
+  useSeoMeta,
+} from "#app";
+import { queryCollection, defineOgImage } from "#imports";
+import { UButton, UPageCTA, ContentRenderer, UCard } from "#components";
+
 const route = useRoute();
 const { $dayjs } = useNuxtApp();
 
