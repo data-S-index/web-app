@@ -1,5 +1,8 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import { computed } from "vue";
+import { UAlert, VChart, Icon, ClientOnly } from "#components";
+
 const props = defineProps<{
   citations:
     | Array<{ citedDate?: string | null; citationWeight?: number | null }>

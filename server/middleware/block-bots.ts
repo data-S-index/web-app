@@ -1,3 +1,5 @@
+import { defineEventHandler, setResponseStatus, setHeader } from "h3";
+
 const BLOCKED_USER_AGENTS = [
   "meta-externalagent/1.1",
   "ClaudeBot/1.0",

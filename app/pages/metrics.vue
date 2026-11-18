@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useSeoMeta, useFetch } from "#app";
+import { defineOgImage } from "#imports";
+import { computed, ref } from "vue";
+import { UPageCTA, UButton, UCard, VChart, ClientOnly } from "#components";
+
 useSeoMeta({
   title: "Metrics",
   description: "Platform statistics and metrics for Scholar Data.",

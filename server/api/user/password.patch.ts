@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { compare, hash } from "bcrypt";
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, readValidatedBody, createError } from "h3";
+import { requireUserSession } from "#imports";
 
 const schema = z.object({
   currentPassword: z.string().min(8),

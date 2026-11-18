@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { UIcon } from "#components";
+
 defineProps<{ to?: string }>();
 </script>
 

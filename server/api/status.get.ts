@@ -1,3 +1,8 @@
+import prisma from "#server/utils/prisma";
+import meilisearch from "#server/utils/meilisearch";
+import { defineEventHandler } from "h3";
+import { getRedisClient } from "#server/utils/redis";
+
 type ServiceStatus = "operational" | "degraded" | "down";
 
 interface ServiceCheck {

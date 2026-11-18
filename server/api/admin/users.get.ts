@@ -1,3 +1,7 @@
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, createError } from "h3";
+import { requireAdminSession } from "#server/utils/requireAdminSession";
+
 export default defineEventHandler(async (event) => {
   await requireAdminSession(event);
 

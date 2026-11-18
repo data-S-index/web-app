@@ -1,3 +1,5 @@
+import { getRedisClient } from "#server/utils/redis";
+
 // Admin-controlled kill switch for the /api/dataset/* endpoints. The flag lives
 // in Redis so it survives restarts and is shared across instances, but is
 // cached in memory so the middleware doesn't hit Redis on every request.

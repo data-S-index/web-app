@@ -1,3 +1,7 @@
+import { defineEventHandler, readBody, createError } from "h3";
+import { requireAdminSession } from "#server/utils/requireAdminSession";
+import { setDatasetApiBlocked } from "#server/utils/datasetApiBlock";
+
 export default defineEventHandler(async (event) => {
   const session = await requireAdminSession(event);
 

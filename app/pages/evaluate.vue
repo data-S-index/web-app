@@ -1,6 +1,24 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
 import { openAlexTopics } from "@/utils/data";
+import DatasetResponseDisplay from "~/components/dataset/DatasetResponseDisplay.vue";
+import { useRoute, useSeoMeta } from "#app";
+import { useToast, defineOgImage } from "#imports";
+import { ref, computed, watch } from "vue";
+import {
+  UPageHeader,
+  UButton,
+  UFieldGroup,
+  UInput,
+  USelectMenu,
+  UCard,
+  USeparator,
+  UIcon,
+  UEmpty,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
 
 const route = useRoute();
 const toast = useToast();

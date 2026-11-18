@@ -15,6 +15,7 @@ import {
 } from "@vueuse/core";
 
 import { ref, watch, computed } from "vue";
+import cn from "~/utils/cn";
 
 type TransitionsPresetsKeys = keyof typeof TransitionPresets;
 
@@ -31,6 +32,7 @@ interface NumberTickerProps {
 const spanRef = ref<HTMLSpanElement>();
 
 const props = withDefaults(defineProps<NumberTickerProps>(), {
+  class: "",
   value: 0,
   direction: "up",
   delay: 0,

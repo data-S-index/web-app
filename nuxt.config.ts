@@ -31,6 +31,9 @@ export default defineNuxtConfig({
     defaultTimezone: "America/Los_Angeles",
     plugins: ["relativeTime", "utc", "timezone"],
   },
+  explicitImports: {
+    mode: { imports: "strict", components: "strict", server: "strict" },
+  },
   modules: [
     "@nuxt/ui",
     "nuxt-auth-utils",
@@ -46,6 +49,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "nuxt-schema-org",
     "nuxt-link-checker",
+    "nuxt-explicit-imports",
   ],
   runtimeConfig: {
     public: {

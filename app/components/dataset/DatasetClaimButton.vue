@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useUserSession, useToast } from "#imports";
+import { ref } from "vue";
+import { $fetch } from "#build/fetch";
+import { UButton, UTooltip, UPopover } from "#components";
+
 const props = defineProps<{
   datasetId: number;
   initialClaimed: boolean;

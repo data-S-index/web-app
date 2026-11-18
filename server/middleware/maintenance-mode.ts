@@ -1,3 +1,6 @@
+import { defineEventHandler, createError } from "h3";
+import { useRuntimeConfig } from "nitropack/runtime";
+
 const BLOCKED_ROUTES: { method: string; path: string }[] = [
   { method: "POST", path: "/api/auth/login" },
   { method: "POST", path: "/api/auth/signup" },

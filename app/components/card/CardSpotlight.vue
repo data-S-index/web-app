@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const props = withDefaults(
   defineProps<{

@@ -1,3 +1,6 @@
+import { defineEventHandler, setResponseStatus, setHeader } from "h3";
+import { getClientIp } from "#server/utils/ip";
+
 // Global per-IP rate limit. Kept fully in-memory so throttled requests never
 // touch Redis or the database.
 

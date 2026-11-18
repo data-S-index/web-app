@@ -1,6 +1,23 @@
 <script setup lang="ts">
 import { useColorMode } from "@vueuse/core";
 import type { ButtonProps } from "@nuxt/ui";
+import CardSpotlight from "~/components/card/CardSpotlight.vue";
+import { useSeoMeta, useHead, useFetch } from "#app";
+import { useSchemaOrg, defineOgImage, useUserSession } from "#imports";
+import { defineWebPage, defineQuestion } from "@unhead/schema-org/vue";
+import { computed, ref } from "vue";
+import {
+  UBadge,
+  UIcon,
+  UPageHero,
+  UButton,
+  NuxtLink,
+  UPageSection,
+  UCard,
+  USeparator,
+  UAccordion,
+  UMarquee,
+} from "#components";
 
 // Force light mode
 useColorMode().value = "light";

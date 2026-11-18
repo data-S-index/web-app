@@ -1,6 +1,28 @@
 <script setup lang="ts">
 import { z } from "zod";
 import type { FormSubmitEvent } from "#ui/types";
+import { definePageMeta } from "#app/composables/pages";
+import { useUserSession, defineOgImage, useToast } from "#imports";
+import { useSeoMeta, navigateTo, useFetch } from "#app";
+import { ref, reactive, computed, watch } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UAvatar,
+  UBadge,
+  UTooltip,
+  NuxtLink,
+  UPageHeader,
+  UInput,
+  UFormField,
+  UButton,
+  ClientOnly,
+  UForm,
+  UCard,
+  UModal,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
 
 definePageMeta({
   middleware: ["auth"],

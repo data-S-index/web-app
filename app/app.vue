@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import { useColorMode, useSchemaOrg } from "#imports";
+import { useHead, useSeoMeta } from "#app";
+import { defineWebSite, defineOrganization } from "@unhead/schema-org/vue";
+import { NuxtLoadingIndicator, NuxtPage, NuxtLayout, UApp } from "#components";
+
 const colorMode = useColorMode();
 
 useHead({

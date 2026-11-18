@@ -1,4 +1,13 @@
 import normalizeDoi from "~~/server/utils/doi";
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, getQuery, createError, setHeader } from "h3";
+import { getDoiSource } from "#server/utils/reference";
+import {
+  getRateLimitIdentifier,
+  checkRateLimit,
+} from "#server/utils/rateLimit";
+import { trackByDoiRequest } from "#server/utils/umami";
+import { getRedisClient } from "#server/utils/redis";
 
 const CACHE_EXPIRATION_SECONDS = 5 * 60; // 5 minutes
 const CACHE_KEY_PREFIX = "v1:datasets:by-doi:citations";

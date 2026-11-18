@@ -1,4 +1,5 @@
 import type { H3Event } from "h3";
+import { createError, getHeader } from "h3";
 
 // Guards the fuji-job endpoints, which are called by an external worker
 // rather than an authenticated user session.

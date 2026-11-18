@@ -1,5 +1,6 @@
 import { getClientIp } from "./ip";
 import { getRedisClient } from "./redis";
+import { getUserSession } from "#imports";
 
 export interface RateLimitOptions {
   /**

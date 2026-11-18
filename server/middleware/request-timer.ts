@@ -1,4 +1,6 @@
 import { logwatch } from "~~/server/utils/logwatch";
+import { defineEventHandler } from "h3";
+import { getClientIp } from "#server/utils/ip";
 
 type RequestMetrics = {
   environment: "prd" | "dev";

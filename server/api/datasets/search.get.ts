@@ -1,3 +1,8 @@
+import prisma from "#server/utils/prisma";
+import meilisearch from "#server/utils/meilisearch";
+import { defineEventHandler, getQuery, createError } from "h3";
+import { requireUserSession } from "#imports";
+
 // returns a paginated list of datasets
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event);

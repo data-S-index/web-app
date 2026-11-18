@@ -1,3 +1,7 @@
+import type { getUserSession } from "#imports";
+import { requireUserSession } from "#imports";
+import { createError } from "h3";
+
 export async function requireAdminSession(
   event: Parameters<typeof getUserSession>[0],
 ) {

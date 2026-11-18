@@ -1,5 +1,8 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import { computed } from "vue";
+import { UAlert, Icon, VChart, ClientOnly } from "#components";
+
 const props = defineProps<{
   dindices?: Array<{ year: number; score: number }> | null;
   publishedAt?: string | Date | null;

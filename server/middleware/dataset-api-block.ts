@@ -1,3 +1,6 @@
+import { defineEventHandler, setHeader, createError } from "h3";
+import { isDatasetApiBlocked } from "#server/utils/datasetApiBlock";
+
 // Rejects /api/dataset/* requests while an admin has the block toggled on
 // (see /admin/controls). Only applies to the published site, never in dev.
 

@@ -1,6 +1,14 @@
 import { z } from "zod";
 import { hash } from "bcrypt";
 import { Meilisearch } from "meilisearch";
+import prisma from "#server/utils/prisma";
+import {
+  defineEventHandler,
+  sendRedirect,
+  readValidatedBody,
+  createError,
+} from "h3";
+import { getUserSession } from "#imports";
 
 const signupSchema = z.object({
   temporary: z.boolean(),

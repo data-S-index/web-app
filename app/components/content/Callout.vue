@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { UIcon } from "#components";
+
 withDefaults(defineProps<{ to?: string; icon?: string }>(), {
+  to: "https://scholardata.io",
   icon: "i-heroicons-megaphone",
 });
 </script>

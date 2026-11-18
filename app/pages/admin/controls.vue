@@ -1,4 +1,19 @@
 <script setup lang="ts">
+import { definePageMeta } from "#app/composables/pages";
+import { useSeoMeta, useFetch } from "#app";
+import { useToast } from "#imports";
+import { ref } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UPageHeader,
+  UBadge,
+  USwitch,
+  UCard,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
+
 definePageMeta({
   middleware: ["admin"],
 });

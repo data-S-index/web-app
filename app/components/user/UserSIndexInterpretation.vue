@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { getPercentile } from "@/utils/percentile";
+import CardCollapsibleContent from "~/components/card/CollapsibleContent.vue";
+import { computed } from "vue";
+import { NuxtLink } from "#components";
 
 const {
   sindex,

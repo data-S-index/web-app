@@ -1,5 +1,8 @@
 <!-- eslint-disable @typescript-eslint/no-explicit-any -->
 <script setup lang="ts">
+import { computed } from "vue";
+import { UAlert, VChart, Icon, ClientOnly } from "#components";
+
 const props = defineProps<{
   mentions:
     | Array<{ mentionedDate?: string | null; mentionWeight?: number | null }>

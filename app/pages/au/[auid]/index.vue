@@ -1,6 +1,24 @@
 <script setup lang="ts">
 import UserDatasetList from "~/components/user/UserDatasetList.vue";
 import type { DatasetListItem } from "~/components/user/UserDatasetList.vue";
+import UserMetricsSection from "~/components/user/UserMetricsSection.vue";
+import { useRoute, useFetch, useSeoMeta } from "#app";
+import { useToast, defineOgImage } from "#imports";
+import { computed } from "vue";
+import {
+  UBadge,
+  UTooltip,
+  UAvatar,
+  UIcon,
+  UPageHeader,
+  UCard,
+  USeparator,
+  UAlert,
+  UPageBody,
+  UButton,
+  UPage,
+  UContainer,
+} from "#components";
 
 interface AuthorDatasetItem {
   datasetId: number;

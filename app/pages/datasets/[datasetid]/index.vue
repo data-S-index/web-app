@@ -1,5 +1,28 @@
 <script setup lang="ts">
 import type { Author } from "#shared/types/dataset";
+import DatasetClaimButton from "~/components/dataset/DatasetClaimButton.vue";
+import MarkdownRenderer from "~/components/markdown/MarkdownRenderer.vue";
+import DatasetCitationsDisplay from "~/components/dataset/DatasetCitationsDisplay.vue";
+import DatasetMentionsDisplay from "~/components/dataset/DatasetMentionsDisplay.vue";
+import DatasetMetricsTabs from "~/components/dataset/DatasetMetricsTabs.vue";
+import DatasetDomainInfo from "~/components/dataset/DatasetDomainInfo.vue";
+import DatasetNormalizationFactors from "~/components/dataset/DatasetNormalizationFactors.vue";
+import { useRoute, useFetch, useLazyFetch, useSeoMeta } from "#app";
+import { useToast, useUserSession, defineOgImage } from "#imports";
+import { computed, ref } from "vue";
+import { $fetch } from "#build/fetch";
+import {
+  UIcon,
+  UButton,
+  UBadge,
+  UTooltip,
+  UPageHeader,
+  UCard,
+  NuxtLink,
+  UPageBody,
+  UPage,
+  UContainer,
+} from "#components";
 
 const route = useRoute();
 const toast = useToast();

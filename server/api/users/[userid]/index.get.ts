@@ -1,3 +1,6 @@
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, createError } from "h3";
+
 export default defineEventHandler(async (event) => {
   const { userid } = event.context.params as { userid: string };
   const userId = userid;

@@ -1,3 +1,6 @@
+import { defineEventHandler, setHeader } from "h3";
+import { useRuntimeConfig } from "nitropack/runtime";
+
 // Lets external workflows check whether the site is in maintenance mode
 // (see MAINTENANCE_MODE in nuxt.config.ts) before writing any data.
 

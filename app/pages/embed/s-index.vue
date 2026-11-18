@@ -1,4 +1,10 @@
 <script setup lang="ts">
+import { definePageMeta } from "#app/composables/pages";
+import { useColorMode } from "#imports";
+import { useHead, useRoute, useRuntimeConfig, useFetch } from "#app";
+import { computed } from "vue";
+import { UCard, USkeleton, UIcon } from "#components";
+
 definePageMeta({
   layout: false,
 });

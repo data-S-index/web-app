@@ -2,6 +2,7 @@
 <script setup lang="ts">
 import sanitizeHtml from "sanitize-html";
 import { parse, marked } from "marked";
+import { ref } from "vue";
 
 marked.use({
   pedantic: false,

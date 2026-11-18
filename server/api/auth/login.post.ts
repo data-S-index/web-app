@@ -1,6 +1,15 @@
 import { z } from "zod";
 import { compare } from "bcrypt";
 import { checkRateLimit, getRateLimitIdentifier } from "../../utils/rateLimit";
+import prisma from "#server/utils/prisma";
+import {
+  defineEventHandler,
+  sendRedirect,
+  readValidatedBody,
+  createError,
+  setHeader,
+} from "h3";
+import { getUserSession, setUserSession } from "#imports";
 
 const LOGIN_IP_RATE_LIMIT = {
   maxRequests: 20,

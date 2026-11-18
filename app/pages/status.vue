@@ -1,4 +1,11 @@
 <script setup lang="ts">
+import { useSeoMeta, useFetch } from "#app";
+import { defineOgImage } from "#imports";
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import { $fetch } from "#build/fetch";
+import { setInterval } from "#app/compat/interval";
+import { UPageCTA, UAlert, UCard, UButton, UIcon, UBadge } from "#components";
+
 useSeoMeta({
   title: "System Status",
   description: "Live status and response times for Scholar Data services.",

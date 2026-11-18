@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { useSeoMeta } from "#app";
+import { defineOgImage } from "#imports";
+import { UAlert, USeparator, NuxtLink, UContainer } from "#components";
+
 useSeoMeta({
   title: "Terms of Use",
   description:

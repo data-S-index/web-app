@@ -1,3 +1,7 @@
+import prisma from "#server/utils/prisma";
+import { defineEventHandler, getQuery, createError, setHeader } from "h3";
+import { getRedisClient } from "#server/utils/redis";
+
 const CACHE_EXPIRATION_SECONDS = 5 * 60; // 5 minutes
 const CACHE_KEY_PREFIX = "v1:researchers:by-id";
 

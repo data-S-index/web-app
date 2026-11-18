@@ -18,6 +18,7 @@ const meilisearchClientSingleton = () => {
   });
 };
 
+// eslint-disable-next-line no-shadow-restricted-names
 declare const globalThis: {
   meilisearchGlobal: ReturnType<typeof meilisearchClientSingleton> | undefined;
 };
