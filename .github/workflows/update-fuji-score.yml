@@ -5,11 +5,6 @@ on:
     - cron: "17 6,18 * * *"
   workflow_dispatch:
 
-# Queue the next scheduled run instead of overlapping with one still in progress
-concurrency:
-  group: update-fuji-score
-  cancel-in-progress: false
-
 jobs:
   update-fuji-score:
     runs-on: ubuntu-latest
