@@ -14,3 +14,6 @@ allowBuilds:
 minimumReleaseAge: 7200
 blockExoticSubdeps: true
 minimumReleaseAgeStrict: true # tracked in https://github.com/pnpm/pnpm/issues/11238
+
+minimumReleaseAgeExclude:
+  - "@nuxt/ui@4.13.0" # Security patch for GHSA-x9jw-j844-v24h

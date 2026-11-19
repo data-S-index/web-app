@@ -76,7 +76,7 @@
     "@iconify-json/tabler": "1.2.43",
     "@iconify-json/uil": "1.2.3",
     "@nuxt/eslint": "1.17.0",
-    "@nuxt/ui": "4.12.0",
+    "@nuxt/ui": "4.13.0",
     "@nuxtjs/eslint-config-typescript": "12.1.0",
     "@paralleldrive/cuid2": "3.3.0",
     "@prisma/adapter-pg": "7.10.1",
