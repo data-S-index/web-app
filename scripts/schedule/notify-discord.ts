@@ -3,6 +3,15 @@ const COLOR_WARNING = 0xf1c40f;
 const COLOR_FAILURE = 0xe74c3c;
 
 const MAX_FAILED_IDS = 20;
+// Embed descriptions cap at 4096 chars; leave room for the wrapper text
+const MAX_DETAILS_LENGTH = 3900;
+
+function truncate(text: string, max: number): string {
+  if (text.length <= max) return text;
+  const suffix = "\n… (truncated, see workflow logs)";
+
+  return text.slice(0, max - suffix.length) + suffix;
+}
 
 function runUrl(): string | undefined {
   const { GITHUB_REPOSITORY, GITHUB_RUN_ID, GITHUB_SERVER_URL } = process.env;
@@ -45,6 +54,8 @@ export async function notifyRunResult(
     elapsedSeconds: number;
     failedIds?: number[];
     extraFields?: Record<string, number>;
+    // Extra text shown in a code block under the summary, truncated to fit Discord's limit
+    details?: string;
   },
 ): Promise<void> {
   const {
@@ -54,6 +65,7 @@ export async function notifyRunResult(
     elapsedSeconds,
     failedIds = [],
     extraFields = {},
+    details,
   } = result;
 
   const fields = [
@@ -79,7 +91,12 @@ export async function notifyRunResult(
 
   await postEmbed({
     title: `${failed > 0 ? "⚠️" : ""} ${jobName} finished`,
-    description: total === 0 ? "No jobs to process." : "Run completed.",
+    description:
+      total === 0
+        ? "No jobs to process."
+        : details
+          ? `Run completed.\n\`\`\`\n${truncate(details, MAX_DETAILS_LENGTH)}\n\`\`\``
+          : "Run completed.",
     color: failed > 0 ? COLOR_WARNING : COLOR_SUCCESS,
     fields: total === 0 ? [] : fields,
   });

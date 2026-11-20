@@ -112,7 +112,6 @@ const AUTOMATED_HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
 
 const MANUAL_PUBLISHER_ID_SCORES: Record<string, number> = {
   "sul.openneuro": 42.31,
-  "gbif.gbif": 55.77,
   "zbmed.dsmz": 61.54,
   // "dartlib.dandi": 88.46,
 };
@@ -229,7 +228,7 @@ async function evaluateDataset(
   datasetId: number,
   identifier: string,
   publisherId: string,
-): Promise<"hardcoded" | "organic"> {
+): Promise<{ source: "hardcoded" | "organic"; score: number }> {
   if (publisherId in HARDCODED_PUBLISHER_ID_SCORES) {
     const score = HARDCODED_PUBLISHER_ID_SCORES[publisherId];
 
@@ -244,7 +243,7 @@ async function evaluateDataset(
       `[${ts()}] Scored dataset ${datasetId} (${identifier}): ${score.toFixed(2)} [hardcoded for publisher ${publisherId}]`,
     );
 
-    return "hardcoded";
+    return { source: "hardcoded", score };
   }
 
   const response = await fetch(FUJI_EVALUATE_URL, {
@@ -273,9 +272,11 @@ async function evaluateDataset(
     throw new Error(`No FAIR score in FUJI response for dataset ${datasetId}`);
   }
 
+  const parsedScore = parseFloat(String(score));
+
   await submitResult({
     datasetId,
-    score: parseFloat(String(score)),
+    score: parsedScore,
     evaluationDate: data.end_timestamp,
     metricVersion: data.metric_version ?? "metrics_v0.8",
     // softwareVersion: "extrapolation_test",
@@ -286,7 +287,43 @@ async function evaluateDataset(
     `[${ts()}] Scored dataset ${datasetId} (${identifier}) (${publisherId}): ${score.toFixed(2)}`,
   );
 
-  return "organic";
+  return { source: "organic", score: parsedScore };
+}
+
+// publisherId -> (score -> dataset count) for every dataset scored in this run
+type ScoreDistribution = Map<string, Map<string, number>>;
+
+function recordScore(
+  distribution: ScoreDistribution,
+  publisherId: string,
+  score: number,
+): void {
+  let counts = distribution.get(publisherId);
+  if (!counts) {
+    counts = new Map();
+    distribution.set(publisherId, counts);
+  }
+  const key = score.toFixed(2);
+  counts.set(key, (counts.get(key) ?? 0) + 1);
+}
+
+function formatScoreDistribution(distribution: ScoreDistribution): string {
+  return [...distribution.entries()]
+    .map(([publisherId, counts]) => {
+      const total = [...counts.values()].reduce((sum, n) => sum + n, 0);
+      const parts = [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || Number(b[0]) - Number(a[0]))
+        .map(
+          ([score, n]) => `${score}: ${((n / total) * 100).toFixed(1)}% (${n})`,
+        );
+
+      return { publisherId, total, line: parts.join(", ") };
+    })
+    .sort((a, b) => b.total - a.total)
+    .map(
+      ({ publisherId, total, line }) => `${publisherId} [n=${total}] ${line}`,
+    )
+    .join("\n");
 }
 
 async function main() {
@@ -299,6 +336,9 @@ async function main() {
   let hardcoded = 0;
   let organic = 0;
   let consecutiveClaimFailures = 0;
+  // Every publisher id this worker claimed a dataset for, including ones that failed
+  const seenPublisherIds = new Set<string>();
+  const scoreDistribution: ScoreDistribution = new Map();
   const startTime = Date.now();
 
   while (true) {
@@ -340,13 +380,19 @@ async function main() {
           );
           break;
         case "pending": {
-          const source = await evaluateDataset(
+          seenPublisherIds.add(job.publisherId);
+          const { source, score } = await evaluateDataset(
             job.datasetId,
             job.identifier,
             job.publisherId,
           );
-          if (source === "hardcoded") hardcoded++;
-          else organic++;
+          if (source === "hardcoded") {
+            hardcoded++;
+          } else {
+            organic++;
+            // Hardcoded repos always get one fixed score, so only organic ones are worth reporting
+            recordScore(scoreDistribution, job.publisherId, score);
+          }
           break;
         }
       }
@@ -366,6 +412,17 @@ async function main() {
     `[${ts()}] Done. ${processed} processed (${hardcoded} hardcoded, ${organic} organic), ${failed} failed in ${elapsedSeconds.toFixed(1)}s`,
   );
 
+  const publisherIds = [...seenPublisherIds].sort();
+  const distributionReport = formatScoreDistribution(scoreDistribution);
+  console.log(
+    `[${ts()}] Publisher ids seen (${publisherIds.length}): ${publisherIds.join(", ") || "none"}`,
+  );
+  if (distributionReport) {
+    console.log(
+      `[${ts()}] Organic score distribution by publisher:\n${distributionReport}`,
+    );
+  }
+
   // Skip empty runs, otherwise the 10 workers flood the channel when the queue is drained
   if (processed + failed > 0) {
     await notifyRunResult(JOB_NAME, {
@@ -373,7 +430,14 @@ async function main() {
       processed,
       failed,
       elapsedSeconds,
-      extraFields: { Hardcoded: hardcoded, Organic: organic },
+      extraFields: {
+        Hardcoded: hardcoded,
+        Organic: organic,
+        Publishers: publisherIds.length,
+      },
+      details: distributionReport
+        ? `Organic score distribution by publisher:\n${distributionReport}`
+        : undefined,
     });
   }
 }
