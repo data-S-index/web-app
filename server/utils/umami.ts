@@ -1,5 +1,7 @@
 import type { H3Event } from "h3";
 import { consola } from "consola";
+import prisma from "./prisma";
+import { getRedisClient } from "./redis";
 import { getDoiSource } from "./reference";
 
 // Same website as the frontend tracker in app/app.vue
@@ -72,30 +74,84 @@ export function trackUmamiEvent(event: H3Event, umamiEvent: UmamiEvent) {
   event.waitUntil?.(request);
 }
 
+const PUBLISHER_CACHE_PREFIX = "v1:umami:publisher";
+const PUBLISHER_CACHE_SECONDS = 24 * 60 * 60; // 24 hours
+const UNKNOWN_PUBLISHER = "unknown";
+
 /**
- * Track a v1 by-doi API request. Always sends a general event, plus a
- * dedicated event for PhysioNet / SPARC DOIs so their volume can be
- * counted directly in the Umami dashboard.
+ * Look up the publisher (repository) for a DOI. Cached separately from the
+ * API response caches so cache-hit requests can still be attributed without
+ * changing the public response shape. DOIs we don't have are "unknown".
+ */
+async function getPublisherForDoi(normalizedDoi: string): Promise<string> {
+  const redis = getRedisClient();
+  const cacheKey = `${PUBLISHER_CACHE_PREFIX}:${normalizedDoi}`;
+
+  const cached = await redis.get(cacheKey);
+  if (cached !== null) return cached;
+
+  const dataset = await prisma.dataset.findUnique({
+    where: {
+      identifierType_identifier: {
+        identifierType: "doi",
+        identifier: normalizedDoi,
+      },
+    },
+    select: { publisher: true },
+  });
+
+  const publisher = dataset?.publisher?.trim() || UNKNOWN_PUBLISHER;
+  await redis.setex(cacheKey, PUBLISHER_CACHE_SECONDS, publisher);
+
+  return publisher;
+}
+
+/**
+ * Track a v1 by-doi API request. Always sends a general event tagged with
+ * the dataset's publisher and DOI prefix (so every repository using the API
+ * can be broken down in Umami's event data), plus a dedicated event for
+ * PhysioNet / SPARC DOIs so their volume can be counted directly.
  */
 export function trackByDoiRequest(
   event: H3Event,
   endpoint: "by-doi" | "by-doi-citations",
   normalizedDoi: string,
 ) {
+  if (process.env.NUXT_SITE_ENV === "development") return;
+
   const source = getDoiSource(normalizedDoi);
   const url =
     endpoint === "by-doi"
       ? "/api/v1/datasets/by-doi"
       : "/api/v1/datasets/by-doi/citations";
-  const data = { endpoint, source, doi: normalizedDoi };
+  // Registrant prefix (e.g. "10.13026") identifies the repo even when the
+  // DOI isn't in our database
+  const doiPrefix = normalizedDoi.split("/")[0] || normalizedDoi;
 
-  trackUmamiEvent(event, { name: `api-v1-${endpoint}`, url, data });
+  // Fire-and-forget: the lookup runs off the request path
+  getPublisherForDoi(normalizedDoi)
+    .catch((err) => {
+      consola.warn("Umami publisher lookup failed:", err);
 
-  if (source !== "other") {
-    trackUmamiEvent(event, {
-      name: `api-v1-${endpoint}-${source}`,
-      url,
-      data,
+      return UNKNOWN_PUBLISHER;
+    })
+    .then((publisher) => {
+      const data = {
+        endpoint,
+        source,
+        publisher,
+        doiPrefix,
+        doi: normalizedDoi,
+      };
+
+      trackUmamiEvent(event, { name: `api-v1-${endpoint}`, url, data });
+
+      if (source !== "other") {
+        trackUmamiEvent(event, {
+          name: `api-v1-${endpoint}-${source}`,
+          url,
+          data,
+        });
+      }
     });
-  }
 }
