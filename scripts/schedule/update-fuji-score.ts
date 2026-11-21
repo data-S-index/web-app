@@ -117,6 +117,7 @@ const MANUAL_PUBLISHER_ID_SCORES: Record<string, number> = {
   "rdg.prod": 48.08,
   "gbif.col": 57.69,
   "bl.mendeley": 69.23,
+  "cern.hepdata": 55.77,
   // "dartlib.dandi": 88.46,
 };
 
