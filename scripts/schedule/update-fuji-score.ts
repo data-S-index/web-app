@@ -113,6 +113,10 @@ const AUTOMATED_HARDCODED_PUBLISHER_ID_SCORES: Record<string, number> = {
 const MANUAL_PUBLISHER_ID_SCORES: Record<string, number> = {
   "sul.openneuro": 42.31,
   "zbmed.dsmz": 61.54,
+  "gbif.gbif": 55.77,
+  "rdg.prod": 48.08,
+  "gbif.col": 57.69,
+  "bl.mendeley": 69.23,
   // "dartlib.dandi": 88.46,
 };
 
