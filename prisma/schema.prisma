@@ -394,7 +394,7 @@ model IngestLog {
     id Int @id @default(autoincrement())
 
     source String // e.g. "datacite"
-    day    DateTime @db.Date // the day the records were created at the source
+    day    DateTime @db.Date // the day the records were created or registered at the source
 
     records  Int // records in the harvested file
     inserted Int // new Dataset rows
@@ -409,6 +409,10 @@ model IngestLog {
 
     indexedAt DateTime? // when the day's datasets were added to Meilisearch
     indexed   Int? // documents sent to Meilisearch
+
+    updatesCheckedAt DateTime? // when datacite_update.py last checked the day for metadata changes
+    updatesFound     Int? // records of the day's files DataCite returned as updated
+    updatesApplied   Int? // datasets changed in the database by that check
 
     created DateTime @default(now())
     updated DateTime @updatedAt
