@@ -278,14 +278,25 @@ const footerItems: NavigationMenuItem[] = [
         </p>
       </template>
 
-      <UNavigationMenu :items="footerItems" variant="link" color="primary" />
+      <!-- Let the links wrap on narrow screens instead of truncating. -->
+      <UNavigationMenu
+        :items="footerItems"
+        variant="link"
+        color="primary"
+        :ui="{
+          root: 'w-full justify-center lg:w-auto',
+          list: 'flex-wrap justify-center gap-x-1',
+          item: 'py-0.5 lg:py-2',
+        }"
+      />
 
       <template #right>
         <p class="text-muted text-sm">Made with ♥ by the S-Index Team</p>
 
-        <USeparator orientation="vertical" class="h-4" />
+        <!-- The mobile header already has a color mode toggle. -->
+        <USeparator orientation="vertical" class="hidden h-4 lg:block" />
 
-        <UColorModeButton />
+        <UColorModeButton class="hidden lg:inline-flex" />
       </template>
     </UFooter>
   </div>
