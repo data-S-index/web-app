@@ -81,8 +81,65 @@ const headerItems = computed<NavigationMenuItem[]>(() => [
   },
 ]);
 
-const mobileHeaderItems = computed<NavigationMenuItem[]>(() => [
-  ...headerItems.value,
+// Top-level desktop links have no icons; add them for the flat mobile list.
+const mobileIcons: Record<string, string> = {
+  "My Profile": "i-heroicons-user-circle",
+  "Browse Datasets": "i-heroicons-circle-stack",
+};
+
+// The header's right-side actions (announcements, docs, account) are hidden
+// on small screens to avoid crowding, so surface them in the mobile menu.
+const mobileHeaderItems = computed<NavigationMenuItem[][]>(() => [
+  // Flatten dropdowns (Browse Profiles, More) so every link is one tap away.
+  headerItems.value.flatMap((item) => {
+    if (!item.children) {
+      return [
+        { ...item, icon: mobileIcons[item.label as string] ?? item.icon },
+      ];
+    }
+
+    return item.children.map((child) =>
+      item.label === "Browse Profiles"
+        ? { ...child, label: `Browse ${child.label}` }
+        : child,
+    );
+  }),
+  [
+    {
+      label: "Announcements",
+      to: "/announcements",
+      icon: "i-heroicons-megaphone-20-solid",
+      active: route.path.startsWith("/announcements"),
+    },
+    {
+      label: "Documentation",
+      to: "https://docs.scholardata.io",
+      target: "_blank",
+      icon: "solar:document-broken",
+    },
+  ],
+  loggedInSession.value
+    ? [
+        {
+          label: "Account Settings",
+          to: "/profile",
+          icon: "i-heroicons-cog-6-tooth",
+          active: route.path.startsWith("/profile"),
+        },
+        {
+          label: "Logout",
+          icon: "i-heroicons-arrow-right-on-rectangle",
+          onSelect: logout,
+        },
+      ]
+    : [
+        {
+          label: "Sign in",
+          to: "/login",
+          icon: "i-heroicons-arrow-right-20-solid",
+          active: route.path.startsWith("/login"),
+        },
+      ],
 ]);
 
 const footerItems: NavigationMenuItem[] = [
@@ -128,6 +185,7 @@ const footerItems: NavigationMenuItem[] = [
       <template #right>
         <UTooltip text="Announcements">
           <UButton
+            class="hidden md:inline-flex"
             to="/announcements"
             icon="i-heroicons-megaphone-20-solid"
             color="neutral"
@@ -138,6 +196,7 @@ const footerItems: NavigationMenuItem[] = [
 
         <UTooltip text="Documentation">
           <UButton
+            class="hidden md:inline-flex"
             to="https://docs.scholardata.io"
             target="_blank"
             rel="noopener noreferrer"
@@ -151,7 +210,10 @@ const footerItems: NavigationMenuItem[] = [
         <UColorModeButton />
 
         <AuthState v-slot="{ loggedIn }">
-          <div v-if="loggedIn" class="flex items-center justify-center gap-3">
+          <div
+            v-if="loggedIn"
+            class="hidden items-center justify-center gap-3 md:flex"
+          >
             <NuxtLink to="/profile">
               <UTooltip text="View your account settings">
                 <UAvatar
@@ -167,7 +229,7 @@ const footerItems: NavigationMenuItem[] = [
             </UButton>
           </div>
 
-          <div v-else class="flex items-center justify-center gap-3">
+          <div v-else class="hidden items-center justify-center gap-3 md:flex">
             <UButton to="/login" variant="outline">
               Sign in
               <template #trailing>
